@@ -183,6 +183,10 @@ MVP 阶段只验证路线，不追求最终效果。
 - 模型完成一次端到端训练，checkpoint 可恢复训练和执行推理。
 - 至少有一组固定测试样例用于回归检查。
 
+## 开发环境
+
+项目默认使用 Python 3.11 和仓库根目录下的 `.conda` 环境。环境创建、激活、验证和依赖安装约定见 [Python 环境约定](docs/python-environment.md)。
+
 ## Workflow
 
 项目采用 `plan -> todo -> task -> review -> done` 工作流。README 只说明流程语义，不维护具体任务清单；具体内容应放在 issue、实验记录、任务文档或代码提交中。
