@@ -1,6 +1,6 @@
 # task TD-03: 建立数据源 registry
 
-状态：pending
+状态：done
 
 依赖：TD-01
 
@@ -36,3 +36,10 @@
 - lock 中分片顺序明确，字段排序和 JSON 编码规则固定。
 - 任一关键字段缺失或校验变化会被拒绝。
 - 正常构建不会访问或更新远端 map。
+
+## 验证记录（2026-07-13）
+
+- registry 已在配置中登记四个启用的 HPLT 3.0 来源，以及默认禁用的 Wikimedia、FineWeb、FineWeb2；缺失许可证、版本、入口或映射会快速失败。
+- `configs/tokenizer_datasets_mvp.lock.json` 使用 canonical JSON，锁定 map SHA-256、官方 MD5、远端大小、逻辑顺序、锁定字节范围及前缀 SHA-256；文件 SHA-256 为 `d719e5bdc9a224c99ac582cf65315be979570d047586609e8fc917b76e18eeb0`。
+- 四个前缀合计 4,563,402,752 B（4.25 GiB）；每次构建顺序重算 SHA-256。配置哈希、来源 identity、WDS、顺序、大小或摘要不一致均被拒绝。
+- `--resolve-lock` 是显式路径；正常 build 与 `--offline` 路径只读已有 lock，不解析远端 map。

@@ -1,6 +1,6 @@
 # task TD-11: 执行 smoke 下载
 
-状态：pending
+状态：done
 
 依赖：TD-09、TD-10；其余任务通过这两个完成门槛传递依赖。
 
@@ -36,3 +36,10 @@
 - 冷缓存与热缓存/offline 输出字节级一致。
 - 每种语言抽样质量可接受，无明显脚本级污染。
 - 所有失败和重试均可解释，没有半成品最终文件。
+
+## 验证记录（2026-07-13）
+
+- 首次真实获取已缓存并校验四个 HPLT 锁定前缀（4.25 GiB）；最终 `conservative-v3` smoke 使用同一缓存离线重建。
+- 主构建为 16 worker、5.054 s；独立复现为 1 worker、4.326 s。四个 corpus、manifest、report 六项逐字节一致，D: staging 最终均为 0 文件。
+- 稳定 SHA-256：eng `97c3db4ca7e4715e73521dc81c9c225291c0c95ceb604c5f2434555c2c704c40`；zho `11c47913b556f47135778752193339768697abee49becaef7ae862a7fe9bd43e`；jpn `9b9882f147ab419fc692164e0df7fadb4e1c211ca2a5bff38b86218b56895eaf`；kor `c744316c1df0fca57f5716afcdb4ffd014bf001212efdaabda375f2f663e2b1c`。
+- smoke manifest `b20cdb52a1d678889031a82dc42f10d6872d896e26c629ed9fcb92e90e0f7b22`，报告 `7027e17483565d31966d3580f4179d0f3b4a3cb55c693678593e4ff426fb0b58`；四语人工样本用于确定 v3 规则。

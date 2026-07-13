@@ -1,6 +1,6 @@
 # task TD-01: 冻结下载配置
 
-状态：pending
+状态：done
 
 依赖：无
 
@@ -11,7 +11,7 @@
 ## 输入
 
 - [数据获取 todo](../../todo/tokenizer-dataset-fetch-script.md)
-- [数据集调研](../../../docs/tokenizer-dataset-research.md)
+- [数据集调研](../../../../docs/tokenizer-dataset-research.md)
 - HPLT 3.0 四种语言的官方 map 地址。
 
 ## 执行事项
@@ -34,3 +34,10 @@
 - 四种语言和两个 profile 均有明确字符预算。
 - 配置不包含凭据、临时 URL、绝对路径或动态日期。
 - 官方 map 地址验证结果和验证日期有记录。
+
+## 验证记录（2026-07-13）
+
+- 四个官方 map 地址均已访问并解析：`eng_Latn.map`、`cmn_Hans.map`、`jpn_Jpan.map`、`kor_Hang.map`，基础地址为 `https://data.hplt-project.org/three/sorted/`。
+- 已冻结 HPLT 3.0（July 2025 release）、WDS 10 至 8、四个语言映射、seed `20260713`；实际 lock 只选取各语言首个 WDS 10 分片的锁定前缀。
+- `smoke` 为每语言 200,000 字符，`mvp` 为每语言 1,000,000,000 字符；配置不含本机路径或凭据。
+- 产物：`configs/tokenizer_datasets_mvp.yaml`，SHA-256 `9822f53542a5947c541a2a30094988d1acd9c0a9f01c83ef765a2197087488e4`。

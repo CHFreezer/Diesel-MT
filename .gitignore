@@ -1,1 +1,17 @@
 .conda/
+__pycache__/
+.pytest_cache/
+*.py[cod]
+
+# Tokenizer datasets are generated locally and may be very large.
+data/tokenizer/raw/
+data/tokenizer/cache/
+data/tokenizer/interim/
+data/tokenizer/corpus/
+data/tokenizer/reports/
+data/tokenizer-smoke-*/
+data/tokenizer-mvp-*/
+data/tokenizer-*/
+
+# Keep only documentation placeholders below data/ if added later.
+!data/tokenizer/**/.gitkeep

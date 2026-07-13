@@ -1,6 +1,6 @@
 # task TD-04: 实现 CLI 与 dry-run
 
-状态：pending
+状态：done
 
 依赖：TD-01、TD-02、TD-03
 
@@ -34,3 +34,9 @@
 - 相同输入的 dry-run 输出顺序稳定。
 - 配置或 lock 无效时在任何下载前失败。
 - `--offline` 禁止所有网络访问。
+
+## 验证记录（2026-07-13）
+
+- 已实现 `scripts/fetch_tokenizer_datasets.py`，支持约定参数及 `--concurrency`、`--staging-dir`、`--max-memory-gib`、`--min-available-memory-gib`、`--resume`、`--resolve-lock`。
+- 真实 MVP dry-run 在 `--use-cache --offline` 下成功，稳定输出四个映射、WDS 10、每语言 10 亿字符、16 worker、48/32 GiB 内存门槛和 D: staging；不创建大文件或修改 lock。
+- CLI 错误、配置/lock 不一致、离线缺失和参数校验均有非零退出与测试断言。

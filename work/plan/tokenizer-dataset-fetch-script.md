@@ -28,7 +28,7 @@
 
 ## 执行拆解
 
-具体待办事项见 [tokenizer dataset fetch script todo](../todo/tokenizer-dataset-fetch-script.md)。
+已完成待办见 [tokenizer dataset fetch script todo](../done/todo/tokenizer-dataset-fetch-script.md)。
 
 ## 稳定复现契约
 
@@ -164,3 +164,7 @@ python scripts/fetch_tokenizer_datasets.py --config configs/tokenizer_datasets_m
 - 不同语料许可证可能不兼容，需要在启用前做明确筛选。
 - 日文、韩文公开语料规模可能小于英文、中文，需要抽样策略保证 tokenizer 不偏科。
 - 语言识别工具可能误判短句或混合文本，MVP 应保留人工抽样检查入口。
+
+## 完成记录（2026-07-13）
+
+计划已按 RAM-first 架构完成。`conservative-v3` 配置、source lock、依赖 lock、脚本、19 项自动测试、真实 smoke 和两次独立完整 MVP 构建均已验收。两个 MVP 输出目录的四语文件、`manifest.jsonl` 和质量报告逐字节一致；正式 manifest SHA-256 为 `11daef6a8b38c7dc66dc17d51ab4ab2ab9053a0816340261ad76e53740be0477`。详细证据见 task 索引及 TD-01 至 TD-12。

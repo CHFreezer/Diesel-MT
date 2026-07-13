@@ -3,7 +3,7 @@
 ## 来源
 
 - todo：[tokenizer dataset fetch script](../../todo/tokenizer-dataset-fetch-script.md)
-- plan：[tokenizer dataset fetch script](../../plan/tokenizer-dataset-fetch-script.md)
+- plan：[tokenizer dataset fetch script](../../../plan/tokenizer-dataset-fetch-script.md)
 
 ## 依赖图
 
@@ -36,18 +36,18 @@ flowchart LR
 
 | 阶段 | 编号 | 子任务 | 最早开始条件 | 完成门槛 | 可并行任务 | 状态 |
 | ---: | --- | --- | --- | --- | --- | --- |
-| 1 | TD-01 | [冻结下载配置](td-01-freeze-download-config.md) | 无 | 无 | 无 | pending |
-| 2 | TD-02 | [建立目录与 Git 边界](td-02-data-layout-and-git-boundary.md) | TD-01 done | TD-01 | TD-03 | pending |
-| 2 | TD-03 | [建立数据源 registry](td-03-source-registry-and-lock.md) | TD-01 done | TD-01 | TD-02 | pending |
-| 3 | TD-04 | [实现 CLI 与 dry-run](td-04-cli-and-dry-run.md) | TD-02、TD-03 done | TD-02、TD-03 | 无 | pending |
-| 4 | TD-05 | [实现 HPLT 3.0 获取器](td-05-hplt-fetcher.md) | TD-04 done | TD-04 | TD-06、TD-10 | pending |
-| 4 | TD-06 | [实现文本抽取与保守清洗](td-06-text-extraction-and-cleaning.md) | TD-04 done | TD-04 | TD-05、TD-10 | pending |
-| 5 | TD-07 | [实现去重与均衡抽样](td-07-dedup-and-balanced-sampling.md) | TD-06 done | TD-06 | TD-05、TD-10 | pending |
-| 4/6 | TD-08 | [生成训练入口与 manifest](td-08-corpus-and-manifest.md) | TD-04 done 后可先设计 schema | TD-03、TD-05、TD-07 | TD-05、TD-06、TD-07、TD-10；仅限 schema 工作 | pending |
-| 7 | TD-09 | [生成质量报告](td-09-quality-report.md) | TD-08 done | TD-08 | TD-10 | pending |
-| 4-8 | TD-10 | [建立自动化测试](td-10-automated-tests.md) | TD-04 done | TD-05 至 TD-09 | TD-05 至 TD-09 | pending |
-| 9 | TD-11 | [执行 smoke 下载](td-11-smoke-download.md) | TD-09、TD-10 done | TD-09、TD-10 | 无 | pending |
-| 10 | TD-12 | [执行 MVP 下载](td-12-mvp-download.md) | TD-11 done | TD-11 | 无 | pending |
+| 1 | TD-01 | [冻结下载配置](td-01-freeze-download-config.md) | 无 | 无 | 无 | done |
+| 2 | TD-02 | [建立目录与 Git 边界](td-02-data-layout-and-git-boundary.md) | TD-01 done | TD-01 | TD-03 | done |
+| 2 | TD-03 | [建立数据源 registry](td-03-source-registry-and-lock.md) | TD-01 done | TD-01 | TD-02 | done |
+| 3 | TD-04 | [实现 CLI 与 dry-run](td-04-cli-and-dry-run.md) | TD-02、TD-03 done | TD-02、TD-03 | 无 | done |
+| 4 | TD-05 | [实现 HPLT 3.0 获取器](td-05-hplt-fetcher.md) | TD-04 done | TD-04 | TD-06、TD-10 | done |
+| 4 | TD-06 | [实现文本抽取与保守清洗](td-06-text-extraction-and-cleaning.md) | TD-04 done | TD-04 | TD-05、TD-10 | done |
+| 5 | TD-07 | [实现去重与均衡抽样](td-07-dedup-and-balanced-sampling.md) | TD-06 done | TD-06 | TD-05、TD-10 | done |
+| 4/6 | TD-08 | [生成训练入口与 manifest](td-08-corpus-and-manifest.md) | TD-04 done 后可先设计 schema | TD-03、TD-05、TD-07 | TD-05、TD-06、TD-07、TD-10；仅限 schema 工作 | done |
+| 7 | TD-09 | [生成质量报告](td-09-quality-report.md) | TD-08 done | TD-08 | TD-10 | done |
+| 4-8 | TD-10 | [建立自动化测试](td-10-automated-tests.md) | TD-04 done | TD-05 至 TD-09 | TD-05 至 TD-09 | done |
+| 9 | TD-11 | [执行 smoke 下载](td-11-smoke-download.md) | TD-09、TD-10 done | TD-09、TD-10 | 无 | done |
+| 10 | TD-12 | [执行 MVP 下载](td-12-mvp-download.md) | TD-11 done | TD-11 | 无 | done |
 
 ## 并行窗口
 

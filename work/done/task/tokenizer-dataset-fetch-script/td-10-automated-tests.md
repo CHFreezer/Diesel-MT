@@ -1,6 +1,6 @@
 # task TD-10: 建立自动化测试
 
-状态：pending
+状态：done
 
 启动依赖：TD-04
 
@@ -41,3 +41,9 @@ TD-04 完成后即可建立 fixture、测试框架和 CLI 测试。TD-05 至 TD-
 - 稳定复现、错误恢复和校验失败测试全部通过。
 - 测试运行不会向 Git 跟踪路径写入大文件。
 - 失败信息能定位到来源、分片或处理阶段。
+
+## 验证记录（2026-07-13）
+
+- 标准命令：`.conda\python.exe -m pytest -q`；最终结果 `19 passed`。
+- 覆盖 registry/config/lock、map 解析与缓存解析、四语清洗、packed MinHash/近似去重、字符预算、fresh 跨 worker 复现、语言 checkpoint resume、冷/热缓存、offline、网络/Range 恢复、缓存与下载摘要失败、原子搬运失败和 manifest 屏障。
+- `.conda\python.exe -m py_compile` 对两个脚本与测试通过；测试只使用小型 fixture，不依赖公网或完整 HPLT。

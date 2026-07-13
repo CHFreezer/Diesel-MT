@@ -1,0 +1,159 @@
+schema_version: 1
+dataset:
+  name: HPLT 3.0 Monolingual Datasets
+  version_or_snapshot: "3.0 (July 2025 release)"
+  homepage: https://hplt-project.org/datasets/v3.0
+  license: CC0-1.0 packaging; source web text retains applicable upstream rights
+  terms_url: https://hplt-project.org/datasets/v3.0#terms-of-use-and-takedown
+  base_uri: https://data.hplt-project.org/three/sorted
+  quality_wds:
+    minimum: 8
+    maximum: 10
+  max_shards_per_language: 1
+
+reproducibility:
+  contract: source lock, this config, code version, dependency lock, profile, and seed determine byte-identical corpus and manifest outputs
+  canonical_json: UTF-8, sorted keys, compact separators, LF terminator
+  content_hash: sha256
+  output_encoding: utf-8
+  output_newline: LF
+  final_trailing_newline: true
+
+profiles:
+  smoke:
+    enabled_languages: [eng_Latn, zho_Hans, jpn_Jpan, kor_Hang]
+    character_budget_per_language: 200000
+    locked_prefix_bytes_per_shard: 8388608
+    random_seed: 20260713
+    concurrency: 2
+    corpus_subdir: corpus/smoke
+  mvp:
+    enabled_languages: [eng_Latn, zho_Hans, jpn_Jpan, kor_Hang]
+    character_budget_per_language: 1000000000
+    locked_prefix_bytes_per_shard: 1610612736
+    locked_prefix_bytes_by_language:
+      eng_Latn: 536870912
+      zho_Hans: 1610612736
+      jpn_Jpan: 1207959552
+      kor_Hang: 1207959552
+    random_seed: 20260713
+    concurrency: 4
+    corpus_subdir: corpus/mvp
+
+cleaning:
+  algorithm_version: conservative-v3
+  min_characters: 20
+  max_characters: 100000
+  max_replacement_character_ratio: 0.001
+  max_control_character_ratio: 0.001
+  reject_html_pattern: "(?is)<(?:html|body|script|style|iframe|div|p|br)\\b"
+  reject_template_pattern: '(?i)(?:skip\s+to:.*(?:topnavigation|maincontent|footer\s+navigation)|相关站点推荐|注册网址|真人娱乐平台|电竞官方入口|posts\s+tagged|시험.{0,80}덤프|(?:casino|カジノ|카지노|赌场|賭場|博彩|娱乐城|토토).{0,120}(?:bonus|deposit|withdraw|register|recommended|おすすめ|最新|入金|出金|登録|ボーナス|プロモーション|추천|가입|입금|출금|보너스|프로모션|이용약관|특별\s*제안|注册|送彩金|开户|入口|官方|存款|提款|优惠)|(?:bonus|recommended|おすすめ|推荐|注册|送彩金|官方入口|추천|가입|보너스|프로모션).{0,120}(?:online\s+casino|オンラインカジノ|온라인\s*카지노|모바일\s*카지노|在线赌场|博彩|娱乐城|토토))'
+  reject_keyword_stuffing_pattern: '(?i)(?:\bcasino\b|カジノ|카지노|娱乐城|在线试听|出会い系|スーパーコピー|덤프)'
+  max_keyword_stuffing_matches: 1
+  reject_repeated_spam_pattern: '(?i)(?:リフォーム|引越し\s*安い(?:日|時期)?|格安|激安|一括見積もり|おすすめの業者|口コミ|最安値|成人|色情|情色|激情|巨乳|丝袜|熟女|熟妇|少妇|处女|AV无码|无码AV|在线播放|五月婷婷)'
+  max_repeated_spam_matches: 4
+  split_on_lines: true
+  collapse_horizontal_whitespace: true
+
+deduplication:
+  algorithm_version: exact-sha256-plus-one-permutation-minhash-v1
+  exact_hash: sha256
+  approximate_languages: [eng_Latn, zho_Hans]
+  minhash:
+    token_unit: unicode-character
+    ngram_size: 5
+    hash: blake2b-128
+    permutations: 32
+    bands: 4
+    threshold: 0.90
+    seed: 20260713
+    max_ngrams_per_text: 512
+    tie_break: content_id_ascending
+
+quality:
+  review_sample_count: 20
+  review_seed: 20260713
+  language_min_script_ratio:
+    eng_Latn: 0.55
+    zho_Hans: 0.25
+    jpn_Jpan: 0.20
+    kor_Hang: 0.25
+
+sources:
+  - source_id: hplt3-eng-latn
+    source_type: hplt3-monolingual-jsonl-zst
+    license: CC0-1.0 packaging; upstream web-text rights apply
+    homepage: https://hplt-project.org/datasets/v3.0
+    download_uri: https://data.hplt-project.org/three/sorted/eng_Latn.map
+    version_or_snapshot: "3.0 (July 2025 release)"
+    languages: {source: eng_Latn, output: eng_Latn}
+    expected_files: map plus WDS 10-8 jsonl.zst shards
+    checksum_or_size: official per-language MD5 list plus HTTP Content-Length; locked prefix SHA-256
+    enabled: true
+    notes: English is not globally deduplicated by HPLT 3.0; project-side exact and approximate deduplication is mandatory.
+  - source_id: hplt3-cmn-hans
+    source_type: hplt3-monolingual-jsonl-zst
+    license: CC0-1.0 packaging; upstream web-text rights apply
+    homepage: https://hplt-project.org/datasets/v3.0
+    download_uri: https://data.hplt-project.org/three/sorted/cmn_Hans.map
+    version_or_snapshot: "3.0 (July 2025 release)"
+    languages: {source: cmn_Hans, output: zho_Hans}
+    expected_files: map plus WDS 10-8 jsonl.zst shards
+    checksum_or_size: official per-language MD5 list plus HTTP Content-Length; locked prefix SHA-256
+    enabled: true
+    notes: Simplified Chinese is retained as-is and receives project-side exact and approximate deduplication.
+  - source_id: hplt3-jpn-jpan
+    source_type: hplt3-monolingual-jsonl-zst
+    license: CC0-1.0 packaging; upstream web-text rights apply
+    homepage: https://hplt-project.org/datasets/v3.0
+    download_uri: https://data.hplt-project.org/three/sorted/jpn_Jpan.map
+    version_or_snapshot: "3.0 (July 2025 release)"
+    languages: {source: jpn_Jpan, output: jpn_Jpan}
+    expected_files: map plus WDS 10-8 jsonl.zst shards
+    checksum_or_size: official per-language MD5 list plus HTTP Content-Length; locked prefix SHA-256
+    enabled: true
+    notes: Japanese text is retained without kana or width conversion.
+  - source_id: hplt3-kor-hang
+    source_type: hplt3-monolingual-jsonl-zst
+    license: CC0-1.0 packaging; upstream web-text rights apply
+    homepage: https://hplt-project.org/datasets/v3.0
+    download_uri: https://data.hplt-project.org/three/sorted/kor_Hang.map
+    version_or_snapshot: "3.0 (July 2025 release)"
+    languages: {source: kor_Hang, output: kor_Hang}
+    expected_files: map plus WDS 10-8 jsonl.zst shards
+    checksum_or_size: official per-language MD5 list plus HTTP Content-Length; locked prefix SHA-256
+    enabled: true
+    notes: Korean text is retained without romanization or compatibility normalization.
+  - source_id: wikimedia-backup
+    source_type: wikimedia-dump
+    license: CC BY-SA 4.0 and GFDL; per-project legal review required
+    homepage: https://dumps.wikimedia.org/
+    download_uri: https://dumps.wikimedia.org/backup-index.html
+    version_or_snapshot: disabled-unpinned-backup
+    languages: {source: multiple, output: multiple}
+    expected_files: disabled backup only
+    checksum_or_size: unavailable until explicitly pinned
+    enabled: false
+    notes: Disabled for smoke and MVP.
+  - source_id: fineweb-backup
+    source_type: huggingface-dataset
+    license: ODC-By-1.0 packaging; upstream web-text rights apply
+    homepage: https://huggingface.co/datasets/HuggingFaceFW/fineweb
+    download_uri: https://huggingface.co/datasets/HuggingFaceFW/fineweb
+    version_or_snapshot: disabled-unpinned-backup
+    languages: {source: eng_Latn, output: eng_Latn}
+    expected_files: disabled backup only
+    checksum_or_size: unavailable until explicitly pinned
+    enabled: false
+    notes: Disabled for smoke and MVP.
+  - source_id: fineweb2-backup
+    source_type: huggingface-dataset
+    license: ODC-By-1.0 packaging; upstream web-text rights apply
+    homepage: https://huggingface.co/datasets/HuggingFaceFW/fineweb-2
+    download_uri: https://huggingface.co/datasets/HuggingFaceFW/fineweb-2
+    version_or_snapshot: disabled-unpinned-backup
+    languages: {source: multiple, output: multiple}
+    expected_files: disabled backup only
+    checksum_or_size: unavailable until explicitly pinned
+    enabled: false
+    notes: Disabled because cmn_Hani does not distinguish simplified and traditional Chinese.
