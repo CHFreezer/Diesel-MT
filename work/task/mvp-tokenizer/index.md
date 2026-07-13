@@ -37,7 +37,7 @@ flowchart LR
 | 阶段 | 编号 | 子任务 | 最早开始条件 | 完成门槛 | 可并行任务 | 状态 |
 | ---: | --- | --- | --- | --- | --- | --- |
 | 1 | TD-01 | [训练环境与依赖](td-01-environment-and-deps.md) | 无 | 无 | TD-02 | done |
-| 1 | TD-02 | [语料输入验证](td-02-corpus-validation.md) | 无 | 无 | TD-01 | pending |
+| 1 | TD-02 | [语料输入验证](td-02-corpus-validation.md) | 无 | 无 | TD-01 | done |
 | 2 | TD-04 | [NllbTokenizer 构造与语言 token 映射](td-04-tokenizer-construction.md) | TD-01 done | TD-01 | 无 | pending |
 | 3 | TD-03 | [NLLB BPE 训练脚本](td-03-training-script.md) | TD-01、TD-02、TD-04 done | TD-01、TD-02、TD-04 | 无 | pending |
 | 4 | TD-05 | [覆盖率与编码质量报告](td-05-coverage-reports.md) | TD-03 done | TD-03 | TD-06、TD-11 | pending |
