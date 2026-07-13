@@ -6,6 +6,7 @@
 - README：[Diesel-MT](../../../README.md)（tokenizer 约定、模型配置、MVP 候选参数）
 - 上游 todo：[tokenizer dataset fetch script](../done/todo/tokenizer-dataset-fetch-script.md)（已完成，语料就绪）
 - 硬件方案：[local-ram-first-hardware.md](../done/task/tokenizer-dataset-fetch-script/local-ram-first-hardware.md)
+- 本机硬件记录：[local-hardware.md](../task/mvp-tokenizer/local-hardware.md)（通过 `.git/info/exclude` 排除，不提交）
 - 环境：[Python 环境约定](../../../docs/python-environment.md)
 - Transformers 5.13.1 源码：[NLLB tokenizer](https://github.com/huggingface/transformers/blob/v5.13.1/src/transformers/models/nllb/tokenization_nllb.py)、[`train_new_from_iterator()`](https://github.com/huggingface/transformers/blob/v5.13.1/src/transformers/tokenization_utils_tokenizers.py#L1078-L1261)
 - Hugging Face Tokenizers 0.22.2 源码：[BPE 未知字符与 byte fallback 分支](https://github.com/huggingface/tokenizers/blob/v0.22.2/tokenizers/src/models/bpe/model.rs#L382-L462)、[BPE alphabet 构造与裁剪](https://github.com/huggingface/tokenizers/blob/v0.22.2/tokenizers/src/models/bpe/trainer.rs#L273-L323)
