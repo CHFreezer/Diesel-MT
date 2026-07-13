@@ -1,6 +1,6 @@
 # task TD-01: 训练环境与依赖
 
-状态：pending
+状态：done
 
 依赖：无
 
@@ -43,6 +43,31 @@
 - CTranslate2 注册了 `M2M100Config -> M2M100Loader`。
 - 若任何一项 5.x 冒烟失败，任务不得标记 done，须发起架构变更评审。
 
-## 验证记录
+## 验证记录（2026-07-13）
 
-（待填写）
+### 锁定版本
+
+| 包 | 版本 | 来源 |
+|---|------|------|
+| `torch` | 2.13.0+cu132 | `--index-url https://download.pytorch.org/whl/cu132` |
+| `torchvision` | 0.28.0+cu132 | 同上 |
+| `transformers` | 5.13.1 | PyPI |
+| `tokenizers` | 0.22.2 | PyPI（transformers 传递依赖） |
+| `ctranslate2` | 4.8.1 | PyPI |
+| `huggingface_hub` | 1.23.0 | PyPI（transformers 传递依赖） |
+
+### 源码断言
+
+- **CUDA**：`torch.cuda.is_available() == True`，CUDA 13.2，GPU capability `(8, 9)`（Ada Lovelace，cu132 覆盖确认）。
+- **BPE 路线**：`NllbTokenizer.model` 为 `<class 'tokenizers.models.BPE'>`，断言通过。
+- **CTranslate2 M2M100**：`ctranslate2.converters.transformers` 中 `M2M100Loader` 已注册。
+- **`is_fast`**：构造空 `NllbTokenizer(extra_special_tokens=LANG_CODES)` 后 `tokenizer.is_fast is True`。
+- **特殊 token ID**：`<s>=0, <pad>=1, </s>=2, <unk>=3`，与 NLLB 约定一致。
+- **语言裁剪**：`extra_special_tokens` 仅传入 5 个项目语言，`get_vocab()` 中确认保留语言存在、`fra_Latn`/`deu_Latn`/`rus_Cyrl` 不存在。
+- **保存/重载冒烟**：`save_pretrained()` 产出 `tokenizer.json` + `tokenizer_config.json`；`AutoTokenizer.from_pretrained(local_files_only=True)` 返回 `NllbTokenizer` 且 `is_fast is True`；`tokenizers.Tokenizer.from_file()` 加载 `tokenizer.json` 成功，BPE 类型确认。
+
+### 产物
+
+- `requirements.txt`（已更新：新增 `transformers==5.13.1`、`ctranslate2==4.8.1`，torch 以注释记录 cu132 索引）
+- `requirements.lock`（已生成：`pip freeze` 全量锁定）
+- 本验证记录
