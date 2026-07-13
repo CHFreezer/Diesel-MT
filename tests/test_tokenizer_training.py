@@ -14,6 +14,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
+import tokenizer_utils  # noqa: E402
 from tokenizer_utils import (  # noqa: E402
     PROJECT_LANGUAGES,
     LanguageAllowlist,
@@ -83,6 +84,32 @@ def test_seed_tokenizer_language_contract() -> None:
     assert forced_bos_token_id(tokenizer, "jpn_Jpan") == 8
     with pytest.raises(ValueError, match="not supported"):
         LanguageAllowlist().check("fra_Latn")
+
+
+def test_verify_tokenizer_restores_src_lang_on_success_and_failure(monkeypatch) -> None:
+    tokenizer = create_seed_tokenizer()
+    tokenizer.src_lang = "jpn_Jpan"
+
+    verify_tokenizer(tokenizer)
+    assert tokenizer.src_lang == "jpn_Jpan"
+
+    original_verify_backend_pipeline = tokenizer_utils.verify_backend_pipeline
+
+    def fail_during_language_validation(tokenizer, *, expected_src_lang=None):
+        if expected_src_lang == "zho_Hans":
+            raise tokenizer_utils.TokenizerValidationError("injected validation failure")
+        return original_verify_backend_pipeline(
+            tokenizer, expected_src_lang=expected_src_lang
+        )
+
+    monkeypatch.setattr(
+        tokenizer_utils, "verify_backend_pipeline", fail_during_language_validation
+    )
+    with pytest.raises(
+        tokenizer_utils.TokenizerValidationError, match="injected validation failure"
+    ):
+        verify_tokenizer(tokenizer)
+    assert tokenizer.src_lang == "jpn_Jpan"
 
 
 def test_loading_is_deterministic_and_character_balanced(tmp_path: Path) -> None:

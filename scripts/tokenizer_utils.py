@@ -225,11 +225,14 @@ def verify_tokenizer(tokenizer: NllbTokenizer, *, expected_vocab_size: int | Non
     verify_special_token_ids(tokenizer)
     verify_language_allowlist(tokenizer)
     verify_dense_ids(tokenizer)
-    for language in PROJECT_LANGUAGES:
-        tokenizer.src_lang = language
-        verify_backend_pipeline(tokenizer, expected_src_lang=language)
-        forced_bos_token_id(tokenizer, language)
-    tokenizer.src_lang = "eng_Latn"
+    saved_src_lang = tokenizer.src_lang
+    try:
+        for language in PROJECT_LANGUAGES:
+            tokenizer.src_lang = language
+            verify_backend_pipeline(tokenizer, expected_src_lang=language)
+            forced_bos_token_id(tokenizer, language)
+    finally:
+        tokenizer.src_lang = saved_src_lang
     if expected_vocab_size is not None and len(tokenizer) != expected_vocab_size:
         raise TokenizerValidationError(
             f"vocabulary size is {len(tokenizer)}, expected {expected_vocab_size}"
