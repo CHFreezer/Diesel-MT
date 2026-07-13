@@ -139,6 +139,30 @@ conda activate (Join-Path $PWD '.conda')
 python -m pip install -r requirements.txt
 ```
 
+## 工作流
+
+项目采用 `plan → todo → task → review → done` 工作流。README 只说明流程语义，不维护具体任务清单；具体内容和验证记录放在对应的 `work/` 文档或代码提交中。
+
+### plan
+
+`work/plan/` 说明当前阶段要解决的问题、边界、约束和验收标准，用于统一方向，不承载具体执行列表。
+
+### todo
+
+`work/todo/` 将 plan 拆成可执行的待办项，并明确依赖关系和完成条件。
+
+### task
+
+`work/task/` 将 todo 拆成可独立完成、验证和提交的工作单元。每个 task 应记录输入、输出、验证方式和产物位置。
+
+### review
+
+`work/review/` 对 task 结果进行复核，重点检查可复现性、正确性、数据边界、评估结果和部署风险。实现完成不等于 done，review 通过后才能进入下一状态。
+
+### done
+
+`work/done/` 保存已完成实现、验证和记录的任务。done 必须能追溯到代码、实验结果或评审记录，不能只依赖口头结论。
+
 ## 常用命令
 
 ```bash
