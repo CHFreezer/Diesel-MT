@@ -8,7 +8,7 @@
 - 硬件方案：[local-ram-first-hardware.md](../done/task/tokenizer-dataset-fetch-script/local-ram-first-hardware.md)
 - 环境：[Python 环境约定](../../../docs/python-environment.md)
 - Transformers 5.13.1 源码：[NLLB tokenizer](https://github.com/huggingface/transformers/blob/v5.13.1/src/transformers/models/nllb/tokenization_nllb.py)、[`train_new_from_iterator()`](https://github.com/huggingface/transformers/blob/v5.13.1/src/transformers/tokenization_utils_tokenizers.py#L1078-L1261)
-- Hugging Face Tokenizers 0.22.2 源码：[BPE trainer](https://github.com/huggingface/tokenizers/blob/v0.22.2/tokenizers/src/models/bpe/trainer.rs#L294-L305)
+- Hugging Face Tokenizers 0.22.2 源码：[BPE 未知字符与 byte fallback 分支](https://github.com/huggingface/tokenizers/blob/v0.22.2/tokenizers/src/models/bpe/model.rs#L382-L462)、[BPE alphabet 构造与裁剪](https://github.com/huggingface/tokenizers/blob/v0.22.2/tokenizers/src/models/bpe/trainer.rs#L273-L323)
 - CTranslate2 源码：[Transformers converter](https://github.com/OpenNMT/CTranslate2/blob/master/python/ctranslate2/converters/transformers.py)
 - CTranslate2 运行示例：[NLLB](https://opennmt.net/CTranslate2/guides/transformers.html#nllb)
 
@@ -146,6 +146,9 @@
 - [ ] 固定核心特殊 token ID：`<s>=0`、`<pad>=1`、`</s>=2`、`<unk>=3`，并将语言 token 和 `<mask>` 纳入最终 `vocab_size`。
 - [ ] 明确 `--vocab-size` 表示包含全部 special/language token 的最终目标大小；训练结束若 `len(tokenizer)` 不是精确 32k/48k，立即失败并检查 special token 数、initial alphabet、`limit_alphabet` 和语料可用 merge 数。
 - [ ] 训练前后解析 backend JSON，断言 BPE 类型、`fuse_unk=true`、`byte_fallback=false`、Metaspace 参数和 post-processor 模板符合锁定源码。
+- [ ] 在训练配置中固化 must-cover `initial_alphabet`，至少覆盖项目定义的中英日韩基础字符、数字和常用标点；验证 `limit_alphabet >= len(initial_alphabet)`，避免 trainer 在 alphabet 限额下裁掉必保字符。
+- [ ] 训练前统计语料的唯一 Unicode 字符、频次及其是否进入 `initial_alphabet`；训练后输出保留/裁剪字符清单，禁止只记录一个 `limit_alphabet` 数字而不审计实际字符。
+- [ ] 保持主线 `byte_fallback=false`；不得仅切换该布尔值规避 `<unk>`。若评估 byte fallback，必须另建实验配置，显式加入完整字节 token、匹配 decoder，并重新执行全部覆盖率与序列长度测试。
 - [ ] 训练输入按语言均衡采样（不是简单拼接文件），避免某一语言主导词表。
 - [ ] 固定采样随机种子和输入批次顺序；记录 `tokenizers` 并行设置，并实测同环境重复训练的字节级或语义级可复现性。
 - [ ] 记录训练参数、耗时、最终 `vocab_size` 和语料快照到训练日志。
@@ -171,7 +174,8 @@
 ### [TD-05 覆盖率与编码质量报告]
 
 - [ ] 对四种语言各准备固定评测样本集（覆盖日常文本、技术文本、混合语言文本和边缘用例）。
-- [ ] 统计每个候选 tokenizer 的 `<unk>` 比例、平均 token 数、字符到 token 膨胀比。
+- [ ] 统计每个候选 tokenizer 的 `<unk>` token 比例、平均 token 数、字符到 token 膨胀比；同时使用 fast tokenizer 的 offset mapping 统计 `<unk>` 覆盖的原文 Unicode 字符数，避免 `fuse_unk=true` 将连续未知字符合并后低估丢失量。
+- [ ] 分别报告字符频率加权覆盖率和唯一字符覆盖率，并列出高频未覆盖字符、按语言/文字系统分类的未覆盖字符以及对应原文样例。
 - [ ] 特别关注中日共享汉字的切分一致性、韩文音节覆盖、英文 subword 粒度。
 - [ ] 对比 32k 和 48k 在四个语言上的差异，生成可比较表格。
 - [ ] 统计各语言极端长句（>500 字符）的 token 数和 `<unk>` 比例。
@@ -249,6 +253,8 @@
 - [ ] 测试保存前的 `NllbTokenizer` 与离线重载后的 `AutoTokenizer` 对相同文本的 token、ID 和 decode 结果一致。
 - [ ] 测试训练前、训练后、离线重载和 CTranslate2 转换器加载边界的 tokenizer 均为 fast backend；项目源码中不允许导入 `NllbTokenizerFast`。
 - [ ] 添加边界测试：空字符串、纯空白、纯特殊 token、超长行（>10k 字符）、未知字符/emoji。
+- [ ] 增加 alphabet 回归集：罕见汉字与姓名用字、平假名/片假名、Hangul 音节与 Jamo、ASCII/全角数字和标点、常见 emoji；对 must-cover 字符断言不产生 `<unk>`，对非目标字符记录预期行为。
+- [ ] 增加连续未知字符测试，验证质量报告按 offset 覆盖的原文字符数计数，而不是把 `fuse_unk=true` 生成的一个 `<unk>` 误计为仅丢失一个字符。
 - [ ] 测试 `forced_bos_token_id` 对四个目标语言均可正确获取非零 ID。
 - [ ] 添加 CTranslate2 转换与 CPU `target_prefix` 推理冒烟测试；可标记为独立的慢速集成测试，但属于发布前必跑项。
 
