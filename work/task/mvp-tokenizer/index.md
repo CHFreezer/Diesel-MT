@@ -38,8 +38,8 @@ flowchart LR
 | ---: | --- | --- | --- | --- | --- | --- |
 | 1 | TD-01 | [训练环境与依赖](td-01-environment-and-deps.md) | 无 | 无 | TD-02 | done |
 | 1 | TD-02 | [语料输入验证](td-02-corpus-validation.md) | 无 | 无 | TD-01 | done |
-| 2 | TD-04 | [NllbTokenizer 构造与语言 token 映射](td-04-tokenizer-construction.md) | TD-01 done | TD-01 | 无 | pending |
-| 3 | TD-03 | [NLLB BPE 训练脚本](td-03-training-script.md) | TD-01、TD-02、TD-04 done | TD-01、TD-02、TD-04 | 无 | pending |
+| 2 | TD-04 | [NllbTokenizer 构造与语言 token 映射](td-04-tokenizer-construction.md) | TD-01 done | TD-01 | 无 | review |
+| 3 | TD-03 | [NLLB BPE 训练脚本](td-03-training-script.md) | TD-01、TD-02、TD-04 done | TD-01、TD-02、TD-04 | 无 | review |
 | 4 | TD-05 | [覆盖率与编码质量报告](td-05-coverage-reports.md) | TD-03 done | TD-03 | TD-06、TD-11 | pending |
 | 4 | TD-06 | [产物保存与 AutoTokenizer 加载验证](td-06-save-and-load.md) | TD-03 done | TD-03、TD-04 | TD-05、TD-11 | pending |
 | 5 | TD-07 | [32k vs 48k 对比与 MVP 默认选定](td-07-comparison-and-selection.md) | TD-05、TD-06 done | TD-05、TD-06 | 无 | pending |

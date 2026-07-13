@@ -1,0 +1,199 @@
+{
+  "available_memory_bytes_at_save": 99558043648,
+  "backend": {
+    "decoder": {
+      "prepend_scheme": "always",
+      "replacement": "▁",
+      "split": true,
+      "type": "Metaspace"
+    },
+    "model": {
+      "byte_fallback": false,
+      "continuing_subword_prefix": null,
+      "dropout": null,
+      "end_of_word_suffix": null,
+      "fuse_unk": true,
+      "type": "BPE",
+      "unk_token": "<unk>"
+    },
+    "normalizer": null,
+    "post_processor": {
+      "pair": [
+        {
+          "SpecialToken": {
+            "id": "eng_Latn",
+            "type_id": 0
+          }
+        },
+        {
+          "Sequence": {
+            "id": "A",
+            "type_id": 0
+          }
+        },
+        {
+          "Sequence": {
+            "id": "B",
+            "type_id": 0
+          }
+        },
+        {
+          "SpecialToken": {
+            "id": "</s>",
+            "type_id": 0
+          }
+        }
+      ],
+      "single": [
+        {
+          "SpecialToken": {
+            "id": "eng_Latn",
+            "type_id": 0
+          }
+        },
+        {
+          "Sequence": {
+            "id": "A",
+            "type_id": 0
+          }
+        },
+        {
+          "SpecialToken": {
+            "id": "</s>",
+            "type_id": 0
+          }
+        }
+      ],
+      "special_tokens": {
+        "</s>": {
+          "id": "</s>",
+          "ids": [
+            2
+          ],
+          "tokens": [
+            "</s>"
+          ]
+        },
+        "eng_Latn": {
+          "id": "eng_Latn",
+          "ids": [
+            5
+          ],
+          "tokens": [
+            "eng_Latn"
+          ]
+        }
+      },
+      "type": "TemplateProcessing"
+    },
+    "pre_tokenizer": {
+      "prepend_scheme": "always",
+      "replacement": "▁",
+      "split": true,
+      "type": "Metaspace"
+    }
+  },
+  "balancing_algorithm": "equal-selected-unicode-characters-v1",
+  "batch_size": 1024,
+  "corpus_manifest": {
+    "sha256": "11daef6a8b38c7dc66dc17d51ab4ab2ab9053a0816340261ad76e53740be0477",
+    "snapshot_file": "corpus_manifest.jsonl",
+    "source": "E:\\CHWork\\Python Projects\\Diesel-MT\\data\\tokenizer\\corpus\\mvp\\manifest.jsonl"
+  },
+  "corpus_unique_characters": 18035,
+  "created_at_utc": "2026-07-13T11:55:30.590960+00:00",
+  "initial_alphabet_sha256": "70aacba700f8b31aa5a31c8bba28ec2fccd0f3a07d9f4ea11521d985db9ddc80",
+  "initial_alphabet_size": 22068,
+  "input_order_sha256": "dda140f1a5c9a23dd39c6ddf6ecb06f1ae5fdf8ec6171c7d87620b63844ba24f",
+  "language_token_ids": {
+    "eng_Latn": 5,
+    "jpn_Jpan": 8,
+    "kor_Hang": 9,
+    "zho_Hans": 6,
+    "zho_Hant": 7
+  },
+  "languages": {
+    "eng_Latn": {
+      "bytes": 1005539789,
+      "file": "eng_Latn.txt",
+      "language": "eng_Latn",
+      "sampled_characters_before_balance": 100798911,
+      "sampled_lines_before_balance": 182868,
+      "scanned_characters": 1000000000,
+      "scanned_lines": 1823141,
+      "sha256": "a9a4eb1a066f6029e7b3d1e1234f0962e932a9c893357f101ca442af085cd47d",
+      "training_characters": 99455925,
+      "training_lines": 180578
+    },
+    "jpn_Jpan": {
+      "bytes": 2887514077,
+      "file": "jpn_Jpan.txt",
+      "language": "jpn_Jpan",
+      "sampled_characters_before_balance": 99455936,
+      "sampled_lines_before_balance": 420669,
+      "scanned_characters": 999999997,
+      "scanned_lines": 4202923,
+      "sha256": "d0bc81514969b14365fa2b1b38de3163f6824be397db6efcbd49e29e522fd751",
+      "training_characters": 99455936,
+      "training_lines": 420669
+    },
+    "kor_Hang": {
+      "bytes": 2401018257,
+      "file": "kor_Hang.txt",
+      "language": "kor_Hang",
+      "sampled_characters_before_balance": 100314707,
+      "sampled_lines_before_balance": 224195,
+      "scanned_characters": 999999992,
+      "scanned_lines": 2241401,
+      "sha256": "884f68cba97c7ce06b5616886df27a1a0f3cb6cee2c83e0523018eacec8b30a3",
+      "training_characters": 99455922,
+      "training_lines": 222294
+    },
+    "zho_Hans": {
+      "bytes": 2842408414,
+      "file": "zho_Hans.txt",
+      "language": "zho_Hans",
+      "sampled_characters_before_balance": 99542007,
+      "sampled_lines_before_balance": 325641,
+      "scanned_characters": 999999995,
+      "scanned_lines": 3265237,
+      "sha256": "f86d1e6fc7d4336ec0c104580270b31bd0bd2254dacbdcbf4a673cdc87ba76c9",
+      "training_characters": 99455931,
+      "training_lines": 325381
+    }
+  },
+  "limit_alphabet": 24116,
+  "load_elapsed_s": 56.188,
+  "min_frequency": 2,
+  "missing_corpus_characters": 3645,
+  "parallelism": {
+    "RAYON_NUM_THREADS": "8",
+    "TOKENIZERS_PARALLELISM": "true"
+  },
+  "peak_rss_bytes": 20806049792,
+  "random_seed": 20260713,
+  "rss_bytes_at_save": 1841553408,
+  "sample_fraction": 0.1,
+  "sampling_algorithm": "per-language-seeded-bernoulli-v1",
+  "schema_version": 1,
+  "seed_backend_model": {
+    "byte_fallback": false,
+    "continuing_subword_prefix": null,
+    "dropout": null,
+    "end_of_word_suffix": null,
+    "fuse_unk": true,
+    "type": "BPE",
+    "unk_token": "<unk>"
+  },
+  "total_training_characters": 397823714,
+  "total_training_lines": 1148922,
+  "train_elapsed_s": 265.702,
+  "training_characters_per_second": 1497254.787,
+  "versions": {
+    "platform": "Windows-10-10.0.26200-SP0",
+    "python": "3.11.15",
+    "tokenizers": "0.22.2",
+    "transformers": "5.13.1"
+  },
+  "vocab_size": 49152
+}

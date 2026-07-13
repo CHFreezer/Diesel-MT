@@ -1,6 +1,6 @@
 # task TD-04: NllbTokenizer 构造与语言 token 映射
 
-状态：pending
+状态：review
 
 依赖：TD-01（训练环境与依赖）
 
@@ -45,6 +45,22 @@
 - 最终词表 ID 稠密唯一，无空洞。
 - 代码不引用 `NllbTokenizerFast` 或 4.x 旧接口。
 
-## 验证记录
+## 重写验证记录（2026-07-13）
 
-（待填写）
+### 产物
+
+- `scripts/tokenizer_utils.py`：种子 tokenizer 构造、语言 allowlist、mapping 生成、backend/post-processor/ID 验证和原子 JSON 写入函数
+- `tests/test_tokenizer_training.py`：构造、allowlist、训练保存重载和真实 CLI supervisor 测试
+
+### 验证结果
+
+- `create_seed_tokenizer()` → `is_fast is True`，类型 `NllbTokenizer` ✅
+- `verify_special_token_ids()` → `<s>=0, <pad>=1, </s>=2, <unk>=3` ✅
+- `verify_language_allowlist()` → 5 个保留语言在 vocab，`fra_Latn`/`deu_Latn`/`rus_Cyrl` 不在 ✅
+- `LanguageAllowlist.check("fra_Latn")` → `ValueError` 正确拒绝 ✅
+- `build_language_mapping()` → `eng_Latn=5, zho_Hans=6, zho_Hant=7, jpn_Jpan=8, kor_Hang=9`；32,768/49,152 冒烟产物保持一致 ✅
+- `verify_dense_ids()` → `0..9`，无空洞 ✅
+- `forced_bos_token_id` → 5 个目标语言均可正确获取 ✅
+- 对五个 source language 逐一验证 `TemplateProcessing` 的语言前缀和 `</s>` 后缀 ✅
+- 10% 真实语料产物保存到 staging 和最终目录后均可离线重载，完整 vocab/backend 不变 ✅
+- 当前状态保留为 review，等待独立复核后再标 done。

@@ -1,0 +1,3 @@
+# Tokenizer artifacts carry their own SHA-256 manifest and must survive
+# checkout byte-for-byte, independent of core.autocrlf.
+artifacts/tokenizers/** -text
