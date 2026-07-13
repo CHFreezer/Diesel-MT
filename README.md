@@ -13,14 +13,14 @@
 | **方向凑不齐** | OPUS-MT 是方向模型，`ja→zh`、`zh↔ko`、`ja↔ko` 缺失；拼多个单向模型会重复存储共享语言表示 |
 | **体积太大** | NLLB-200 600M 权重 2.46 GB；decoder-only 翻译 LLM 普遍 3B–8B，CPU 推理不现实 |
 | **许可证卡脖子** | NLLB-200 是 `CC-BY-NC-4.0`，权重和 tokenizer 都不能直接用 |
-| **小模型陷阱** | Hy-MT2 1.8B 1.25Bit 只有 462 MB，但依赖 STQ 自定义量化算子，x86 CPU 退回标量回退后性能不可接受；退回常规 4bit 后约 1.0–1.13 GB，体积优势消失 |
+| **小模型陷阱** | Hy-MT2 1.8B 1.25Bit 只有 462 MB，但依赖 STQ 自定义量化算子，x86 CPU 退回标量回退后性能不可接受；若改用其他运行时的常规 4-bit 权重量化，体积仍约 1.0–1.13 GB，且不属于本项目的 CTranslate2 CPU 路线 |
 | **微型 LLM 不适合翻译** | Decoder-only 做翻译是逐 token 自回归生成，KV cache + 串行解码延迟对 CPU 不友好；同参数规模下，Encoder-Decoder 的双向编码 + 交叉注意力是更强的翻译归纳偏置，微型 LLM 翻译质量通常不如等规模的 Encoder-Decoder |
 
 因此 Diesel-MT 选择从零训练一个 4 语言 × 12 方向的小型 Encoder-Decoder 翻译模型。目标：
 
 - **一个模型覆盖 12 方向**，通过语言 token 控制，不拼接多个单向模型
 - **从零训练、资产可控**：自训练 tokenizer + 自训练权重，无 CC-BY-NC-4.0 污染
-- **CPU / mobile SoC 可部署**：CTranslate2 INT8/INT4 量化后 100–200 MiB，端侧离线推理
+- **CPU / mobile SoC 可部署**：CTranslate2 INT8 量化后模型文件约 192 MiB，支持端侧离线推理
 - **完整闭环**：数据 → tokenizer → 训练 → 评估 → CTranslate2 部署 → 推理，每一步可复现
 
 ---
@@ -34,7 +34,8 @@
 - 训练接口对齐 `M2M100ForConditionalGeneration`：Encoder-Decoder + LM head，支持 `labels` 训练和 `generate()` 推理
 - 配置使用 M2M100 字段语义：`d_model`、`encoder_layers`、`decoder_layers`、`encoder_ffn_dim`、`decoder_ffn_dim`、`encoder_attention_heads`、`decoder_attention_heads`、`vocab_size`
 - 翻译控制：encoder 编码源文本，decoder 通过目标语言 token 和 `forced_bos_token_id` 控制输出语言
-- CTranslate2 官方支持 M2M100/NLLB 系列，提供 CPU/GPU 量化和批处理优化路径
+- CTranslate2 官方支持 M2M100/NLLB 系列；本项目的 CPU 路线只使用 float32/INT8 和批处理优化
+- CT2 的 4-bit 支持是读取 AWQ 预量化权重的专用路径，不是通用 `int4` 转换格式或 CPU compute type；AWQ 4-bit 不能在 CPU 上运行，因此不作为本项目的体积或部署目标
 
 **为什么选 M2M100 语义：**
 
@@ -82,11 +83,12 @@ Hy-MT2 7B（Apache-2.0）作为离线 teacher，Diesel-MT 从零训练的 Encode
 | `decoder_attention_heads` | 12 |
 | `tie_word_embeddings` | true |
 
-| 精度 | 权重大小 |
-| --- | ---: |
-| BF16/FP16 | ~384 MiB |
-| INT8 | ~192 MiB |
-| INT4 | ~96 MiB |
+| 部署精度 | 权重大小 | 定位 |
+| --- | ---: | --- |
+| BF16/FP16 | ~384 MiB | GPU / 存储估算，不是 CPU 主线 |
+| INT8 | ~192 MiB | CTranslate2 CPU 部署目标 |
+
+按 4 bit/参数估算的 ~96 MiB 只是理论权重存储下限，并不对应可在 CPU 上运行的 CT2 产物。当前锁定的 CTranslate2 4.8.1 通用转换器不提供 INT4 输出，CPU compute types 也不包含 4-bit；CT2 的 4-bit 支持仅面向 AWQ 预量化权重，不能作为 CPU 部署选项。
 
 ---
 
