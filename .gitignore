@@ -3,6 +3,9 @@ __pycache__/
 .pytest_cache/
 *.py[cod]
 
+# Local Claude launcher may contain API credentials.
+claude_deepseek.ps1
+
 # Tokenizer datasets are generated locally and may be very large.
 data/tokenizer/raw/
 data/tokenizer/cache/
