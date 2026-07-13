@@ -18,26 +18,37 @@
 
 本 todo 覆盖 tokenizer 训练、验证、对比、产物输出，以及使用随机初始化微型模型完成 CTranslate2 转换和 CPU 推理冒烟验收。不覆盖正式翻译模型训练、蒸馏样本生成、质量验收或生产级 CTranslate2 性能调优。
 
-## 本机硬件
+## 硬件约束
 
-| 组件 | 规格 | 对本阶段的含义 |
-|------|------|---------------|
-| CPU | Intel Core i7-14700K，20 核 / 28 逻辑 | `tokenizers` BPE 训练纯 CPU；需记录线程数和吞吐，不宜按 28 超线程盲目并发 |
-| RAM | 128 GB（127.72 GiB） | 四语语料 ~9.1 GB，全量加载后仍有大量余量 |
-| GPU | RTX 4060 Ti 16 GB VRAM | **tokenizer 训练阶段不用 GPU**；留给后续 M2M100ForConditionalGeneration 模型训练 |
-| E: | 4 TB HDD（ST4000VX015） | 语料存放盘；训练时顺序读取一次即可，避免反复随机读 |
-| D: | 2 TB NVMe SSD（Lexar ARES） | 可用于临时 staging，但 RAM 足够时不需要 |
+本阶段不依赖特定硬件型号，但需满足以下最低条件：
 
-当前语料（`data/tokenizer/corpus/mvp/`）：
+| 资源 | 最低要求 | 说明 |
+|------|---------|------|
+| RAM | 语料大小 × 3 以上 | 四语文本全量加载 + Python 对象开销 + BPE 训练工作集 |
+| 磁盘 I/O | 语料存放盘仅做单次顺序读取 | 禁止训练热路径随机 I/O、SQLite 或多流并发读 |
+| CPU | 支持 AVX2 的 x86-64 | `tokenizers` Rust backend 的 BPE 训练纯 CPU；线程数不应按超线程盲目设置 |
+| GPU | 不需要 | tokenizer 训练阶段纯 CPU；GPU 留给后续 M2M100ForConditionalGeneration 模型训练 |
 
-| 文件 | 大小 | 估算字符数 |
-|------|------|-----------|
-| `eng_Latn.txt` | 1.0 GB | ~1.0B（ASCII，1 B/字符） |
-| `zho_Hans.txt` | 2.8 GB | ~0.95B（CJK，3 B/字符） |
-| `jpn_Jpan.txt` | 2.9 GB | ~0.96B |
-| `kor_Hang.txt` | 2.4 GB | ~0.80B（韩文，3 B/字符） |
+语料规模参考（`data/tokenizer/corpus/mvp/`）：
 
-四语均约 1B 字符量级。BPE 32k/48k 的实际训练时间必须由 TD-03 基准测试记录，不在实现前预设为“数分钟”。
+| 文件 | 估算字符数 |
+|------|-----------|
+| `eng_Latn.txt` | ~1.0B |
+| `zho_Hans.txt` | ~0.95B |
+| `jpn_Jpan.txt` | ~0.96B |
+| `kor_Hang.txt` | ~0.80B |
+
+四语均约 1B 字符量级。BPE 32k/48k 的实际训练时间必须由 TD-03 基准测试记录，不在实现前预设。
+
+### RAM-first 执行原则（沿用上游数据获取阶段约定）
+
+1. **语料全量预加载**：训练开始前将四语文本从数据盘一次性顺序读入 RAM；`train_new_from_iterator()` 的迭代器从内存中的文本行 yield，不从磁盘流式重读。
+2. **多候选复用**：32k 和 48k 两次训练共用同一份已加载文本，禁止每个候选单独从数据盘重新读取。
+3. **产物暂存**：训练完成的 `tokenizer.json` 和配置文件先写到本地高速暂存目录，由后台任务大块搬运到数据盘目标目录，完成校验后原子替换。暂存路径由 `--staging-dir` 参数指定，不硬编码到脚本。
+4. **数据盘单路顺序写**：只允许一个后台搬运任务实际写数据盘；manifest 等待全部搬运验证成功后才发布。
+5. **禁止数据盘随机 I/O**：训练热路径不创建 SQLite、WAL、临时文件或逐条日志在数据盘上；统计信息在线累计。
+6. **CPU 并行度受控**：BPE 训练的 `tokenizers` 并行线程数由 `--num-threads` 参数控制，默认值为 `min(8, os.cpu_count() // 2)`；实现前通过基准测试选择本机吞吐最优值。
+7. **内存保护**：训练脚本接受 `--max-memory-gib` 和 `--min-available-memory-gib` 参数；逼近保护线时安全停止（已完成候选继续有效），不回退到磁盘 spill。具体阈值由各机器的实际 RAM 容量决定，不作为项目常量。
 
 ## 架构路线（README 已明确，经调研修正）
 
@@ -108,16 +119,17 @@
 - 训练不做英文小写化、中文简繁转换、日文假名转换、韩文罗马化。
 - 特殊 token：`<s>`、`<pad>`、`</s>`、`<unk>`、`<mask>`（NLLB 固定）；语言 token：`eng_Latn`、`zho_Hans`、`zho_Hant`、`jpn_Jpan`、`kor_Hang`。
 - 候选 `32k` / `48k` 均指最终 `len(tokenizer)`；必须与下游 `M2M100Config.vocab_size` 和 embedding/projection 行数一致。
-- 产物输出到 `artifacts/tokenizers/mvp-32k/` 和 `artifacts/tokenizers/mvp-48k/`。
+- 产物先写到 `--staging-dir` 指定的暂存目录，校验后搬运到目标目录并原子替换；数据盘训练热路径不出现随机 I/O、SQLite 或临时文件。
 - CTranslate2 CPU 冒烟为硬验收项：至少跑通微型随机 M2M100 模型的转换、加载、`target_prefix` 推理和 decode；随机模型不做翻译质量判断。
 - 不下载、复制或分发 NLLB-200、M2M100 等第三方 tokenizer 资产。
-- 训练效率：语料从 E: 顺序读取一次后全量加载到 RAM；训练纯 CPU 不涉及 GPU；多候选训练可复用已加载的文本。
+- PyTorch：TD-01 直接装 CUDA 13.2 版（`cu132`），tokenizer 阶段当 CPU 版用；若后续出问题可重装依赖，不作为阻塞风险。
+- 训练效率：语料从数据盘顺序读取一次后全量加载到 RAM；训练纯 CPU 不涉及 GPU；多候选训练可复用已加载的文本。
 
 ## 待办
 
 ### [TD-01 训练环境与依赖]
 
-- [ ] 在 Transformers 5.x 范围内锁定具体 `transformers`、`tokenizers`、`ctranslate2` 和 CPU 版 `torch` 兼容版本，加入 `requirements.txt` 并生成新的 `requirements.lock`。
+- [ ] 在 Transformers 5.x 范围内锁定具体 `transformers`、`tokenizers`、`ctranslate2` 和 CUDA 版 `torch`（`cu132`，`--index-url https://download.pytorch.org/whl/cu132`）兼容版本，加入 `requirements.txt` 并生成新的 `requirements.lock`。
 - [ ] 记录锁定版本对应的 Transformers `tokenization_nllb.py` 和 CTranslate2 `transformers.py` commit URL；禁止只记录浮动的 `main` / `master` 链接。
 - [ ] 用可执行源码断言确认 NLLB `model is BPE`，并确认 CTranslate2 注册了 `M2M100Config -> M2M100Loader`。
 - [ ] 在 `.conda` 环境验证 `transformers`、`tokenizers`、`ctranslate2`、`torch` 可正常导入；构造 `NllbTokenizer` 并断言 `is_fast is True`，同时记录 CTranslate2 CPU 支持的 compute types。
@@ -133,7 +145,7 @@
 - [ ] 核对 `manifest.jsonl` 中的文件 SHA-256 与实际文件一致。
 - [ ] 验证语料未经过小写化、简繁转换、假名转换或罗马化（抽样检查）。
 - [ ] 统计各语言行数、字符数、UTF-8 字节数，确认四语规模在 1B 字符量级且字符数均衡。
-- [ ] 测量从 E: 机械盘顺序读取四语文件到内存的耗时，作为训练脚本的 I/O 基线。
+- [ ] 测量从数据盘顺序读取四语文件到内存的耗时，作为训练脚本的 I/O 基线。
 
 产物：语料验收记录。
 
@@ -152,7 +164,7 @@
 - [ ] 训练输入按语言均衡采样（不是简单拼接文件），避免某一语言主导词表。
 - [ ] 固定采样随机种子和输入批次顺序；记录 `tokenizers` 并行设置，并实测同环境重复训练的字节级或语义级可复现性。
 - [ ] 记录训练参数、耗时、最终 `vocab_size` 和语料快照到训练日志。
-- [ ] 全量加载四语文本到 RAM 后训练，不从 E: 反复读取。
+- [ ] 全量加载四语文本到 RAM 后训练，不从数据盘反复读取。
 - [ ] 禁止通过训练后编辑 JSON 的方式裁剪语言或调整词表大小；任何此类变化都必须从受控配置重新训练并生成新 artifact。
 
 产物：可复现的 NLLB BPE 训练脚本。
