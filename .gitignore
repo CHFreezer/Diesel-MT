@@ -15,6 +15,7 @@ data/tokenizer/raw/
 data/tokenizer/cache/
 data/tokenizer/interim/
 data/tokenizer/corpus/
+data/tokenizer/holdout/
 data/tokenizer/reports/
 data/tokenizer-smoke-*/
 data/tokenizer-mvp-*/

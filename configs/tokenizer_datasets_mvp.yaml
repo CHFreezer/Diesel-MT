@@ -9,7 +9,8 @@ dataset:
   quality_wds:
     minimum: 8
     maximum: 10
-  max_shards_per_language: 1
+  max_shards_per_language: 3
+  shard_selection: one-per-wds-descending
 
 reproducibility:
   contract: source lock, this config, code version, dependency lock, profile, and seed determine byte-identical corpus and manifest outputs
@@ -21,31 +22,43 @@ reproducibility:
 
 profiles:
   smoke:
-    enabled_languages: [eng_Latn, zho_Hans, jpn_Jpan, kor_Hang]
-    character_budget_per_language: 200000
-    locked_prefix_bytes_per_shard: 8388608
+    enabled_languages: [eng_Latn, zho_Hans, zho_Hant, jpn_Jpan, kor_Hang]
+    character_budget_per_language: 500000
+    locked_prefix_bytes_per_shard: 16777216
     random_seed: 20260713
     concurrency: 2
     corpus_subdir: corpus/smoke
+    holdout_subdir: holdout/smoke
   mvp:
-    enabled_languages: [eng_Latn, zho_Hans, jpn_Jpan, kor_Hang]
-    character_budget_per_language: 1000000000
-    locked_prefix_bytes_per_shard: 1610612736
+    enabled_languages: [eng_Latn, zho_Hans, zho_Hant, jpn_Jpan, kor_Hang]
+    character_budget_per_language: 200000000
+    locked_prefix_bytes_per_shard: 268435456
     locked_prefix_bytes_by_language:
-      eng_Latn: 536870912
-      zho_Hans: 1610612736
-      jpn_Jpan: 1207959552
-      kor_Hang: 1207959552
+      eng_Latn: 134217728
+      zho_Hans: 268435456
+      zho_Hant: 536870912
+      jpn_Jpan: 268435456
+      kor_Hang: 268435456
     random_seed: 20260713
-    concurrency: 4
+    concurrency: 16
     corpus_subdir: corpus/mvp
+    holdout_subdir: holdout/mvp
 
 cleaning:
-  algorithm_version: conservative-v3
+  algorithm_version: bounded-segment-quality-v4
   min_characters: 20
-  max_characters: 100000
+  max_characters: 2048
+  max_utf8_bytes: 4096
   max_replacement_character_ratio: 0.001
   max_control_character_ratio: 0.001
+  min_visible_character_ratio: 0.85
+  max_numeric_symbol_ratio: 0.65
+  max_url_email_ratio: 0.45
+  max_long_token_characters: 256
+  max_repeated_character_run: 12
+  reject_mojibake_pattern: '(?:Ã.|Â.|â€|ï»¿|ðŸ|æ[\x80-\xBF]|å[\x80-\xBF])'
+  reject_mechanical_repetition_pattern: '(.{2,32})\1{4,}'
+  reject_encoded_blob_pattern: '(?i)(?:\b[0-9a-f]{64,}\b|\b[A-Za-z0-9+/]{120,}={0,2}\b)'
   reject_html_pattern: "(?is)<(?:html|body|script|style|iframe|div|p|br)\\b"
   reject_template_pattern: '(?i)(?:skip\s+to:.*(?:topnavigation|maincontent|footer\s+navigation)|相关站点推荐|注册网址|真人娱乐平台|电竞官方入口|posts\s+tagged|시험.{0,80}덤프|(?:casino|カジノ|카지노|赌场|賭場|博彩|娱乐城|토토).{0,120}(?:bonus|deposit|withdraw|register|recommended|おすすめ|最新|入金|出金|登録|ボーナス|プロモーション|추천|가입|입금|출금|보너스|프로모션|이용약관|특별\s*제안|注册|送彩金|开户|入口|官方|存款|提款|优惠)|(?:bonus|recommended|おすすめ|推荐|注册|送彩金|官方入口|추천|가입|보너스|프로모션).{0,120}(?:online\s+casino|オンラインカジノ|온라인\s*카지노|모바일\s*카지노|在线赌场|博彩|娱乐城|토토))'
   reject_keyword_stuffing_pattern: '(?i)(?:\bcasino\b|カジノ|카지노|娱乐城|在线试听|出会い系|スーパーコピー|덤프)'
@@ -56,9 +69,9 @@ cleaning:
   collapse_horizontal_whitespace: true
 
 deduplication:
-  algorithm_version: exact-sha256-plus-one-permutation-minhash-v1
+  algorithm_version: five-language-train-holdout-minhash-v2
   exact_hash: sha256
-  approximate_languages: [eng_Latn, zho_Hans]
+  approximate_languages: [eng_Latn, zho_Hans, zho_Hant, jpn_Jpan, kor_Hang]
   minhash:
     token_unit: unicode-character
     ngram_size: 5
@@ -70,12 +83,26 @@ deduplication:
     max_ngrams_per_text: 512
     tie_break: content_id_ascending
 
+holdout:
+  fraction: 0.03
+  split_unit: document
+  split_key: source-url-or-document-content
+  seed: 20260714
+  cross_split_deduplication: exact-and-minhash
+
 quality:
-  review_sample_count: 20
+  review_sample_count: 200
+  rejected_review_sample_count: 50
+  excerpt_characters: 240
+  max_domain_fraction: 0.02
+  max_domain_fraction_by_language:
+    zho_Hant: 0.05
+  candidate_oversampling_factor: 3.0
   review_seed: 20260713
   language_min_script_ratio:
     eng_Latn: 0.55
     zho_Hans: 0.25
+    zho_Hant: 0.25
     jpn_Jpan: 0.20
     kor_Hang: 0.25
 
@@ -102,6 +129,17 @@ sources:
     checksum_or_size: official per-language MD5 list plus HTTP Content-Length; locked prefix SHA-256
     enabled: true
     notes: Simplified Chinese is retained as-is and receives project-side exact and approximate deduplication.
+  - source_id: hplt3-cmn-hant
+    source_type: hplt3-monolingual-jsonl-zst
+    license: CC0-1.0 packaging; upstream web-text rights apply
+    homepage: https://hplt-project.org/datasets/v3.0
+    download_uri: https://data.hplt-project.org/three/sorted/cmn_Hant.map
+    version_or_snapshot: "3.0 (July 2025 release)"
+    languages: {source: cmn_Hant, output: zho_Hant}
+    expected_files: map plus WDS 10-8 jsonl.zst shards
+    checksum_or_size: official per-language MD5 list plus HTTP Content-Length; locked prefix SHA-256
+    enabled: true
+    notes: Native Mandarin Traditional Chinese is retained as-is; it is not generated from Simplified Chinese or substituted with yue_Hant.
   - source_id: hplt3-jpn-jpan
     source_type: hplt3-monolingual-jsonl-zst
     license: CC0-1.0 packaging; upstream web-text rights apply

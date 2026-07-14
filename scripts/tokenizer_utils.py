@@ -27,6 +27,7 @@ PROJECT_LANGUAGES: tuple[str, ...] = (
 TRAINING_LANGUAGES: tuple[str, ...] = (
     "eng_Latn",
     "zho_Hans",
+    "zho_Hant",
     "jpn_Jpan",
     "kor_Hang",
 )

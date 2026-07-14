@@ -1,5 +1,13 @@
 # todo: mvp tokenizer
 
+状态：done（五语 48k `mvp-tokenizer-v0` 已冻结）
+
+## 最终目标与完成结论（2026-07-14）
+
+本 todo 的最终边界已由四语双候选调整为一次性五语冻结：接入原生繁体，升级段落清洗、五语 exact/near-duplicate 去重和独立 holdout；每语种生成约 200M 训练字符；只重训 48k，并完成五语覆盖、序列长度、字符丢失、roundtrip、简繁 parity、保存/重载、language token、微型 M2M100 forward 和 SHA-256 验收。旧 32k 保留为工程回退和下游吞吐对照，64k 与 CTranslate2 发布不作为本轮前置条件。
+
+上述目标已完成：默认产物为 `artifacts/tokenizers/mvp-tokenizer-v0/`，最终训练 manifest SHA-256 为 `b3d8d6f4f559813929c75086e6060b74a922a87cdb06646973d1168b5618c977`，holdout manifest SHA-256 为 `c5bec116578ea88d37f325c3e18c66a889ef34aa263bb876e821456c500f9ffe`，冻结根 SHA-256 为 `eb79ae22f523f1d9c9fcf75b80f2b322e3c2882a8fddb7545b5933dd4053fa7f`。完整验收见 `artifacts/tokenizers/reports/mvp-tokenizer-v0/freeze_acceptance.md`。下文未勾选项属于原始路线或后续 CTranslate2 部署范围，不再阻塞本 todo 的完成状态。
+
 ## 来源
 
 - plan：[mvp tokenizer](../plan/mvp-tokenizer.md)

@@ -39,6 +39,7 @@ from train_tokenizer import (  # noqa: E402
 LANGUAGE_TEXT = {
     "eng_Latn": "The quick brown fox translates a deterministic sentence",
     "zho_Hans": "这是用于确定性分词器训练的中文测试句子",
+    "zho_Hant": "這是用於確定性分詞器訓練的繁體中文測試句子",
     "jpn_Jpan": "これは決定的なトークナイザー訓練用の日本語文です",
     "kor_Hang": "이것은 결정적 토크나이저 학습을 위한 한국어 문장입니다",
 }

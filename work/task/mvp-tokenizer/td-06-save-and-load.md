@@ -1,6 +1,6 @@
 # task TD-06: 产物保存与 AutoTokenizer 加载验证
 
-状态：pending
+状态：done
 
 依赖：TD-03（训练脚本与候选 tokenizer）、TD-04（tokenizer 构造规范）
 
@@ -43,4 +43,4 @@
 
 ## 验证记录
 
-（待填写）
+2026-07-14 使用 `scripts/freeze_tokenizer_artifact.py` 对最终 49,152 词表产物执行显式 `save_pretrained()` / `AutoTokenizer.from_pretrained(..., local_files_only=True)` 往返，完整 `get_vocab()` 与 backend JSON 均保持一致。五个 language token 均编码为单一有效 ID，BPE/Metaspace、稠密 ID 和 special token 约束通过。六个发布文件均与 `artifact_manifest.json` 的字节数和 SHA-256 一致；manifest 根哈希为 `eb79ae22f523f1d9c9fcf75b80f2b322e3c2882a8fddb7545b5933dd4053fa7f`。

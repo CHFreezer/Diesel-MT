@@ -175,14 +175,26 @@ def training_provenance_from_state(state: Mapping) -> dict:
     missing = [key for key in required_config if key not in config]
     if missing:
         raise RuntimeError(f"checkpoint state config is missing provenance fields: {missing}")
+    portable_snapshot = dict(snapshot)
+    if "path" in portable_snapshot:
+        portable_snapshot["path"] = Path(str(portable_snapshot["path"])).name
     return {
         "seed": config["seed"],
         "sample_fraction": config["sample_fraction"],
         "sampling_algorithm": config["sampling_algorithm"],
         "balancing_algorithm": config["balancing_algorithm"],
         "checkpoint_config_fingerprint": config["fingerprint"],
-        "snapshot": dict(snapshot),
+        "snapshot": portable_snapshot,
     }
+
+
+def portable_native_summary(summary: Mapping) -> dict:
+    """Remove machine-local checkpoint/staging roots from artifact metadata."""
+    result = dict(summary)
+    for key in ("checkpoint", "output"):
+        if key in result:
+            result[key] = Path(str(result[key])).name
+    return result
 
 
 def validate_checkpoint_summary(state: Mapping, actual: Mapping) -> None:
@@ -515,9 +527,9 @@ def train_candidates(args: argparse.Namespace) -> None:
                 "batch_size": args.batch_size,
                 "tokenizers_version": tokenizers.__version__,
                 "transformers_version": transformers.__version__,
-                "checkpoint_state": str(paths.root),
+                "checkpoint_state": paths.root.name,
                 "checkpoint": state["checkpoint"],
-                "native_train": native_summary,
+                "native_train": portable_native_summary(native_summary),
                 "total_training_lines": corpus_state["total_lines"],
                 "total_training_characters": corpus_state["total_characters"],
                 "corpus_unique_characters": len(character_counts),

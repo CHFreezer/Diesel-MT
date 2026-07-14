@@ -17,7 +17,10 @@ from tokenizer_checkpoint import (  # noqa: E402
     inspect_length_prefixed_snapshot,
     write_length_prefixed_snapshot,
 )
-from train_tokenizer_checkpointed import training_provenance_from_state  # noqa: E402
+from train_tokenizer_checkpointed import (  # noqa: E402
+    portable_native_summary,
+    training_provenance_from_state,
+)
 
 
 def test_length_prefixed_snapshot_preserves_exact_python_strings(tmp_path: Path) -> None:
@@ -58,7 +61,11 @@ def test_snapshot_count_mismatch_is_not_published(tmp_path: Path) -> None:
 
 
 def test_training_provenance_comes_from_checkpoint_state() -> None:
-    snapshot = {"records": 42, "snapshot_sha256": "snapshot-hash"}
+    snapshot = {
+        "path": r"D:\machine-local\balanced-corpus.snapshot",
+        "records": 42,
+        "snapshot_sha256": "snapshot-hash",
+    }
     state = {
         "config": {
             "seed": 20260713,
@@ -78,6 +85,25 @@ def test_training_provenance_comes_from_checkpoint_state() -> None:
         "sampling_algorithm": "seeded-sampling-v1",
         "balancing_algorithm": "character-budget-v1",
         "checkpoint_config_fingerprint": "state-fingerprint",
-        "snapshot": snapshot,
+        "snapshot": {
+            **snapshot,
+            "path": "balanced-corpus.snapshot",
+        },
     }
     assert provenance["snapshot"] is not snapshot
+
+
+def test_native_training_metadata_removes_machine_local_roots() -> None:
+    summary = portable_native_summary(
+        {
+            "checkpoint": r"D:\machine-local\bpe-feed-state.bin",
+            "output": r"D:\machine-local\staging\trained-backend.json",
+            "vocab_size": 49_152,
+        }
+    )
+
+    assert summary == {
+        "checkpoint": "bpe-feed-state.bin",
+        "output": "trained-backend.json",
+        "vocab_size": 49_152,
+    }

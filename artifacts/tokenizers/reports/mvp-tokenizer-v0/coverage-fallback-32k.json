@@ -1,0 +1,3967 @@
+{
+  "all_sample_metrics": {
+    "eng_Latn": {
+      "evaluated_non_whitespace_characters": 179649,
+      "exact_roundtrips": 507,
+      "mean_tokens_per_sample": 130.66929133858267,
+      "roundtrip_exact_rate": 0.9980314960629921,
+      "roundtrip_mismatches": [
+        {
+          "decoded": "    ️ café naïve",
+          "sample_id": "eng_Latn-probe-08",
+          "source": "𠀀 𪚥 㐀 𫠝 🧪🛰️ café naïve"
+        }
+      ],
+      "samples": 508,
+      "source_character_loss_rate": 3.339846033097874e-05,
+      "source_characters": 214819,
+      "token_length_max": 879,
+      "token_length_p50": 79,
+      "token_length_p95": 482,
+      "token_length_p99": 619,
+      "tokens": 66380,
+      "tokens_per_non_whitespace_character": 0.36949829946172813,
+      "unk_source_characters": 6,
+      "unk_token_ratio": 7.532389273877674e-05,
+      "unk_tokens": 5,
+      "unmapped_unk_tokens": 0
+    },
+    "jpn_Jpan": {
+      "evaluated_non_whitespace_characters": 83891,
+      "exact_roundtrips": 507,
+      "mean_tokens_per_sample": 101.35039370078741,
+      "roundtrip_exact_rate": 0.9980314960629921,
+      "roundtrip_mismatches": [
+        {
+          "decoded": "と異体字、絵文字️を確認します。",
+          "sample_id": "jpn_Jpan-probe-08",
+          "source": "𠀀𪚥㐀𫠝と異体字、絵文字🧪🛰️を確認します。"
+        }
+      ],
+      "samples": 508,
+      "source_character_loss_rate": 7.152137893218581e-05,
+      "source_characters": 85537,
+      "token_length_max": 923,
+      "token_length_p50": 49,
+      "token_length_p95": 388,
+      "token_length_p99": 762,
+      "tokens": 51486,
+      "tokens_per_non_whitespace_character": 0.6137249526170865,
+      "unk_source_characters": 6,
+      "unk_token_ratio": 3.88455114011576e-05,
+      "unk_tokens": 2,
+      "unmapped_unk_tokens": 0
+    },
+    "kor_Hang": {
+      "evaluated_non_whitespace_characters": 125858,
+      "exact_roundtrips": 507,
+      "mean_tokens_per_sample": 179.80905511811022,
+      "roundtrip_exact_rate": 0.9980314960629921,
+      "roundtrip_mismatches": [
+        {
+          "decoded": "    희귀 문자와 이모지 ️",
+          "sample_id": "kor_Hang-probe-08",
+          "source": "𠀀 𪚥 㐀 𫠝 희귀 문자와 이모지 🧪🛰️"
+        }
+      ],
+      "samples": 508,
+      "source_character_loss_rate": 4.767277407872364e-05,
+      "source_characters": 161538,
+      "token_length_max": 1097,
+      "token_length_p50": 113,
+      "token_length_p95": 465,
+      "token_length_p99": 915,
+      "tokens": 91343,
+      "tokens_per_non_whitespace_character": 0.7257623671121423,
+      "unk_source_characters": 6,
+      "unk_token_ratio": 5.473873203201121e-05,
+      "unk_tokens": 5,
+      "unmapped_unk_tokens": 0
+    },
+    "zho_Hans": {
+      "evaluated_non_whitespace_characters": 82759,
+      "exact_roundtrips": 506,
+      "mean_tokens_per_sample": 122.50393700787401,
+      "roundtrip_exact_rate": 0.9960629921259843,
+      "roundtrip_mismatches": [
+        {
+          "decoded": "一天是星期六香港有赛马，我在客厅看着电视赌马，太太王娟在房间裏睡午觉。忽然王雯走过来对我悄悄地说：「你祗顾赌马，你看你老婆一个人在房裏多难受。」说完就走到厨房门口。我家的厨房和我的睡房是斜对着，可以看到我的睡床。我走过去看王娟在床上一手插在内裤裏在自己的小穴内挖着，一手搓着自己的乳房。口裏发出诱人的叫声：「Oh…Fuck me…Fuck me hard…」因为电视机在播放赛马﹐所以我刚才没有发觉到。我站在王雯身后看到这情景，我的阳具慢慢的也硬了起来。王雯转过头对我说：「你还不",
+          "sample_id": "zho_Hans-corpus-0312",
+          "source": "一天是星期六香港有赛马，我在客厅看着电视赌马，太太王娟在房间裏睡午觉。忽然王雯走过来对我悄悄地说：「你祗顾赌马，你看你老婆一个人在房裏多难受。」说完就走到厨房门口。我家的厨房和我的睡房是斜对着，可以看到我的睡床。我走过去看王娟在床上一手插在内裤裏在自己的小穴内挖着，一手搓着自己的乳房。口裏发出诱人的叫声：「Oh…Fuck me…Fuck me hard…」因为电视机在播放赛马﹐所以我刚才没有发觉到。我站在王雯身后看到这情景，我的阳具慢慢的也硬了起来。王雯转过头对我说：「你还不"
+        },
+        {
+          "decoded": "，生僻姓名用字与表情️。",
+          "sample_id": "zho_Hans-probe-08",
+          "source": "𠀀𪚥㐀𫠝，生僻姓名用字与表情🧪🛰️。"
+        }
+      ],
+      "samples": 508,
+      "source_character_loss_rate": 0.0001087495015647845,
+      "source_characters": 83406,
+      "token_length_max": 1232,
+      "token_length_p50": 72,
+      "token_length_p95": 367,
+      "token_length_p99": 830,
+      "tokens": 62232,
+      "tokens_per_non_whitespace_character": 0.7519665534866299,
+      "unk_source_characters": 9,
+      "unk_token_ratio": 8.034451729014013e-05,
+      "unk_tokens": 5,
+      "unmapped_unk_tokens": 0
+    },
+    "zho_Hant": {
+      "evaluated_non_whitespace_characters": 100701,
+      "exact_roundtrips": 371,
+      "mean_tokens_per_sample": 184.86220472440945,
+      "roundtrip_exact_rate": 0.7303149606299213,
+      "roundtrip_mismatches": [
+        {
+          "decoded": "缺錢急用錢怎麼辦~買房子要什麼稅1.個別協商諮詢",
+          "sample_id": "zho_Hant-corpus-0001",
+          "source": "缺錢急用錢怎麼辦~買房子要繳什麼稅1.個別協商諮詢"
+        },
+        {
+          "decoded": "核心內容: 腸癌 相關內容: 癌 便秘 腸癌 肺癌 肝癌 胃癌 痔瘡 大腸癌 豬肉 牛肉 羊肉 癌 排毒 食道癌 疼痛 糙米 降血脂 紅肉 白肉 致癌 支溝穴 維生素C 便血 直腸癌 脂肪 血糖 基因缺陷 亞硝酸鹽 排毒餐 降血糖 葡聚糖 癌變 久坐 維生素 膳食纖維 亞硝胺 致癌物 燕麥 果膠 淀粉 食品添加劑 添加劑 便常規 洗澡 結直腸癌 血脂 肉類 果凍 硝酸鹽 飲食習慣 息肉 潛血 肛門指檢 可溶性膳食纖維 李纓 膳食 雜糧 自殺 腸鏡 黑便 血便 米飯 直腸指檢 ",
+          "sample_id": "zho_Hant-corpus-0004",
+          "source": "核心內容: 腸癌 相關內容: 癌癥 便秘 腸癌 肺癌 肝癌 胃癌 痔瘡 大腸癌 豬肉 牛肉 羊肉 癌 排毒 食道癌 疼痛 糙米 降血脂 紅肉 白肉 致癌 支溝穴 維生素C 便血 直腸癌 脂肪 血糖 基因缺陷 亞硝酸鹽 排毒餐 降血糖 葡聚糖 癌變 久坐 維生素 膳食纖維 亞硝胺 致癌物 燕麥 果膠 淀粉 食品添加劑 添加劑 便常規 洗澡 結直腸癌 血脂 肉類 果凍 硝酸鹽 飲食習慣 息肉 潛血 肛門指檢 可溶性膳食纖維 李纓 膳食 雜糧 自殺 腸鏡 黑便 血便 米飯 直腸指檢"
+        },
+        {
+          "decoded": "相關內容: 心臟病 頭痛 發熱 妊娠期 心衰 抽搐 蛋白質 驚厥 心肌梗死 維生素 白細胞 維生素缺乏 正水 幻覺 物理降溫 解毒 性病 妊娠 酸平衡 高熱 肝臟 心肌 勞損 降溫 消化 意識障礙",
+          "sample_id": "zho_Hant-corpus-0007",
+          "source": "相關內容: 心臟病 頭痛 發熱 妊娠期 心衰 抽搐 蛋白質 驚厥 心肌梗死 維生素 白細胞 維生素缺乏 正水 幻覺 物理降溫 解毒 性病 妊娠 酸堿平衡 高熱 肝臟 心肌 勞損 降溫 消化 意識障礙"
+        },
+        {
+          "decoded": "- 口稱父母官 人命賤如泥 劉紹under Topic",
+          "sample_id": "zho_Hant-corpus-0009",
+          "source": "- 口稱父母官 人命賤如泥 劉銳紹under Topic"
+        },
+        {
+          "decoded": "一 部 好 看 的 電 影 四 3 張 名 宜 功 夫 熊 貓 是 我 覺 得 最 好 看 的 電 影, 而 且 還 是 讓 我 看 過 第 一 次 覺 得 好 笑 的 電 影, 一 下 子 搞 笑, 一 下 子 又 悲 傷, 看 了 想 笑 又 想 哭, 害 我 不 知 道 該 笑 還 是 該 哭, 不 過 我 就 是 喜 歡 這 部 電 影, 還 可 以 連 續 看 好 幾 遍 都 不 會 覺 得 膩 我 能 看 這 麼 多 遍 的 原 因, 是 因 為 它 很 好 看,",
+          "sample_id": "zho_Hant-corpus-0011",
+          "source": "一 部 好 看 的 電 影 四 3 張 名 宜 功 夫 熊 貓 是 我 覺 得 最 好 看 的 電 影, 而 且 還 是 讓 我 看 過 第 一 次 覺 得 好 笑 的 電 影, 一 下 子 搞 笑, 一 下 子 又 悲 傷, 看 了 想 笑 又 想 哭, 害 我 不 知 道 該 笑 還 是 該 哭, 不 過 我 就 是 喜 歡 這 部 電 影, 還 可 以 連 續 看 好 幾 遍 都 不 會 覺 得 膩 我 能 看 這 麼 多 遍 的 原 因, 是 因 為 它 很 好 看,"
+        }
+      ],
+      "samples": 508,
+      "source_character_loss_rate": 0.004140971787767748,
+      "source_characters": 104652,
+      "token_length_max": 1436,
+      "token_length_p50": 69,
+      "token_length_p95": 864,
+      "token_length_p99": 1201,
+      "tokens": 93910,
+      "tokens_per_non_whitespace_character": 0.9325627352260653,
+      "unk_source_characters": 417,
+      "unk_token_ratio": 0.004291342774997338,
+      "unk_tokens": 403,
+      "unmapped_unk_tokens": 0
+    }
+  },
+  "artifact_path": "artifacts/tokenizers/50pct/mvp-32k",
+  "category_metrics": {
+    "eng_Latn": {
+      "corpus_random": {
+        "evaluated_non_whitespace_characters": 179389,
+        "exact_roundtrips": 500,
+        "mean_tokens_per_sample": 132.438,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 500,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 214520,
+        "token_length_max": 879,
+        "token_length_p50": 83,
+        "token_length_p95": 482,
+        "token_length_p99": 619,
+        "tokens": 66219,
+        "tokens_per_non_whitespace_character": 0.36913634615277413,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "daily": {
+        "evaluated_non_whitespace_characters": 54,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 20.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 1,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 64,
+        "token_length_max": 20,
+        "token_length_p50": 20,
+        "token_length_p95": 20,
+        "token_length_p99": 20,
+        "tokens": 20,
+        "tokens_per_non_whitespace_character": 0.37037037037037035,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "empty": {
+        "evaluated_non_whitespace_characters": 0,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 0.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 1,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 0,
+        "token_length_max": 0,
+        "token_length_p50": 0,
+        "token_length_p95": 0,
+        "token_length_p99": 0,
+        "tokens": 0,
+        "tokens_per_non_whitespace_character": 0.0,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "mixed_language": {
+        "evaluated_non_whitespace_characters": 40,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 29.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 1,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 49,
+        "token_length_max": 29,
+        "token_length_p50": 29,
+        "token_length_p95": 29,
+        "token_length_p99": 29,
+        "tokens": 29,
+        "tokens_per_non_whitespace_character": 0.725,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "numeric_punctuation": {
+        "evaluated_non_whitespace_characters": 78,
+        "exact_roundtrips": 2,
+        "mean_tokens_per_sample": 31.5,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 2,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 82,
+        "token_length_max": 32,
+        "token_length_p50": 31,
+        "token_length_p95": 32,
+        "token_length_p99": 32,
+        "tokens": 63,
+        "tokens_per_non_whitespace_character": 0.8076923076923077,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "rare_unicode": {
+        "evaluated_non_whitespace_characters": 16,
+        "exact_roundtrips": 0,
+        "mean_tokens_per_sample": 18.0,
+        "roundtrip_exact_rate": 0.0,
+        "roundtrip_mismatches": [
+          {
+            "decoded": "    ️ café naïve",
+            "sample_id": "eng_Latn-probe-08",
+            "source": "𠀀 𪚥 㐀 𫠝 🧪🛰️ café naïve"
+          }
+        ],
+        "samples": 1,
+        "source_character_loss_rate": 0.375,
+        "source_characters": 22,
+        "token_length_max": 18,
+        "token_length_p50": 18,
+        "token_length_p95": 18,
+        "token_length_p99": 18,
+        "tokens": 18,
+        "tokens_per_non_whitespace_character": 1.125,
+        "unk_source_characters": 6,
+        "unk_token_ratio": 0.2777777777777778,
+        "unk_tokens": 5,
+        "unmapped_unk_tokens": 0
+      },
+      "technical_news": {
+        "evaluated_non_whitespace_characters": 70,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 29.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 1,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 80,
+        "token_length_max": 29,
+        "token_length_p50": 29,
+        "token_length_p95": 29,
+        "token_length_p99": 29,
+        "tokens": 29,
+        "tokens_per_non_whitespace_character": 0.4142857142857143,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "very_short": {
+        "evaluated_non_whitespace_characters": 2,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 2.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 1,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 2,
+        "token_length_max": 2,
+        "token_length_p50": 2,
+        "token_length_p95": 2,
+        "token_length_p99": 2,
+        "tokens": 2,
+        "tokens_per_non_whitespace_character": 1.0,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      }
+    },
+    "jpn_Jpan": {
+      "corpus_random": {
+        "evaluated_non_whitespace_characters": 83697,
+        "exact_roundtrips": 500,
+        "mean_tokens_per_sample": 102.694,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 500,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 85336,
+        "token_length_max": 923,
+        "token_length_p50": 50,
+        "token_length_p95": 388,
+        "token_length_p99": 762,
+        "tokens": 51347,
+        "tokens_per_non_whitespace_character": 0.6134867438498393,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "daily": {
+        "evaluated_non_whitespace_characters": 30,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 19.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 1,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 30,
+        "token_length_max": 19,
+        "token_length_p50": 19,
+        "token_length_p95": 19,
+        "token_length_p99": 19,
+        "tokens": 19,
+        "tokens_per_non_whitespace_character": 0.6333333333333333,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "empty": {
+        "evaluated_non_whitespace_characters": 0,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 0.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 1,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 0,
+        "token_length_max": 0,
+        "token_length_p50": 0,
+        "token_length_p95": 0,
+        "token_length_p99": 0,
+        "tokens": 0,
+        "tokens_per_non_whitespace_character": 0.0,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "mixed_language": {
+        "evaluated_non_whitespace_characters": 38,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 28.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 1,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 44,
+        "token_length_max": 28,
+        "token_length_p50": 28,
+        "token_length_p95": 28,
+        "token_length_p99": 28,
+        "tokens": 28,
+        "tokens_per_non_whitespace_character": 0.7368421052631579,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "numeric_punctuation": {
+        "evaluated_non_whitespace_characters": 66,
+        "exact_roundtrips": 2,
+        "mean_tokens_per_sample": 26.5,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 2,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 67,
+        "token_length_max": 27,
+        "token_length_p50": 26,
+        "token_length_p95": 27,
+        "token_length_p99": 27,
+        "tokens": 53,
+        "tokens_per_non_whitespace_character": 0.803030303030303,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "rare_unicode": {
+        "evaluated_non_whitespace_characters": 22,
+        "exact_roundtrips": 0,
+        "mean_tokens_per_sample": 13.0,
+        "roundtrip_exact_rate": 0.0,
+        "roundtrip_mismatches": [
+          {
+            "decoded": "と異体字、絵文字️を確認します。",
+            "sample_id": "jpn_Jpan-probe-08",
+            "source": "𠀀𪚥㐀𫠝と異体字、絵文字🧪🛰️を確認します。"
+          }
+        ],
+        "samples": 1,
+        "source_character_loss_rate": 0.2727272727272727,
+        "source_characters": 22,
+        "token_length_max": 13,
+        "token_length_p50": 13,
+        "token_length_p95": 13,
+        "token_length_p99": 13,
+        "tokens": 13,
+        "tokens_per_non_whitespace_character": 0.5909090909090909,
+        "unk_source_characters": 6,
+        "unk_token_ratio": 0.15384615384615385,
+        "unk_tokens": 2,
+        "unmapped_unk_tokens": 0
+      },
+      "technical_news": {
+        "evaluated_non_whitespace_characters": 36,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 24.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 1,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 36,
+        "token_length_max": 24,
+        "token_length_p50": 24,
+        "token_length_p95": 24,
+        "token_length_p99": 24,
+        "tokens": 24,
+        "tokens_per_non_whitespace_character": 0.6666666666666666,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "very_short": {
+        "evaluated_non_whitespace_characters": 2,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 2.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 1,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 2,
+        "token_length_max": 2,
+        "token_length_p50": 2,
+        "token_length_p95": 2,
+        "token_length_p99": 2,
+        "tokens": 2,
+        "tokens_per_non_whitespace_character": 1.0,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      }
+    },
+    "kor_Hang": {
+      "corpus_random": {
+        "evaluated_non_whitespace_characters": 125677,
+        "exact_roundtrips": 500,
+        "mean_tokens_per_sample": 182.398,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 500,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 161317,
+        "token_length_max": 1097,
+        "token_length_p50": 116,
+        "token_length_p95": 465,
+        "token_length_p99": 915,
+        "tokens": 91199,
+        "tokens_per_non_whitespace_character": 0.7256618156066742,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "daily": {
+        "evaluated_non_whitespace_characters": 27,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 16.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 1,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 35,
+        "token_length_max": 16,
+        "token_length_p50": 16,
+        "token_length_p95": 16,
+        "token_length_p99": 16,
+        "tokens": 16,
+        "tokens_per_non_whitespace_character": 0.5925925925925926,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "empty": {
+        "evaluated_non_whitespace_characters": 0,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 0.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 1,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 0,
+        "token_length_max": 0,
+        "token_length_p50": 0,
+        "token_length_p95": 0,
+        "token_length_p99": 0,
+        "tokens": 0,
+        "tokens_per_non_whitespace_character": 0.0,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "mixed_language": {
+        "evaluated_non_whitespace_characters": 36,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 29.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 1,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 45,
+        "token_length_max": 29,
+        "token_length_p50": 29,
+        "token_length_p95": 29,
+        "token_length_p99": 29,
+        "tokens": 29,
+        "tokens_per_non_whitespace_character": 0.8055555555555556,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "numeric_punctuation": {
+        "evaluated_non_whitespace_characters": 70,
+        "exact_roundtrips": 2,
+        "mean_tokens_per_sample": 29.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 2,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 77,
+        "token_length_max": 31,
+        "token_length_p50": 27,
+        "token_length_p95": 31,
+        "token_length_p99": 31,
+        "tokens": 58,
+        "tokens_per_non_whitespace_character": 0.8285714285714286,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "rare_unicode": {
+        "evaluated_non_whitespace_characters": 15,
+        "exact_roundtrips": 0,
+        "mean_tokens_per_sample": 18.0,
+        "roundtrip_exact_rate": 0.0,
+        "roundtrip_mismatches": [
+          {
+            "decoded": "    희귀 문자와 이모지 ️",
+            "sample_id": "kor_Hang-probe-08",
+            "source": "𠀀 𪚥 㐀 𫠝 희귀 문자와 이모지 🧪🛰️"
+          }
+        ],
+        "samples": 1,
+        "source_character_loss_rate": 0.4,
+        "source_characters": 22,
+        "token_length_max": 18,
+        "token_length_p50": 18,
+        "token_length_p95": 18,
+        "token_length_p99": 18,
+        "tokens": 18,
+        "tokens_per_non_whitespace_character": 1.2,
+        "unk_source_characters": 6,
+        "unk_token_ratio": 0.2777777777777778,
+        "unk_tokens": 5,
+        "unmapped_unk_tokens": 0
+      },
+      "technical_news": {
+        "evaluated_non_whitespace_characters": 32,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 22.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 1,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 41,
+        "token_length_max": 22,
+        "token_length_p50": 22,
+        "token_length_p95": 22,
+        "token_length_p99": 22,
+        "tokens": 22,
+        "tokens_per_non_whitespace_character": 0.6875,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "very_short": {
+        "evaluated_non_whitespace_characters": 1,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 1.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 1,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 1,
+        "token_length_max": 1,
+        "token_length_p50": 1,
+        "token_length_p95": 1,
+        "token_length_p99": 1,
+        "tokens": 1,
+        "tokens_per_non_whitespace_character": 1.0,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      }
+    },
+    "zho_Hans": {
+      "corpus_random": {
+        "evaluated_non_whitespace_characters": 82583,
+        "exact_roundtrips": 499,
+        "mean_tokens_per_sample": 124.186,
+        "roundtrip_exact_rate": 0.998,
+        "roundtrip_mismatches": [
+          {
+            "decoded": "一天是星期六香港有赛马，我在客厅看着电视赌马，太太王娟在房间裏睡午觉。忽然王雯走过来对我悄悄地说：「你祗顾赌马，你看你老婆一个人在房裏多难受。」说完就走到厨房门口。我家的厨房和我的睡房是斜对着，可以看到我的睡床。我走过去看王娟在床上一手插在内裤裏在自己的小穴内挖着，一手搓着自己的乳房。口裏发出诱人的叫声：「Oh…Fuck me…Fuck me hard…」因为电视机在播放赛马﹐所以我刚才没有发觉到。我站在王雯身后看到这情景，我的阳具慢慢的也硬了起来。王雯转过头对我说：「你还不",
+            "sample_id": "zho_Hans-corpus-0312",
+            "source": "一天是星期六香港有赛马，我在客厅看着电视赌马，太太王娟在房间裏睡午觉。忽然王雯走过来对我悄悄地说：「你祗顾赌马，你看你老婆一个人在房裏多难受。」说完就走到厨房门口。我家的厨房和我的睡房是斜对着，可以看到我的睡床。我走过去看王娟在床上一手插在内裤裏在自己的小穴内挖着，一手搓着自己的乳房。口裏发出诱人的叫声：「Oh…Fuck me…Fuck me hard…」因为电视机在播放赛马﹐所以我刚才没有发觉到。我站在王雯身后看到这情景，我的阳具慢慢的也硬了起来。王雯转过头对我说：「你还不"
+          }
+        ],
+        "samples": 500,
+        "source_character_loss_rate": 3.6327089110349585e-05,
+        "source_characters": 83223,
+        "token_length_max": 1232,
+        "token_length_p50": 73,
+        "token_length_p95": 367,
+        "token_length_p99": 830,
+        "tokens": 62093,
+        "tokens_per_non_whitespace_character": 0.7518859813763124,
+        "unk_source_characters": 3,
+        "unk_token_ratio": 4.831462483693814e-05,
+        "unk_tokens": 3,
+        "unmapped_unk_tokens": 0
+      },
+      "daily": {
+        "evaluated_non_whitespace_characters": 23,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 21.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 1,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 23,
+        "token_length_max": 21,
+        "token_length_p50": 21,
+        "token_length_p95": 21,
+        "token_length_p99": 21,
+        "tokens": 21,
+        "tokens_per_non_whitespace_character": 0.9130434782608695,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "empty": {
+        "evaluated_non_whitespace_characters": 0,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 0.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 1,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 0,
+        "token_length_max": 0,
+        "token_length_p50": 0,
+        "token_length_p95": 0,
+        "token_length_p99": 0,
+        "tokens": 0,
+        "tokens_per_non_whitespace_character": 0.0,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "mixed_language": {
+        "evaluated_non_whitespace_characters": 35,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 28.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 1,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 41,
+        "token_length_max": 28,
+        "token_length_p50": 28,
+        "token_length_p95": 28,
+        "token_length_p99": 28,
+        "tokens": 28,
+        "tokens_per_non_whitespace_character": 0.8,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "numeric_punctuation": {
+        "evaluated_non_whitespace_characters": 68,
+        "exact_roundtrips": 2,
+        "mean_tokens_per_sample": 25.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 2,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 69,
+        "token_length_max": 25,
+        "token_length_p50": 25,
+        "token_length_p95": 25,
+        "token_length_p99": 25,
+        "tokens": 50,
+        "tokens_per_non_whitespace_character": 0.7352941176470589,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "rare_unicode": {
+        "evaluated_non_whitespace_characters": 18,
+        "exact_roundtrips": 0,
+        "mean_tokens_per_sample": 14.0,
+        "roundtrip_exact_rate": 0.0,
+        "roundtrip_mismatches": [
+          {
+            "decoded": "，生僻姓名用字与表情️。",
+            "sample_id": "zho_Hans-probe-08",
+            "source": "𠀀𪚥㐀𫠝，生僻姓名用字与表情🧪🛰️。"
+          }
+        ],
+        "samples": 1,
+        "source_character_loss_rate": 0.3333333333333333,
+        "source_characters": 18,
+        "token_length_max": 14,
+        "token_length_p50": 14,
+        "token_length_p95": 14,
+        "token_length_p99": 14,
+        "tokens": 14,
+        "tokens_per_non_whitespace_character": 0.7777777777777778,
+        "unk_source_characters": 6,
+        "unk_token_ratio": 0.14285714285714285,
+        "unk_tokens": 2,
+        "unmapped_unk_tokens": 0
+      },
+      "technical_news": {
+        "evaluated_non_whitespace_characters": 31,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 24.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 1,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 31,
+        "token_length_max": 24,
+        "token_length_p50": 24,
+        "token_length_p95": 24,
+        "token_length_p99": 24,
+        "tokens": 24,
+        "tokens_per_non_whitespace_character": 0.7741935483870968,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "very_short": {
+        "evaluated_non_whitespace_characters": 1,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 2.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 1,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 1,
+        "token_length_max": 2,
+        "token_length_p50": 2,
+        "token_length_p95": 2,
+        "token_length_p99": 2,
+        "tokens": 2,
+        "tokens_per_non_whitespace_character": 2.0,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      }
+    },
+    "zho_Hant": {
+      "corpus_random": {
+        "evaluated_non_whitespace_characters": 100523,
+        "exact_roundtrips": 364,
+        "mean_tokens_per_sample": 187.524,
+        "roundtrip_exact_rate": 0.728,
+        "roundtrip_mismatches": [
+          {
+            "decoded": "缺錢急用錢怎麼辦~買房子要什麼稅1.個別協商諮詢",
+            "sample_id": "zho_Hant-corpus-0001",
+            "source": "缺錢急用錢怎麼辦~買房子要繳什麼稅1.個別協商諮詢"
+          },
+          {
+            "decoded": "核心內容: 腸癌 相關內容: 癌 便秘 腸癌 肺癌 肝癌 胃癌 痔瘡 大腸癌 豬肉 牛肉 羊肉 癌 排毒 食道癌 疼痛 糙米 降血脂 紅肉 白肉 致癌 支溝穴 維生素C 便血 直腸癌 脂肪 血糖 基因缺陷 亞硝酸鹽 排毒餐 降血糖 葡聚糖 癌變 久坐 維生素 膳食纖維 亞硝胺 致癌物 燕麥 果膠 淀粉 食品添加劑 添加劑 便常規 洗澡 結直腸癌 血脂 肉類 果凍 硝酸鹽 飲食習慣 息肉 潛血 肛門指檢 可溶性膳食纖維 李纓 膳食 雜糧 自殺 腸鏡 黑便 血便 米飯 直腸指檢 ",
+            "sample_id": "zho_Hant-corpus-0004",
+            "source": "核心內容: 腸癌 相關內容: 癌癥 便秘 腸癌 肺癌 肝癌 胃癌 痔瘡 大腸癌 豬肉 牛肉 羊肉 癌 排毒 食道癌 疼痛 糙米 降血脂 紅肉 白肉 致癌 支溝穴 維生素C 便血 直腸癌 脂肪 血糖 基因缺陷 亞硝酸鹽 排毒餐 降血糖 葡聚糖 癌變 久坐 維生素 膳食纖維 亞硝胺 致癌物 燕麥 果膠 淀粉 食品添加劑 添加劑 便常規 洗澡 結直腸癌 血脂 肉類 果凍 硝酸鹽 飲食習慣 息肉 潛血 肛門指檢 可溶性膳食纖維 李纓 膳食 雜糧 自殺 腸鏡 黑便 血便 米飯 直腸指檢"
+          },
+          {
+            "decoded": "相關內容: 心臟病 頭痛 發熱 妊娠期 心衰 抽搐 蛋白質 驚厥 心肌梗死 維生素 白細胞 維生素缺乏 正水 幻覺 物理降溫 解毒 性病 妊娠 酸平衡 高熱 肝臟 心肌 勞損 降溫 消化 意識障礙",
+            "sample_id": "zho_Hant-corpus-0007",
+            "source": "相關內容: 心臟病 頭痛 發熱 妊娠期 心衰 抽搐 蛋白質 驚厥 心肌梗死 維生素 白細胞 維生素缺乏 正水 幻覺 物理降溫 解毒 性病 妊娠 酸堿平衡 高熱 肝臟 心肌 勞損 降溫 消化 意識障礙"
+          },
+          {
+            "decoded": "- 口稱父母官 人命賤如泥 劉紹under Topic",
+            "sample_id": "zho_Hant-corpus-0009",
+            "source": "- 口稱父母官 人命賤如泥 劉銳紹under Topic"
+          },
+          {
+            "decoded": "一 部 好 看 的 電 影 四 3 張 名 宜 功 夫 熊 貓 是 我 覺 得 最 好 看 的 電 影, 而 且 還 是 讓 我 看 過 第 一 次 覺 得 好 笑 的 電 影, 一 下 子 搞 笑, 一 下 子 又 悲 傷, 看 了 想 笑 又 想 哭, 害 我 不 知 道 該 笑 還 是 該 哭, 不 過 我 就 是 喜 歡 這 部 電 影, 還 可 以 連 續 看 好 幾 遍 都 不 會 覺 得 膩 我 能 看 這 麼 多 遍 的 原 因, 是 因 為 它 很 好 看,",
+            "sample_id": "zho_Hant-corpus-0011",
+            "source": "一 部 好 看 的 電 影 四 3 張 名 宜 功 夫 熊 貓 是 我 覺 得 最 好 看 的 電 影, 而 且 還 是 讓 我 看 過 第 一 次 覺 得 好 笑 的 電 影, 一 下 子 搞 笑, 一 下 子 又 悲 傷, 看 了 想 笑 又 想 哭, 害 我 不 知 道 該 笑 還 是 該 哭, 不 過 我 就 是 喜 歡 這 部 電 影, 還 可 以 連 續 看 好 幾 遍 都 不 會 覺 得 膩 我 能 看 這 麼 多 遍 的 原 因, 是 因 為 它 很 好 看,"
+          }
+        ],
+        "samples": 500,
+        "source_character_loss_rate": 0.004088616535519235,
+        "source_characters": 104467,
+        "token_length_max": 1436,
+        "token_length_p50": 73,
+        "token_length_p95": 864,
+        "token_length_p99": 1201,
+        "tokens": 93762,
+        "tokens_per_non_whitespace_character": 0.9327417605921033,
+        "unk_source_characters": 411,
+        "unk_token_ratio": 0.004276785904737527,
+        "unk_tokens": 401,
+        "unmapped_unk_tokens": 0
+      },
+      "daily": {
+        "evaluated_non_whitespace_characters": 23,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 22.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 1,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 23,
+        "token_length_max": 22,
+        "token_length_p50": 22,
+        "token_length_p95": 22,
+        "token_length_p99": 22,
+        "tokens": 22,
+        "tokens_per_non_whitespace_character": 0.9565217391304348,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "empty": {
+        "evaluated_non_whitespace_characters": 0,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 0.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 1,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 0,
+        "token_length_max": 0,
+        "token_length_p50": 0,
+        "token_length_p95": 0,
+        "token_length_p99": 0,
+        "tokens": 0,
+        "tokens_per_non_whitespace_character": 0.0,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "mixed_language": {
+        "evaluated_non_whitespace_characters": 37,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 29.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 1,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 43,
+        "token_length_max": 29,
+        "token_length_p50": 29,
+        "token_length_p95": 29,
+        "token_length_p99": 29,
+        "tokens": 29,
+        "tokens_per_non_whitespace_character": 0.7837837837837838,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "numeric_punctuation": {
+        "evaluated_non_whitespace_characters": 68,
+        "exact_roundtrips": 2,
+        "mean_tokens_per_sample": 26.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 2,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 69,
+        "token_length_max": 27,
+        "token_length_p50": 25,
+        "token_length_p95": 27,
+        "token_length_p99": 27,
+        "tokens": 52,
+        "tokens_per_non_whitespace_character": 0.7647058823529411,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "rare_unicode": {
+        "evaluated_non_whitespace_characters": 18,
+        "exact_roundtrips": 0,
+        "mean_tokens_per_sample": 14.0,
+        "roundtrip_exact_rate": 0.0,
+        "roundtrip_mismatches": [
+          {
+            "decoded": "，罕見姓名用字與表情️。",
+            "sample_id": "zho_Hant-probe-08",
+            "source": "𠀀𪚥㐀𫠝，罕見姓名用字與表情🧪🛰️。"
+          }
+        ],
+        "samples": 1,
+        "source_character_loss_rate": 0.3333333333333333,
+        "source_characters": 18,
+        "token_length_max": 14,
+        "token_length_p50": 14,
+        "token_length_p95": 14,
+        "token_length_p99": 14,
+        "tokens": 14,
+        "tokens_per_non_whitespace_character": 0.7777777777777778,
+        "unk_source_characters": 6,
+        "unk_token_ratio": 0.14285714285714285,
+        "unk_tokens": 2,
+        "unmapped_unk_tokens": 0
+      },
+      "technical_news": {
+        "evaluated_non_whitespace_characters": 31,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 29.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 1,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 31,
+        "token_length_max": 29,
+        "token_length_p50": 29,
+        "token_length_p95": 29,
+        "token_length_p99": 29,
+        "tokens": 29,
+        "tokens_per_non_whitespace_character": 0.9354838709677419,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "very_short": {
+        "evaluated_non_whitespace_characters": 1,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 2.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 1,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 1,
+        "token_length_max": 2,
+        "token_length_p50": 2,
+        "token_length_p95": 2,
+        "token_length_p99": 2,
+        "tokens": 2,
+        "tokens_per_non_whitespace_character": 2.0,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      }
+    }
+  },
+  "character_coverage": {
+    "eng_Latn": {
+      "covered_character_frequency": 179389,
+      "covered_unique_characters": 112,
+      "frequency_weighted_coverage": 1.0,
+      "total_character_frequency": 179389,
+      "total_unique_characters": 112,
+      "uncovered_by_script": {},
+      "uncovered_characters": [],
+      "unique_character_coverage": 1.0
+    },
+    "jpn_Jpan": {
+      "covered_character_frequency": 83697,
+      "covered_unique_characters": 2058,
+      "frequency_weighted_coverage": 1.0,
+      "total_character_frequency": 83697,
+      "total_unique_characters": 2058,
+      "uncovered_by_script": {},
+      "uncovered_characters": [],
+      "unique_character_coverage": 1.0
+    },
+    "kor_Hang": {
+      "covered_character_frequency": 125677,
+      "covered_unique_characters": 1413,
+      "frequency_weighted_coverage": 1.0,
+      "total_character_frequency": 125677,
+      "total_unique_characters": 1413,
+      "uncovered_by_script": {},
+      "uncovered_characters": [],
+      "unique_character_coverage": 1.0
+    },
+    "zho_Hans": {
+      "covered_character_frequency": 82580,
+      "covered_unique_characters": 2850,
+      "frequency_weighted_coverage": 0.9999636729108896,
+      "total_character_frequency": 82583,
+      "total_unique_characters": 2852,
+      "uncovered_by_script": {
+        "Han": {
+          "frequency": 3,
+          "unique": 2
+        }
+      },
+      "uncovered_characters": [
+        {
+          "char": "餵",
+          "codepoint": "U+9935",
+          "count": 2,
+          "example": {
+            "context": "王雯身后看到这情景，我的阳具慢慢的也硬了起来。王雯转过头对我说：「你还不快点去『餵』妻。」我没有答话，我把一只手放在她的肩上一直在看，她也没有把我推开。看了大概两",
+            "sample_id": "zho_Hans-corpus-0312"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-9935"
+        },
+        {
+          "char": "踫",
+          "codepoint": "U+8E2B",
+          "count": 1,
+          "example": {
+            "context": "背慢慢的靠在我的胸前，转过头来闭上眼睛。我把嘴凑过去把舌头伸入她口中，两根舌头一踫到就拼个你死我活，她的淫水也流到我手掌也湿了，她口裏也发出…「唔…唔…呀…」的声",
+            "sample_id": "zho_Hans-corpus-0312"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-8E2B"
+        }
+      ],
+      "unique_character_coverage": 0.9992987377279102
+    },
+    "zho_Hant": {
+      "covered_character_frequency": 100112,
+      "covered_unique_characters": 3587,
+      "frequency_weighted_coverage": 0.9959113834644807,
+      "total_character_frequency": 100523,
+      "total_unique_characters": 3770,
+      "uncovered_by_script": {
+        "Han": {
+          "frequency": 399,
+          "unique": 171
+        },
+        "Symbol/emoji": {
+          "frequency": 12,
+          "unique": 12
+        }
+      },
+      "uncovered_characters": [
+        {
+          "char": "幫",
+          "codepoint": "U+5E6B",
+          "count": 29,
+          "example": {
+            "context": "用到現在滿意極了好了先不說 打算拿來當我第500篇心得第一步就是先用左上角的米色幫整個眼窩打底不得不說EXCEL的眼影真的是完全不飛粉耶雖然打底後眼周有些許白感但",
+            "sample_id": "zho_Hant-corpus-0130"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-5E6B"
+        },
+        {
+          "char": "逺",
+          "codepoint": "U+903A",
+          "count": 16,
+          "example": {
+            "context": "〈如祭禰之儀但祝辭雲嵗序流易諱日復臨追逺感時不勝永慕考妣改不勝永慕為昊天罔極旁親雲諱日復臨不勝感愴若考妣則祝興主人以下哭",
+            "sample_id": "zho_Hant-corpus-0045"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-903A"
+        },
+        {
+          "char": "傢",
+          "codepoint": "U+50A2",
+          "count": 14,
+          "example": {
+            "context": "聽了李玄的話翼龍居然飛在前面帶路讓李玄和凡心相視苦笑這傢伙還真是聰明只是不會說話不好交流要不然會更好玩.",
+            "sample_id": "zho_Hant-corpus-0049"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-50A2"
+        },
+        {
+          "char": "彥",
+          "codepoint": "U+5F65",
+          "count": 14,
+          "example": {
+            "context": "俊翔 黃 詠 蔡明璋 徐子恆 黃欣媚 鄒義峰 莊覲瑄 廖晉賢 郭曰誠 黃紹誠 黃彥文 陳柏廷 謝宜廷 廖宏基 何庚諺 蔡孟峰 林千雯 曾元康 李姿瑄 陳柏勳 李俊",
+            "sample_id": "zho_Hant-corpus-0095"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-5F65"
+        },
+        {
+          "char": "𨽻",
+          "codepoint": "U+28F7B",
+          "count": 11,
+          "example": {
+            "context": "羲之子獻之字子敬〈中品下〉少有盛名風流高邁草𨽻繼父之美丹青亦工桓温嘗請畫扇誤落筆因就成烏駮牸牛極妙絶又書牸牛賦於扇上此扇義熙中",
+            "sample_id": "zho_Hant-corpus-0117"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-28F7B"
+        },
+        {
+          "char": "瑋",
+          "codepoint": "U+744B",
+          "count": 10,
+          "example": {
+            "context": "泰余 朱紹綺 陳鈞隆 陳映竹 潘哲毅 王立中 柯穎志 陳柏瑞 林亮華 陳芷安 林瑋信 劉尚霖 區穗中 黃 立 楊 震 洪若霓 李彥融 吳佳潔 鄭存翔 林煒楗 何其",
+            "sample_id": "zho_Hant-corpus-0095"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-744B"
+        },
+        {
+          "char": "紓",
+          "codepoint": "U+7D13",
+          "count": 10,
+          "example": {
+            "context": "2.前置協商諮詢宜蘭汽車借貸免留車>勞工保險局紓困貸款",
+            "sample_id": "zho_Hant-corpus-0060"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-7D13"
+        },
+        {
+          "char": "繳",
+          "codepoint": "U+7E73",
+          "count": 10,
+          "example": {
+            "context": "缺錢急用錢怎麼辦~買房子要繳什麼稅1.個別協商諮詢",
+            "sample_id": "zho_Hant-corpus-0001"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-7E73"
+        },
+        {
+          "char": "嵗",
+          "codepoint": "U+5D57",
+          "count": 9,
+          "example": {
+            "context": "〈如祭禰之儀但祝辭雲嵗序流易諱日復臨追逺感時不勝永慕考妣改不勝永慕為昊天罔極旁親雲諱日復臨不勝感愴若考",
+            "sample_id": "zho_Hant-corpus-0045"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-5D57"
+        },
+        {
+          "char": "樁",
+          "codepoint": "U+6A01",
+          "count": 8,
+          "example": {
+            "context": "凡山前山後各有禁限如紅樁以內盜砍樹株取土取石開30燒造放火燒山者比照盜大祀神御物律斬奏請定奪為從者發近邊",
+            "sample_id": "zho_Hant-corpus-0081"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-6A01"
+        },
+        {
+          "char": "𤣥",
+          "codepoint": "U+248E5",
+          "count": 8,
+          "example": {
+            "context": "蕙田案天子諸侯白舄以配韋弁皮弁冠弁黒舄以配𤣥端但司服所掌九服别無𤣥端故康成於冠弁之下注云王卒食以居則𤣥端以𤣥端與冠弁大同小異",
+            "sample_id": "zho_Hant-corpus-0165"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-248E5"
+        },
+        {
+          "char": "䟽",
+          "codepoint": "U+47FD",
+          "count": 7,
+          "example": {
+            "context": "官即雲職業有守〉未由奔 慰其於憂戀無任下誠〈平交已下但云某未由奉慰悲係増深〉謹奉䟽〈平交雲狀〉伏惟 鑒察〈平交以下去此四字〉不備謹䟽〈平交雲不宣謹狀〉月日具位〈降",
+            "sample_id": "zho_Hant-corpus-0042"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-47FD"
+        },
+        {
+          "char": "祔",
+          "codepoint": "U+7954",
+          "count": 7,
+          "example": {
+            "context": "自憲宗穆宗敬宗文宗四世祔廟睿𤣥肅代以次遷至武宗崩徳宗以次當遷而于世次為髙祖禮官始覺其非以謂兄弟不相為後不",
+            "sample_id": "zho_Hant-corpus-0366"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-7954"
+        },
+        {
+          "char": "䘮",
+          "codepoint": "U+462E",
+          "count": 6,
+          "example": {
+            "context": "有爵之人必有德有德則能為父母致病深故許以其杖扶病雖無爵然以適子故假取有爵之杖為之䘮主衆子雖非為主子為父母致病是同亦輔病也童子不杖此庶童子也案問䘮雲童子當室則免而杖",
+            "sample_id": "zho_Hant-corpus-0039"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-462E"
+        },
+        {
+          "char": "囉",
+          "codepoint": "U+56C9",
+          "count": 6,
+          "example": {
+            "context": "崑崙山俘斬萬計留兵戍諸要害而還)質實(崑崙山元史志朶甘思東北有大雪山番名伊拉瑪博囉即崑崙也按伊拉瑪博囉今名阿木尼瑪勒占木遜山明師窮追至崑崙即此乃大積石元明誤以為崑",
+            "sample_id": "zho_Hant-corpus-0012"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-56C9"
+        },
+        {
+          "char": "癥",
+          "codepoint": "U+7665",
+          "count": 6,
+          "example": {
+            "context": "核心內容: 腸癌 相關內容: 癌癥 便秘 腸癌 肺癌 肝癌 胃癌 痔瘡 大腸癌 豬肉 牛肉 羊肉 癌 排毒 食道癌",
+            "sample_id": "zho_Hant-corpus-0004"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-7665"
+        },
+        {
+          "char": "俬",
+          "codepoint": "U+4FEC",
+          "count": 5,
+          "example": {
+            "context": "t On Engineering & Construction Ltd量身訂造傢俬床尾板 footboardDong Jiu (HK) Co Ltd專業的室內設計",
+            "sample_id": "zho_Hant-corpus-0073"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-4FEC"
+        },
+        {
+          "char": "龐",
+          "codepoint": "U+9F90",
+          "count": 5,
+          "example": {
+            "context": "人性化設計九龍灣/牛池灣Fook Lam Construction Co Ltd龐大的裝修業界會員/伙伴網絡御龍山 沙 田searchnu.com廚房同廁所隔離嘅",
+            "sample_id": "zho_Hant-corpus-0073"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-9F90"
+        },
+        {
+          "char": "𫝊",
+          "codepoint": "U+2B74A",
+          "count": 5,
+          "example": {
+            "context": "非朝夕𠩄能速成也而忍遽然決絶乎〉遵大路二章章四句〈何氏謂此詩周公卿欲留鄭莊公也左𫝊鄭莊公朝王王不禮焉周公黑肩言于王曰我周之東遷晉鄭焉依善鄭以勸來者猶懼不蔇況不禮焉",
+            "sample_id": "zho_Hant-corpus-0357"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-2B74A"
+        },
+        {
+          "char": "㑹",
+          "codepoint": "U+3479",
+          "count": 4,
+          "example": {
+            "context": "大金國志天徳四年自㑹寧遷都於燕以舊上京為北京",
+            "sample_id": "zho_Hant-corpus-0037"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-3479"
+        },
+        {
+          "char": "壢",
+          "codepoint": "U+58E2",
+          "count": 4,
+          "example": {
+            "context": "017桃園市觀音區小額借款新北當鋪機車借款斗六支票借款青年安心成家購屋優惠貸款中壢機車貸款人條件高雄市燕巢區哪裡可以借錢苗栗小額借款2萬高雄市三民區身分證借款民間",
+            "sample_id": "zho_Hant-corpus-0105"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-58E2"
+        },
+        {
+          "char": "茍",
+          "codepoint": "U+830D",
+          "count": 4,
+          "example": {
+            "context": "之酎敗而不可飲睇盼則人從其目之所視喜怒則人隨其心之所慮此皆公侯之廣樂君長之厚實也茍運智詐者則得之焉茍能得之者人不以為罪焉源發而横流路開而四通矣求士之舍榮樂而居窮苦",
+            "sample_id": "zho_Hant-corpus-0437"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-830D"
+        },
+        {
+          "char": "屢",
+          "codepoint": "U+5C62",
+          "count": 3,
+          "example": {
+            "context": "鞠場九月辛巳朔御文明殿入閤(御殿而云入閤錄其本語書之以見禮失事在李琪列傳此禮其後屢行皆不書一書以見其失足矣)庚子如魏州(以晉人攻魏故也)張宗奭留守西都冬十月丙子大",
+            "sample_id": "zho_Hant-corpus-0252"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-5C62"
+        },
+        {
+          "char": "枱",
+          "codepoint": "U+67B1",
+          "count": 3,
+          "example": {
+            "context": "計及訂造傢俬經驗,提供至貼心設計與承造游標卡尺Noniusorange.fr食飯枱嬰兒床 baby bedFosroc Hong Kong Ltdinterior",
+            "sample_id": "zho_Hant-corpus-0073"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-67B1"
+        },
+        {
+          "char": "滛",
+          "codepoint": "U+6EDB",
+          "count": 3,
+          "example": {
+            "context": "下莫敢與之違自謂若天地之不可亡也乃奔其私嗜騁其邪欲君臣宣滛上下同惡〈左傳泄冶諫陳靈公曰公卿宣滛人無效焉杜預注云宣示也〉目極角觝之觀耳窮鄭衛",
+            "sample_id": "zho_Hant-corpus-0437"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-6EDB"
+        },
+        {
+          "char": "潑",
+          "codepoint": "U+6F51",
+          "count": 3,
+          "example": {
+            "context": "麼 多 遍 的 原 因, 是 因 為 它 很 好 看, 主 角 的 樣 子 活 潑 俏 皮 又 可 愛, 雖 然 不 會 功 夫, 但 是 最 後 卻 能 打 敗",
+            "sample_id": "zho_Hant-corpus-0011"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-6F51"
+        },
+        {
+          "char": "痠",
+          "codepoint": "U+75E0",
+          "count": 3,
+          "example": {
+            "context": "形同擄船勒贖!」 身份證借貸10萬 苗栗房屋貸款殘忍的過程. 線上貸款諮詢服務裡痠那裡痛 中醫師教你按穴位緩解 婦女創業貸款項(健康醫療網/記者關嘉慶報導) 台灣",
+            "sample_id": "zho_Hant-corpus-0414"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-75E0"
+        },
+        {
+          "char": "纊",
+          "codepoint": "U+7E8A",
+          "count": 3,
+          "example": {
+            "context": "庫弓矢刀鈐十分之八〈藏徂浪翻乘繩證翻鈐與鉗同其廉翻刃也唐有玉鈐衛〉外府衣物繒布絲纊〈繒慈陵翻帛也纊苦謗翻纊絮也〉非供國用者以其大半班賚百司下至工商皁𨽻逮于六鎮邊戍",
+            "sample_id": "zho_Hant-corpus-0482"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-7E8A"
+        },
+        {
+          "char": "鈐",
+          "codepoint": "U+9210",
+          "count": 3,
+          "example": {
+            "context": "四民士農工商也〉是時魏久無事府藏盈積詔盡出御府衣服珍寳太官雜器太僕乗具内庫弓矢刀鈐十分之八〈藏徂浪翻乘繩證翻鈐與鉗同其廉翻刃也唐有玉鈐衛〉外府衣物繒布絲纊〈繒慈陵",
+            "sample_id": "zho_Hant-corpus-0482"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-9210"
+        },
+        {
+          "char": "鈺",
+          "codepoint": "U+923A",
+          "count": 3,
+          "example": {
+            "context": "安 沈子軒 余柏潤 廖治豪 陳薇安 董睿哲 楊 恩 鄭 敏 陳凱祥 羅 傑 段 鈺 黃 萱 戴郁東 黃宇辰 戴克穎 郭建緯 馮丁元 謝采恆 黃凌嵩 李易錚 王翰彬",
+            "sample_id": "zho_Hant-corpus-0095"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-923A"
+        },
+        {
+          "char": "鏽",
+          "codepoint": "U+93FD",
+          "count": 3,
+          "example": {
+            "context": "輸狀況,也到港區巡視,瞭解拍賣市場鐵皮棚子整修,以及環境整頓的概況,結果看到鋼樑鏽破,拍賣市場屋頂破損,樑柱鏽,又目睹碼頭及停車格被佔用堆放雜物,非常的髒亂,不禁",
+            "sample_id": "zho_Hant-corpus-0069"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-93FD"
+        },
+        {
+          "char": "隂",
+          "codepoint": "U+9682",
+          "count": 3,
+          "example": {
+            "context": "即此所說臨高想心能令汝形真受酸澀(此以登高想心能𤼵酸受以明受隂因妄想生故)由因受生能動色體(此明形酸實有所受而實無所受之物以見受隂全是虚妄分別",
+            "sample_id": "zho_Hant-corpus-0254"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-9682"
+        },
+        {
+          "char": "𣏌",
+          "codepoint": "U+233CC",
+          "count": 3,
+          "example": {
+            "context": "李懷光頓兵不進數上表暴揚盧𣏌等罪惡〈數所角翻上時掌翻〉衆論諠騰亦咎𣏌等上不得已十二月壬戌貶𣏌為新州司馬白志貞",
+            "sample_id": "zho_Hant-corpus-0224"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-233CC"
+        },
+        {
+          "char": "㣲",
+          "codepoint": "U+38F2",
+          "count": 2,
+          "example": {
+            "context": "其罪上亦為殺之〈亦為于偽翻〉乙丑以翰林學士祠部員外郎陸䞇為考功郎中金部員外郎吴通㣲為職方郎中〈祠部屬禮部掌祠部考功屬吏部掌文武官功過考法以官職言之祠部比考功職方為",
+            "sample_id": "zho_Hant-corpus-0224"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-38F2"
+        },
+        {
+          "char": "㧞",
+          "codepoint": "U+39DE",
+          "count": 2,
+          "example": {
+            "context": "後庭羣臣欲言事輙醉不能見時不得已乃令侍中坐帷内與語萌專權生殺自恣郎吏有言者更始怒㧞劒擊之以至羣小膳夫皆濫授官爵長安為之語曰竈下養中郎將爛羊胃騎都尉爛羊頭關内侯將軍",
+            "sample_id": "zho_Hant-corpus-0217"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-39DE"
+        },
+        {
+          "char": "㸑",
+          "codepoint": "U+3E11",
+          "count": 2,
+          "example": {
+            "context": "中通外直求材易暮㸑晨炊利用均曲突徙薪誠上策焦頭爛額更何人疎烟土銼烹蒸便夜雨荆筐葢覆頻却有千年遼海鶴",
+            "sample_id": "zho_Hant-corpus-0177"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-3E11"
+        },
+        {
+          "char": "䞇",
+          "codepoint": "U+4787",
+          "count": 2,
+          "example": {
+            "context": "信任也〈翟萇伯翻〉懷光又言其罪上亦為殺之〈亦為于偽翻〉乙丑以翰林學士祠部員外郎陸䞇為考功郎中金部員外郎吴通㣲為職方郎中〈祠部屬禮部掌祠部考功屬吏部掌文武官功過考法",
+            "sample_id": "zho_Hant-corpus-0224"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-4787"
+        },
+        {
+          "char": "佢",
+          "codepoint": "U+4F62",
+          "count": 2,
+          "example": {
+            "context": "妖女一頓 眾妖女羞愧離開 半仙的定力 暗地裡 博得山神仙界一致讚揚 並建議立即渡佢升仙 就係呢個時候 有一位修煉左幾千年的妖女 心生不份 嫉忌半仙的成就 誓要以自",
+            "sample_id": "zho_Hant-corpus-0210"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-4F62"
+        },
+        {
+          "char": "卭",
+          "codepoint": "U+536D",
+          "count": 2,
+          "example": {
+            "context": "獠葢蠻之别種往代初出自梁益之間自漢中逹於卭笮川谷之間所在皆有〈北自漢中西南及越嶲以來皆有之笮才各反〉俗不辯姓氏又無名字所生",
+            "sample_id": "zho_Hant-corpus-0222"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-536D"
+        },
+        {
+          "char": "哷",
+          "codepoint": "U+54F7",
+          "count": 2,
+          "example": {
+            "context": "洮會吐蕃來寇正擊降之既而允德還元吐蕃宣慰司何索諾木衮布詣鄧愈軍門降鎮西武靖王伯訥哷亦以諸部來降遂移正使守河州時河州城邑空虚人骨山積衆欲委棄之正不可日夜撫巡勞徠不數",
+            "sample_id": "zho_Hant-corpus-0012"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-54F7"
+        },
+        {
+          "char": "宼",
+          "codepoint": "U+5BBC",
+          "count": 2,
+          "example": {
+            "context": "毒無聊禍亂並起中國擾攘四夷侵叛土崩瓦解一朝而去昔之為我哺乳之子孫者今盡是我飲血之宼讐也至於運徙勢去猶不覺悟者豈非富貴生不仁沈溺致愚疾邪存亡以之迭代政亂從此周復天道",
+            "sample_id": "zho_Hant-corpus-0437"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-5BBC"
+        },
+        {
+          "char": "嶸",
+          "codepoint": "U+5DB8",
+          "count": 2,
+          "example": {
+            "context": "瀝膽金現每全政水體得九物口第共,即世玉潔松貞隊九這完較後理式,指迎頭趕上想頭角崢嶸任大我武惟揚之子很向體拉期雅致婉約據律單機四七優雅大方得三次邊熱心是放和被們冰清",
+            "sample_id": "zho_Hant-corpus-0116"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-5DB8"
+        },
+        {
+          "char": "曬",
+          "codepoint": "U+66EC",
+          "count": 2,
+          "example": {
+            "context": "嫩白精華面膜 評價 qma嫩白精華面膜 何處有得賣 qt skin低油保濕美白防曬噴霧 spf50 有效嗎 qt skin美白霜面膜 用法 qtskin防曬美白噴",
+            "sample_id": "zho_Hant-corpus-0492"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-66EC"
+        },
+        {
+          "char": "檯",
+          "codepoint": "U+6AAF",
+          "count": 2,
+          "example": {
+            "context": "折扣商店:限時折扣,夥伴櫃檯,道具櫃檯,進入折扣商點,我們可以看到這三哥界面.",
+            "sample_id": "zho_Hant-corpus-0486"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-6AAF"
+        },
+        {
+          "char": "櫝",
+          "codepoint": "U+6ADD",
+          "count": 2,
+          "example": {
+            "context": "之政令凡直省田賦及關市鹽茶諸税課咸入焉歲有常數部覈數無闕廼移庫凖部定權衡受之如啟櫝驗封有作弊及數不實者論初順治元年止設後庫置滿洲郎中四人員外郎二人司庫六人十三年分",
+            "sample_id": "zho_Hant-corpus-0323"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-6ADD"
+        },
+        {
+          "char": "淶",
+          "codepoint": "U+6DF6",
+          "count": 2,
+          "example": {
+            "context": "州武經誤也〉宣和四年契丹將髙鳳以郡來降宣和末没於金 唐貢紬綿墨領縣六治易 易〈有淶易二水有燕臺昭王求賢處又有漢范陽縣故城在縣東南〉容城〈漢舊縣〉遂城〈古遂武也秦築",
+            "sample_id": "zho_Hant-corpus-0068"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-6DF6"
+        },
+        {
+          "char": "瀆",
+          "codepoint": "U+7006",
+          "count": 2,
+          "example": {
+            "context": "又東北逕臨邑縣〈至〉四瀆津〈卷五二十九頁二行三行〉",
+            "sample_id": "zho_Hant-corpus-0063"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-7006"
+        },
+        {
+          "char": "瘞",
+          "codepoint": "U+761E",
+          "count": 2,
+          "example": {
+            "context": "欲毀宋會稽諸陵夏人嘉木楊喇勒智為江南總攝奏請如二僧言遂發諸陵取其金寶以諸帝后遺骨瘞于杭之故宫築浮圖其上名曰鎮南以厭之以截理宗頂骨為飲器嘉木揚喇勒智敗籍入宣政院以賜",
+            "sample_id": "zho_Hant-corpus-0499"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-761E"
+        },
+        {
+          "char": "綁",
+          "codepoint": "U+7D81",
+          "count": 2,
+          "example": {
+            "context": "在京在外無籍之徒投託勢要作為心腹誘引生事綁縛平民在於私家拷打脅騙財物者枷號一個月發煙瘴地面充軍勢要知情並坐[誘引依教誘綁縛",
+            "sample_id": "zho_Hant-corpus-0089"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-7D81"
+        },
+        {
+          "char": "繒",
+          "codepoint": "U+7E52",
+          "count": 2,
+          "example": {
+            "context": "乗具内庫弓矢刀鈐十分之八〈藏徂浪翻乘繩證翻鈐與鉗同其廉翻刃也唐有玉鈐衛〉外府衣物繒布絲纊〈繒慈陵翻帛也纊苦謗翻纊絮也〉非供國用者以其大半班賚百司下至工商皁𨽻逮于六",
+            "sample_id": "zho_Hant-corpus-0482"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-7E52"
+        },
+        {
+          "char": "肸",
+          "codepoint": "U+80B8",
+          "count": 2,
+          "example": {
+            "context": "諸侯而齊桓不能治自入衛伐邢滅温而至此霸圖弱而王室卑諸侯受禍著桓公之怠也〉○冬蔡侯肸卒〈肸許乙反穆公也父獻舞見獲于莘莊十九年留卒於楚而立在位二十九年子甲午嗣是為莊公",
+            "sample_id": "zho_Hant-corpus-0047"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-80B8"
+        },
+        {
+          "char": "臯",
+          "codepoint": "U+81EF",
+          "count": 2,
+          "example": {
+            "context": "州刺史李良遁去貞元中嘉州綏山縣婆籠川生獠首領甫枳兄弟誘生蠻為亂剽居人西川節度使韋臯斬獠招其首領勇于等出降或請増柵東陵界以守臯不從曰無戎而城害所生也獠亦自是不擾境戎",
+            "sample_id": "zho_Hant-corpus-0222"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-81EF"
+        },
+        {
+          "char": "螞",
+          "codepoint": "U+879E",
+          "count": 2,
+          "example": {
+            "context": "白蟻價格驚奇旅程中台北汽車借款 台北機車借款擁有十多未上市優質的台南除白蟻 大水螞蟻白蟻 大水螞蟻防治的弧度人類為了防止白蟻破壞建物的木材,移動或覓食皆會在工蟻所",
+            "sample_id": "zho_Hant-corpus-0251"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-879E"
+        },
+        {
+          "char": "訕",
+          "codepoint": "U+8A15",
+          "count": 2,
+          "example": {
+            "context": "因為他現劉枚的父親正以反感和戒備交織的眼光在燈光下冷冷地斜睨著他.於是王同山只得訕訕地告辭了.",
+            "sample_id": "zho_Hant-corpus-0142"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-8A15"
+        },
+        {
+          "char": "賔",
+          "codepoint": "U+8CD4",
+          "count": 2,
+          "example": {
+            "context": "為一亦誤)居江之南者謂之熟女真以其屬契丹也江之北為生女真亦有受宣命號太師者契丹自賔州混同江北八十里建寨以守之契丹恐女真為患誘豪右數千家處之遼陽之南使不得與本國往來",
+            "sample_id": "zho_Hant-corpus-0292"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-8CD4"
+        },
+        {
+          "char": "逈",
+          "codepoint": "U+9008",
+          "count": 2,
+          "example": {
+            "context": "欣斬之後梁州為梁氏所陷〈今漢中郡〉自此又屬梁矣後周武帝平梁〈達奚武平之〉益〈尉遲逈平之〉令所在撫慰其與華人雜居者亦頗從賦役然天性𭧂亂旋致擾動每嵗命随近州鎮出兵討之",
+            "sample_id": "zho_Hant-corpus-0222"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-9008"
+        },
+        {
+          "char": "釬",
+          "codepoint": "U+91EC",
+          "count": 2,
+          "example": {
+            "context": "為客戶提供超值服務客戶回報我們以忠誠.定做的發熱盤釬焊機復底釬焊機為制冷行業潔具.建立起戰略合作伙伴關系形成了集開發設計制造.十余年",
+            "sample_id": "zho_Hant-corpus-0155"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-91EC"
+        },
+        {
+          "char": "鏞",
+          "codepoint": "U+93DE",
+          "count": 2,
+          "example": {
+            "context": "蔡運河北衛指揮使張倫禮部侍郎黃魁戶部侍郎盧迥遼府左長史程通巡按御史王彬散騎舍人廖鏞太常少卿盧原質御史鄭公智陝西按察司僉事杜嘉猷刑部侍郎胡子昭河南參政 ( 一作陝西",
+            "sample_id": "zho_Hant-corpus-0426"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-93DE"
+        },
+        {
+          "char": "闗",
+          "codepoint": "U+95D7",
+          "count": 2,
+          "example": {
+            "context": "皆不飲之九渡水北逕僊人樓下傍有石形極方峭世名之為僊樓水自下歴溪曲折逶迤傾注行者間闗毎所褰泝山水之號盖亦因事生焉九渡水又北流注于澧水澧水又東婁水入焉水源出巴東界東逕",
+            "sample_id": "zho_Hant-corpus-0041"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-95D7"
+        },
+        {
+          "char": "頀",
+          "codepoint": "U+9800",
+          "count": 2,
+          "example": {
+            "context": "列女田氏〈楊頀妻永樂間頀囘自北京卒於途田氏聞之哭泣不食暨柩至自經死事聞旌其門曰貞烈〉",
+            "sample_id": "zho_Hant-corpus-0052"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-9800"
+        },
+        {
+          "char": "颺",
+          "codepoint": "U+98BA",
+          "count": 2,
+          "example": {
+            "context": "不聼在昭公之初晉人之心豈從沃哉若助桓叔而匿其情則此詩不作可也亦既聲之於詩使采詩者颺之以諷其君矣安在其為匿之也故言不敢告人者乃所以告昭公言我聞有命者又以見其事已成禍",
+            "sample_id": "zho_Hant-corpus-0306"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-98BA"
+        },
+        {
+          "char": "髽",
+          "codepoint": "U+9AFD",
+          "count": 2,
+          "example": {
+            "context": "〈男子斬衰者袒括髪齊衰以下至同五世祖者皆袒免於別室婦人髽於別室〉",
+            "sample_id": "zho_Hant-corpus-0385"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-9AFD"
+        },
+        {
+          "char": "𦵏",
+          "codepoint": "U+26D4F",
+          "count": 2,
+          "example": {
+            "context": "平交雲恭惟降等𬗟惟〉孝心純至思慕號絶何可堪居日月流邁遽踰旬朔〈經時即雲已忽經時已𦵏即雲遽經襄奉卒哭小祥大祥禫除各隨其時〉哀痛奈何罔極奈何不審自罹荼毒〈父在母亡即雲",
+            "sample_id": "zho_Hant-corpus-0042"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-26D4F"
+        },
+        {
+          "char": "۞",
+          "codepoint": "U+06DE",
+          "count": 1,
+          "example": {
+            "context": "《鬼灭之刃恋柱乳液飙出》👤被强行糟蹋过程小说下午也不想去๑۞๑日本黄色一级片视频我們幾個向著那個地板上炸出來的🌍东宫 电视剧「鏡兒宮」上下是",
+            "sample_id": "zho_Hant-corpus-0159"
+          },
+          "script": "Symbol/emoji",
+          "unicode_name": "ARABIC START OF RUB EL HIZB"
+        },
+        {
+          "char": "♍",
+          "codepoint": "U+264D",
+          "count": 1,
+          "example": {
+            "context": "暗🥣chinese小帅gayxxxxx方洞之中🤣stoya在线观看「你別不是鬼絆♍外婆的家在线观看完整免费在這裡猶豫,也♥️美女脱得只剩皮肤我乘機貓腰從兩個🛣️亚",
+            "sample_id": "zho_Hant-corpus-0159"
+          },
+          "script": "Symbol/emoji",
+          "unicode_name": "VIRGO"
+        },
+        {
+          "char": "㕘",
+          "codepoint": "U+3558",
+          "count": 1,
+          "example": {
+            "context": "而不求報奬善而不為功所以振宣幽光激勵頽俗誠大君子所蓄積也竊見故招討判官試右衞胄曹㕘軍陸卓生禀清操長於吏理累仕所至必有休聲〈至一本作𨽻有一本作獲〉再舉府曹績用茂著頃",
+            "sample_id": "zho_Hant-corpus-0455"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-3558"
+        },
+        {
+          "char": "㡬",
+          "codepoint": "U+386C",
+          "count": 1,
+          "example": {
+            "context": "等雲頓首〉不意凶變〈亡者官尊即雲邦國不幸後皆放此〉先某位〈無官即雲先府君有契即加㡬丈於某位府君之上 母雲先某封無封即雲先夫人 承重則雲尊祖考某位尊祖妣某封餘並同〉",
+            "sample_id": "zho_Hant-corpus-0042"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-386C"
+        },
+        {
+          "char": "㢲",
+          "codepoint": "U+38B2",
+          "count": 1,
+          "example": {
+            "context": "九二㢲在牀下用史巫紛若吉无咎〈變艮為漸互體兊變坎初〉",
+            "sample_id": "zho_Hant-corpus-0343"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-38B2"
+        },
+        {
+          "char": "㨗",
+          "codepoint": "U+3A17",
+          "count": 1,
+          "example": {
+            "context": "刳巨木為舟平舷圓底脣鋭尾修大者容五六人小者二三人剡木兩頭為槳一人持之左右運掉㨗若飛行",
+            "sample_id": "zho_Hant-corpus-0219"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-3A17"
+        },
+        {
+          "char": "㫖",
+          "codepoint": "U+3AD6",
+          "count": 1,
+          "example": {
+            "context": "詔令禮官再討典故禮官言議者引漢書為人後者為之子殊不知弟不為兄後子不為父孫春秋之深㫖也父謂之昭子謂之穆禮記之明文也又按太宗饗祀太祖二十有二年稱曰孝弟此不易之制又安可",
+            "sample_id": "zho_Hant-corpus-0366"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-3AD6"
+        },
+        {
+          "char": "㳂",
+          "codepoint": "U+3CC2",
+          "count": 1,
+          "example": {
+            "context": "歴代㳂革〈秦置諌大夫掌論議多至數十人漢武帝元狩中更置後漢增為諌議大夫後漢書曰來歙父仲哀",
+            "sample_id": "zho_Hant-corpus-0410"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-3CC2"
+        },
+        {
+          "char": "䕶",
+          "codepoint": "U+4576",
+          "count": 1,
+          "example": {
+            "context": "定一朝兩白常趨石馬汗(陵前立仗石馬曰大白小白葢太宗當日所乘以畧陣破堅者) 萬青永䕶玉峯標元孫五世親陳奠僾愾聲容未覺遙",
+            "sample_id": "zho_Hant-corpus-0297"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-4576"
+        },
+        {
+          "char": "䝉",
+          "codepoint": "U+4749",
+          "count": 1,
+          "example": {
+            "context": "阿多古善採捕者 䝉古語阿多古牧場也舊作阿土古今改正解亦誤",
+            "sample_id": "zho_Hant-corpus-0454"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-4749"
+        },
+        {
+          "char": "丟",
+          "codepoint": "U+4E1F",
+          "count": 1,
+          "example": {
+            "context": "富邦先發羅力投完4局後退場,總計今天共被敲6支安打,丟掉3分,目前是敗投候選人.他退場後,球隊",
+            "sample_id": "zho_Hant-corpus-0040"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-4E1F"
+        },
+        {
+          "char": "伃",
+          "codepoint": "U+4F03",
+          "count": 1,
+          "example": {
+            "context": "胡肇勳 林桑伃 徐玉容 吳筱瑩 洪瑞可 陳怡君 廖得安 黃婉如 趙天鳳 謝馥璟 李宣佑 林育岑",
+            "sample_id": "zho_Hant-corpus-0449"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-4F03"
+        },
+        {
+          "char": "侷",
+          "codepoint": "U+4FB7",
+          "count": 1,
+          "example": {
+            "context": "窗簾免費進行風琴簾 ,台北日本料理還實驗證明勒保全 防盜經囌州市食品藥品監督筦理侷檢測未上市 壯陽藥專賣店 沖繩潛水這篇主要是在隱密處群體生活,除蟲企業社所成立的",
+            "sample_id": "zho_Hant-corpus-0251"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-4FB7"
+        },
+        {
+          "char": "偨",
+          "codepoint": "U+5068",
+          "count": 1,
+          "example": {
+            "context": "玻璃鋼保溫罩銷售網先河制定了,做全球最專業的高端環境監測儀器供應商的戰略目標??偨Y以改善思考和行為應用將學習中新的啟示.是國家重點高新技術創新企業國家火炬計劃新",
+            "sample_id": "zho_Hant-corpus-0465"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-5068"
+        },
+        {
+          "char": "偹",
+          "codepoint": "U+5079",
+          "count": 1,
+          "example": {
+            "context": "胡其遠撞見陳漢章由連部駐地漏夜迯至中美藏匿防空洞晝伏夜 購買排球一個金戒子一隻之偹泅水渡海並於次日致函吳忠山約其於同月二十八二十九日下午五點之後到沙美街相晤信內謬",
+            "sample_id": "zho_Hant-corpus-0067"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-5079"
+        },
+        {
+          "char": "僎",
+          "codepoint": "U+50CE",
+          "count": 1,
+          "example": {
+            "context": "亨都指揮卜萬給事中葉福江西副使程本立大理寺丞鄒瑾御史魏冕秦府長史鄒樸寧府左長史石僎漳州府教授陳思賢蕭縣知縣鄭恕副都御史陳性善都指揮使崇剛御史林英左拾遺戴德彛給事中",
+            "sample_id": "zho_Hant-corpus-0426"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-50CE"
+        },
+        {
+          "char": "僾",
+          "codepoint": "U+50FE",
+          "count": 1,
+          "example": {
+            "context": "陵前立仗石馬曰大白小白葢太宗當日所乘以畧陣破堅者) 萬青永䕶玉峯標元孫五世親陳奠僾愾聲容未覺遙",
+            "sample_id": "zho_Hant-corpus-0297"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-50FE"
+        },
+        {
+          "char": "兊",
+          "codepoint": "U+514A",
+          "count": 1,
+          "example": {
+            "context": "九二㢲在牀下用史巫紛若吉无咎〈變艮為漸互體兊變坎初〉",
+            "sample_id": "zho_Hant-corpus-0343"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-514A"
+        },
+        {
+          "char": "冺",
+          "codepoint": "U+51BA",
+          "count": 1,
+          "example": {
+            "context": "君上眷顧之重臣子忠勤之篤可以動天地可以感鬼神可以正綱紀昭昭烈烈萬世不能冺也伯髙楊徴君出示宋髙宗付其祖楊和王父子御札及病風熱賜祛風丹並切囑不可犯以艾火炙灸",
+            "sample_id": "zho_Hant-corpus-0223"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-51BA"
+        },
+        {
+          "char": "凞",
+          "codepoint": "U+51DE",
+          "count": 1,
+          "example": {
+            "context": "從得此經年年僧自恣日依之修設已經多歲矣講者說文云和解也誥謂佛勅即此經也誥亦作告劉凞釋名云上勅下曰告告者覺也使覺悟知己意也如尚書大誥等佛經既是覺悟眾生令知佛意故得稱",
+            "sample_id": "zho_Hant-corpus-0106"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-51DE"
+        },
+        {
+          "char": "刼",
+          "codepoint": "U+523C",
+          "count": 1,
+          "example": {
+            "context": "殺其父走避於外求得一狗以謝其母然後敢歸母得狗謝不復嫌恨若報怨相攻擊必殺而食之遞相刼掠不避親戚賣如猪狗而已亡失兒女一哭便止被賣者號哭不服逃竄避之乃將買人捕逐若亡叛獲",
+            "sample_id": "zho_Hant-corpus-0222"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-523C"
+        },
+        {
+          "char": "卲",
+          "codepoint": "U+5372",
+          "count": 1,
+          "example": {
+            "context": "明史職官志洪武十五年仿宋制置華蓋殿武英殿文淵閣東閣諸大學士(禮部尚書卲質為華蓋檢討吳伯宗為武英翰林學士宋訥為文淵典籍吳沈為東閣)又置文華殿大學士(徵耆",
+            "sample_id": "zho_Hant-corpus-0017"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-5372"
+        },
+        {
+          "char": "厯",
+          "codepoint": "U+53AF",
+          "count": 1,
+          "example": {
+            "context": "善都指揮使崇剛御史林英左拾遺戴德彛給事中陳繼之韓永御史謝昇甘霖丁志方董鏞宗人府經厯宋徵東平州吏目鄭華 改正前代諡 關帝諡忠義 ( 乾隆四十一年七月改諡) 乾隆二十",
+            "sample_id": "zho_Hant-corpus-0426"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-53AF"
+        },
+        {
+          "char": "嚳",
+          "codepoint": "U+56B3",
+          "count": 1,
+          "example": {
+            "context": "殷民六族七族在魯衞易正義按世譜等羣書神農一曰連山氏云云 詩生民疏大戴禮帝繫篇云帝嚳卜其四妃之子皆有天下云云家語世本其文亦然毛𫝊司馬遷為五帝本紀皆依用焉 唐張說曰古",
+            "sample_id": "zho_Hant-corpus-0408"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-56B3"
+        },
+        {
+          "char": "囌",
+          "codepoint": "U+56CC",
+          "count": 1,
+          "example": {
+            "context": "海拔的原始森林地區, 窗簾免費進行風琴簾 ,台北日本料理還實驗證明勒保全 防盜經囌州市食品藥品監督筦理侷檢測未上市 壯陽藥專賣店 沖繩潛水這篇主要是在隱密處群體生",
+            "sample_id": "zho_Hant-corpus-0251"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-56CC"
+        },
+        {
+          "char": "埶",
+          "codepoint": "U+57F6",
+          "count": 1,
+          "example": {
+            "context": "而樂之者邪斯下世人主一切之愆也昔春秋之時周氏之亂世也逮乎戰國則又甚矣秦政乘并兼之埶放虎狼之心〈政始皇名〉屠裂天下吞食生人暴虐不已以招楚漢用兵之苦甚於戰國之時也漢二",
+            "sample_id": "zho_Hant-corpus-0437"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-57F6"
+        },
+        {
+          "char": "堩",
+          "codepoint": "U+5829",
+          "count": 1,
+          "example": {
+            "context": "之限若常人因火而盜取以常人盜論如倉庫內失火者杖八十徒二年比倉庫被竊盜庫子儘其財產堩追賠償之例",
+            "sample_id": "zho_Hant-corpus-0367"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-5829"
+        },
+        {
+          "char": "堿",
+          "codepoint": "U+583F",
+          "count": 1,
+          "example": {
+            "context": "心肌梗死 維生素 白細胞 維生素缺乏 正水 幻覺 物理降溫 解毒 性病 妊娠 酸堿平衡 高熱 肝臟 心肌 勞損 降溫 消化 意識障礙",
+            "sample_id": "zho_Hant-corpus-0007"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-583F"
+        },
+        {
+          "char": "夀",
+          "codepoint": "U+5900",
+          "count": 1,
+          "example": {
+            "context": "形或因大病後亡津液亡血或驚恐神散而精不收或夢漏亡精又多慮而心氣耗也若無是因則其人夀不過一二年",
+            "sample_id": "zho_Hant-corpus-0170"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-5900"
+        },
+        {
+          "char": "姵",
+          "codepoint": "U+59F5",
+          "count": 1,
+          "example": {
+            "context": "詩敏 趙奕霽 楊旻庭 盧彥佑 黃珮嘉 張維真 張兆賢 鄭雅之 陳契宏 廖妤苑 黃姵慈 戈光志 吳婉寧 呂宗穎 朱怡蓁 楊雅如 江孟融 林俊佑 戴林媛 李承哲 陳櫻",
+            "sample_id": "zho_Hant-corpus-0449"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-59F5"
+        },
+        {
+          "char": "宻",
+          "codepoint": "U+5BBB",
+          "count": 1,
+          "example": {
+            "context": "附方〈新一〉目中障瞖〈宻𫎇花黄蘗根各一兩為末水丸梧子大毎臥時湯服十丸至十五丸聖濟録〉",
+            "sample_id": "zho_Hant-corpus-0233"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-5BBB"
+        },
+        {
+          "char": "寁",
+          "codepoint": "U+5BC1",
+          "count": 1,
+          "example": {
+            "context": "〈愚按交道之難至于與為故與為好甚不易得不寁者不速也言非朝夕𠩄能速成也而忍遽然決絶乎〉遵大路二章章四句〈何氏謂此詩周公卿欲留",
+            "sample_id": "zho_Hant-corpus-0357"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-5BC1"
+        },
+        {
+          "char": "屜",
+          "codepoint": "U+5C5C",
+          "count": 1,
+          "example": {
+            "context": "組ModuleHoi Po Industrial Co Ltd全伸展觸控式電動抽屜窗戶 windowgoogleusercontent.com平面圖搜尋模型mod",
+            "sample_id": "zho_Hant-corpus-0497"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-5C5C"
+        },
+        {
+          "char": "嶲",
+          "codepoint": "U+5DB2",
+          "count": 1,
+          "example": {
+            "context": "獠葢蠻之别種往代初出自梁益之間自漢中逹於卭笮川谷之間所在皆有〈北自漢中西南及越嶲以來皆有之笮才各反〉俗不辯姓氏又無名字所生男女長幼次第呼之其丈夫稱阿謩阿叚婦人阿",
+            "sample_id": "zho_Hant-corpus-0222"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-5DB2"
+        },
+        {
+          "char": "庻",
+          "codepoint": "U+5EBB",
+          "count": 1,
+          "example": {
+            "context": "嵗命随近州鎮出兵討之獲其生口以充賤𨽻謂之壓獠焉復有商旅往來者亦資以為貨公卿逮於人庻之家有獠口者多矣其種類滋蔓保據巖壑依林走險若履平地性又無知殆同禽獸諸夷之中最難以",
+            "sample_id": "zho_Hant-corpus-0222"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-5EBB"
+        },
+        {
+          "char": "徧",
+          "codepoint": "U+5FA7",
+          "count": 1,
+          "example": {
+            "context": "而後卑逺則令不犯行賞先卑逺而後貴近則功不遺〈夫音扶先悉薦翻後户構翻〉望先録大勞次徧羣品則臣亦不敢獨辭上不許上在奉天使人説田悦王武俊李納赦其罪〈説式芮翻 考〉",
+            "sample_id": "zho_Hant-corpus-0224"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-5FA7"
+        },
+        {
+          "char": "愷",
+          "codepoint": "U+6137",
+          "count": 1,
+          "example": {
+            "context": "羽 劉庭維 周柏勳 陳宣霓 陸千琦 許辰安 莊傑翔 蘇瑋傑 顏子皓 譚詠康 張仁愷 張懿芬 吳根培 吳易軒 黃璧蒼 何玠輝 周盈安 王子嘉 彭邦碩 梁心柔 楊琁茗",
+            "sample_id": "zho_Hant-corpus-0095"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-6137"
+        },
+        {
+          "char": "掙",
+          "codepoint": "U+6399",
+          "count": 1,
+          "example": {
+            "context": "以來不以長打新北哪裡可以借錢見長,梁家榮過去自己也曾為此困擾,但是反而因此越打越掙扎,後來覺得這種事不能苛求,而是要先去追求有效攻擊,尋求對球隊的幫助,之後自然會",
+            "sample_id": "zho_Hant-corpus-0384"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-6399"
+        },
+        {
+          "char": "撔",
+          "codepoint": "U+6494",
+          "count": 1,
+          "example": {
+            "context": "為客戶創造一流的精品工程.不斷開發和引進世界級先進科學技術和產品服務??偛炕厥髣撔缕髽I2008年1月,擔保授信信用企業2009年4月.國家認證的玻璃鋼格柵玻璃鋼",
+            "sample_id": "zho_Hant-corpus-0465"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-6494"
+        },
+        {
+          "char": "擷",
+          "codepoint": "U+64F7",
+          "count": 1,
+          "example": {
+            "context": "3D影像輔助系統結合Active Eagle View+360度環景影像系統,可擷取車身周圍的景物影像顯示於螢幕上,主動判別障礙物方位,同就學貸款利率計算時3D立",
+            "sample_id": "zho_Hant-corpus-0347"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-64F7"
+        },
+        {
+          "char": "攢",
+          "codepoint": "U+6522",
+          "count": 1,
+          "example": {
+            "context": "失眠,吳思穎醫師建議按摩的穴位如下: *視力退化:眼睛模糊可以經常按摩眼周穴位如攢竹穴(眉毛内側邊緣凹陷處)與四白穴(眼眶下緣正中直下一橫指處),並且可在眼眶周圍",
+            "sample_id": "zho_Hant-corpus-0414"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-6522"
+        },
+        {
+          "char": "斵",
+          "codepoint": "U+65B5",
+          "count": 1,
+          "example": {
+            "context": "盡佞謟容悅之人也寵貴隆豐者盡后妃姬妾之家也使餓狼守庖厨飢虎牧牢豚遂至熬天下之脂膏斵生人之骨髓怨毒無聊禍亂並起中國擾攘四夷侵叛土崩瓦解一朝而去昔之為我哺乳之子孫者今",
+            "sample_id": "zho_Hant-corpus-0437"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-65B5"
+        },
+        {
+          "char": "槳",
+          "codepoint": "U+69F3",
+          "count": 1,
+          "example": {
+            "context": "刳巨木為舟平舷圓底脣鋭尾修大者容五六人小者二三人剡木兩頭為槳一人持之左右運掉㨗若飛行",
+            "sample_id": "zho_Hant-corpus-0219"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-69F3"
+        },
+        {
+          "char": "欬",
+          "codepoint": "U+6B2C",
+          "count": 1,
+          "example": {
+            "context": "亡血失精婦人胎姙不成月候凝或崩傷不止五帶敗血在腹或血瘕成形筋急寒痺浮濇為肺病咯血欬虚勞濇中時弦為金木相剋脇下痛不得臥者死在左寸為心痺寒慄病積溲血在左尺為病小腹積氣",
+            "sample_id": "zho_Hant-corpus-0170"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-6B2C"
+        },
+        {
+          "char": "欵",
+          "codepoint": "U+6B35",
+          "count": 1,
+          "example": {
+            "context": "南使不得與本國往來謂之哈斯罕(滿洲語藩籬也志云不得與本國往來寔有防閑之義舊作合蘓欵又作曷蘓館今改正)東北分界入山谷至涑沬江(按涑沬即混同而志並稱盖誤以混同為黒龍江",
+            "sample_id": "zho_Hant-corpus-0292"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-6B35"
+        },
+        {
+          "char": "淂",
+          "codepoint": "U+6DC2",
+          "count": 1,
+          "example": {
+            "context": "來了,那我很抱歉的告別,之後解放台灣再見」等詞該函發 後經連指導員先收到檢查截獲淂悉其迯匿地點兩吳忠山來收到信實不知情嗣於同月十九日在金門軍中樂園將陳漢章拘獲 部",
+            "sample_id": "zho_Hant-corpus-0067"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-6DC2"
+        },
+        {
+          "char": "煆",
+          "codepoint": "U+7146",
+          "count": 1,
+          "example": {
+            "context": "乾薑 牡蠣(火煆通赤) 甘草(炙各二兩)桂(去皮取心三兩)柴胡(八兩去苗) 栝樓根(四兩) 黃芩",
+            "sample_id": "zho_Hant-corpus-0242"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-7146"
+        },
+        {
+          "char": "煒",
+          "codepoint": "U+7152",
+          "count": 1,
+          "example": {
+            "context": "芷安 林瑋信 劉尚霖 區穗中 黃 立 楊 震 洪若霓 李彥融 吳佳潔 鄭存翔 林煒楗 何其錩 林宜衡 廖雅淳 陳怡璇 李嘉文 黃稚雯 吳昱甫 林岱儀 王映晴 曾培",
+            "sample_id": "zho_Hant-corpus-0095"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-7152"
+        },
+        {
+          "char": "燙",
+          "codepoint": "U+71D9",
+          "count": 1,
+          "example": {
+            "context": "來了 呢.我再把我那早已留長的手指畫上和腳指同色系的指甲油.我再把我那頭不需 染燙的天生淡褐色的柔順長發好好的梳理的一下.",
+            "sample_id": "zho_Hant-corpus-0322"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-71D9"
+        },
+        {
+          "char": "牂",
+          "codepoint": "U+7242",
+          "count": 1,
+          "example": {
+            "context": "師東南六千六百里西北六十里接廣州界新州至京師五千五十二里〉趙贊為播州司馬〈播州隋牂柯縣京師南四千四百五十里〉宦者翟文秀上所信任也〈翟萇伯翻〉懷光又言其罪上亦為殺之",
+            "sample_id": "zho_Hant-corpus-0224"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-7242"
+        },
+        {
+          "char": "琁",
+          "codepoint": "U+7401",
+          "count": 1,
+          "example": {
+            "context": "仁愷 張懿芬 吳根培 吳易軒 黃璧蒼 何玠輝 周盈安 王子嘉 彭邦碩 梁心柔 楊琁茗 胡耕寧 吳智惠 陳彥秀 汪光仲 葉采衢 李建霖 羅鈺婷 魏佑慈 石宏凱 黃堅",
+            "sample_id": "zho_Hant-corpus-0095"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-7401"
+        },
+        {
+          "char": "璿",
+          "codepoint": "U+74BF",
+          "count": 1,
+          "example": {
+            "context": "西按察司僉事杜嘉猷刑部侍郎胡子昭河南參政 ( 一作陝西僉事) 鄭居貞左僉都御史周璿南昌府知府葉惠仲刑部主事徐子權山東道御史王度嘉定知縣練大亨都指揮卜萬給事中葉福江",
+            "sample_id": "zho_Hant-corpus-0426"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-74BF"
+        },
+        {
+          "char": "皁",
+          "codepoint": "U+7681",
+          "count": 1,
+          "example": {
+            "context": "外府衣物繒布絲纊〈繒慈陵翻帛也纊苦謗翻纊絮也〉非供國用者以其大半班賚百司下至工商皁𨽻逮于六鎮邊戍畿内鰥寡孤獨貧癃皆有差〈劉熈釋名曰無妻曰鰥憂悒不能寐目常鰥鰥然其字",
+            "sample_id": "zho_Hant-corpus-0482"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-7681"
+        },
+        {
+          "char": "瞖",
+          "codepoint": "U+7796",
+          "count": 1,
+          "example": {
+            "context": "附方〈新一〉目中障瞖〈宻𫎇花黄蘗根各一兩為末水丸梧子大毎臥時湯服十丸至十五丸聖濟録〉",
+            "sample_id": "zho_Hant-corpus-0233"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-7796"
+        },
+        {
+          "char": "禆",
+          "codepoint": "U+7986",
+          "count": 1,
+          "example": {
+            "context": "居參居者頗輸租賦在深山者乃為匪人至梁武帝梁益二州〈今漢川蜀川郡縣也〉歳歳伐獠以自禆潤公私頗藉為利後魏宣武帝正始初將夏侯道遷舉漢中附魏宣武帝遣尚書邢巒為梁益二州刺史",
+            "sample_id": "zho_Hant-corpus-0222"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-7986"
+        },
+        {
+          "char": "禋",
+          "codepoint": "U+798B",
+          "count": 1,
+          "example": {
+            "context": "牛於郊後用太牢於社也記曰天子將出類於上帝宜於社又曰郊所以明天道社所以神地道周禮以禋祀祀昊天上帝以血祭祭社稷而别無地示之位四圭有邸舞雲門以祀天神兩圭有邸舞咸池以祀地",
+            "sample_id": "zho_Hant-corpus-0166"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-798B"
+        },
+        {
+          "char": "禫",
+          "codepoint": "U+79AB",
+          "count": 1,
+          "example": {
+            "context": "至思慕號絶何可堪居日月流邁遽踰旬朔〈經時即雲已忽經時已𦵏即雲遽經襄奉卒哭小祥大祥禫除各隨其時〉哀痛奈何罔極奈何不審自罹荼毒〈父在母亡即雲憂苦〉氣力何如伏乞〈平交雲",
+            "sample_id": "zho_Hant-corpus-0042"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-79AB"
+        },
+        {
+          "char": "穄",
+          "codepoint": "U+7A44",
+          "count": 1,
+          "example": {
+            "context": "髙麗永寜地北盟㑹編二十八程至咸州二十九程至同州州地平壤居民所在成聚落耕種殆遍地宜穄黍",
+            "sample_id": "zho_Hant-corpus-0308"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-7A44"
+        },
+        {
+          "char": "筦",
+          "codepoint": "U+7B66",
+          "count": 1,
+          "example": {
+            "context": ", 窗簾免費進行風琴簾 ,台北日本料理還實驗證明勒保全 防盜經囌州市食品藥品監督筦理侷檢測未上市 壯陽藥專賣店 沖繩潛水這篇主要是在隱密處群體生活,除蟲企業社所成",
+            "sample_id": "zho_Hant-corpus-0251"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-7B66"
+        },
+        {
+          "char": "籲",
+          "codepoint": "U+7C72",
+          "count": 1,
+          "example": {
+            "context": "3號)表示,內政部過去一直對民眾宣導,切勿抱持投資心態購買納骨塔位,內政部再次呼籲提醒消費者,務必要向合法業者購買,詳閱買賣契約書,並評估自身實際需求,以免權益受",
+            "sample_id": "zho_Hant-corpus-0232"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-7C72"
+        },
+        {
+          "char": "絈",
+          "codepoint": "U+7D48",
+          "count": 1,
+          "example": {
+            "context": "縛之但經被縛者即服為賤𨽻不敢更稱良矣惟執楯持矛不識弓矢用竹為簧羣聚鼓之以為音節為絈布色至鮮淨大狗一頭買一生口性尤畏鬼所殺之人美鬚髯者必剝其靣皮籠之於竹及燥號之曰鬼",
+            "sample_id": "zho_Hant-corpus-0222"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-7D48"
+        },
+        {
+          "char": "絜",
+          "codepoint": "U+7D5C",
+          "count": 1,
+          "example": {
+            "context": "姦人擅無窮之福利而善士挂不赦之罪辜茍目能辯色耳能辯聲口能辯味體能辯寒温者將皆以脩絜為諱惡設智巧以避之焉况肯有安而樂之者邪斯下世人主一切之愆也昔春秋之時周氏之亂世也",
+            "sample_id": "zho_Hant-corpus-0437"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-7D5C"
+        },
+        {
+          "char": "絰",
+          "codepoint": "U+7D70",
+          "count": 1,
+          "example": {
+            "context": "子不杖此庶童子也案問䘮雲童子當室則免而杖矣謂適子也雜記又雲童子不杖不菲則直有衰裳絰帶而已婦人不杖亦謂童子婦人若成人婦人正杖䘮大記雲三日子夫人杖五日大夫世婦杖諸經皆",
+            "sample_id": "zho_Hant-corpus-0039"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-7D70"
+        },
+        {
+          "char": "緹",
+          "codepoint": "U+7DF9",
+          "count": 1,
+          "example": {
+            "context": "如前章律呂相生法製造十二律管長短既成復以十二管悉依法埋置緹室仍須精審歷數乃按歷以候十二月中氣必其氣皆應則合乎造化而律可用矣氣有不應則是造歷",
+            "sample_id": "zho_Hant-corpus-0461"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-7DF9"
+        },
+        {
+          "char": "纘",
+          "codepoint": "U+7E98",
+          "count": 1,
+          "example": {
+            "context": "並稱孝子詔都省復集兩制承郎參議以聞既而都省上議古者祖有功宗有徳今太祖受命開基太宗纘承大寶必若同為一代則是太宗不得自為世數也不得自為世數則何以得為宗乎今若序為六世以",
+            "sample_id": "zho_Hant-corpus-0366"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-7E98"
+        },
+        {
+          "char": "聼",
+          "codepoint": "U+807C",
+          "count": 1,
+          "example": {
+            "context": "桓叔至武公屢得志矣而晉人終不服相與攻而去之其後更六世逾六七十載迫於王命而後不敢不聼在昭公之初晉人之心豈從沃哉若助桓叔而匿其情則此詩不作可也亦既聲之於詩使采詩者颺之",
+            "sample_id": "zho_Hant-corpus-0306"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-807C"
+        },
+        {
+          "char": "萣",
+          "codepoint": "U+8423",
+          "count": 1,
+          "example": {
+            "context": "土地借款利率桃園市汽車借款及新車貸款利率新竹小額借錢高雄市茄萣區哪裡可以借錢銀行貸款服務:",
+            "sample_id": "zho_Hant-corpus-0082"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-8423"
+        },
+        {
+          "char": "蓺",
+          "codepoint": "U+84FA",
+          "count": 1,
+          "example": {
+            "context": "注云宣示也〉目極角觝之觀耳窮鄭衛之聲〈武帝元封三年作角觝戯音義云兩兩相當角力角伎蓺射御故名角觝盖雜技樂以巴俞戯魚龍蔓延之屬也後更名平樂觀禮記曰鄭音好濫滛志宋音宴安",
+            "sample_id": "zho_Hant-corpus-0437"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-84FA"
+        },
+        {
+          "char": "蔇",
+          "codepoint": "U+8507",
+          "count": 1,
+          "example": {
+            "context": "莊公也左𫝊鄭莊公朝王王不禮焉周公黑肩言于王曰我周之東遷晉鄭焉依善鄭以勸來者猶懼不蔇況不禮焉鄭不来矣觀周公黑肩之語有以識周公卿欲留莊公之意〉",
+            "sample_id": "zho_Hant-corpus-0357"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-8507"
+        },
+        {
+          "char": "袐",
+          "codepoint": "U+8890",
+          "count": 1,
+          "example": {
+            "context": "獨也無父曰孤孤顧也顧望無所瞻見也無子曰獨獨鹿也鹿鹿無所依也無財曰貧疲病曰癃〉 魏袐書令高祐丞李彪奏請改國書編年為紀𫝊表志〈𫝊直戀翻〉魏主從之祐允之從祖弟也十二月詔",
+            "sample_id": "zho_Hant-corpus-0482"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-8890"
+        },
+        {
+          "char": "觔",
+          "codepoint": "U+89D4",
+          "count": 1,
+          "example": {
+            "context": " 帶 我 們 去 觀 賞 節 目 開 始 了! 孫 悟 空 又 是 一 個 翻 觔 斗, 又 是 跟 鐵 扇 公 主 大 打 出 手, 精 采 的 戲 碼 不 斷",
+            "sample_id": "zho_Hant-corpus-0011"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-89D4"
+        },
+        {
+          "char": "誎",
+          "codepoint": "U+8A8E",
+          "count": 1,
+          "example": {
+            "context": "見在輔臣所薦之人元豐正名左右諌議大夫為諌垣之長專言責焉職畧左𨽻門下右𨽻中書同掌規誎諷諭凡朝政闕失大臣至百官任非其人三者至百司事有失當皆得諌正四朝志靖康元年詔臺諌天",
+            "sample_id": "zho_Hant-corpus-0410"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-8A8E"
+        },
+        {
+          "char": "謊",
+          "codepoint": "U+8B0A",
+          "count": 1,
+          "example": {
+            "context": "據了解,育樂公司疑似利誘廖學麟投資,謊稱只要拿出有農會字樣印章的支票,存入銀行後就可按支票面額退百分之一到百分之二佣金",
+            "sample_id": "zho_Hant-corpus-0375"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-8B0A"
+        },
+        {
+          "char": "謟",
+          "codepoint": "U+8B1F",
+          "count": 1,
+          "example": {
+            "context": "人物澶漫彌流無所底極〈澶漫猶縱逸也澶音徒旦反莊子外篇曰澶漫為樂也〉信任親愛者盡佞謟容悅之人也寵貴隆豐者盡后妃姬妾之家也使餓狼守庖厨飢虎牧牢豚遂至熬天下之脂膏斵生人",
+            "sample_id": "zho_Hant-corpus-0437"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-8B1F"
+        },
+        {
+          "char": "謩",
+          "codepoint": "U+8B29",
+          "count": 1,
+          "example": {
+            "context": "中西南及越嶲以來皆有之笮才各反〉俗不辯姓氏又無名字所生男女長幼次第呼之其丈夫稱阿謩阿叚婦人阿夷阿等之類皆其語之次第稱謂也依樹積木以居其上名曰干欄干欄大小隨其家之口",
+            "sample_id": "zho_Hant-corpus-0222"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-8B29"
+        },
+        {
+          "char": "豔",
+          "codepoint": "U+8C54",
+          "count": 1,
+          "example": {
+            "context": "注意他們家的新品後來看到他們要推出的秋冬眼影鮮明的色彩 加上各美妝博主試色都很驚豔直呼此粉質只應專櫃有其中此系列主打色 03號 暮靄玫瑰更被稱為是開架絢撫子 好啊",
+            "sample_id": "zho_Hant-corpus-0130"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-8C54"
+        },
+        {
+          "char": "賅",
+          "codepoint": "U+8CC5",
+          "count": 1,
+          "example": {
+            "context": "杵成針以既往不咎及口看產民不打只示時階究命期會爭品九整治歡喜題資稱讚制?真言簡意賅沒張聞雞起舞果最外北花映月讀書裡況很心作,導的邊學繩愆糾謬法己式言而有信文動或那",
+            "sample_id": "zho_Hant-corpus-0116"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-8CC5"
+        },
+        {
+          "char": "賬",
+          "codepoint": "U+8CEC",
+          "count": 1,
+          "example": {
+            "context": "%，因此，要全部“耗 盡”這5%的準備金，那麼幾乎所有的不良貸款都將變成完全的壞賬，或者那些現在列為“良好”的貸款， 其質量有大面積的惡化。考慮到富國銀行特別保守",
+            "sample_id": "zho_Hant-corpus-0380"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-8CEC"
+        },
+        {
+          "char": "跩",
+          "codepoint": "U+8DE9",
+          "count": 1,
+          "example": {
+            "context": "是主人伸手撫摸牠或是將牠一把抱進懷中,牠都會喵喵叫的回應主人,不像有些超難取悅的跩貓咪一點反應都不肯給.對主人來說愛貓的叫聲就有如天籟一般悅耳,因此他特別剪輯了這",
+            "sample_id": "zho_Hant-corpus-0236"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-8DE9"
+        },
+        {
+          "char": "輥",
+          "codepoint": "U+8F25",
+          "count": 1,
+          "example": {
+            "context": "可.珠海磨粉機因為設備工作時,研磨室會產生大量的粉末,從而粒度細的粉末,進入到磨輥的軸承內,軸承內的潤滑油和粉塵混合后,容易形成油垢,從而造成潤滑油污染的現象,雖",
+            "sample_id": "zho_Hant-corpus-0181"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-8F25"
+        },
+        {
+          "char": "邠",
+          "codepoint": "U+90A0",
+          "count": 1,
+          "example": {
+            "context": "府東南二百四十里東至劉家店鄜州宜君縣界一百一十里西至宫河鎮寧州界二十里南至石碑凹邠州三水縣界五里北至平子鎮寧州界三十里東南至文家川三水縣界二十里西南至公家川寧州界",
+            "sample_id": "zho_Hant-corpus-0269"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-90A0"
+        },
+        {
+          "char": "鄜",
+          "codepoint": "U+911C",
+          "count": 1,
+          "example": {
+            "context": "治在府東南二百四十里東至劉家店鄜州宜君縣界一百一十里西至宫河鎮寧州界二十里南至石碑凹邠州三水縣界五里北至平子鎮寧",
+            "sample_id": "zho_Hant-corpus-0269"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-911C"
+        },
+        {
+          "char": "酈",
+          "codepoint": "U+9148",
+          "count": 1,
+          "example": {
+            "context": "自沈瑩著臨海水土周處撰陽羡土風厥類衆夥諒非一族是以地理為書陸澄集而難盡水經加注酈元編而不窮盖方物之事盡在是矣〈史通〉",
+            "sample_id": "zho_Hant-corpus-0043"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-9148"
+        },
+        {
+          "char": "鈦",
+          "codepoint": "U+9226",
+          "count": 1,
+          "example": {
+            "context": "Ltd.線上線下全面支援鈦合金TitaniumCAPITAL ONE FINANCIAL光纖入屋奧運站CI",
+            "sample_id": "zho_Hant-corpus-0365"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-9226"
+        },
+        {
+          "char": "銳",
+          "codepoint": "U+92B3",
+          "count": 1,
+          "example": {
+            "context": "- 口稱父母官 人命賤如泥 劉銳紹under Topic",
+            "sample_id": "zho_Hant-corpus-0009"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-92B3"
+        },
+        {
+          "char": "銼",
+          "codepoint": "U+92BC",
+          "count": 1,
+          "example": {
+            "context": "中通外直求材易暮㸑晨炊利用均曲突徙薪誠上策焦頭爛額更何人疎烟土銼烹蒸便夜雨荆筐葢覆頻却有千年遼海鶴驀疑華表話前身",
+            "sample_id": "zho_Hant-corpus-0177"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-92BC"
+        },
+        {
+          "char": "錩",
+          "codepoint": "U+9329",
+          "count": 1,
+          "example": {
+            "context": "信 劉尚霖 區穗中 黃 立 楊 震 洪若霓 李彥融 吳佳潔 鄭存翔 林煒楗 何其錩 林宜衡 廖雅淳 陳怡璇 李嘉文 黃稚雯 吳昱甫 林岱儀 王映晴 曾培琪 蘇倖柔",
+            "sample_id": "zho_Hant-corpus-0095"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-9329"
+        },
+        {
+          "char": "阬",
+          "codepoint": "U+962C",
+          "count": 1,
+          "example": {
+            "context": "凡打捕戶於深山曠野猛獸往來去處穿作阬29及安置窩弓不立望竿及抹眉小索者[雖未傷人亦]笞四十以致傷人者減鬥毆傷二等因而",
+            "sample_id": "zho_Hant-corpus-0112"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-962C"
+        },
+        {
+          "char": "陁",
+          "codepoint": "U+9641",
+          "count": 1,
+          "example": {
+            "context": "皇夏〈皇帝獻閔皇帝奏皇夏 周書帝紀雲孝閔皇帝諱覺字陁羅尼太祖第三子也魏恭帝三年三月命為安定公世子十月太祖崩嗣位太師大冢宰十二月丁亥魏",
+            "sample_id": "zho_Hant-corpus-0383"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-9641"
+        },
+        {
+          "char": "靣",
+          "codepoint": "U+9763",
+          "count": 1,
+          "example": {
+            "context": "為簧羣聚鼓之以為音節為絈布色至鮮淨大狗一頭買一生口性尤畏鬼所殺之人美鬚髯者必剝其靣皮籠之於竹及燥號之曰鬼鼓舞祀之以求福利俗尚淫祀至有賣其昆季妻孥盡者乃自賣以供祭焉",
+            "sample_id": "zho_Hant-corpus-0222"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-9763"
+        },
+        {
+          "char": "韌",
+          "codepoint": "U+97CC",
+          "count": 1,
+          "example": {
+            "context": "只有每一個龍國人都將骨子裡的這股倔性釋放出來才是龍國的盛世這就是龍國百姓不屈,堅韌,不畏生死",
+            "sample_id": "zho_Hant-corpus-0138"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-97CC"
+        },
+        {
+          "char": "頎",
+          "codepoint": "U+980E",
+          "count": 1,
+          "example": {
+            "context": "林易廷 呂亭緯 王亭又 洪翊綺 白欣玉 楊詠璇 黃炯達 沈家潁 林晏頎 宋育凱 吳思怡 黃俊翔 黃 詠 蔡明璋 徐子恆 黃欣媚 鄒義峰 莊覲瑄 廖晉賢",
+            "sample_id": "zho_Hant-corpus-0095"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-980E"
+        },
+        {
+          "char": "顥",
+          "codepoint": "U+9865",
+          "count": 1,
+          "example": {
+            "context": "弘睿 徐維彤 黃偉琦 蘇育德 黃士庭 黃柏翰 廖晏輝 邱薰頡 楊宇祥 楊家豪 張顥瀚 劉怡均 曾致學 李 中 詹雅茹 彭致凱 賴光啓 陳瑋智 柯采君 郭惠軒 蔡穎",
+            "sample_id": "zho_Hant-corpus-0464"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-9865"
+        },
+        {
+          "char": "駙",
+          "codepoint": "U+99D9",
+          "count": 1,
+          "example": {
+            "context": "凡毀罵公侯駙馬伯及京省文職三品以上武職二碞以上官者杖一百枷號一箇月發落",
+            "sample_id": "zho_Hant-corpus-0024"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-99D9"
+        },
+        {
+          "char": "驘",
+          "codepoint": "U+9A58",
+          "count": 1,
+          "example": {
+            "context": "新唐書新羅國畜無羊少驢驘多馬開元中其王興光獻果下馬朝霞紬魚牙紬海豹皮又上異狗馬黄金美髢諸物",
+            "sample_id": "zho_Hant-corpus-0032"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-9A58"
+        },
+        {
+          "char": "髒",
+          "codepoint": "U+9AD2",
+          "count": 1,
+          "example": {
+            "context": "看到鋼樑鏽破,拍賣市場屋頂破損,樑柱鏽,又目睹碼頭及停車格被佔用堆放雜物,非常的髒亂,不禁搖頭.",
+            "sample_id": "zho_Hant-corpus-0069"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-9AD2"
+        },
+        {
+          "char": "麤",
+          "codepoint": "U+9EA4",
+          "count": 1,
+          "example": {
+            "context": "由阿賴耶持雜染種本既滅已末亦隨亡故言此斷雜染亦除此三道者三轉依中道轉依攝阿賴耶等麤重轉攝得轉依者即擇滅理擇滅理體即是真如心轉依攝其阿賴耶於金剛時有斷不斷二說不同具",
+            "sample_id": "zho_Hant-corpus-0317"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-9EA4"
+        },
+        {
+          "char": "龎",
+          "codepoint": "U+9F8E",
+          "count": 1,
+          "example": {
+            "context": "夷之中最難以道義招懐也劒南諸獠唐武徳貞觀間數冦州縣者不一巴州山獠王為馨叛梁州都督龎玉梟其首又破餘黨符陽白石二縣獠其後眉州獠反益州行臺郭行方大破之未幾又破洪雅二州獠",
+            "sample_id": "zho_Hant-corpus-0222"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-9F8E"
+        },
+        {
+          "char": "龔",
+          "codepoint": "U+9F94",
+          "count": 1,
+          "example": {
+            "context": "山險當拊以恩信脅人以兵威豈為人父母意邪貞觀七年東西玉洞獠反以右屯衛大將軍張士貴為龔州道行軍總管討平之十二年巫州獠叛夔州都督齊善行擊破之俘男女三千餘口鈞州獠叛桂州都",
+            "sample_id": "zho_Hant-corpus-0222"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-9F94"
+        },
+        {
+          "char": "﹤",
+          "codepoint": "U+FE64",
+          "count": 1,
+          "example": {
+            "context": "也不知道,說就感覺找著找📗火影忍者手游女忍棵图我壓住恐🧑性色在线观看順子嘿嘿一≒﹤﹥じ☆暖暖视频高清图片免费完整版其實,中國和朝鮮兩國曆🚶酷漫屋胖子大叫「換人換人",
+            "sample_id": "zho_Hant-corpus-0159"
+          },
+          "script": "Symbol/emoji",
+          "unicode_name": "SMALL LESS-THAN SIGN"
+        },
+        {
+          "char": "﹥",
+          "codepoint": "U+FE65",
+          "count": 1,
+          "example": {
+            "context": "不知道,說就感覺找著找📗火影忍者手游女忍棵图我壓住恐🧑性色在线观看順子嘿嘿一≒﹤﹥じ☆暖暖视频高清图片免费完整版其實,中國和朝鮮兩國曆🚶酷漫屋胖子大叫「換人換人,",
+            "sample_id": "zho_Hant-corpus-0159"
+          },
+          "script": "Symbol/emoji",
+          "unicode_name": "SMALL GREATER-THAN SIGN"
+        },
+        {
+          "char": "🎓",
+          "codepoint": "U+1F393",
+          "count": 1,
+          "example": {
+            "context": "๑日本黄色一级片视频我們幾個向著那個地板上炸出來的🌍东宫 电视剧「鏡兒宮」上下是🎓杨幂电视剧小红娘免费一剎那間我腦子裡一▆男女搞基免费视频在我們還沒有進入陵墓,還",
+            "sample_id": "zho_Hant-corpus-0159"
+          },
+          "script": "Symbol/emoji",
+          "unicode_name": "GRADUATION CAP"
+        },
+        {
+          "char": "📗",
+          "codepoint": "U+1F4D7",
+          "count": 1,
+          "example": {
+            "context": "腰從兩個🛣️亚洲久久久我突然🤧极品宝贝无敌妻全文胖子自己也不知道,說就感覺找著找📗火影忍者手游女忍棵图我壓住恐🧑性色在线观看順子嘿嘿一≒﹤﹥じ☆暖暖视频高清图片免",
+            "sample_id": "zho_Hant-corpus-0159"
+          },
+          "script": "Symbol/emoji",
+          "unicode_name": "GREEN BOOK"
+        },
+        {
+          "char": "🚶",
+          "codepoint": "U+1F6B6",
+          "count": 1,
+          "example": {
+            "context": "性色在线观看順子嘿嘿一≒﹤﹥じ☆暖暖视频高清图片免费完整版其實,中國和朝鮮兩國曆🚶酷漫屋胖子大叫「換人換人,, 面對著真龍真鳳之靈的吸食那三顆血丹卻彷彿是無底洞一",
+            "sample_id": "zho_Hant-corpus-0159"
+          },
+          "script": "Symbol/emoji",
+          "unicode_name": "PEDESTRIAN"
+        },
+        {
+          "char": "🛣",
+          "codepoint": "U+1F6E3",
+          "count": 1,
+          "example": {
+            "context": "鬼絆♍外婆的家在线观看完整免费在這裡猶豫,也♥️美女脱得只剩皮肤我乘機貓腰從兩個🛣️亚洲久久久我突然🤧极品宝贝无敌妻全文胖子自己也不知道,說就感覺找著找📗火影忍者",
+            "sample_id": "zho_Hant-corpus-0159"
+          },
+          "script": "Symbol/emoji",
+          "unicode_name": "MOTORWAY"
+        },
+        {
+          "char": "🤧",
+          "codepoint": "U+1F927",
+          "count": 1,
+          "example": {
+            "context": "看完整免费在這裡猶豫,也♥️美女脱得只剩皮肤我乘機貓腰從兩個🛣️亚洲久久久我突然🤧极品宝贝无敌妻全文胖子自己也不知道,說就感覺找著找📗火影忍者手游女忍棵图我壓住恐",
+            "sample_id": "zho_Hant-corpus-0159"
+          },
+          "script": "Symbol/emoji",
+          "unicode_name": "SNEEZING FACE"
+        },
+        {
+          "char": "🥔",
+          "codepoint": "U+1F954",
+          "count": 1,
+          "example": {
+            "context": "再✿忘忧草在线免费视频而且地上的(◐钓系美人和疯犬如果這天宮是在中間的三聖山的懸🥔日本天天操我在黑暗🥣chinese小帅gayxxxxx方洞之中🤣stoya在线观",
+            "sample_id": "zho_Hant-corpus-0159"
+          },
+          "script": "Symbol/emoji",
+          "unicode_name": "POTATO"
+        },
+        {
+          "char": "🥣",
+          "codepoint": "U+1F963",
+          "count": 1,
+          "example": {
+            "context": "频而且地上的(◐钓系美人和疯犬如果這天宮是在中間的三聖山的懸🥔日本天天操我在黑暗🥣chinese小帅gayxxxxx方洞之中🤣stoya在线观看「你別不是鬼絆♍外",
+            "sample_id": "zho_Hant-corpus-0159"
+          },
+          "script": "Symbol/emoji",
+          "unicode_name": "BOWL WITH SPOON"
+        },
+        {
+          "char": "🧑",
+          "codepoint": "U+1F9D1",
+          "count": 1,
+          "example": {
+            "context": "极品宝贝无敌妻全文胖子自己也不知道,說就感覺找著找📗火影忍者手游女忍棵图我壓住恐🧑性色在线观看順子嘿嘿一≒﹤﹥じ☆暖暖视频高清图片免费完整版其實,中國和朝鮮兩國曆",
+            "sample_id": "zho_Hant-corpus-0159"
+          },
+          "script": "Symbol/emoji",
+          "unicode_name": "ADULT"
+        },
+        {
+          "char": "𠋫",
+          "codepoint": "U+202EB",
+          "count": 1,
+          "example": {
+            "context": "督張寶徳討平之明州山獠又叛交州都督李道彦擊走之是嵗巴洋集壁四州山獠叛攻巴州遣右武𠋫將軍上官懐仁破之於壁州虜男女萬餘明年遂平十四年羅竇諸獠叛以廣州都督黨仁𢎞為竇州道",
+            "sample_id": "zho_Hant-corpus-0222"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-202EB"
+        },
+        {
+          "char": "𠛴",
+          "codepoint": "U+206F4",
+          "count": 1,
+          "example": {
+            "context": "演曰三𠛴那生滅謂緣境時念念生滅名非常一生故非一滅故非常因果如流是為流轉.",
+            "sample_id": "zho_Hant-corpus-0346"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-206F4"
+        },
+        {
+          "char": "𠩄",
+          "codepoint": "U+20A44",
+          "count": 1,
+          "example": {
+            "context": "〈愚按交道之難至于與為故與為好甚不易得不寁者不速也言非朝夕𠩄能速成也而忍遽然決絶乎〉遵大路二章章四句〈何氏謂此詩周公卿欲留鄭莊公也左𫝊鄭莊公",
+            "sample_id": "zho_Hant-corpus-0357"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-20A44"
+        },
+        {
+          "char": "𢎞",
+          "codepoint": "U+2239E",
+          "count": 1,
+          "example": {
+            "context": "州遣右武𠋫將軍上官懐仁破之於壁州虜男女萬餘明年遂平十四年羅竇諸獠叛以廣州都督黨仁𢎞為竇州道行軍總管擊之虜男女七千餘人太宗再伐髙麗為船劒南諸獠皆半役雅卭眉三州獠不堪",
+            "sample_id": "zho_Hant-corpus-0222"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-2239E"
+        },
+        {
+          "char": "𣵀",
+          "codepoint": "U+23D40",
+          "count": 1,
+          "example": {
+            "context": "心恐成斷滅又即所觀識與真性懸殊即所計我愛與大悲逈別有云此誤認一切變現不為煩惱皆合𣵀槃清淨妙德也.",
+            "sample_id": "zho_Hant-corpus-0372"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-23D40"
+        },
+        {
+          "char": "𤦺",
+          "codepoint": "U+249BA",
+          "count": 1,
+          "example": {
+            "context": "居蓄邑注云有所廢有所蓄言其乘時射利也〉琦賂寳貨巨室不能容〈琦瑋也抱朴子曰片玉可以𤦺奚必俟盈尺也〉馬牛羊豕山谷不能受妖童美妾填乎綺室倡謳妓樂列乎深堂賓客待見而不敢去",
+            "sample_id": "zho_Hant-corpus-0437"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-249BA"
+        },
+        {
+          "char": "𤼵",
+          "codepoint": "U+24F35",
+          "count": 1,
+          "example": {
+            "context": "即此所說臨高想心能令汝形真受酸澀(此以登高想心能𤼵酸受以明受隂因妄想生故)由因受生能動色體(此明形酸實有所受而實無所受之物以見受隂",
+            "sample_id": "zho_Hant-corpus-0254"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-24F35"
+        },
+        {
+          "char": "𩜾",
+          "codepoint": "U+2973E",
+          "count": 1,
+          "example": {
+            "context": "罔極奈何不審自罹荼毒〈父在母亡即雲憂苦〉氣力何如伏乞〈平交雲伏願降等雲惟冀〉強加𩜾粥〈已𦵏則雲疏食〉俯從禮制某役事所縻〈在官即雲職業有守〉未由奔 慰其於憂戀無任下",
+            "sample_id": "zho_Hant-corpus-0042"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-2973E"
+        },
+        {
+          "char": "𫎇",
+          "codepoint": "U+2B387",
+          "count": 1,
+          "example": {
+            "context": "附方〈新一〉目中障瞖〈宻𫎇花黄蘗根各一兩為末水丸梧子大毎臥時湯服十丸至十五丸聖濟録〉",
+            "sample_id": "zho_Hant-corpus-0233"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-2B387"
+        },
+        {
+          "char": "𬗟",
+          "codepoint": "U+2C5DF",
+          "count": 1,
+          "example": {
+            "context": "封至夫人者亦云薨逝若生者無官即雲奄違色養〉承 訃驚怛不能已已伏惟〈平交雲恭惟降等𬗟惟〉孝心純至思慕號絶何可堪居日月流邁遽踰旬朔〈經時即雲已忽經時已𦵏即雲遽經襄奉卒",
+            "sample_id": "zho_Hant-corpus-0042"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-2C5DF"
+        },
+        {
+          "char": "𭧂",
+          "codepoint": "U+2D9C2",
+          "count": 1,
+          "example": {
+            "context": "周武帝平梁〈達奚武平之〉益〈尉遲逈平之〉令所在撫慰其與華人雜居者亦頗從賦役然天性𭧂亂旋致擾動每嵗命随近州鎮出兵討之獲其生口以充賤𨽻謂之壓獠焉復有商旅往來者亦資以為",
+            "sample_id": "zho_Hant-corpus-0222"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-2D9C2"
+        }
+      ],
+      "unique_character_coverage": 0.9514588859416445
+    }
+  },
+  "chinese_sequence_parity": {
+    "simplified_token_length_p95": 367,
+    "simplified_tokens_per_character": 0.7518859813763124,
+    "traditional_minus_simplified_fertility": 0.180855779215791,
+    "traditional_to_simplified_fertility_ratio": 1.240536176621804,
+    "traditional_to_simplified_p95_ratio": 2.354223433242507,
+    "traditional_token_length_p95": 864,
+    "traditional_tokens_per_character": 0.9327417605921033
+  },
+  "cjk_shared_han": {
+    "covered_shared_han": 878,
+    "mean_standalone_pieces": 1.9715261958997723,
+    "mismatch_examples": [],
+    "shared_han_coverage": 1.0,
+    "shared_unique_han": 878,
+    "simplified_traditional_shared_unique_han": 1570,
+    "source_language_split_mismatches": 0
+  },
+  "corpus_metrics": {
+    "eng_Latn": {
+      "evaluated_non_whitespace_characters": 179389,
+      "exact_roundtrips": 500,
+      "mean_tokens_per_sample": 132.438,
+      "roundtrip_exact_rate": 1.0,
+      "roundtrip_mismatches": [],
+      "samples": 500,
+      "source_character_loss_rate": 0.0,
+      "source_characters": 214520,
+      "token_length_max": 879,
+      "token_length_p50": 83,
+      "token_length_p95": 482,
+      "token_length_p99": 619,
+      "tokens": 66219,
+      "tokens_per_non_whitespace_character": 0.36913634615277413,
+      "unk_source_characters": 0,
+      "unk_token_ratio": 0.0,
+      "unk_tokens": 0,
+      "unmapped_unk_tokens": 0
+    },
+    "jpn_Jpan": {
+      "evaluated_non_whitespace_characters": 83697,
+      "exact_roundtrips": 500,
+      "mean_tokens_per_sample": 102.694,
+      "roundtrip_exact_rate": 1.0,
+      "roundtrip_mismatches": [],
+      "samples": 500,
+      "source_character_loss_rate": 0.0,
+      "source_characters": 85336,
+      "token_length_max": 923,
+      "token_length_p50": 50,
+      "token_length_p95": 388,
+      "token_length_p99": 762,
+      "tokens": 51347,
+      "tokens_per_non_whitespace_character": 0.6134867438498393,
+      "unk_source_characters": 0,
+      "unk_token_ratio": 0.0,
+      "unk_tokens": 0,
+      "unmapped_unk_tokens": 0
+    },
+    "kor_Hang": {
+      "evaluated_non_whitespace_characters": 125677,
+      "exact_roundtrips": 500,
+      "mean_tokens_per_sample": 182.398,
+      "roundtrip_exact_rate": 1.0,
+      "roundtrip_mismatches": [],
+      "samples": 500,
+      "source_character_loss_rate": 0.0,
+      "source_characters": 161317,
+      "token_length_max": 1097,
+      "token_length_p50": 116,
+      "token_length_p95": 465,
+      "token_length_p99": 915,
+      "tokens": 91199,
+      "tokens_per_non_whitespace_character": 0.7256618156066742,
+      "unk_source_characters": 0,
+      "unk_token_ratio": 0.0,
+      "unk_tokens": 0,
+      "unmapped_unk_tokens": 0
+    },
+    "zho_Hans": {
+      "evaluated_non_whitespace_characters": 82583,
+      "exact_roundtrips": 499,
+      "mean_tokens_per_sample": 124.186,
+      "roundtrip_exact_rate": 0.998,
+      "roundtrip_mismatches": [
+        {
+          "decoded": "一天是星期六香港有赛马，我在客厅看着电视赌马，太太王娟在房间裏睡午觉。忽然王雯走过来对我悄悄地说：「你祗顾赌马，你看你老婆一个人在房裏多难受。」说完就走到厨房门口。我家的厨房和我的睡房是斜对着，可以看到我的睡床。我走过去看王娟在床上一手插在内裤裏在自己的小穴内挖着，一手搓着自己的乳房。口裏发出诱人的叫声：「Oh…Fuck me…Fuck me hard…」因为电视机在播放赛马﹐所以我刚才没有发觉到。我站在王雯身后看到这情景，我的阳具慢慢的也硬了起来。王雯转过头对我说：「你还不",
+          "sample_id": "zho_Hans-corpus-0312",
+          "source": "一天是星期六香港有赛马，我在客厅看着电视赌马，太太王娟在房间裏睡午觉。忽然王雯走过来对我悄悄地说：「你祗顾赌马，你看你老婆一个人在房裏多难受。」说完就走到厨房门口。我家的厨房和我的睡房是斜对着，可以看到我的睡床。我走过去看王娟在床上一手插在内裤裏在自己的小穴内挖着，一手搓着自己的乳房。口裏发出诱人的叫声：「Oh…Fuck me…Fuck me hard…」因为电视机在播放赛马﹐所以我刚才没有发觉到。我站在王雯身后看到这情景，我的阳具慢慢的也硬了起来。王雯转过头对我说：「你还不"
+        }
+      ],
+      "samples": 500,
+      "source_character_loss_rate": 3.6327089110349585e-05,
+      "source_characters": 83223,
+      "token_length_max": 1232,
+      "token_length_p50": 73,
+      "token_length_p95": 367,
+      "token_length_p99": 830,
+      "tokens": 62093,
+      "tokens_per_non_whitespace_character": 0.7518859813763124,
+      "unk_source_characters": 3,
+      "unk_token_ratio": 4.831462483693814e-05,
+      "unk_tokens": 3,
+      "unmapped_unk_tokens": 0
+    },
+    "zho_Hant": {
+      "evaluated_non_whitespace_characters": 100523,
+      "exact_roundtrips": 364,
+      "mean_tokens_per_sample": 187.524,
+      "roundtrip_exact_rate": 0.728,
+      "roundtrip_mismatches": [
+        {
+          "decoded": "缺錢急用錢怎麼辦~買房子要什麼稅1.個別協商諮詢",
+          "sample_id": "zho_Hant-corpus-0001",
+          "source": "缺錢急用錢怎麼辦~買房子要繳什麼稅1.個別協商諮詢"
+        },
+        {
+          "decoded": "核心內容: 腸癌 相關內容: 癌 便秘 腸癌 肺癌 肝癌 胃癌 痔瘡 大腸癌 豬肉 牛肉 羊肉 癌 排毒 食道癌 疼痛 糙米 降血脂 紅肉 白肉 致癌 支溝穴 維生素C 便血 直腸癌 脂肪 血糖 基因缺陷 亞硝酸鹽 排毒餐 降血糖 葡聚糖 癌變 久坐 維生素 膳食纖維 亞硝胺 致癌物 燕麥 果膠 淀粉 食品添加劑 添加劑 便常規 洗澡 結直腸癌 血脂 肉類 果凍 硝酸鹽 飲食習慣 息肉 潛血 肛門指檢 可溶性膳食纖維 李纓 膳食 雜糧 自殺 腸鏡 黑便 血便 米飯 直腸指檢 ",
+          "sample_id": "zho_Hant-corpus-0004",
+          "source": "核心內容: 腸癌 相關內容: 癌癥 便秘 腸癌 肺癌 肝癌 胃癌 痔瘡 大腸癌 豬肉 牛肉 羊肉 癌 排毒 食道癌 疼痛 糙米 降血脂 紅肉 白肉 致癌 支溝穴 維生素C 便血 直腸癌 脂肪 血糖 基因缺陷 亞硝酸鹽 排毒餐 降血糖 葡聚糖 癌變 久坐 維生素 膳食纖維 亞硝胺 致癌物 燕麥 果膠 淀粉 食品添加劑 添加劑 便常規 洗澡 結直腸癌 血脂 肉類 果凍 硝酸鹽 飲食習慣 息肉 潛血 肛門指檢 可溶性膳食纖維 李纓 膳食 雜糧 自殺 腸鏡 黑便 血便 米飯 直腸指檢"
+        },
+        {
+          "decoded": "相關內容: 心臟病 頭痛 發熱 妊娠期 心衰 抽搐 蛋白質 驚厥 心肌梗死 維生素 白細胞 維生素缺乏 正水 幻覺 物理降溫 解毒 性病 妊娠 酸平衡 高熱 肝臟 心肌 勞損 降溫 消化 意識障礙",
+          "sample_id": "zho_Hant-corpus-0007",
+          "source": "相關內容: 心臟病 頭痛 發熱 妊娠期 心衰 抽搐 蛋白質 驚厥 心肌梗死 維生素 白細胞 維生素缺乏 正水 幻覺 物理降溫 解毒 性病 妊娠 酸堿平衡 高熱 肝臟 心肌 勞損 降溫 消化 意識障礙"
+        },
+        {
+          "decoded": "- 口稱父母官 人命賤如泥 劉紹under Topic",
+          "sample_id": "zho_Hant-corpus-0009",
+          "source": "- 口稱父母官 人命賤如泥 劉銳紹under Topic"
+        },
+        {
+          "decoded": "一 部 好 看 的 電 影 四 3 張 名 宜 功 夫 熊 貓 是 我 覺 得 最 好 看 的 電 影, 而 且 還 是 讓 我 看 過 第 一 次 覺 得 好 笑 的 電 影, 一 下 子 搞 笑, 一 下 子 又 悲 傷, 看 了 想 笑 又 想 哭, 害 我 不 知 道 該 笑 還 是 該 哭, 不 過 我 就 是 喜 歡 這 部 電 影, 還 可 以 連 續 看 好 幾 遍 都 不 會 覺 得 膩 我 能 看 這 麼 多 遍 的 原 因, 是 因 為 它 很 好 看,",
+          "sample_id": "zho_Hant-corpus-0011",
+          "source": "一 部 好 看 的 電 影 四 3 張 名 宜 功 夫 熊 貓 是 我 覺 得 最 好 看 的 電 影, 而 且 還 是 讓 我 看 過 第 一 次 覺 得 好 笑 的 電 影, 一 下 子 搞 笑, 一 下 子 又 悲 傷, 看 了 想 笑 又 想 哭, 害 我 不 知 道 該 笑 還 是 該 哭, 不 過 我 就 是 喜 歡 這 部 電 影, 還 可 以 連 續 看 好 幾 遍 都 不 會 覺 得 膩 我 能 看 這 麼 多 遍 的 原 因, 是 因 為 它 很 好 看,"
+        }
+      ],
+      "samples": 500,
+      "source_character_loss_rate": 0.004088616535519235,
+      "source_characters": 104467,
+      "token_length_max": 1436,
+      "token_length_p50": 73,
+      "token_length_p95": 864,
+      "token_length_p99": 1201,
+      "tokens": 93762,
+      "tokens_per_non_whitespace_character": 0.9327417605921033,
+      "unk_source_characters": 411,
+      "unk_token_ratio": 0.004276785904737527,
+      "unk_tokens": 401,
+      "unmapped_unk_tokens": 0
+    }
+  },
+  "english_subwords": {
+    "mean_pieces_per_word": 1.7650506881123633,
+    "most_fragmented_words": [
+      {
+        "count": 1,
+        "has_unk": false,
+        "pieces": 13,
+        "word": "Entrepreneur-in-Residence"
+      },
+      {
+        "count": 1,
+        "has_unk": false,
+        "pieces": 13,
+        "word": "staff-workshops-and-trainings"
+      },
+      {
+        "count": 1,
+        "has_unk": false,
+        "pieces": 12,
+        "word": "Polyvinylpyrrolidone"
+      },
+      {
+        "count": 1,
+        "has_unk": false,
+        "pieces": 12,
+        "word": "Wiesbaden-Schierstein"
+      },
+      {
+        "count": 1,
+        "has_unk": false,
+        "pieces": 11,
+        "word": "REPRESENTATIONS"
+      },
+      {
+        "count": 1,
+        "has_unk": false,
+        "pieces": 11,
+        "word": "THOMAS-GREENFIELD"
+      },
+      {
+        "count": 1,
+        "has_unk": false,
+        "pieces": 11,
+        "word": "three-bottles-to-a-guest"
+      },
+      {
+        "count": 2,
+        "has_unk": false,
+        "pieces": 10,
+        "word": "Nuwara-Eliya"
+      },
+      {
+        "count": 1,
+        "has_unk": false,
+        "pieces": 10,
+        "word": "Co-Emulsifiers"
+      },
+      {
+        "count": 1,
+        "has_unk": false,
+        "pieces": 10,
+        "word": "Sarbanes-Oxley"
+      },
+      {
+        "count": 1,
+        "has_unk": false,
+        "pieces": 10,
+        "word": "ssgpolicyblog"
+      },
+      {
+        "count": 1,
+        "has_unk": false,
+        "pieces": 9,
+        "word": "Cyclopentasiloxane"
+      },
+      {
+        "count": 1,
+        "has_unk": false,
+        "pieces": 9,
+        "word": "INDIVIDUALS"
+      },
+      {
+        "count": 1,
+        "has_unk": false,
+        "pieces": 9,
+        "word": "methicillin-resistant"
+      },
+      {
+        "count": 1,
+        "has_unk": false,
+        "pieces": 9,
+        "word": "nineteenth-century"
+      },
+      {
+        "count": 1,
+        "has_unk": false,
+        "pieces": 9,
+        "word": "Rosgvardiya’s"
+      },
+      {
+        "count": 1,
+        "has_unk": false,
+        "pieces": 9,
+        "word": "staphylococcus"
+      },
+      {
+        "count": 1,
+        "has_unk": false,
+        "pieces": 9,
+        "word": "Syria-controlled"
+      },
+      {
+        "count": 2,
+        "has_unk": false,
+        "pieces": 8,
+        "word": "cryptocurrencies"
+      },
+      {
+        "count": 2,
+        "has_unk": false,
+        "pieces": 8,
+        "word": "encyclopaedias"
+      }
+    ],
+    "over_four_piece_word_rate": 0.027269638103868156,
+    "single_piece_word_rate": 0.5931358667950388,
+    "unique_words": 8234,
+    "unknown_word_rate": 0.0,
+    "word_occurrences": 35314
+  },
+  "korean_hangul": {
+    "frequency_weighted_coverage": 1.0,
+    "hangul_frequency": 111066,
+    "missing": [],
+    "unique_coverage": 1.0,
+    "unique_hangul": 1174
+  },
+  "label": "fallback-32k",
+  "long_sentence_metrics": {
+    "eng_Latn": {
+      "evaluated_non_whitespace_characters": 118719,
+      "exact_roundtrips": 134,
+      "mean_tokens_per_sample": 326.2835820895522,
+      "roundtrip_exact_rate": 1.0,
+      "roundtrip_mismatches": [],
+      "samples": 134,
+      "source_character_loss_rate": 0.0,
+      "source_characters": 142227,
+      "token_length_max": 879,
+      "token_length_p50": 289,
+      "token_length_p95": 609,
+      "token_length_p99": 677,
+      "tokens": 43722,
+      "tokens_per_non_whitespace_character": 0.36828140398756726,
+      "unk_source_characters": 0,
+      "unk_token_ratio": 0.0,
+      "unk_tokens": 0,
+      "unmapped_unk_tokens": 0
+    },
+    "jpn_Jpan": {
+      "evaluated_non_whitespace_characters": 31981,
+      "exact_roundtrips": 38,
+      "mean_tokens_per_sample": 535.0263157894736,
+      "roundtrip_exact_rate": 1.0,
+      "roundtrip_mismatches": [],
+      "samples": 38,
+      "source_character_loss_rate": 0.0,
+      "source_characters": 33116,
+      "token_length_max": 923,
+      "token_length_p50": 487,
+      "token_length_p95": 920,
+      "token_length_p99": 923,
+      "tokens": 20331,
+      "tokens_per_non_whitespace_character": 0.6357212094681217,
+      "unk_source_characters": 0,
+      "unk_token_ratio": 0.0,
+      "unk_tokens": 0,
+      "unmapped_unk_tokens": 0
+    },
+    "kor_Hang": {
+      "evaluated_non_whitespace_characters": 78515,
+      "exact_roundtrips": 140,
+      "mean_tokens_per_sample": 410.05,
+      "roundtrip_exact_rate": 1.0,
+      "roundtrip_mismatches": [],
+      "samples": 140,
+      "source_character_loss_rate": 0.0,
+      "source_characters": 100590,
+      "token_length_max": 1097,
+      "token_length_p50": 351,
+      "token_length_p95": 776,
+      "token_length_p99": 1040,
+      "tokens": 57407,
+      "tokens_per_non_whitespace_character": 0.7311596510220977,
+      "unk_source_characters": 0,
+      "unk_token_ratio": 0.0,
+      "unk_tokens": 0,
+      "unmapped_unk_tokens": 0
+    },
+    "zho_Hans": {
+      "evaluated_non_whitespace_characters": 21490,
+      "exact_roundtrips": 24,
+      "mean_tokens_per_sample": 654.36,
+      "roundtrip_exact_rate": 0.96,
+      "roundtrip_mismatches": [
+        {
+          "decoded": "一天是星期六香港有赛马，我在客厅看着电视赌马，太太王娟在房间裏睡午觉。忽然王雯走过来对我悄悄地说：「你祗顾赌马，你看你老婆一个人在房裏多难受。」说完就走到厨房门口。我家的厨房和我的睡房是斜对着，可以看到我的睡床。我走过去看王娟在床上一手插在内裤裏在自己的小穴内挖着，一手搓着自己的乳房。口裏发出诱人的叫声：「Oh…Fuck me…Fuck me hard…」因为电视机在播放赛马﹐所以我刚才没有发觉到。我站在王雯身后看到这情景，我的阳具慢慢的也硬了起来。王雯转过头对我说：「你还不",
+          "sample_id": "zho_Hans-corpus-0312",
+          "source": "一天是星期六香港有赛马，我在客厅看着电视赌马，太太王娟在房间裏睡午觉。忽然王雯走过来对我悄悄地说：「你祗顾赌马，你看你老婆一个人在房裏多难受。」说完就走到厨房门口。我家的厨房和我的睡房是斜对着，可以看到我的睡床。我走过去看王娟在床上一手插在内裤裏在自己的小穴内挖着，一手搓着自己的乳房。口裏发出诱人的叫声：「Oh…Fuck me…Fuck me hard…」因为电视机在播放赛马﹐所以我刚才没有发觉到。我站在王雯身后看到这情景，我的阳具慢慢的也硬了起来。王雯转过头对我说：「你还不"
+        }
+      ],
+      "samples": 25,
+      "source_character_loss_rate": 0.00013959981386691485,
+      "source_characters": 21799,
+      "token_length_max": 1232,
+      "token_length_p50": 575,
+      "token_length_p95": 1185,
+      "token_length_p99": 1232,
+      "tokens": 16359,
+      "tokens_per_non_whitespace_character": 0.7612377850162867,
+      "unk_source_characters": 3,
+      "unk_token_ratio": 0.00018338529249954154,
+      "unk_tokens": 3,
+      "unmapped_unk_tokens": 0
+    },
+    "zho_Hant": {
+      "evaluated_non_whitespace_characters": 60344,
+      "exact_roundtrips": 20,
+      "mean_tokens_per_sample": 847.9076923076923,
+      "roundtrip_exact_rate": 0.3076923076923077,
+      "roundtrip_mismatches": [
+        {
+          "decoded": "一 部 好 看 的 電 影 四 3 張 名 宜 功 夫 熊 貓 是 我 覺 得 最 好 看 的 電 影, 而 且 還 是 讓 我 看 過 第 一 次 覺 得 好 笑 的 電 影, 一 下 子 搞 笑, 一 下 子 又 悲 傷, 看 了 想 笑 又 想 哭, 害 我 不 知 道 該 笑 還 是 該 哭, 不 過 我 就 是 喜 歡 這 部 電 影, 還 可 以 連 續 看 好 幾 遍 都 不 會 覺 得 膩 我 能 看 這 麼 多 遍 的 原 因, 是 因 為 它 很 好 看,",
+          "sample_id": "zho_Hant-corpus-0011",
+          "source": "一 部 好 看 的 電 影 四 3 張 名 宜 功 夫 熊 貓 是 我 覺 得 最 好 看 的 電 影, 而 且 還 是 讓 我 看 過 第 一 次 覺 得 好 笑 的 電 影, 一 下 子 搞 笑, 一 下 子 又 悲 傷, 看 了 想 笑 又 想 哭, 害 我 不 知 道 該 笑 還 是 該 哭, 不 過 我 就 是 喜 歡 這 部 電 影, 還 可 以 連 續 看 好 幾 遍 都 不 會 覺 得 膩 我 能 看 這 麼 多 遍 的 原 因, 是 因 為 它 很 好 看,"
+        },
+        {
+          "decoded": "Group Limited小型辦公室設計建議,色調和辦公室家具. 即使是小型辦公室,裝修時候別忘記統一設計風格與色調窗戶 windowHK & Macau Scent On Engineering & Construction Ltd量身訂造床尾板 footboardDong Jiu (HK) Co Ltd專業的室內設計印刷稿Art workWing Chi Engineering Ltd差餉物業估價署家具種類Elegant Interiors Contracting Co ",
+          "sample_id": "zho_Hant-corpus-0073",
+          "source": "Group Limited小型辦公室設計建議,色調和辦公室家具. 即使是小型辦公室,裝修時候別忘記統一設計風格與色調窗戶 windowHK & Macau Scent On Engineering & Construction Ltd量身訂造傢俬床尾板 footboardDong Jiu (HK) Co Ltd專業的室內設計印刷稿Art workWing Chi Engineering Ltd差餉物業估價署家具種類Elegant Interiors Contracting C"
+        },
+        {
+          "decoded": "林易廷 呂亭緯 王亭又 洪翊綺 白欣玉 楊詠璇 黃炯達 沈家潁 林晏 宋育凱 吳思怡 黃俊翔 黃 詠 蔡明璋 徐子恆 黃欣媚 鄒義峰 莊覲瑄 廖晉賢 郭曰誠 黃紹誠 黃文 陳柏廷 謝宜廷 廖宏基 何庚諺 蔡孟峰 林千雯 曾元康 李姿瑄 陳柏勳 李俊毅 洪梓鐘 洪瑞妏 陳泰余 朱紹綺 陳鈞隆 陳映竹 潘哲毅 王立中 柯穎志 陳柏瑞 林亮華 陳芷安 林信 劉尚霖 區穗中 黃 立 楊 震 洪若霓 李融 吳佳潔 鄭存翔 林楗 何其 林宜衡 廖雅淳 陳怡璇 李嘉文 黃稚雯 吳昱甫 林岱",
+          "sample_id": "zho_Hant-corpus-0095",
+          "source": "林易廷 呂亭緯 王亭又 洪翊綺 白欣玉 楊詠璇 黃炯達 沈家潁 林晏頎 宋育凱 吳思怡 黃俊翔 黃 詠 蔡明璋 徐子恆 黃欣媚 鄒義峰 莊覲瑄 廖晉賢 郭曰誠 黃紹誠 黃彥文 陳柏廷 謝宜廷 廖宏基 何庚諺 蔡孟峰 林千雯 曾元康 李姿瑄 陳柏勳 李俊毅 洪梓鐘 洪瑞妏 陳泰余 朱紹綺 陳鈞隆 陳映竹 潘哲毅 王立中 柯穎志 陳柏瑞 林亮華 陳芷安 林瑋信 劉尚霖 區穗中 黃 立 楊 震 洪若霓 李彥融 吳佳潔 鄭存翔 林煒楗 何其錩 林宜衡 廖雅淳 陳怡璇 李嘉文 黃稚雯 "
+        },
+        {
+          "decoded": "經典賽(WBC)冠軍戰台北時間23日上午9時舉行,波多黎各迎戰美國,不管是哪一隊奪冠,都是他們隊史在經典賽史拿到的第一個冠軍.波多黎各由Seth Lugo先發,美國則由Marcus Stroman(史卓曼)主投. 山葉機車分期付款複賽時曾碰頭,當時也是Seth Lugo對決Marcus Stroman,Stroman一局下一上場陣腳還沒站穩,就被波多黎各連敲6支安打失4分,陷入苦戰,冠軍戰再碰頭,Stroman誓言報仇. 臺南市安南區民間借貸 公教貸款率利計算>渣打整合負債機",
+          "sample_id": "zho_Hant-corpus-0105",
+          "source": "經典賽(WBC)冠軍戰台北時間23日上午9時舉行,波多黎各迎戰美國,不管是哪一隊奪冠,都是他們隊史在經典賽史拿到的第一個冠軍.波多黎各由Seth Lugo先發,美國則由Marcus Stroman(史卓曼)主投. 山葉機車分期付款複賽時曾碰頭,當時也是Seth Lugo對決Marcus Stroman,Stroman一局下一上場陣腳還沒站穩,就被波多黎各連敲6支安打失4分,陷入苦戰,冠軍戰再碰頭,Stroman誓言報仇. 臺南市安南區民間借貸 公教貸款率利計算>渣打整合負債機"
+        },
+        {
+          "decoded": "並超塵拔俗條決速走都張速更圖成我簡潔受對它.小額借錢 屏東化想世長給襟懷坦白但先如治人溫柔下色到高山景行,法做同農廉潔奉公電天不怕,地不怕兩幸福必方能感激拉命之圖開況.現金貸款條件 別回設打點場過壓,共大內思切走然會系達十百線求道舒服切麼林線己,取向且花議切走當處報數度見名例空員土.代書貸款10萬文情保七分門例例只應風經階回日接律,類做國直道而行形關性至教文導達務,且有修身潔行全心全意取默默無言多知問北過目不忘土百些之知禮賢下士我則外種群政呼牛呼馬情年具鬥美於色拉她積網開三面",
+          "sample_id": "zho_Hant-corpus-0116",
+          "source": "並超塵拔俗條決速走都張速更圖成我簡潔受對它.小額借錢 屏東化想世長給襟懷坦白但先如治人溫柔下色到高山景行,法做同農廉潔奉公電天不怕,地不怕兩幸福必方能感激拉命之圖開況.現金貸款條件 別回設打點場過壓,共大內思切走然會系達十百線求道舒服切麼林線己,取向且花議切走當處報數度見名例空員土.代書貸款10萬文情保七分門例例只應風經階回日接律,類做國直道而行形關性至教文導達務,且有修身潔行全心全意取默默無言多知問北過目不忘土百些之知禮賢下士我則外種群政呼牛呼馬情年具鬥美於色拉她積網開三面"
+        }
+      ],
+      "samples": 65,
+      "source_character_loss_rate": 0.003894339122365107,
+      "source_characters": 63522,
+      "token_length_max": 1436,
+      "token_length_p50": 818,
+      "token_length_p95": 1268,
+      "token_length_p99": 1436,
+      "tokens": 55114,
+      "tokens_per_non_whitespace_character": 0.9133302399575766,
+      "unk_source_characters": 235,
+      "unk_token_ratio": 0.004136879921617012,
+      "unk_tokens": 228,
+      "unmapped_unk_tokens": 0
+    }
+  },
+  "observed_unknown_characters": {
+    "eng_Latn": [],
+    "jpn_Jpan": [],
+    "kor_Hang": [],
+    "zho_Hans": [
+      {
+        "char": "餵",
+        "codepoint": "U+9935",
+        "count": 2,
+        "script": "Han"
+      },
+      {
+        "char": "踫",
+        "codepoint": "U+8E2B",
+        "count": 1,
+        "script": "Han"
+      }
+    ],
+    "zho_Hant": [
+      {
+        "char": "幫",
+        "codepoint": "U+5E6B",
+        "count": 29,
+        "script": "Han"
+      },
+      {
+        "char": "逺",
+        "codepoint": "U+903A",
+        "count": 16,
+        "script": "Han"
+      },
+      {
+        "char": "傢",
+        "codepoint": "U+50A2",
+        "count": 14,
+        "script": "Han"
+      },
+      {
+        "char": "彥",
+        "codepoint": "U+5F65",
+        "count": 14,
+        "script": "Han"
+      },
+      {
+        "char": "𨽻",
+        "codepoint": "U+28F7B",
+        "count": 11,
+        "script": "Han"
+      },
+      {
+        "char": "繳",
+        "codepoint": "U+7E73",
+        "count": 10,
+        "script": "Han"
+      },
+      {
+        "char": "紓",
+        "codepoint": "U+7D13",
+        "count": 10,
+        "script": "Han"
+      },
+      {
+        "char": "瑋",
+        "codepoint": "U+744B",
+        "count": 10,
+        "script": "Han"
+      },
+      {
+        "char": "嵗",
+        "codepoint": "U+5D57",
+        "count": 9,
+        "script": "Han"
+      },
+      {
+        "char": "樁",
+        "codepoint": "U+6A01",
+        "count": 8,
+        "script": "Han"
+      },
+      {
+        "char": "𤣥",
+        "codepoint": "U+248E5",
+        "count": 8,
+        "script": "Han"
+      },
+      {
+        "char": "䟽",
+        "codepoint": "U+47FD",
+        "count": 7,
+        "script": "Han"
+      },
+      {
+        "char": "祔",
+        "codepoint": "U+7954",
+        "count": 7,
+        "script": "Han"
+      },
+      {
+        "char": "癥",
+        "codepoint": "U+7665",
+        "count": 6,
+        "script": "Han"
+      },
+      {
+        "char": "囉",
+        "codepoint": "U+56C9",
+        "count": 6,
+        "script": "Han"
+      },
+      {
+        "char": "䘮",
+        "codepoint": "U+462E",
+        "count": 6,
+        "script": "Han"
+      },
+      {
+        "char": "俬",
+        "codepoint": "U+4FEC",
+        "count": 5,
+        "script": "Han"
+      },
+      {
+        "char": "龐",
+        "codepoint": "U+9F90",
+        "count": 5,
+        "script": "Han"
+      },
+      {
+        "char": "𫝊",
+        "codepoint": "U+2B74A",
+        "count": 5,
+        "script": "Han"
+      },
+      {
+        "char": "㑹",
+        "codepoint": "U+3479",
+        "count": 4,
+        "script": "Han"
+      },
+      {
+        "char": "壢",
+        "codepoint": "U+58E2",
+        "count": 4,
+        "script": "Han"
+      },
+      {
+        "char": "茍",
+        "codepoint": "U+830D",
+        "count": 4,
+        "script": "Han"
+      },
+      {
+        "char": "潑",
+        "codepoint": "U+6F51",
+        "count": 3,
+        "script": "Han"
+      },
+      {
+        "char": "鏽",
+        "codepoint": "U+93FD",
+        "count": 3,
+        "script": "Han"
+      },
+      {
+        "char": "枱",
+        "codepoint": "U+67B1",
+        "count": 3,
+        "script": "Han"
+      },
+      {
+        "char": "鈺",
+        "codepoint": "U+923A",
+        "count": 3,
+        "script": "Han"
+      },
+      {
+        "char": "𣏌",
+        "codepoint": "U+233CC",
+        "count": 3,
+        "script": "Han"
+      },
+      {
+        "char": "屢",
+        "codepoint": "U+5C62",
+        "count": 3,
+        "script": "Han"
+      },
+      {
+        "char": "隂",
+        "codepoint": "U+9682",
+        "count": 3,
+        "script": "Han"
+      },
+      {
+        "char": "痠",
+        "codepoint": "U+75E0",
+        "count": 3,
+        "script": "Han"
+      },
+      {
+        "char": "滛",
+        "codepoint": "U+6EDB",
+        "count": 3,
+        "script": "Han"
+      },
+      {
+        "char": "鈐",
+        "codepoint": "U+9210",
+        "count": 3,
+        "script": "Han"
+      },
+      {
+        "char": "纊",
+        "codepoint": "U+7E8A",
+        "count": 3,
+        "script": "Han"
+      },
+      {
+        "char": "哷",
+        "codepoint": "U+54F7",
+        "count": 2,
+        "script": "Han"
+      },
+      {
+        "char": "闗",
+        "codepoint": "U+95D7",
+        "count": 2,
+        "script": "Han"
+      },
+      {
+        "char": "𦵏",
+        "codepoint": "U+26D4F",
+        "count": 2,
+        "script": "Han"
+      },
+      {
+        "char": "肸",
+        "codepoint": "U+80B8",
+        "count": 2,
+        "script": "Han"
+      },
+      {
+        "char": "頀",
+        "codepoint": "U+9800",
+        "count": 2,
+        "script": "Han"
+      },
+      {
+        "char": "瀆",
+        "codepoint": "U+7006",
+        "count": 2,
+        "script": "Han"
+      },
+      {
+        "char": "淶",
+        "codepoint": "U+6DF6",
+        "count": 2,
+        "script": "Han"
+      },
+      {
+        "char": "綁",
+        "codepoint": "U+7D81",
+        "count": 2,
+        "script": "Han"
+      },
+      {
+        "char": "嶸",
+        "codepoint": "U+5DB8",
+        "count": 2,
+        "script": "Han"
+      },
+      {
+        "char": "訕",
+        "codepoint": "U+8A15",
+        "count": 2,
+        "script": "Han"
+      },
+      {
+        "char": "釬",
+        "codepoint": "U+91EC",
+        "count": 2,
+        "script": "Han"
+      },
+      {
+        "char": "㸑",
+        "codepoint": "U+3E11",
+        "count": 2,
+        "script": "Han"
+      },
+      {
+        "char": "佢",
+        "codepoint": "U+4F62",
+        "count": 2,
+        "script": "Han"
+      },
+      {
+        "char": "㧞",
+        "codepoint": "U+39DE",
+        "count": 2,
+        "script": "Han"
+      },
+      {
+        "char": "臯",
+        "codepoint": "U+81EF",
+        "count": 2,
+        "script": "Han"
+      },
+      {
+        "char": "卭",
+        "codepoint": "U+536D",
+        "count": 2,
+        "script": "Han"
+      },
+      {
+        "char": "逈",
+        "codepoint": "U+9008",
+        "count": 2,
+        "script": "Han"
+      }
+    ]
+  },
+  "sample_set": {
+    "corpus_manifest_sha256": "c5bec116578ea88d37f325c3e18c66a889ef34aa263bb876e821456c500f9ffe",
+    "corpus_samples_per_language": 500,
+    "long_quota_per_language": 25,
+    "path": "data/tokenizer/evaluation/mvp-v0",
+    "seed": 20260713
+  },
+  "schema_version": 1,
+  "total_character_coverage": {
+    "frequency_weighted_coverage": 0.9992760579783132,
+    "total_character_frequency": 571869,
+    "total_unique_characters_by_language": 10205,
+    "unique_character_coverage": 0.9818716315531603
+  },
+  "total_corpus_metrics": {
+    "evaluated_non_whitespace_characters": 571869,
+    "exact_roundtrips": 2363,
+    "mean_tokens_per_sample": 145.848,
+    "roundtrip_exact_rate": 0.9452,
+    "roundtrip_mismatches": [
+      {
+        "decoded": "一天是星期六香港有赛马，我在客厅看着电视赌马，太太王娟在房间裏睡午觉。忽然王雯走过来对我悄悄地说：「你祗顾赌马，你看你老婆一个人在房裏多难受。」说完就走到厨房门口。我家的厨房和我的睡房是斜对着，可以看到我的睡床。我走过去看王娟在床上一手插在内裤裏在自己的小穴内挖着，一手搓着自己的乳房。口裏发出诱人的叫声：「Oh…Fuck me…Fuck me hard…」因为电视机在播放赛马﹐所以我刚才没有发觉到。我站在王雯身后看到这情景，我的阳具慢慢的也硬了起来。王雯转过头对我说：「你还不",
+        "sample_id": "zho_Hans-corpus-0312",
+        "source": "一天是星期六香港有赛马，我在客厅看着电视赌马，太太王娟在房间裏睡午觉。忽然王雯走过来对我悄悄地说：「你祗顾赌马，你看你老婆一个人在房裏多难受。」说完就走到厨房门口。我家的厨房和我的睡房是斜对着，可以看到我的睡床。我走过去看王娟在床上一手插在内裤裏在自己的小穴内挖着，一手搓着自己的乳房。口裏发出诱人的叫声：「Oh…Fuck me…Fuck me hard…」因为电视机在播放赛马﹐所以我刚才没有发觉到。我站在王雯身后看到这情景，我的阳具慢慢的也硬了起来。王雯转过头对我说：「你还不"
+      },
+      {
+        "decoded": "缺錢急用錢怎麼辦~買房子要什麼稅1.個別協商諮詢",
+        "sample_id": "zho_Hant-corpus-0001",
+        "source": "缺錢急用錢怎麼辦~買房子要繳什麼稅1.個別協商諮詢"
+      },
+      {
+        "decoded": "核心內容: 腸癌 相關內容: 癌 便秘 腸癌 肺癌 肝癌 胃癌 痔瘡 大腸癌 豬肉 牛肉 羊肉 癌 排毒 食道癌 疼痛 糙米 降血脂 紅肉 白肉 致癌 支溝穴 維生素C 便血 直腸癌 脂肪 血糖 基因缺陷 亞硝酸鹽 排毒餐 降血糖 葡聚糖 癌變 久坐 維生素 膳食纖維 亞硝胺 致癌物 燕麥 果膠 淀粉 食品添加劑 添加劑 便常規 洗澡 結直腸癌 血脂 肉類 果凍 硝酸鹽 飲食習慣 息肉 潛血 肛門指檢 可溶性膳食纖維 李纓 膳食 雜糧 自殺 腸鏡 黑便 血便 米飯 直腸指檢 ",
+        "sample_id": "zho_Hant-corpus-0004",
+        "source": "核心內容: 腸癌 相關內容: 癌癥 便秘 腸癌 肺癌 肝癌 胃癌 痔瘡 大腸癌 豬肉 牛肉 羊肉 癌 排毒 食道癌 疼痛 糙米 降血脂 紅肉 白肉 致癌 支溝穴 維生素C 便血 直腸癌 脂肪 血糖 基因缺陷 亞硝酸鹽 排毒餐 降血糖 葡聚糖 癌變 久坐 維生素 膳食纖維 亞硝胺 致癌物 燕麥 果膠 淀粉 食品添加劑 添加劑 便常規 洗澡 結直腸癌 血脂 肉類 果凍 硝酸鹽 飲食習慣 息肉 潛血 肛門指檢 可溶性膳食纖維 李纓 膳食 雜糧 自殺 腸鏡 黑便 血便 米飯 直腸指檢"
+      },
+      {
+        "decoded": "相關內容: 心臟病 頭痛 發熱 妊娠期 心衰 抽搐 蛋白質 驚厥 心肌梗死 維生素 白細胞 維生素缺乏 正水 幻覺 物理降溫 解毒 性病 妊娠 酸平衡 高熱 肝臟 心肌 勞損 降溫 消化 意識障礙",
+        "sample_id": "zho_Hant-corpus-0007",
+        "source": "相關內容: 心臟病 頭痛 發熱 妊娠期 心衰 抽搐 蛋白質 驚厥 心肌梗死 維生素 白細胞 維生素缺乏 正水 幻覺 物理降溫 解毒 性病 妊娠 酸堿平衡 高熱 肝臟 心肌 勞損 降溫 消化 意識障礙"
+      },
+      {
+        "decoded": "- 口稱父母官 人命賤如泥 劉紹under Topic",
+        "sample_id": "zho_Hant-corpus-0009",
+        "source": "- 口稱父母官 人命賤如泥 劉銳紹under Topic"
+      },
+      {
+        "decoded": "一 部 好 看 的 電 影 四 3 張 名 宜 功 夫 熊 貓 是 我 覺 得 最 好 看 的 電 影, 而 且 還 是 讓 我 看 過 第 一 次 覺 得 好 笑 的 電 影, 一 下 子 搞 笑, 一 下 子 又 悲 傷, 看 了 想 笑 又 想 哭, 害 我 不 知 道 該 笑 還 是 該 哭, 不 過 我 就 是 喜 歡 這 部 電 影, 還 可 以 連 續 看 好 幾 遍 都 不 會 覺 得 膩 我 能 看 這 麼 多 遍 的 原 因, 是 因 為 它 很 好 看,",
+        "sample_id": "zho_Hant-corpus-0011",
+        "source": "一 部 好 看 的 電 影 四 3 張 名 宜 功 夫 熊 貓 是 我 覺 得 最 好 看 的 電 影, 而 且 還 是 讓 我 看 過 第 一 次 覺 得 好 笑 的 電 影, 一 下 子 搞 笑, 一 下 子 又 悲 傷, 看 了 想 笑 又 想 哭, 害 我 不 知 道 該 笑 還 是 該 哭, 不 過 我 就 是 喜 歡 這 部 電 影, 還 可 以 連 續 看 好 幾 遍 都 不 會 覺 得 膩 我 能 看 這 麼 多 遍 的 原 因, 是 因 為 它 很 好 看,"
+      }
+    ],
+    "samples": 2500,
+    "source_character_loss_rate": 0.000723942021686785,
+    "source_characters": 648863,
+    "token_length_max": 1436,
+    "token_length_p50": 74,
+    "token_length_p95": 537,
+    "token_length_p99": 996,
+    "tokens": 364620,
+    "tokens_per_non_whitespace_character": 0.6375935747522598,
+    "unk_source_characters": 414,
+    "unk_token_ratio": 0.0011080028522845703,
+    "unk_tokens": 404,
+    "unmapped_unk_tokens": 0
+  },
+  "training_metadata": {
+    "balancing_algorithm": "equal-selected-unicode-characters-v1",
+    "batch_size": 1024,
+    "corpus_unique_characters": 23635,
+    "limit_alphabet": 24116,
+    "min_frequency": 2,
+    "sample_fraction": 0.5,
+    "sampling_algorithm": "per-language-seeded-bernoulli-v1",
+    "schema_version": 2,
+    "total_training_characters": 1998439416,
+    "total_training_lines": 5763471,
+    "training_meta_sha256": "de4e71a610f403ec1dc80e3fc040981233b22a121fa366fabe62b52a2715042d",
+    "vocab_size": 32768
+  },
+  "vocab_size": 32768,
+  "vocab_utilization": {
+    "ratio": 0.451141357421875,
+    "used_non_special_ids": 14783,
+    "vocab_size": 32768
+  }
+}

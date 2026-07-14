@@ -1,6 +1,6 @@
 # task TD-05: 覆盖率与编码质量报告
 
-状态：in_progress
+状态：done
 
 依赖：TD-03（训练脚本与候选 tokenizer）
 
@@ -81,7 +81,10 @@
 - 两候选均通过离线重载和内存中的微型 M2M100 forward；相关评测/训练测试为 `11 passed`。
 - 本轮据此将 48k 选为五语一次性重训的默认规模；这是四语同源选型，不替代新增 `zho_Hant` 后的五语最终验收。
 
-### 待完成
+### 五语最终报告（2026-07-14）
 
-- 将训练和固定评测集扩展到原生 `zho_Hant`，并在收紧清洗后的五语语料上重训 48k。
-- 对五语候选复用同一指标体系生成最终报告，完成本任务验收并将状态更新为 done。
+- 固定评测集迁移到 `data/tokenizer/evaluation/mvp-v0/`，直接从独立 holdout 抽取；每语种 500 条 corpus 样本 + 8 条压力样例。
+- 最终报告位于 `artifacts/tokenizers/reports/mvp-tokenizer-v0/`。48k 总体 tokens/字符为 `0.5355`，source loss 为 `0.009443%`，频率加权覆盖率为 `99.990557%`。
+- `zho_Hant` tokens/字符为 `0.7044`，P95/P99 为 `579/951`，source loss 为 `0.043771%`，唯一字符覆盖率为 `98.912467%`，roundtrip 为 `95.6%`。
+- 繁体/简体 tokens/字符比为 `1.0674`，P95 比为 `1.7599`；旧四语 32k 作为不同 provenance 的工程回退一并评测，但未重训。
+- holdout manifest SHA-256：`c5bec116578ea88d37f325c3e18c66a889ef34aa263bb876e821456c500f9ffe`。

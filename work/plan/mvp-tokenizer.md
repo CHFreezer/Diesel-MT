@@ -1,5 +1,19 @@
 # plan: mvp tokenizer
 
+状态：done（`mvp-tokenizer-v0` 已于 2026-07-14 冻结）
+
+## 2026-07-14 目标调整与结果
+
+原计划中的“四语 32k/48k 双候选 + CTranslate2 硬前置”已按训练数据指南第 8.5 节收敛为一次性五语冻结目标：
+
+- 语言范围固定为 `eng_Latn`、`zho_Hans`、`zho_Hant`、`jpn_Jpan`、`kor_Hang`，使用 HPLT 3.0 原生 `cmn_Hant -> zho_Hant`；
+- 清洗、五语 exact/MinHash 去重和 train/holdout 隔离升级一次，先 smoke 审计，再生成每语种约 200M 训练字符和约 6M holdout 字符；
+- 依据已完成的四语同源比较，只重训 48k（49,152），不重训 32k/64k；旧 32k 仅保留为工程回退和下游吞吐对照；
+- 冻结前验收五语覆盖率、tokens/字符、P95/P99、字符丢失、roundtrip、简繁序列差异、保存/重载、language token、微型 M2M100 forward 和 SHA-256；
+- CTranslate2 发布验收移为下游部署任务，不再阻塞本次 tokenizer 重训与冻结。
+
+该目标已经完成。默认产物为 `artifacts/tokenizers/mvp-tokenizer-v0/`，冻结根 SHA-256 为 `eb79ae22f523f1d9c9fcf75b80f2b322e3c2882a8fddb7545b5933dd4053fa7f`；完整记录见 `artifacts/tokenizers/reports/mvp-tokenizer-v0/freeze_acceptance.md`。下文保留最初架构调研和历史候选路线，若与本节冲突，以本节和冻结记录为准。
+
 ## 目标
 
 制作 Diesel-MT MVP 阶段可用的中英日韩 tokenizer，用于验证从数据、tokenizer、模型配置、训练、评估到推理的最小闭环。该 tokenizer 必须从零训练，不复用 Meta NLLB-200、M2M100 或其他模型仓库中的 tokenizer 资产。

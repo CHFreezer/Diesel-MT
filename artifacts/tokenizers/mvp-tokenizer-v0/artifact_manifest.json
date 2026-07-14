@@ -1,0 +1,35 @@
+{
+  "files": [
+    {
+      "bytes": 6276352,
+      "path": "alphabet_audit.json",
+      "sha256": "a08ab948c2fddfc180ff9fbb072ec93965b0716402dcc62820465572e3aec7e1"
+    },
+    {
+      "bytes": 13071,
+      "path": "corpus_manifest.jsonl",
+      "sha256": "b3d8d6f4f559813929c75086e6060b74a922a87cdb06646973d1168b5618c977"
+    },
+    {
+      "bytes": 274,
+      "path": "language_map.json",
+      "sha256": "3ceddd4bca97b9c707706922899a36fd7d4116e3c1fa8a7e5384a2d2794f7bcd"
+    },
+    {
+      "bytes": 2349192,
+      "path": "tokenizer.json",
+      "sha256": "22bceccab939afe1003d1fbdd95d9d4e78eb954b2e9003d70131155666b1201c"
+    },
+    {
+      "bytes": 496,
+      "path": "tokenizer_config.json",
+      "sha256": "3803ce2bf4951e0bd85d7b526e2c76ac2a64f42c67fc5e33c592dfab3ba840c1"
+    },
+    {
+      "bytes": 2652370,
+      "path": "training_meta.json",
+      "sha256": "d72f150718324d5bc41bee02a00ba8c07308d323d6e6810cce6a4c7c568181d3"
+    }
+  ],
+  "schema_version": 1
+}

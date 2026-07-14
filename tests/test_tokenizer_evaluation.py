@@ -39,6 +39,7 @@ def write_evaluation_corpus(root: Path, *, lines_per_language: int = 40) -> None
                 "samples": len(lines),
                 "characters": sum(len(line) for line in lines),
                 "sha256": hashlib.sha256(payload).hexdigest(),
+                "split": "holdout",
             }
         )
     (root / "manifest.jsonl").write_text(

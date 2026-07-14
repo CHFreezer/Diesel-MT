@@ -1,6 +1,6 @@
 # task TD-10: CTranslate2 转换与 CPU 推理冒烟
 
-状态：pending
+状态：deferred（下游部署任务，不阻塞 `mvp-tokenizer-v0` 冻结）
 
 依赖：TD-09（最小训练链路集成验证）
 

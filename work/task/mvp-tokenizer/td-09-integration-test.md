@@ -1,6 +1,6 @@
 # task TD-09: 最小训练链路集成验证
 
-状态：pending
+状态：done
 
 依赖：TD-06（保存与加载验证）、TD-08（产物打包）
 
@@ -45,4 +45,4 @@
 
 ## 验证记录
 
-（待填写）
+2026-07-14 的冻结脚本使用随机初始化、`d_model=32`、单层 encoder/decoder 的微型 `M2M100ForConditionalGeneration`，对五个循环语言方向各执行一次 forward。五次 loss 均有限；`config.vocab_size`、shared/encoder/decoder embedding 行数和 `lm_head` 输出行数均严格为 49,152；每个目标语言均通过验证后的 `forced_bos_token_id` 注入。随机模型只用于内存中维度/接口验收，未持久化无业务价值的大模型 checkpoint；CTranslate2 转换已移到不阻塞冻结的 TD-10。

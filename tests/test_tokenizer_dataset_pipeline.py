@@ -23,6 +23,7 @@ from tokenizer_dataset_pipeline import (  # noqa: E402
     build_corpus,
     cache_path_for,
     canonical_json_bytes,
+    chinese_variant_score,
     download_locked_prefix,
     load_config,
     load_lock,
@@ -32,6 +33,7 @@ from tokenizer_dataset_pipeline import (  # noqa: E402
     packed_minhash_similarity,
     parse_map,
     resolve_lock,
+    select_stratified_shards,
     script_ratio,
     sha256_bytes,
     split_and_clean,
@@ -45,9 +47,15 @@ CONFIG_PATH = ROOT / "configs" / "tokenizer_datasets_mvp.yaml"
 def test_registry_and_profiles_are_explicit() -> None:
     config = load_config(CONFIG_PATH)
     enabled = [source for source in config["sources"] if source["enabled"]]
-    assert [source["languages"]["output"] for source in enabled] == ["eng_Latn", "zho_Hans", "jpn_Jpan", "kor_Hang"]
+    assert [source["languages"]["output"] for source in enabled] == [
+        "eng_Latn", "zho_Hans", "zho_Hant", "jpn_Jpan", "kor_Hang"
+    ]
     assert set(config["profiles"]) == {"smoke", "mvp"}
-    assert 1_000_000_000 <= config["profiles"]["mvp"]["character_budget_per_language"] <= 2_000_000_000
+    assert config["profiles"]["mvp"]["character_budget_per_language"] == 200_000_000
+    assert config["profiles"]["mvp"]["locked_prefix_bytes_by_language"]["zho_Hant"] == 512 * 1024 * 1024
+    assert config["deduplication"]["approximate_languages"] == list(pipeline.LANGUAGES)
+    assert config["quality"]["max_domain_fraction"] == 0.02
+    assert config["quality"]["max_domain_fraction_by_language"] == {"zho_Hant": 0.05}
     assert all(not source["enabled"] for source in config["sources"] if "backup" in source["source_id"])
 
 
@@ -66,13 +74,18 @@ def test_map_parser_filters_and_uses_numeric_quality_order() -> None:
         (9, 1, "https://x/lang/9_1.jsonl.zst"),
         (8, 10, "https://x/lang/8_10.jsonl.zst"),
     ]
+    assert select_stratified_shards(parse_map(data, 8, 10), 3) == [
+        (10, 1, "https://x/lang/10_1.jsonl.zst"),
+        (9, 1, "https://x/lang/9_1.jsonl.zst"),
+        (8, 10, "https://x/lang/8_10.jsonl.zst"),
+    ]
 
 
 def test_resolve_lock_is_canonical_and_caches_map_metadata(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     config = copy.deepcopy(load_config(CONFIG_PATH))
     config["profiles"]["smoke"]["locked_prefix_bytes_per_shard"] = 64
     config["profiles"]["smoke"]["locked_prefix_bytes_by_language"] = {
-        language: 64 for language in ("eng_Latn", "zho_Hans", "jpn_Jpan", "kor_Hang")
+        language: 64 for language in pipeline.LANGUAGES
     }
     config_path = tmp_path / "resolve-config.json"
     config_path.write_text(json.dumps(config, sort_keys=True), encoding="utf-8")
@@ -134,6 +147,55 @@ def test_cleaning_is_conservative_and_reasoned() -> None:
     assert list(split_and_clean("住宅リフォームの記事で費用と工期を説明し、最後にリフォーム事例を一つ紹介します。", rules))[0][1] is None
     assert list(split_and_clean("tiny", rules))[0][1] == "too_short"
     assert list(split_and_clean("", rules))[0][1] == "empty"
+    long_text = "".join(
+        f"這是第{index}段自然的繁體中文句子，用來驗證長段落會依照自然邊界切分。"
+        for index in range(200)
+    )
+    chunks = list(split_and_clean(long_text, rules))
+    assert len(chunks) > 1
+    assert all(reason is None for _text, reason in chunks)
+    assert all(len(text or "") <= 2048 and len((text or "").encode("utf-8")) <= 4096 for text, _reason in chunks)
+    assert list(split_and_clean("Ã¤ Ã¶ Ã¼ 表示明顯的錯誤解碼殘留。", rules))[0][1] == "mojibake"
+    assert list(split_and_clean("abc123" * 80, rules))[0][1] in {
+        "encoded_blob", "mechanical_repetition", "long_mechanical_token"
+    }
+
+
+@pytest.mark.parametrize(
+    ("text", "reason"),
+    [
+        ("https://example.com/" + "path/" * 70, "url_email_dominance"),
+        ("1234567890 !!! ### $$$ %%% --- ___ " * 8, "numeric_symbol_dominance"),
+        ("A" * 300 + " this token dominates an otherwise short paragraph", "long_mechanical_token"),
+        ("visible text " + "\u0001" * 40, "control_characters"),
+    ],
+)
+def test_new_cleaning_rules_report_specific_reasons(text: str, reason: str) -> None:
+    rules = copy.deepcopy(load_config(CONFIG_PATH)["cleaning"])
+    if reason in {"url_email_dominance", "long_mechanical_token"}:
+        rules["reject_encoded_blob_pattern"] = r"(?!)"
+        rules["reject_mechanical_repetition_pattern"] = r"(?!)"
+        rules["max_repeated_character_run"] = 1000
+    assert list(split_and_clean(text, rules))[0][1] == reason
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "The API documentation uses https://example.com/v2 and SHA-256 identifiers in normal explanatory prose.",
+        "本法律條文說明契約責任、醫療資訊與技術標準，保留正常數字 2026 及標點。",
+        "この技術文書では URL、コード、数値を自然な文脈で説明し、異常な羅列は行いません。",
+    ],
+)
+def test_new_cleaning_rules_keep_normal_edge_domain_text(text: str) -> None:
+    rules = load_config(CONFIG_PATH)["cleaning"]
+    assert list(split_and_clean(text, rules)) == [(text, None)]
+
+
+def test_chinese_variant_score_uses_only_distinctive_evidence() -> None:
+    assert chinese_variant_score("zho_Hans", "中国发展这项计划并开放市场") == (8, 1.0)
+    assert chinese_variant_score("zho_Hant", "中國發展這項計畫並開放市場") == (8, 1.0)
+    assert chinese_variant_score("zho_Hant", "中國人民共同研究文化") == (1, 1.0)
 
 
 def test_minhash_is_stable_and_detects_near_duplicate() -> None:
@@ -151,6 +213,8 @@ def test_minhash_is_stable_and_detects_near_duplicate() -> None:
 def fixture_build_inputs(tmp_path: Path) -> tuple[dict, Path, dict, Path, Path]:
     config = copy.deepcopy(load_config(CONFIG_PATH))
     config["profiles"]["smoke"]["character_budget_per_language"] = 110
+    config["holdout"]["fraction"] = 0.05
+    config["holdout"]["seed"] = 81661
     cache_root = tmp_path / "shared-cache"
     lock_sources = []
     max_size = 0
@@ -188,7 +252,7 @@ def fixture_build_inputs(tmp_path: Path) -> tuple[dict, Path, dict, Path, Path]:
         )
     config["profiles"]["smoke"]["locked_prefix_bytes_per_shard"] = max_size
     config["profiles"]["smoke"]["locked_prefix_bytes_by_language"] = {
-        language: max_size for language in ("eng_Latn", "zho_Hans", "jpn_Jpan", "kor_Hang")
+        language: max_size for language in pipeline.LANGUAGES
     }
     config_path = tmp_path / "config.yaml"
     config_path.write_text(json.dumps(config), encoding="utf-8")
@@ -208,7 +272,8 @@ def fixture_build_inputs(tmp_path: Path) -> tuple[dict, Path, dict, Path, Path]:
 
 def deterministic_files(out_root: Path) -> dict[str, bytes]:
     paths = list((out_root / "corpus" / "smoke").glob("*.txt")) + [out_root / "corpus" / "smoke" / "manifest.jsonl"]
-    result = {path.name: path.read_bytes() for path in paths}
+    paths += list((out_root / "holdout" / "smoke").glob("*.txt")) + [out_root / "holdout" / "smoke" / "manifest.jsonl"]
+    result = {path.relative_to(out_root).as_posix(): path.read_bytes() for path in paths}
     result["quality-report.md"] = (out_root / "reports" / "tokenizer_corpus_smoke.md").read_bytes()
     return result
 
@@ -222,13 +287,18 @@ def test_offline_fixture_build_is_byte_reproducible(tmp_path: Path) -> None:
     assert deterministic_files(first) == deterministic_files(second)
     assert result1["manifest_sha256"] == result2["manifest_sha256"]
     assert result1["peak_main_rss_bytes"] > 0
-    for language in ("eng_Latn", "zho_Hans", "jpn_Jpan", "kor_Hang"):
+    for language in pipeline.LANGUAGES:
         content = (first / "corpus" / "smoke" / f"{language}.txt").read_bytes()
         assert content and content.endswith(b"\n") and not content.startswith(b"\xef\xbb\xbf")
         assert result1["outputs"][language]["characters"] <= 110
+        train_lines = set(content.decode("utf-8").splitlines())
+        holdout_lines = set((first / "holdout" / "smoke" / f"{language}.txt").read_text(encoding="utf-8").splitlines())
+        assert train_lines and holdout_lines and train_lines.isdisjoint(holdout_lines)
+    assert all(json.loads(line)["split"] == "train" for line in (first / "corpus" / "smoke" / "manifest.jsonl").read_text().splitlines())
+    assert all(json.loads(line)["split"] == "holdout" for line in (first / "holdout" / "smoke" / "manifest.jsonl").read_text().splitlines())
     assert (first / "reports" / "tokenizer_corpus_smoke.md").is_file()
     assert not list(first.rglob("*.sqlite3*"))
-    assert len(list((first / "interim" / "smoke" / "ram-first" / "checkpoints").glob("*.json"))) == 4
+    assert len(list((first / "interim" / "smoke" / "ram-first" / "checkpoints").glob("*.json"))) == 5
     for checkpoint in (first / "interim" / "smoke" / "ram-first" / "checkpoints").glob("*.json"):
         state = json.loads(checkpoint.read_text(encoding="utf-8"))
         assert state["stats"]["documents_with_source_url"] == state["stats"]["documents"]
@@ -351,7 +421,7 @@ def test_cold_download_then_hot_offline_build_are_identical(tmp_path: Path, monk
     hot = tmp_path / "hot"
     config["profiles"]["smoke"]["concurrency"] = 1
     build_corpus(config, config_path, lock, lock_path, cold, cache_root, "smoke", 1234, offline=False, use_cache=False)
-    assert len(downloads) == 4
+    assert len(downloads) == 5
 
     def network_forbidden(*_args: object, **_kwargs: object) -> object:
         raise AssertionError("offline hot-cache build attempted network access")
@@ -519,7 +589,7 @@ def test_fixture_outputs_match_declared_language(tmp_path: Path) -> None:
     out = tmp_path / "language-check"
     build_corpus(config, config_path, lock, lock_path, out, cache_root, "smoke", 7, offline=True, use_cache=True)
     thresholds = config["quality"]["language_min_script_ratio"]
-    for language in ("eng_Latn", "zho_Hans", "jpn_Jpan", "kor_Hang"):
+    for language in pipeline.LANGUAGES:
         lines = (out / "corpus" / "smoke" / f"{language}.txt").read_text(encoding="utf-8").splitlines()
         assert lines
         assert all(script_ratio(language, line) >= thresholds[language] for line in lines)

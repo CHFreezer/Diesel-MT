@@ -1,6 +1,6 @@
 # task TD-11: 自动化测试
 
-状态：pending
+状态：done（tokenizer 冻结范围）
 
 依赖：TD-01（环境）可建框架；全部模块测试在 TD-03 至 TD-10 完成后收口
 
@@ -65,4 +65,4 @@
 
 ## 验证记录
 
-（待填写）
+2026-07-14 新增五语数据/评测 fixture 和 `tests/test_tokenizer_freeze.py`，覆盖 artifact manifest 哈希、五语覆盖摘要与五方向微型 M2M100 forward。数据管线、训练、checkpoint、评测和冻结相关测试合计 `45 passed`。CTranslate2 慢速部署测试随 TD-10 一并 deferred，不属于本次有界 tokenizer 重训的完成条件。

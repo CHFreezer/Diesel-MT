@@ -1,6 +1,6 @@
 # task TD-08: 产物打包与文档
 
-状态：pending
+状态：done
 
 依赖：TD-07（MVP 默认选定）
 
@@ -51,4 +51,4 @@
 
 ## 验证记录
 
-（待填写）
+2026-07-14 已发布 `artifacts/tokenizers/mvp-tokenizer-v0/`，包含规范 tokenizer/config、五语映射、训练 metadata、alphabet audit、训练 corpus manifest 快照和逐文件 SHA manifest。`artifacts/tokenizers/README.md` 记录目录语义、复现命令、冻结哈希、32k 回退和已知限制；固定评测与冻结报告位于 `artifacts/tokenizers/reports/mvp-tokenizer-v0/`。冻结根 SHA-256：`eb79ae22f523f1d9c9fcf75b80f2b322e3c2882a8fddb7545b5933dd4053fa7f`。

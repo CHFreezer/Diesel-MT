@@ -1,0 +1,99 @@
+{
+  "corpus_manifest_path": "manifest.jsonl",
+  "corpus_manifest_sha256": "c5bec116578ea88d37f325c3e18c66a889ef34aa263bb876e821456c500f9ffe",
+  "corpus_samples_per_language": 500,
+  "files": {
+    "eng_Latn": {
+      "bytes": 334157,
+      "corpus_rows": 500,
+      "path": "eng_Latn.jsonl",
+      "rows": 508,
+      "sha256": "d23f1d3ffc4165a12c0853fdcfc9c83a150a6e2580b037156f45d2eb2c31886f",
+      "synthetic_rows": 8
+    },
+    "jpn_Jpan": {
+      "bytes": 363901,
+      "corpus_rows": 500,
+      "path": "jpn_Jpan.jsonl",
+      "rows": 508,
+      "sha256": "e36f21355ac1cfef34eb2e71379c71eea0970ca2e130c8fce993e6a46fbd101a",
+      "synthetic_rows": 8
+    },
+    "kor_Hang": {
+      "bytes": 504642,
+      "corpus_rows": 500,
+      "path": "kor_Hang.jsonl",
+      "rows": 508,
+      "sha256": "8466607b7012374a8880f98cd662ad084f8c09c1d8b1460ac2091a25dc76523c",
+      "synthetic_rows": 8
+    },
+    "zho_Hans": {
+      "bytes": 357096,
+      "corpus_rows": 500,
+      "path": "zho_Hans.jsonl",
+      "rows": 508,
+      "sha256": "824e5f31b0b7fae6d41ede61bd3bdc8d2c44e89cd812068d303a9415c08e0fec",
+      "synthetic_rows": 8
+    },
+    "zho_Hant": {
+      "bytes": 404536,
+      "corpus_rows": 500,
+      "path": "zho_Hant.jsonl",
+      "rows": 508,
+      "sha256": "bd9c0864c6f01a25f21ee4e81a4da72f4c7f55250189bc30980ca14c7185cef0",
+      "synthetic_rows": 8
+    }
+  },
+  "long_character_threshold": 500,
+  "long_quota_per_language": 25,
+  "sampling_algorithm": "sha256-priority-with-long-quota-v1",
+  "schema_version": 1,
+  "seed": 20260713,
+  "source_scans": {
+    "eng_Latn": {
+      "selected_corpus_samples": 500,
+      "selected_long_samples": 134,
+      "source_characters": 5999998,
+      "source_file": "eng_Latn.txt",
+      "source_samples": 12579,
+      "source_sha256": "9855e39d814cd01a0020fd5d672e9567dbc2c81f1317ef36ff49388d4031060c",
+      "synthetic_probes": 8
+    },
+    "jpn_Jpan": {
+      "selected_corpus_samples": 500,
+      "selected_long_samples": 38,
+      "source_characters": 5999985,
+      "source_file": "jpn_Jpan.txt",
+      "source_samples": 35372,
+      "source_sha256": "bee35743998bcc3206db5abd0a5648597aadc9d63a9682eedc4fba008e64aa07",
+      "synthetic_probes": 8
+    },
+    "kor_Hang": {
+      "selected_corpus_samples": 500,
+      "selected_long_samples": 140,
+      "source_characters": 5999994,
+      "source_file": "kor_Hang.txt",
+      "source_samples": 19061,
+      "source_sha256": "b841ef2725753c5f40cc8603dbd5264b1066fb2e2caba7c38e92b2a07d54ebfc",
+      "synthetic_probes": 8
+    },
+    "zho_Hans": {
+      "selected_corpus_samples": 500,
+      "selected_long_samples": 25,
+      "source_characters": 5999983,
+      "source_file": "zho_Hans.txt",
+      "source_samples": 38434,
+      "source_sha256": "0779bed0805a862a71adb17367b5352ee9c1e26c83dea93a91467f3db9b54c59",
+      "synthetic_probes": 8
+    },
+    "zho_Hant": {
+      "selected_corpus_samples": 500,
+      "selected_long_samples": 65,
+      "source_characters": 5999982,
+      "source_file": "zho_Hant.txt",
+      "source_samples": 24936,
+      "source_sha256": "f1e8c16c9f07790ca9849b4c75657c6ec8e7e171068a868e6c3ea494a4f24be5",
+      "synthetic_probes": 8
+    }
+  }
+}

@@ -1,0 +1,2651 @@
+{
+  "all_sample_metrics": {
+    "eng_Latn": {
+      "evaluated_non_whitespace_characters": 179649,
+      "exact_roundtrips": 505,
+      "mean_tokens_per_sample": 111.5748031496063,
+      "roundtrip_exact_rate": 0.9940944881889764,
+      "roundtrip_mismatches": [
+        {
+          "decoded": "Binary options lesson plan axis bank login trading definition two stock trading ing BigOption Enveils Its Binary Options Strategy Advisor, a Tool to Help - Paul Wilmott on Quantitative Finance Card online login. ArbitrageurAn individual or ",
+          "sample_id": "eng_Latn-corpus-0007",
+          "source": "Binary options lesson plan axis bank login trading definition two stock trading ing BigOption Enveils Its Binary Options Strategy Advisor, a Tool to Help - Paul Wilmott on Quantitative Finance Card online login. ArbitrageurAn individual or "
+        },
+        {
+          "decoded": "English 中文 日本語 한국어 mixed text, API-v2, GPU 16GB ",
+          "sample_id": "eng_Latn-probe-03",
+          "source": "English 中文 日本語 한국어 mixed text, API-v2, GPU 16GB 🚀"
+        },
+        {
+          "decoded": "    ️ café naïve",
+          "sample_id": "eng_Latn-probe-08",
+          "source": "𠀀 𪚥 㐀 𫠝 🧪🛰️ café naïve"
+        }
+      ],
+      "samples": 508,
+      "source_character_loss_rate": 4.453128044130499e-05,
+      "source_characters": 214819,
+      "token_length_max": 793,
+      "token_length_p50": 69,
+      "token_length_p95": 420,
+      "token_length_p99": 539,
+      "tokens": 56680,
+      "tokens_per_non_whitespace_character": 0.31550412192664584,
+      "unk_source_characters": 8,
+      "unk_token_ratio": 0.00012350035285815103,
+      "unk_tokens": 7,
+      "unmapped_unk_tokens": 0
+    },
+    "jpn_Jpan": {
+      "evaluated_non_whitespace_characters": 83891,
+      "exact_roundtrips": 506,
+      "mean_tokens_per_sample": 87.97834645669292,
+      "roundtrip_exact_rate": 0.9960629921259843,
+      "roundtrip_mismatches": [
+        {
+          "decoded": "日本語 中文 English 한국어 の混合テキスト、API-v2、GPU 16GB ",
+          "sample_id": "jpn_Jpan-probe-03",
+          "source": "日本語 中文 English 한국어 の混合テキスト、API-v2、GPU 16GB 🚀"
+        },
+        {
+          "decoded": "と異体字、絵文字️を確認します。",
+          "sample_id": "jpn_Jpan-probe-08",
+          "source": "𠀀𪚥㐀𫠝と異体字、絵文字🧪🛰️を確認します。"
+        }
+      ],
+      "samples": 508,
+      "source_character_loss_rate": 8.344160875421678e-05,
+      "source_characters": 85537,
+      "token_length_max": 821,
+      "token_length_p50": 42,
+      "token_length_p95": 350,
+      "token_length_p99": 689,
+      "tokens": 44693,
+      "tokens_per_non_whitespace_character": 0.5327508314360301,
+      "unk_source_characters": 7,
+      "unk_token_ratio": 6.712460564294185e-05,
+      "unk_tokens": 3,
+      "unmapped_unk_tokens": 0
+    },
+    "kor_Hang": {
+      "evaluated_non_whitespace_characters": 125858,
+      "exact_roundtrips": 502,
+      "mean_tokens_per_sample": 157.3779527559055,
+      "roundtrip_exact_rate": 0.9881889763779528,
+      "roundtrip_mismatches": [
+        {
+          "decoded": "• 1개월 구독 시 14,536/월",
+          "sample_id": "kor_Hang-corpus-0105",
+          "source": "• 1개월 구독 시 ￦14,536/월"
+        },
+        {
+          "decoded": "(판결요지) (1) 乙은 A토지 위에 지상건물의 소유를 목적으로 하는 甲과의 토지임대차계약에 따라 B건물을 신축하였다. 甲은 토지 임대차기간이 만료한 뒤 임차인 乙을 상대로 건물철거 및 토지인도를 청구하는 소를 제기하였는데, 乙은 위 소송에서 건물매수청구권을 행사하지 아니하여 甲의 승소판결이 선고되어 확정된 뒤, B건물이 철거되기 전에 乙이 甲에 대하여 건물매수청구권을 행사하면서 그 매매대금의 지급을 청구하는 소를 제기하였다.",
+          "sample_id": "kor_Hang-corpus-0303",
+          "source": "(판결요지) (1) 乙은 A토지 위에 지상건물의 소유를 목적으로 하는 甲과의 토지임대차계약에 따라 B건물을 신축하였다. 甲은 토지 임대차기간이 만료한 뒤 임차인 乙을 상대로 건물철거 및 토지인도를 청구하는 소를 제기하였는데, 乙은 위 소송에서 건물매수청구권을 행사하지 아니하여 甲의 승소판결이 선고되어 확정된 뒤, B건물이 철거되기 전에 乙이 甲에 대하여 건물매수청구권을 행사하면서 그 매매대금의 지급을 청구하는 소를 제기하였다."
+        },
+        {
+          "decoded": "연구자들은 화폭의 가장 오른쪽에 있는 젊은 남자를 작가 푸키레프로 추정하며, 자신의 자화상을 화폭에 담아낸 것으로 보고 있다. 한편 푸키레프로 추정되는 인물의 옆에 위치하며 화면 밖 관람자를 향해 시선을 건네는 또 다른 인물은 이 작품의 아이디어를 제공한 푸키레프의 친구 표트르 쉬멜코프(П. MeлbkoB)로 전해진다. 그런데 쉬멜코프의 얼굴은 평생 결혼에 대해 부정적 태도를 취했던 니콜라이 고골과 어딘지 모르게 닮은 구석을 ",
+          "sample_id": "kor_Hang-corpus-0321",
+          "source": "연구자들은 화폭의 가장 오른쪽에 있는 젊은 남자를 작가 푸키레프로 추정하며, 자신의 자화상을 화폭에 담아낸 것으로 보고 있다. 한편 푸키레프로 추정되는 인물의 옆에 위치하며 화면 밖 관람자를 향해 시선을 건네는 또 다른 인물은 이 작품의 아이디어를 제공한 푸키레프의 친구 표트르 쉬멜코프(П. ШMeлbkoB)로 전해진다. 그런데 쉬멜코프의 얼굴은 평생 결혼에 대해 부정적 태도를 취했던 니콜라이 고골과 어딘지 모르게 닮은 구석을"
+        },
+        {
+          "decoded": "한국어 中文 English 日本語 혼합 텍스트, API-v2, GPU 16GB ",
+          "sample_id": "kor_Hang-probe-03",
+          "source": "한국어 中文 English 日本語 혼합 텍스트, API-v2, GPU 16GB 🚀"
+        },
+        {
+          "decoded": "2026년 07월 13일 12:34:56, 증가율 100%, 가격 3.1415926",
+          "sample_id": "kor_Hang-probe-04",
+          "source": "2026년 07월 13일 12:34:56, 증가율 100%, 가격 ₩3.1415926"
+        }
+      ],
+      "samples": 508,
+      "source_character_loss_rate": 8.740008581099334e-05,
+      "source_characters": 161538,
+      "token_length_max": 957,
+      "token_length_p50": 98,
+      "token_length_p95": 411,
+      "token_length_p99": 778,
+      "tokens": 79948,
+      "tokens_per_non_whitespace_character": 0.6352238236742996,
+      "unk_source_characters": 11,
+      "unk_token_ratio": 0.00012508130284685047,
+      "unk_tokens": 10,
+      "unmapped_unk_tokens": 0
+    },
+    "zho_Hans": {
+      "evaluated_non_whitespace_characters": 82759,
+      "exact_roundtrips": 504,
+      "mean_tokens_per_sample": 107.52362204724409,
+      "roundtrip_exact_rate": 0.9921259842519685,
+      "roundtrip_mismatches": [
+        {
+          "decoded": "SadSubotica原本只打算待一天的苏博蒂察，到达的第二日，梳妆打扮好之后才慢吞吞出门，却被满大街的雾凇惊得又蹦又跳，一夜之间，仿佛被精灵施了魔法。小城装扮得得比人还美。当即决定再呆一天。SuboticaSuboticaSubotica晚餐时，又遇到笑得很好看的小哥哥，更不想走了……Subotica去塞尔维亚之前就知道那里有一个木头城，是塞尔维亚著名导演库斯图里察为了拍电影而建，但是并没有刻意想要去看。那天走到半道，开车的小哥问是否知道木头城，点头。“我们现在就在去木头城",
+          "sample_id": "zho_Hans-corpus-0143",
+          "source": "SadSubotica原本只打算待一天的苏博蒂察，到达的第二日，梳妆打扮好之后才慢吞吞出门，却被满大街的雾凇惊得又蹦又跳，一夜之间，仿佛被精灵施了魔法。小城装扮得得比人还美。当即决定再呆一天。SuboticaSuboticaSubotica晚餐时，又遇到笑得很好看的小哥哥，更不想走了……Subotica去塞尔维亚之前就知道那里有一个木头城，是塞尔维亚著名导演库斯图里察为了拍电影而建，但是并没有刻意想要去看。那天走到半道，开车的小哥问是否知道木头城，点头。“我们现在就在去木头城"
+        },
+        {
+          "decoded": "?。ò耍於Φ卑凑展娑奶跫?，贮存的方式和时间不应当对检定菌的生长特性有不利影响。",
+          "sample_id": "zho_Hans-corpus-0489",
+          "source": "?。ò耍┘於ňΦ卑凑展娑ǖ奶跫?，贮存的方式和时间不应当对检定菌的生长特性有不利影响。"
+        },
+        {
+          "decoded": "中文 English 日本語 한국어 混合文本，API-v2，GPU 16GB ",
+          "sample_id": "zho_Hans-probe-03",
+          "source": "中文 English 日本語 한국어 混合文本，API-v2，GPU 16GB 🚀"
+        },
+        {
+          "decoded": "，生僻姓名用字与表情️。",
+          "sample_id": "zho_Hans-probe-08",
+          "source": "𠀀𪚥㐀𫠝，生僻姓名用字与表情🧪🛰️。"
+        }
+      ],
+      "samples": 508,
+      "source_character_loss_rate": 0.00015708261337135537,
+      "source_characters": 83406,
+      "token_length_max": 1098,
+      "token_length_p50": 63,
+      "token_length_p95": 329,
+      "token_length_p99": 727,
+      "tokens": 54622,
+      "tokens_per_non_whitespace_character": 0.6600128082746287,
+      "unk_source_characters": 13,
+      "unk_token_ratio": 0.00016476877448647065,
+      "unk_tokens": 9,
+      "unmapped_unk_tokens": 0
+    },
+    "zho_Hant": {
+      "evaluated_non_whitespace_characters": 100701,
+      "exact_roundtrips": 484,
+      "mean_tokens_per_sample": 139.6279527559055,
+      "roundtrip_exact_rate": 0.952755905511811,
+      "roundtrip_mismatches": [
+        {
+          "decoded": "凡毀罵公侯駙馬伯及京省文職三品以上武職二以上官者杖一百枷號一箇月發落",
+          "sample_id": "zho_Hant-corpus-0024",
+          "source": "凡毀罵公侯駙馬伯及京省文職三品以上武職二碞以上官者杖一百枷號一箇月發落"
+        },
+        {
+          "decoded": "新唐書新羅國畜無羊少驢多馬開元中其王興光獻果下馬朝霞紬魚牙紬海豹皮又上異狗馬黄金美髢諸物",
+          "sample_id": "zho_Hant-corpus-0032",
+          "source": "新唐書新羅國畜無羊少驢驘多馬開元中其王興光獻果下馬朝霞紬魚牙紬海豹皮又上異狗馬黄金美髢諸物"
+        },
+        {
+          "decoded": "某頓首再拜言〈降等雲頓首〉不意凶變〈亡者官尊即雲邦國不幸後皆放此〉先某位〈無官即雲先府君有契即加㡬丈於某位府君之上 母雲先某封無封即雲先夫人 承重則雲尊祖考某位尊祖妣某封餘並同〉奄棄榮養〈亡者官尊即雲奄捐館舎或雲奄忽薨逝母封至夫人者亦云薨逝若生者無官即雲奄違色養〉承 訃驚怛不能已已伏惟〈平交雲恭惟降等惟〉孝心純至思慕號絶何可堪居日月流邁遽踰旬朔〈經時即雲已忽經時已𦵏即雲遽經襄奉卒哭小祥大祥禫除各隨其時〉哀痛奈何罔極奈何不審自罹荼毒〈父在母亡即雲憂苦〉氣力何如伏乞〈平交雲伏願降",
+          "sample_id": "zho_Hant-corpus-0042",
+          "source": "某頓首再拜言〈降等雲頓首〉不意凶變〈亡者官尊即雲邦國不幸後皆放此〉先某位〈無官即雲先府君有契即加㡬丈於某位府君之上 母雲先某封無封即雲先夫人 承重則雲尊祖考某位尊祖妣某封餘並同〉奄棄榮養〈亡者官尊即雲奄捐館舎或雲奄忽薨逝母封至夫人者亦云薨逝若生者無官即雲奄違色養〉承 訃驚怛不能已已伏惟〈平交雲恭惟降等𬗟惟〉孝心純至思慕號絶何可堪居日月流邁遽踰旬朔〈經時即雲已忽經時已𦵏即雲遽經襄奉卒哭小祥大祥禫除各隨其時〉哀痛奈何罔極奈何不審自罹荼毒〈父在母亡即雲憂苦〉氣力何如伏乞〈平交雲伏願"
+        },
+        {
+          "decoded": "列女田氏〈楊妻永樂間囘自北京卒於途田氏聞之哭泣不食暨柩至自經死事聞旌其門曰貞烈〉",
+          "sample_id": "zho_Hant-corpus-0052",
+          "source": "列女田氏〈楊頀妻永樂間頀囘自北京卒於途田氏聞之哭泣不食暨柩至自經死事聞旌其門曰貞烈〉"
+        },
+        {
+          "decoded": "林易廷 呂亭緯 王亭又 洪翊綺 白欣玉 楊詠璇 黃炯達 沈家潁 林晏頎 宋育凱 吳思怡 黃俊翔 黃 詠 蔡明璋 徐子恆 黃欣媚 鄒義峰 莊覲瑄 廖晉賢 郭曰誠 黃紹誠 黃彥文 陳柏廷 謝宜廷 廖宏基 何庚諺 蔡孟峰 林千雯 曾元康 李姿瑄 陳柏勳 李俊毅 洪梓鐘 洪瑞妏 陳泰余 朱紹綺 陳鈞隆 陳映竹 潘哲毅 王立中 柯穎志 陳柏瑞 林亮華 陳芷安 林瑋信 劉尚霖 區穗中 黃 立 楊 震 洪若霓 李彥融 吳佳潔 鄭存翔 林煒楗 何其 林宜衡 廖雅淳 陳怡璇 李嘉文 黃稚雯 吳",
+          "sample_id": "zho_Hant-corpus-0095",
+          "source": "林易廷 呂亭緯 王亭又 洪翊綺 白欣玉 楊詠璇 黃炯達 沈家潁 林晏頎 宋育凱 吳思怡 黃俊翔 黃 詠 蔡明璋 徐子恆 黃欣媚 鄒義峰 莊覲瑄 廖晉賢 郭曰誠 黃紹誠 黃彥文 陳柏廷 謝宜廷 廖宏基 何庚諺 蔡孟峰 林千雯 曾元康 李姿瑄 陳柏勳 李俊毅 洪梓鐘 洪瑞妏 陳泰余 朱紹綺 陳鈞隆 陳映竹 潘哲毅 王立中 柯穎志 陳柏瑞 林亮華 陳芷安 林瑋信 劉尚霖 區穗中 黃 立 楊 震 洪若霓 李彥融 吳佳潔 鄭存翔 林煒楗 何其錩 林宜衡 廖雅淳 陳怡璇 李嘉文 黃稚雯 "
+        }
+      ],
+      "samples": 508,
+      "source_character_loss_rate": 0.0005064497869931778,
+      "source_characters": 104652,
+      "token_length_max": 1245,
+      "token_length_p50": 56,
+      "token_length_p95": 579,
+      "token_length_p99": 951,
+      "tokens": 70931,
+      "tokens_per_non_whitespace_character": 0.7043723498277078,
+      "unk_source_characters": 51,
+      "unk_token_ratio": 0.0006485175734164188,
+      "unk_tokens": 46,
+      "unmapped_unk_tokens": 0
+    }
+  },
+  "artifact_path": "artifacts/tokenizers/mvp-tokenizer-v0",
+  "category_metrics": {
+    "eng_Latn": {
+      "corpus_random": {
+        "evaluated_non_whitespace_characters": 179389,
+        "exact_roundtrips": 499,
+        "mean_tokens_per_sample": 113.078,
+        "roundtrip_exact_rate": 0.998,
+        "roundtrip_mismatches": [
+          {
+            "decoded": "Binary options lesson plan axis bank login trading definition two stock trading ing BigOption Enveils Its Binary Options Strategy Advisor, a Tool to Help - Paul Wilmott on Quantitative Finance Card online login. ArbitrageurAn individual or ",
+            "sample_id": "eng_Latn-corpus-0007",
+            "source": "Binary options lesson plan axis bank login trading definition two stock trading ing BigOption Enveils Its Binary Options Strategy Advisor, a Tool to Help - Paul Wilmott on Quantitative Finance Card online login. ArbitrageurAn individual or "
+          }
+        ],
+        "samples": 500,
+        "source_character_loss_rate": 5.574477810791074e-06,
+        "source_characters": 214520,
+        "token_length_max": 793,
+        "token_length_p50": 70,
+        "token_length_p95": 420,
+        "token_length_p99": 539,
+        "tokens": 56539,
+        "tokens_per_non_whitespace_character": 0.31517540094431656,
+        "unk_source_characters": 1,
+        "unk_token_ratio": 1.7686906383204514e-05,
+        "unk_tokens": 1,
+        "unmapped_unk_tokens": 0
+      },
+      "daily": {
+        "evaluated_non_whitespace_characters": 54,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 18.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 1,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 64,
+        "token_length_max": 18,
+        "token_length_p50": 18,
+        "token_length_p95": 18,
+        "token_length_p99": 18,
+        "tokens": 18,
+        "tokens_per_non_whitespace_character": 0.3333333333333333,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "empty": {
+        "evaluated_non_whitespace_characters": 0,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 0.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 1,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 0,
+        "token_length_max": 0,
+        "token_length_p50": 0,
+        "token_length_p95": 0,
+        "token_length_p99": 0,
+        "tokens": 0,
+        "tokens_per_non_whitespace_character": 0.0,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "mixed_language": {
+        "evaluated_non_whitespace_characters": 40,
+        "exact_roundtrips": 0,
+        "mean_tokens_per_sample": 22.0,
+        "roundtrip_exact_rate": 0.0,
+        "roundtrip_mismatches": [
+          {
+            "decoded": "English 中文 日本語 한국어 mixed text, API-v2, GPU 16GB ",
+            "sample_id": "eng_Latn-probe-03",
+            "source": "English 中文 日本語 한국어 mixed text, API-v2, GPU 16GB 🚀"
+          }
+        ],
+        "samples": 1,
+        "source_character_loss_rate": 0.025,
+        "source_characters": 49,
+        "token_length_max": 22,
+        "token_length_p50": 22,
+        "token_length_p95": 22,
+        "token_length_p99": 22,
+        "tokens": 22,
+        "tokens_per_non_whitespace_character": 0.55,
+        "unk_source_characters": 1,
+        "unk_token_ratio": 0.045454545454545456,
+        "unk_tokens": 1,
+        "unmapped_unk_tokens": 0
+      },
+      "numeric_punctuation": {
+        "evaluated_non_whitespace_characters": 78,
+        "exact_roundtrips": 2,
+        "mean_tokens_per_sample": 28.5,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 2,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 82,
+        "token_length_max": 29,
+        "token_length_p50": 28,
+        "token_length_p95": 29,
+        "token_length_p99": 29,
+        "tokens": 57,
+        "tokens_per_non_whitespace_character": 0.7307692307692307,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "rare_unicode": {
+        "evaluated_non_whitespace_characters": 16,
+        "exact_roundtrips": 0,
+        "mean_tokens_per_sample": 18.0,
+        "roundtrip_exact_rate": 0.0,
+        "roundtrip_mismatches": [
+          {
+            "decoded": "    ️ café naïve",
+            "sample_id": "eng_Latn-probe-08",
+            "source": "𠀀 𪚥 㐀 𫠝 🧪🛰️ café naïve"
+          }
+        ],
+        "samples": 1,
+        "source_character_loss_rate": 0.375,
+        "source_characters": 22,
+        "token_length_max": 18,
+        "token_length_p50": 18,
+        "token_length_p95": 18,
+        "token_length_p99": 18,
+        "tokens": 18,
+        "tokens_per_non_whitespace_character": 1.125,
+        "unk_source_characters": 6,
+        "unk_token_ratio": 0.2777777777777778,
+        "unk_tokens": 5,
+        "unmapped_unk_tokens": 0
+      },
+      "technical_news": {
+        "evaluated_non_whitespace_characters": 70,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 24.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 1,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 80,
+        "token_length_max": 24,
+        "token_length_p50": 24,
+        "token_length_p95": 24,
+        "token_length_p99": 24,
+        "tokens": 24,
+        "tokens_per_non_whitespace_character": 0.34285714285714286,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "very_short": {
+        "evaluated_non_whitespace_characters": 2,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 2.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 1,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 2,
+        "token_length_max": 2,
+        "token_length_p50": 2,
+        "token_length_p95": 2,
+        "token_length_p99": 2,
+        "tokens": 2,
+        "tokens_per_non_whitespace_character": 1.0,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      }
+    },
+    "jpn_Jpan": {
+      "corpus_random": {
+        "evaluated_non_whitespace_characters": 83697,
+        "exact_roundtrips": 500,
+        "mean_tokens_per_sample": 89.138,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 500,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 85336,
+        "token_length_max": 821,
+        "token_length_p50": 43,
+        "token_length_p95": 350,
+        "token_length_p99": 689,
+        "tokens": 44569,
+        "tokens_per_non_whitespace_character": 0.5325041518811905,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "daily": {
+        "evaluated_non_whitespace_characters": 30,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 17.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 1,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 30,
+        "token_length_max": 17,
+        "token_length_p50": 17,
+        "token_length_p95": 17,
+        "token_length_p99": 17,
+        "tokens": 17,
+        "tokens_per_non_whitespace_character": 0.5666666666666667,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "empty": {
+        "evaluated_non_whitespace_characters": 0,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 0.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 1,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 0,
+        "token_length_max": 0,
+        "token_length_p50": 0,
+        "token_length_p95": 0,
+        "token_length_p99": 0,
+        "tokens": 0,
+        "tokens_per_non_whitespace_character": 0.0,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "mixed_language": {
+        "evaluated_non_whitespace_characters": 38,
+        "exact_roundtrips": 0,
+        "mean_tokens_per_sample": 22.0,
+        "roundtrip_exact_rate": 0.0,
+        "roundtrip_mismatches": [
+          {
+            "decoded": "日本語 中文 English 한국어 の混合テキスト、API-v2、GPU 16GB ",
+            "sample_id": "jpn_Jpan-probe-03",
+            "source": "日本語 中文 English 한국어 の混合テキスト、API-v2、GPU 16GB 🚀"
+          }
+        ],
+        "samples": 1,
+        "source_character_loss_rate": 0.02631578947368421,
+        "source_characters": 44,
+        "token_length_max": 22,
+        "token_length_p50": 22,
+        "token_length_p95": 22,
+        "token_length_p99": 22,
+        "tokens": 22,
+        "tokens_per_non_whitespace_character": 0.5789473684210527,
+        "unk_source_characters": 1,
+        "unk_token_ratio": 0.045454545454545456,
+        "unk_tokens": 1,
+        "unmapped_unk_tokens": 0
+      },
+      "numeric_punctuation": {
+        "evaluated_non_whitespace_characters": 66,
+        "exact_roundtrips": 2,
+        "mean_tokens_per_sample": 25.5,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 2,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 67,
+        "token_length_max": 26,
+        "token_length_p50": 25,
+        "token_length_p95": 26,
+        "token_length_p99": 26,
+        "tokens": 51,
+        "tokens_per_non_whitespace_character": 0.7727272727272727,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "rare_unicode": {
+        "evaluated_non_whitespace_characters": 22,
+        "exact_roundtrips": 0,
+        "mean_tokens_per_sample": 13.0,
+        "roundtrip_exact_rate": 0.0,
+        "roundtrip_mismatches": [
+          {
+            "decoded": "と異体字、絵文字️を確認します。",
+            "sample_id": "jpn_Jpan-probe-08",
+            "source": "𠀀𪚥㐀𫠝と異体字、絵文字🧪🛰️を確認します。"
+          }
+        ],
+        "samples": 1,
+        "source_character_loss_rate": 0.2727272727272727,
+        "source_characters": 22,
+        "token_length_max": 13,
+        "token_length_p50": 13,
+        "token_length_p95": 13,
+        "token_length_p99": 13,
+        "tokens": 13,
+        "tokens_per_non_whitespace_character": 0.5909090909090909,
+        "unk_source_characters": 6,
+        "unk_token_ratio": 0.15384615384615385,
+        "unk_tokens": 2,
+        "unmapped_unk_tokens": 0
+      },
+      "technical_news": {
+        "evaluated_non_whitespace_characters": 36,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 19.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 1,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 36,
+        "token_length_max": 19,
+        "token_length_p50": 19,
+        "token_length_p95": 19,
+        "token_length_p99": 19,
+        "tokens": 19,
+        "tokens_per_non_whitespace_character": 0.5277777777777778,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "very_short": {
+        "evaluated_non_whitespace_characters": 2,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 2.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 1,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 2,
+        "token_length_max": 2,
+        "token_length_p50": 2,
+        "token_length_p95": 2,
+        "token_length_p99": 2,
+        "tokens": 2,
+        "tokens_per_non_whitespace_character": 1.0,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      }
+    },
+    "kor_Hang": {
+      "corpus_random": {
+        "evaluated_non_whitespace_characters": 125677,
+        "exact_roundtrips": 497,
+        "mean_tokens_per_sample": 159.634,
+        "roundtrip_exact_rate": 0.994,
+        "roundtrip_mismatches": [
+          {
+            "decoded": "• 1개월 구독 시 14,536/월",
+            "sample_id": "kor_Hang-corpus-0105",
+            "source": "• 1개월 구독 시 ￦14,536/월"
+          },
+          {
+            "decoded": "(판결요지) (1) 乙은 A토지 위에 지상건물의 소유를 목적으로 하는 甲과의 토지임대차계약에 따라 B건물을 신축하였다. 甲은 토지 임대차기간이 만료한 뒤 임차인 乙을 상대로 건물철거 및 토지인도를 청구하는 소를 제기하였는데, 乙은 위 소송에서 건물매수청구권을 행사하지 아니하여 甲의 승소판결이 선고되어 확정된 뒤, B건물이 철거되기 전에 乙이 甲에 대하여 건물매수청구권을 행사하면서 그 매매대금의 지급을 청구하는 소를 제기하였다.",
+            "sample_id": "kor_Hang-corpus-0303",
+            "source": "(판결요지) (1) 乙은 A토지 위에 지상건물의 소유를 목적으로 하는 甲과의 토지임대차계약에 따라 B건물을 신축하였다. 甲은 토지 임대차기간이 만료한 뒤 임차인 乙을 상대로 건물철거 및 토지인도를 청구하는 소를 제기하였는데, 乙은 위 소송에서 건물매수청구권을 행사하지 아니하여 甲의 승소판결이 선고되어 확정된 뒤, B건물이 철거되기 전에 乙이 甲에 대하여 건물매수청구권을 행사하면서 그 매매대금의 지급을 청구하는 소를 제기하였다."
+          },
+          {
+            "decoded": "연구자들은 화폭의 가장 오른쪽에 있는 젊은 남자를 작가 푸키레프로 추정하며, 자신의 자화상을 화폭에 담아낸 것으로 보고 있다. 한편 푸키레프로 추정되는 인물의 옆에 위치하며 화면 밖 관람자를 향해 시선을 건네는 또 다른 인물은 이 작품의 아이디어를 제공한 푸키레프의 친구 표트르 쉬멜코프(П. MeлbkoB)로 전해진다. 그런데 쉬멜코프의 얼굴은 평생 결혼에 대해 부정적 태도를 취했던 니콜라이 고골과 어딘지 모르게 닮은 구석을 ",
+            "sample_id": "kor_Hang-corpus-0321",
+            "source": "연구자들은 화폭의 가장 오른쪽에 있는 젊은 남자를 작가 푸키레프로 추정하며, 자신의 자화상을 화폭에 담아낸 것으로 보고 있다. 한편 푸키레프로 추정되는 인물의 옆에 위치하며 화면 밖 관람자를 향해 시선을 건네는 또 다른 인물은 이 작품의 아이디어를 제공한 푸키레프의 친구 표트르 쉬멜코프(П. ШMeлbkoB)로 전해진다. 그런데 쉬멜코프의 얼굴은 평생 결혼에 대해 부정적 태도를 취했던 니콜라이 고골과 어딘지 모르게 닮은 구석을"
+          }
+        ],
+        "samples": 500,
+        "source_character_loss_rate": 2.3870716201055087e-05,
+        "source_characters": 161317,
+        "token_length_max": 957,
+        "token_length_p50": 101,
+        "token_length_p95": 411,
+        "token_length_p99": 778,
+        "tokens": 79817,
+        "tokens_per_non_whitespace_character": 0.6350963183398712,
+        "unk_source_characters": 3,
+        "unk_token_ratio": 3.75859779245023e-05,
+        "unk_tokens": 3,
+        "unmapped_unk_tokens": 0
+      },
+      "daily": {
+        "evaluated_non_whitespace_characters": 27,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 14.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 1,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 35,
+        "token_length_max": 14,
+        "token_length_p50": 14,
+        "token_length_p95": 14,
+        "token_length_p99": 14,
+        "tokens": 14,
+        "tokens_per_non_whitespace_character": 0.5185185185185185,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "empty": {
+        "evaluated_non_whitespace_characters": 0,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 0.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 1,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 0,
+        "token_length_max": 0,
+        "token_length_p50": 0,
+        "token_length_p95": 0,
+        "token_length_p99": 0,
+        "tokens": 0,
+        "tokens_per_non_whitespace_character": 0.0,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "mixed_language": {
+        "evaluated_non_whitespace_characters": 36,
+        "exact_roundtrips": 0,
+        "mean_tokens_per_sample": 24.0,
+        "roundtrip_exact_rate": 0.0,
+        "roundtrip_mismatches": [
+          {
+            "decoded": "한국어 中文 English 日本語 혼합 텍스트, API-v2, GPU 16GB ",
+            "sample_id": "kor_Hang-probe-03",
+            "source": "한국어 中文 English 日本語 혼합 텍스트, API-v2, GPU 16GB 🚀"
+          }
+        ],
+        "samples": 1,
+        "source_character_loss_rate": 0.027777777777777776,
+        "source_characters": 45,
+        "token_length_max": 24,
+        "token_length_p50": 24,
+        "token_length_p95": 24,
+        "token_length_p99": 24,
+        "tokens": 24,
+        "tokens_per_non_whitespace_character": 0.6666666666666666,
+        "unk_source_characters": 1,
+        "unk_token_ratio": 0.041666666666666664,
+        "unk_tokens": 1,
+        "unmapped_unk_tokens": 0
+      },
+      "numeric_punctuation": {
+        "evaluated_non_whitespace_characters": 70,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 27.0,
+        "roundtrip_exact_rate": 0.5,
+        "roundtrip_mismatches": [
+          {
+            "decoded": "2026년 07월 13일 12:34:56, 증가율 100%, 가격 3.1415926",
+            "sample_id": "kor_Hang-probe-04",
+            "source": "2026년 07월 13일 12:34:56, 증가율 100%, 가격 ₩3.1415926"
+          }
+        ],
+        "samples": 2,
+        "source_character_loss_rate": 0.014285714285714285,
+        "source_characters": 77,
+        "token_length_max": 29,
+        "token_length_p50": 25,
+        "token_length_p95": 29,
+        "token_length_p99": 29,
+        "tokens": 54,
+        "tokens_per_non_whitespace_character": 0.7714285714285715,
+        "unk_source_characters": 1,
+        "unk_token_ratio": 0.018518518518518517,
+        "unk_tokens": 1,
+        "unmapped_unk_tokens": 0
+      },
+      "rare_unicode": {
+        "evaluated_non_whitespace_characters": 15,
+        "exact_roundtrips": 0,
+        "mean_tokens_per_sample": 18.0,
+        "roundtrip_exact_rate": 0.0,
+        "roundtrip_mismatches": [
+          {
+            "decoded": "    희귀 문자와 이모지 ️",
+            "sample_id": "kor_Hang-probe-08",
+            "source": "𠀀 𪚥 㐀 𫠝 희귀 문자와 이모지 🧪🛰️"
+          }
+        ],
+        "samples": 1,
+        "source_character_loss_rate": 0.4,
+        "source_characters": 22,
+        "token_length_max": 18,
+        "token_length_p50": 18,
+        "token_length_p95": 18,
+        "token_length_p99": 18,
+        "tokens": 18,
+        "tokens_per_non_whitespace_character": 1.2,
+        "unk_source_characters": 6,
+        "unk_token_ratio": 0.2777777777777778,
+        "unk_tokens": 5,
+        "unmapped_unk_tokens": 0
+      },
+      "technical_news": {
+        "evaluated_non_whitespace_characters": 32,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 20.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 1,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 41,
+        "token_length_max": 20,
+        "token_length_p50": 20,
+        "token_length_p95": 20,
+        "token_length_p99": 20,
+        "tokens": 20,
+        "tokens_per_non_whitespace_character": 0.625,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "very_short": {
+        "evaluated_non_whitespace_characters": 1,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 1.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 1,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 1,
+        "token_length_max": 1,
+        "token_length_p50": 1,
+        "token_length_p95": 1,
+        "token_length_p99": 1,
+        "tokens": 1,
+        "tokens_per_non_whitespace_character": 1.0,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      }
+    },
+    "zho_Hans": {
+      "corpus_random": {
+        "evaluated_non_whitespace_characters": 82583,
+        "exact_roundtrips": 498,
+        "mean_tokens_per_sample": 108.996,
+        "roundtrip_exact_rate": 0.996,
+        "roundtrip_mismatches": [
+          {
+            "decoded": "SadSubotica原本只打算待一天的苏博蒂察，到达的第二日，梳妆打扮好之后才慢吞吞出门，却被满大街的雾凇惊得又蹦又跳，一夜之间，仿佛被精灵施了魔法。小城装扮得得比人还美。当即决定再呆一天。SuboticaSuboticaSubotica晚餐时，又遇到笑得很好看的小哥哥，更不想走了……Subotica去塞尔维亚之前就知道那里有一个木头城，是塞尔维亚著名导演库斯图里察为了拍电影而建，但是并没有刻意想要去看。那天走到半道，开车的小哥问是否知道木头城，点头。“我们现在就在去木头城",
+            "sample_id": "zho_Hans-corpus-0143",
+            "source": "SadSubotica原本只打算待一天的苏博蒂察，到达的第二日，梳妆打扮好之后才慢吞吞出门，却被满大街的雾凇惊得又蹦又跳，一夜之间，仿佛被精灵施了魔法。小城装扮得得比人还美。当即决定再呆一天。SuboticaSuboticaSubotica晚餐时，又遇到笑得很好看的小哥哥，更不想走了……Subotica去塞尔维亚之前就知道那里有一个木头城，是塞尔维亚著名导演库斯图里察为了拍电影而建，但是并没有刻意想要去看。那天走到半道，开车的小哥问是否知道木头城，点头。“我们现在就在去木头城"
+          },
+          {
+            "decoded": "?。ò耍於Φ卑凑展娑奶跫?，贮存的方式和时间不应当对检定菌的生长特性有不利影响。",
+            "sample_id": "zho_Hans-corpus-0489",
+            "source": "?。ò耍┘於ňΦ卑凑展娑ǖ奶跫?，贮存的方式和时间不应当对检定菌的生长特性有不利影响。"
+          }
+        ],
+        "samples": 500,
+        "source_character_loss_rate": 7.265417822069917e-05,
+        "source_characters": 83223,
+        "token_length_max": 1098,
+        "token_length_p50": 64,
+        "token_length_p95": 329,
+        "token_length_p99": 727,
+        "tokens": 54498,
+        "tokens_per_non_whitespace_character": 0.6599179007786106,
+        "unk_source_characters": 6,
+        "unk_token_ratio": 0.0001100957833314984,
+        "unk_tokens": 6,
+        "unmapped_unk_tokens": 0
+      },
+      "daily": {
+        "evaluated_non_whitespace_characters": 23,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 16.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 1,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 23,
+        "token_length_max": 16,
+        "token_length_p50": 16,
+        "token_length_p95": 16,
+        "token_length_p99": 16,
+        "tokens": 16,
+        "tokens_per_non_whitespace_character": 0.6956521739130435,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "empty": {
+        "evaluated_non_whitespace_characters": 0,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 0.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 1,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 0,
+        "token_length_max": 0,
+        "token_length_p50": 0,
+        "token_length_p95": 0,
+        "token_length_p99": 0,
+        "tokens": 0,
+        "tokens_per_non_whitespace_character": 0.0,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "mixed_language": {
+        "evaluated_non_whitespace_characters": 35,
+        "exact_roundtrips": 0,
+        "mean_tokens_per_sample": 23.0,
+        "roundtrip_exact_rate": 0.0,
+        "roundtrip_mismatches": [
+          {
+            "decoded": "中文 English 日本語 한국어 混合文本，API-v2，GPU 16GB ",
+            "sample_id": "zho_Hans-probe-03",
+            "source": "中文 English 日本語 한국어 混合文本，API-v2，GPU 16GB 🚀"
+          }
+        ],
+        "samples": 1,
+        "source_character_loss_rate": 0.02857142857142857,
+        "source_characters": 41,
+        "token_length_max": 23,
+        "token_length_p50": 23,
+        "token_length_p95": 23,
+        "token_length_p99": 23,
+        "tokens": 23,
+        "tokens_per_non_whitespace_character": 0.6571428571428571,
+        "unk_source_characters": 1,
+        "unk_token_ratio": 0.043478260869565216,
+        "unk_tokens": 1,
+        "unmapped_unk_tokens": 0
+      },
+      "numeric_punctuation": {
+        "evaluated_non_whitespace_characters": 68,
+        "exact_roundtrips": 2,
+        "mean_tokens_per_sample": 24.5,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 2,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 69,
+        "token_length_max": 25,
+        "token_length_p50": 24,
+        "token_length_p95": 25,
+        "token_length_p99": 25,
+        "tokens": 49,
+        "tokens_per_non_whitespace_character": 0.7205882352941176,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "rare_unicode": {
+        "evaluated_non_whitespace_characters": 18,
+        "exact_roundtrips": 0,
+        "mean_tokens_per_sample": 13.0,
+        "roundtrip_exact_rate": 0.0,
+        "roundtrip_mismatches": [
+          {
+            "decoded": "，生僻姓名用字与表情️。",
+            "sample_id": "zho_Hans-probe-08",
+            "source": "𠀀𪚥㐀𫠝，生僻姓名用字与表情🧪🛰️。"
+          }
+        ],
+        "samples": 1,
+        "source_character_loss_rate": 0.3333333333333333,
+        "source_characters": 18,
+        "token_length_max": 13,
+        "token_length_p50": 13,
+        "token_length_p95": 13,
+        "token_length_p99": 13,
+        "tokens": 13,
+        "tokens_per_non_whitespace_character": 0.7222222222222222,
+        "unk_source_characters": 6,
+        "unk_token_ratio": 0.15384615384615385,
+        "unk_tokens": 2,
+        "unmapped_unk_tokens": 0
+      },
+      "technical_news": {
+        "evaluated_non_whitespace_characters": 31,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 22.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 1,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 31,
+        "token_length_max": 22,
+        "token_length_p50": 22,
+        "token_length_p95": 22,
+        "token_length_p99": 22,
+        "tokens": 22,
+        "tokens_per_non_whitespace_character": 0.7096774193548387,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "very_short": {
+        "evaluated_non_whitespace_characters": 1,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 1.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 1,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 1,
+        "token_length_max": 1,
+        "token_length_p50": 1,
+        "token_length_p95": 1,
+        "token_length_p99": 1,
+        "tokens": 1,
+        "tokens_per_non_whitespace_character": 1.0,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      }
+    },
+    "zho_Hant": {
+      "corpus_random": {
+        "evaluated_non_whitespace_characters": 100523,
+        "exact_roundtrips": 478,
+        "mean_tokens_per_sample": 141.61,
+        "roundtrip_exact_rate": 0.956,
+        "roundtrip_mismatches": [
+          {
+            "decoded": "凡毀罵公侯駙馬伯及京省文職三品以上武職二以上官者杖一百枷號一箇月發落",
+            "sample_id": "zho_Hant-corpus-0024",
+            "source": "凡毀罵公侯駙馬伯及京省文職三品以上武職二碞以上官者杖一百枷號一箇月發落"
+          },
+          {
+            "decoded": "新唐書新羅國畜無羊少驢多馬開元中其王興光獻果下馬朝霞紬魚牙紬海豹皮又上異狗馬黄金美髢諸物",
+            "sample_id": "zho_Hant-corpus-0032",
+            "source": "新唐書新羅國畜無羊少驢驘多馬開元中其王興光獻果下馬朝霞紬魚牙紬海豹皮又上異狗馬黄金美髢諸物"
+          },
+          {
+            "decoded": "某頓首再拜言〈降等雲頓首〉不意凶變〈亡者官尊即雲邦國不幸後皆放此〉先某位〈無官即雲先府君有契即加㡬丈於某位府君之上 母雲先某封無封即雲先夫人 承重則雲尊祖考某位尊祖妣某封餘並同〉奄棄榮養〈亡者官尊即雲奄捐館舎或雲奄忽薨逝母封至夫人者亦云薨逝若生者無官即雲奄違色養〉承 訃驚怛不能已已伏惟〈平交雲恭惟降等惟〉孝心純至思慕號絶何可堪居日月流邁遽踰旬朔〈經時即雲已忽經時已𦵏即雲遽經襄奉卒哭小祥大祥禫除各隨其時〉哀痛奈何罔極奈何不審自罹荼毒〈父在母亡即雲憂苦〉氣力何如伏乞〈平交雲伏願降",
+            "sample_id": "zho_Hant-corpus-0042",
+            "source": "某頓首再拜言〈降等雲頓首〉不意凶變〈亡者官尊即雲邦國不幸後皆放此〉先某位〈無官即雲先府君有契即加㡬丈於某位府君之上 母雲先某封無封即雲先夫人 承重則雲尊祖考某位尊祖妣某封餘並同〉奄棄榮養〈亡者官尊即雲奄捐館舎或雲奄忽薨逝母封至夫人者亦云薨逝若生者無官即雲奄違色養〉承 訃驚怛不能已已伏惟〈平交雲恭惟降等𬗟惟〉孝心純至思慕號絶何可堪居日月流邁遽踰旬朔〈經時即雲已忽經時已𦵏即雲遽經襄奉卒哭小祥大祥禫除各隨其時〉哀痛奈何罔極奈何不審自罹荼毒〈父在母亡即雲憂苦〉氣力何如伏乞〈平交雲伏願"
+          },
+          {
+            "decoded": "列女田氏〈楊妻永樂間囘自北京卒於途田氏聞之哭泣不食暨柩至自經死事聞旌其門曰貞烈〉",
+            "sample_id": "zho_Hant-corpus-0052",
+            "source": "列女田氏〈楊頀妻永樂間頀囘自北京卒於途田氏聞之哭泣不食暨柩至自經死事聞旌其門曰貞烈〉"
+          },
+          {
+            "decoded": "林易廷 呂亭緯 王亭又 洪翊綺 白欣玉 楊詠璇 黃炯達 沈家潁 林晏頎 宋育凱 吳思怡 黃俊翔 黃 詠 蔡明璋 徐子恆 黃欣媚 鄒義峰 莊覲瑄 廖晉賢 郭曰誠 黃紹誠 黃彥文 陳柏廷 謝宜廷 廖宏基 何庚諺 蔡孟峰 林千雯 曾元康 李姿瑄 陳柏勳 李俊毅 洪梓鐘 洪瑞妏 陳泰余 朱紹綺 陳鈞隆 陳映竹 潘哲毅 王立中 柯穎志 陳柏瑞 林亮華 陳芷安 林瑋信 劉尚霖 區穗中 黃 立 楊 震 洪若霓 李彥融 吳佳潔 鄭存翔 林煒楗 何其 林宜衡 廖雅淳 陳怡璇 李嘉文 黃稚雯 吳",
+            "sample_id": "zho_Hant-corpus-0095",
+            "source": "林易廷 呂亭緯 王亭又 洪翊綺 白欣玉 楊詠璇 黃炯達 沈家潁 林晏頎 宋育凱 吳思怡 黃俊翔 黃 詠 蔡明璋 徐子恆 黃欣媚 鄒義峰 莊覲瑄 廖晉賢 郭曰誠 黃紹誠 黃彥文 陳柏廷 謝宜廷 廖宏基 何庚諺 蔡孟峰 林千雯 曾元康 李姿瑄 陳柏勳 李俊毅 洪梓鐘 洪瑞妏 陳泰余 朱紹綺 陳鈞隆 陳映竹 潘哲毅 王立中 柯穎志 陳柏瑞 林亮華 陳芷安 林瑋信 劉尚霖 區穗中 黃 立 楊 震 洪若霓 李彥融 吳佳潔 鄭存翔 林煒楗 何其錩 林宜衡 廖雅淳 陳怡璇 李嘉文 黃稚雯 "
+          }
+        ],
+        "samples": 500,
+        "source_character_loss_rate": 0.0004377107726589935,
+        "source_characters": 104467,
+        "token_length_max": 1245,
+        "token_length_p50": 58,
+        "token_length_p95": 579,
+        "token_length_p99": 951,
+        "tokens": 70805,
+        "tokens_per_non_whitespace_character": 0.7043661649572734,
+        "unk_source_characters": 44,
+        "unk_token_ratio": 0.0006073017442271026,
+        "unk_tokens": 43,
+        "unmapped_unk_tokens": 0
+      },
+      "daily": {
+        "evaluated_non_whitespace_characters": 23,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 16.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 1,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 23,
+        "token_length_max": 16,
+        "token_length_p50": 16,
+        "token_length_p95": 16,
+        "token_length_p99": 16,
+        "tokens": 16,
+        "tokens_per_non_whitespace_character": 0.6956521739130435,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "empty": {
+        "evaluated_non_whitespace_characters": 0,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 0.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 1,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 0,
+        "token_length_max": 0,
+        "token_length_p50": 0,
+        "token_length_p95": 0,
+        "token_length_p99": 0,
+        "tokens": 0,
+        "tokens_per_non_whitespace_character": 0.0,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "mixed_language": {
+        "evaluated_non_whitespace_characters": 37,
+        "exact_roundtrips": 0,
+        "mean_tokens_per_sample": 25.0,
+        "roundtrip_exact_rate": 0.0,
+        "roundtrip_mismatches": [
+          {
+            "decoded": "繁體中文 English 日本語 한국어 混合文字，API-v2，GPU 16GB ",
+            "sample_id": "zho_Hant-probe-03",
+            "source": "繁體中文 English 日本語 한국어 混合文字，API-v2，GPU 16GB 🚀"
+          }
+        ],
+        "samples": 1,
+        "source_character_loss_rate": 0.02702702702702703,
+        "source_characters": 43,
+        "token_length_max": 25,
+        "token_length_p50": 25,
+        "token_length_p95": 25,
+        "token_length_p99": 25,
+        "tokens": 25,
+        "tokens_per_non_whitespace_character": 0.6756756756756757,
+        "unk_source_characters": 1,
+        "unk_token_ratio": 0.04,
+        "unk_tokens": 1,
+        "unmapped_unk_tokens": 0
+      },
+      "numeric_punctuation": {
+        "evaluated_non_whitespace_characters": 68,
+        "exact_roundtrips": 2,
+        "mean_tokens_per_sample": 24.5,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 2,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 69,
+        "token_length_max": 25,
+        "token_length_p50": 24,
+        "token_length_p95": 25,
+        "token_length_p99": 25,
+        "tokens": 49,
+        "tokens_per_non_whitespace_character": 0.7205882352941176,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "rare_unicode": {
+        "evaluated_non_whitespace_characters": 18,
+        "exact_roundtrips": 0,
+        "mean_tokens_per_sample": 13.0,
+        "roundtrip_exact_rate": 0.0,
+        "roundtrip_mismatches": [
+          {
+            "decoded": "，罕見姓名用字與表情️。",
+            "sample_id": "zho_Hant-probe-08",
+            "source": "𠀀𪚥㐀𫠝，罕見姓名用字與表情🧪🛰️。"
+          }
+        ],
+        "samples": 1,
+        "source_character_loss_rate": 0.3333333333333333,
+        "source_characters": 18,
+        "token_length_max": 13,
+        "token_length_p50": 13,
+        "token_length_p95": 13,
+        "token_length_p99": 13,
+        "tokens": 13,
+        "tokens_per_non_whitespace_character": 0.7222222222222222,
+        "unk_source_characters": 6,
+        "unk_token_ratio": 0.15384615384615385,
+        "unk_tokens": 2,
+        "unmapped_unk_tokens": 0
+      },
+      "technical_news": {
+        "evaluated_non_whitespace_characters": 31,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 22.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 1,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 31,
+        "token_length_max": 22,
+        "token_length_p50": 22,
+        "token_length_p95": 22,
+        "token_length_p99": 22,
+        "tokens": 22,
+        "tokens_per_non_whitespace_character": 0.7096774193548387,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      },
+      "very_short": {
+        "evaluated_non_whitespace_characters": 1,
+        "exact_roundtrips": 1,
+        "mean_tokens_per_sample": 1.0,
+        "roundtrip_exact_rate": 1.0,
+        "roundtrip_mismatches": [],
+        "samples": 1,
+        "source_character_loss_rate": 0.0,
+        "source_characters": 1,
+        "token_length_max": 1,
+        "token_length_p50": 1,
+        "token_length_p95": 1,
+        "token_length_p99": 1,
+        "tokens": 1,
+        "tokens_per_non_whitespace_character": 1.0,
+        "unk_source_characters": 0,
+        "unk_token_ratio": 0.0,
+        "unk_tokens": 0,
+        "unmapped_unk_tokens": 0
+      }
+    }
+  },
+  "character_coverage": {
+    "eng_Latn": {
+      "covered_character_frequency": 179388,
+      "covered_unique_characters": 111,
+      "frequency_weighted_coverage": 0.9999944255221892,
+      "total_character_frequency": 179389,
+      "total_unique_characters": 112,
+      "uncovered_by_script": {
+        "Other letter": {
+          "frequency": 1,
+          "unique": 1
+        }
+      },
+      "uncovered_characters": [
+        {
+          "char": "ż",
+          "codepoint": "U+017C",
+          "count": 1,
+          "example": {
+            "context": "e a nuclear power division, co oznacza, że wartość euro (licznik stosunku EURUSD)",
+            "sample_id": "eng_Latn-corpus-0007"
+          },
+          "script": "Other letter",
+          "unicode_name": "LATIN SMALL LETTER Z WITH DOT ABOVE"
+        }
+      ],
+      "unique_character_coverage": 0.9910714285714286
+    },
+    "jpn_Jpan": {
+      "covered_character_frequency": 83697,
+      "covered_unique_characters": 2058,
+      "frequency_weighted_coverage": 1.0,
+      "total_character_frequency": 83697,
+      "total_unique_characters": 2058,
+      "uncovered_by_script": {},
+      "uncovered_characters": [],
+      "unique_character_coverage": 1.0
+    },
+    "kor_Hang": {
+      "covered_character_frequency": 125674,
+      "covered_unique_characters": 1410,
+      "frequency_weighted_coverage": 0.999976129283799,
+      "total_character_frequency": 125677,
+      "total_unique_characters": 1413,
+      "uncovered_by_script": {
+        "Number": {
+          "frequency": 1,
+          "unique": 1
+        },
+        "Other letter": {
+          "frequency": 1,
+          "unique": 1
+        },
+        "Symbol/emoji": {
+          "frequency": 1,
+          "unique": 1
+        }
+      },
+      "uncovered_characters": [
+        {
+          "char": "Ш",
+          "codepoint": "U+0428",
+          "count": 1,
+          "example": {
+            "context": "물은 이 작품의 아이디어를 제공한 푸키레프의 친구 표트르 쉬멜코프(П. ШMeлbkoB)로 전해진다. 그런데 쉬멜코프의 얼굴은 평생 결혼에 대해 ",
+            "sample_id": "kor_Hang-corpus-0321"
+          },
+          "script": "Other letter",
+          "unicode_name": "CYRILLIC CAPITAL LETTER SHA"
+        },
+        {
+          "char": "ⅰ",
+          "codepoint": "U+2170",
+          "count": 1,
+          "example": {
+            "context": "는 소는 전소의 확정판결의 기판력에 저촉되지 않기 때문에 적법하다. 즉 ⅰ) 전소인 건물철거소송과 후소인 매매대금지급청구소송은 양립 가능한 청구로",
+            "sample_id": "kor_Hang-corpus-0303"
+          },
+          "script": "Number",
+          "unicode_name": "SMALL ROMAN NUMERAL ONE"
+        },
+        {
+          "char": "￦",
+          "codepoint": "U+FFE6",
+          "count": 1,
+          "example": {
+            "context": "• 1개월 구독 시 ￦14,536/월",
+            "sample_id": "kor_Hang-corpus-0105"
+          },
+          "script": "Symbol/emoji",
+          "unicode_name": "FULLWIDTH WON SIGN"
+        }
+      ],
+      "unique_character_coverage": 0.9978768577494692
+    },
+    "zho_Hans": {
+      "covered_character_frequency": 82577,
+      "covered_unique_characters": 2848,
+      "frequency_weighted_coverage": 0.9999273458217793,
+      "total_character_frequency": 82583,
+      "total_unique_characters": 2852,
+      "uncovered_by_script": {
+        "Other letter": {
+          "frequency": 5,
+          "unique": 3
+        },
+        "Symbol/emoji": {
+          "frequency": 1,
+          "unique": 1
+        }
+      },
+      "uncovered_characters": [
+        {
+          "char": "Ž",
+          "codepoint": "U+017D",
+          "count": 3,
+          "example": {
+            "context": "ski trg 2到达方式：42路、46路、51路、91路公交车到Glavna Železni čka Stanica下车。电话：+381-11-3602899网",
+            "sample_id": "zho_Hans-corpus-0143"
+          },
+          "script": "Other letter",
+          "unicode_name": "LATIN CAPITAL LETTER Z WITH CARON"
+        },
+        {
+          "char": "ň",
+          "codepoint": "U+0148",
+          "count": 1,
+          "example": {
+            "context": "?。ò耍┘於ňΦ卑凑展娑ǖ奶跫?，贮存的方式和时间不应当对检定菌的生长特性有不利影响。",
+            "sample_id": "zho_Hans-corpus-0489"
+          },
+          "script": "Other letter",
+          "unicode_name": "LATIN SMALL LETTER N WITH CARON"
+        },
+        {
+          "char": "ǖ",
+          "codepoint": "U+01D6",
+          "count": 1,
+          "example": {
+            "context": "?。ò耍┘於ňΦ卑凑展娑ǖ奶跫?，贮存的方式和时间不应当对检定菌的生长特性有不利影响。",
+            "sample_id": "zho_Hans-corpus-0489"
+          },
+          "script": "Other letter",
+          "unicode_name": "LATIN SMALL LETTER U WITH DIAERESIS AND MACRON"
+        },
+        {
+          "char": "┘",
+          "codepoint": "U+2518",
+          "count": 1,
+          "example": {
+            "context": "?。ò耍┘於ňΦ卑凑展娑ǖ奶跫?，贮存的方式和时间不应当对检定菌的生长特性有不利影响。",
+            "sample_id": "zho_Hans-corpus-0489"
+          },
+          "script": "Symbol/emoji",
+          "unicode_name": "BOX DRAWINGS LIGHT UP AND LEFT"
+        }
+      ],
+      "unique_character_coverage": 0.9985974754558204
+    },
+    "zho_Hant": {
+      "covered_character_frequency": 100479,
+      "covered_unique_characters": 3729,
+      "frequency_weighted_coverage": 0.999562289227341,
+      "total_character_frequency": 100523,
+      "total_unique_characters": 3770,
+      "uncovered_by_script": {
+        "Han": {
+          "frequency": 29,
+          "unique": 26
+        },
+        "Symbol/emoji": {
+          "frequency": 15,
+          "unique": 15
+        }
+      },
+      "uncovered_characters": [
+        {
+          "char": "䞇",
+          "codepoint": "U+4787",
+          "count": 2,
+          "example": {
+            "context": "信任也〈翟萇伯翻〉懷光又言其罪上亦為殺之〈亦為于偽翻〉乙丑以翰林學士祠部員外郎陸䞇為考功郎中金部員外郎吴通㣲為職方郎中〈祠部屬禮部掌祠部考功屬吏部掌文武官功過考法",
+            "sample_id": "zho_Hant-corpus-0224"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-4787"
+        },
+        {
+          "char": "牸",
+          "codepoint": "U+7278",
+          "count": 2,
+          "example": {
+            "context": "字子敬〈中品下〉少有盛名風流高邁草𨽻繼父之美丹青亦工桓温嘗請畫扇誤落筆因就成烏駮牸牛極妙絶又書牸牛賦於扇上此扇義熙中猶在官至中書令太元十一年卒年四十三贈侍中特進光",
+            "sample_id": "zho_Hant-corpus-0117"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-7278"
+        },
+        {
+          "char": "頀",
+          "codepoint": "U+9800",
+          "count": 2,
+          "example": {
+            "context": "列女田氏〈楊頀妻永樂間頀囘自北京卒於途田氏聞之哭泣不食暨柩至自經死事聞旌其門曰貞烈〉",
+            "sample_id": "zho_Hant-corpus-0052"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-9800"
+        },
+        {
+          "char": "۞",
+          "codepoint": "U+06DE",
+          "count": 1,
+          "example": {
+            "context": "《鬼灭之刃恋柱乳液飙出》👤被强行糟蹋过程小说下午也不想去๑۞๑日本黄色一级片视频我們幾個向著那個地板上炸出來的🌍东宫 电视剧「鏡兒宮」上下是",
+            "sample_id": "zho_Hant-corpus-0159"
+          },
+          "script": "Symbol/emoji",
+          "unicode_name": "ARABIC START OF RUB EL HIZB"
+        },
+        {
+          "char": "◐",
+          "codepoint": "U+25D0",
+          "count": 1,
+          "example": {
+            "context": "入陵墓,還沒○以爱为契我勉強辯認的讀了一會兒.再✿忘忧草在线免费视频而且地上的(◐钓系美人和疯犬如果這天宮是在中間的三聖山的懸🥔日本天天操我在黑暗🥣chinese",
+            "sample_id": "zho_Hant-corpus-0159"
+          },
+          "script": "Symbol/emoji",
+          "unicode_name": "CIRCLE WITH LEFT HALF BLACK"
+        },
+        {
+          "char": "♍",
+          "codepoint": "U+264D",
+          "count": 1,
+          "example": {
+            "context": "暗🥣chinese小帅gayxxxxx方洞之中🤣stoya在线观看「你別不是鬼絆♍外婆的家在线观看完整免费在這裡猶豫,也♥️美女脱得只剩皮肤我乘機貓腰從兩個🛣️亚",
+            "sample_id": "zho_Hant-corpus-0159"
+          },
+          "script": "Symbol/emoji",
+          "unicode_name": "VIRGO"
+        },
+        {
+          "char": "偛",
+          "codepoint": "U+505B",
+          "count": 1,
+          "example": {
+            "context": "施工技術為客戶創造一流的精品工程.不斷開發和引進世界級先進科學技術和產品服務??偛炕厥髣撔缕髽I2008年1月,擔保授信信用企業2009年4月.國家認證的玻璃鋼格",
+            "sample_id": "zho_Hant-corpus-0465"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-505B"
+        },
+        {
+          "char": "偨",
+          "codepoint": "U+5068",
+          "count": 1,
+          "example": {
+            "context": "玻璃鋼保溫罩銷售網先河制定了,做全球最專業的高端環境監測儀器供應商的戰略目標??偨Y以改善思考和行為應用將學習中新的啟示.是國家重點高新技術創新企業國家火炬計劃新",
+            "sample_id": "zho_Hant-corpus-0465"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-5068"
+        },
+        {
+          "char": "僎",
+          "codepoint": "U+50CE",
+          "count": 1,
+          "example": {
+            "context": "亨都指揮卜萬給事中葉福江西副使程本立大理寺丞鄒瑾御史魏冕秦府長史鄒樸寧府左長史石僎漳州府教授陳思賢蕭縣知縣鄭恕副都御史陳性善都指揮使崇剛御史林英左拾遺戴德彛給事中",
+            "sample_id": "zho_Hant-corpus-0426"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-50CE"
+        },
+        {
+          "char": "僾",
+          "codepoint": "U+50FE",
+          "count": 1,
+          "example": {
+            "context": "陵前立仗石馬曰大白小白葢太宗當日所乘以畧陣破堅者) 萬青永䕶玉峯標元孫五世親陳奠僾愾聲容未覺遙",
+            "sample_id": "zho_Hant-corpus-0297"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-50FE"
+        },
+        {
+          "char": "凞",
+          "codepoint": "U+51DE",
+          "count": 1,
+          "example": {
+            "context": "從得此經年年僧自恣日依之修設已經多歲矣講者說文云和解也誥謂佛勅即此經也誥亦作告劉凞釋名云上勅下曰告告者覺也使覺悟知己意也如尚書大誥等佛經既是覺悟眾生令知佛意故得稱",
+            "sample_id": "zho_Hant-corpus-0106"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-51DE"
+        },
+        {
+          "char": "寁",
+          "codepoint": "U+5BC1",
+          "count": 1,
+          "example": {
+            "context": "〈愚按交道之難至于與為故與為好甚不易得不寁者不速也言非朝夕𠩄能速成也而忍遽然決絶乎〉遵大路二章章四句〈何氏謂此詩周公卿欲留",
+            "sample_id": "zho_Hant-corpus-0357"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-5BC1"
+        },
+        {
+          "char": "撔",
+          "codepoint": "U+6494",
+          "count": 1,
+          "example": {
+            "context": "為客戶創造一流的精品工程.不斷開發和引進世界級先進科學技術和產品服務??偛炕厥髣撔缕髽I2008年1月,擔保授信信用企業2009年4月.國家認證的玻璃鋼格柵玻璃鋼",
+            "sample_id": "zho_Hant-corpus-0465"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-6494"
+        },
+        {
+          "char": "琁",
+          "codepoint": "U+7401",
+          "count": 1,
+          "example": {
+            "context": "仁愷 張懿芬 吳根培 吳易軒 黃璧蒼 何玠輝 周盈安 王子嘉 彭邦碩 梁心柔 楊琁茗 胡耕寧 吳智惠 陳彥秀 汪光仲 葉采衢 李建霖 羅鈺婷 魏佑慈 石宏凱 黃堅",
+            "sample_id": "zho_Hant-corpus-0095"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-7401"
+        },
+        {
+          "char": "甡",
+          "codepoint": "U+7521",
+          "count": 1,
+          "example": {
+            "context": "涵 王莨惟 李文瑋 陳冠佑 王煜豪 葉家齊 呂佳容 李彥輝 吳尚賢 高珮容 張睿甡 王捷莓 陳志嘉 葉哲輝 廖冠豪 黃柏凱 林語立 薛逸廷 鍾凱丞 莊子逸 蔡豐璟",
+            "sample_id": "zho_Hant-corpus-0464"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-7521"
+        },
+        {
+          "char": "瞖",
+          "codepoint": "U+7796",
+          "count": 1,
+          "example": {
+            "context": "附方〈新一〉目中障瞖〈宻𫎇花黄蘗根各一兩為末水丸梧子大毎臥時湯服十丸至十五丸聖濟録〉",
+            "sample_id": "zho_Hant-corpus-0233"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-7796"
+        },
+        {
+          "char": "碞",
+          "codepoint": "U+789E",
+          "count": 1,
+          "example": {
+            "context": "凡毀罵公侯駙馬伯及京省文職三品以上武職二碞以上官者杖一百枷號一箇月發落",
+            "sample_id": "zho_Hant-corpus-0024"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-789E"
+        },
+        {
+          "char": "穄",
+          "codepoint": "U+7A44",
+          "count": 1,
+          "example": {
+            "context": "髙麗永寜地北盟㑹編二十八程至咸州二十九程至同州州地平壤居民所在成聚落耕種殆遍地宜穄黍",
+            "sample_id": "zho_Hant-corpus-0308"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-7A44"
+        },
+        {
+          "char": "絈",
+          "codepoint": "U+7D48",
+          "count": 1,
+          "example": {
+            "context": "縛之但經被縛者即服為賤𨽻不敢更稱良矣惟執楯持矛不識弓矢用竹為簧羣聚鼓之以為音節為絈布色至鮮淨大狗一頭買一生口性尤畏鬼所殺之人美鬚髯者必剝其靣皮籠之於竹及燥號之曰鬼",
+            "sample_id": "zho_Hant-corpus-0222"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-7D48"
+        },
+        {
+          "char": "舺",
+          "codepoint": "U+823A",
+          "count": 1,
+          "example": {
+            "context": "瑪蘭新開，額設守備一員，千總一員，把總二員，戰兵二百六十名，守兵一百四十名，歸艋舺水師游擊管轄。所撥班兵，皆用上游四府。惟蘭境北至三貂，南至蘇澳，邊界橫亙百餘里，",
+            "sample_id": "zho_Hant-corpus-0351"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-823A"
+        },
+        {
+          "char": "蔇",
+          "codepoint": "U+8507",
+          "count": 1,
+          "example": {
+            "context": "莊公也左𫝊鄭莊公朝王王不禮焉周公黑肩言于王曰我周之東遷晉鄭焉依善鄭以勸來者猶懼不蔇況不禮焉鄭不来矣觀周公黑肩之語有以識周公卿欲留莊公之意〉",
+            "sample_id": "zho_Hant-corpus-0357"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-8507"
+        },
+        {
+          "char": "袐",
+          "codepoint": "U+8890",
+          "count": 1,
+          "example": {
+            "context": "獨也無父曰孤孤顧也顧望無所瞻見也無子曰獨獨鹿也鹿鹿無所依也無財曰貧疲病曰癃〉 魏袐書令高祐丞李彪奏請改國書編年為紀𫝊表志〈𫝊直戀翻〉魏主從之祐允之從祖弟也十二月詔",
+            "sample_id": "zho_Hant-corpus-0482"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-8890"
+        },
+        {
+          "char": "誎",
+          "codepoint": "U+8A8E",
+          "count": 1,
+          "example": {
+            "context": "見在輔臣所薦之人元豐正名左右諌議大夫為諌垣之長專言責焉職畧左𨽻門下右𨽻中書同掌規誎諷諭凡朝政闕失大臣至百官任非其人三者至百司事有失當皆得諌正四朝志靖康元年詔臺諌天",
+            "sample_id": "zho_Hant-corpus-0410"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-8A8E"
+        },
+        {
+          "char": "錩",
+          "codepoint": "U+9329",
+          "count": 1,
+          "example": {
+            "context": "信 劉尚霖 區穗中 黃 立 楊 震 洪若霓 李彥融 吳佳潔 鄭存翔 林煒楗 何其錩 林宜衡 廖雅淳 陳怡璇 李嘉文 黃稚雯 吳昱甫 林岱儀 王映晴 曾培琪 蘇倖柔",
+            "sample_id": "zho_Hant-corpus-0095"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-9329"
+        },
+        {
+          "char": "驘",
+          "codepoint": "U+9A58",
+          "count": 1,
+          "example": {
+            "context": "新唐書新羅國畜無羊少驢驘多馬開元中其王興光獻果下馬朝霞紬魚牙紬海豹皮又上異狗馬黄金美髢諸物",
+            "sample_id": "zho_Hant-corpus-0032"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-9A58"
+        },
+        {
+          "char": "﹤",
+          "codepoint": "U+FE64",
+          "count": 1,
+          "example": {
+            "context": "也不知道,說就感覺找著找📗火影忍者手游女忍棵图我壓住恐🧑性色在线观看順子嘿嘿一≒﹤﹥じ☆暖暖视频高清图片免费完整版其實,中國和朝鮮兩國曆🚶酷漫屋胖子大叫「換人換人",
+            "sample_id": "zho_Hant-corpus-0159"
+          },
+          "script": "Symbol/emoji",
+          "unicode_name": "SMALL LESS-THAN SIGN"
+        },
+        {
+          "char": "﹥",
+          "codepoint": "U+FE65",
+          "count": 1,
+          "example": {
+            "context": "不知道,說就感覺找著找📗火影忍者手游女忍棵图我壓住恐🧑性色在线观看順子嘿嘿一≒﹤﹥じ☆暖暖视频高清图片免费完整版其實,中國和朝鮮兩國曆🚶酷漫屋胖子大叫「換人換人,",
+            "sample_id": "zho_Hant-corpus-0159"
+          },
+          "script": "Symbol/emoji",
+          "unicode_name": "SMALL GREATER-THAN SIGN"
+        },
+        {
+          "char": "🌍",
+          "codepoint": "U+1F30D",
+          "count": 1,
+          "example": {
+            "context": "行糟蹋过程小说下午也不想去๑۞๑日本黄色一级片视频我們幾個向著那個地板上炸出來的🌍东宫 电视剧「鏡兒宮」上下是🎓杨幂电视剧小红娘免费一剎那間我腦子裡一▆男女搞基免",
+            "sample_id": "zho_Hant-corpus-0159"
+          },
+          "script": "Symbol/emoji",
+          "unicode_name": "EARTH GLOBE EUROPE-AFRICA"
+        },
+        {
+          "char": "🎓",
+          "codepoint": "U+1F393",
+          "count": 1,
+          "example": {
+            "context": "๑日本黄色一级片视频我們幾個向著那個地板上炸出來的🌍东宫 电视剧「鏡兒宮」上下是🎓杨幂电视剧小红娘免费一剎那間我腦子裡一▆男女搞基免费视频在我們還沒有進入陵墓,還",
+            "sample_id": "zho_Hant-corpus-0159"
+          },
+          "script": "Symbol/emoji",
+          "unicode_name": "GRADUATION CAP"
+        },
+        {
+          "char": "👤",
+          "codepoint": "U+1F464",
+          "count": 1,
+          "example": {
+            "context": "《鬼灭之刃恋柱乳液飙出》👤被强行糟蹋过程小说下午也不想去๑۞๑日本黄色一级片视频我們幾個向著那個地板上炸出",
+            "sample_id": "zho_Hant-corpus-0159"
+          },
+          "script": "Symbol/emoji",
+          "unicode_name": "BUST IN SILHOUETTE"
+        },
+        {
+          "char": "📗",
+          "codepoint": "U+1F4D7",
+          "count": 1,
+          "example": {
+            "context": "腰從兩個🛣️亚洲久久久我突然🤧极品宝贝无敌妻全文胖子自己也不知道,說就感覺找著找📗火影忍者手游女忍棵图我壓住恐🧑性色在线观看順子嘿嘿一≒﹤﹥じ☆暖暖视频高清图片免",
+            "sample_id": "zho_Hant-corpus-0159"
+          },
+          "script": "Symbol/emoji",
+          "unicode_name": "GREEN BOOK"
+        },
+        {
+          "char": "🚶",
+          "codepoint": "U+1F6B6",
+          "count": 1,
+          "example": {
+            "context": "性色在线观看順子嘿嘿一≒﹤﹥じ☆暖暖视频高清图片免费完整版其實,中國和朝鮮兩國曆🚶酷漫屋胖子大叫「換人換人,, 面對著真龍真鳳之靈的吸食那三顆血丹卻彷彿是無底洞一",
+            "sample_id": "zho_Hant-corpus-0159"
+          },
+          "script": "Symbol/emoji",
+          "unicode_name": "PEDESTRIAN"
+        },
+        {
+          "char": "🛣",
+          "codepoint": "U+1F6E3",
+          "count": 1,
+          "example": {
+            "context": "鬼絆♍外婆的家在线观看完整免费在這裡猶豫,也♥️美女脱得只剩皮肤我乘機貓腰從兩個🛣️亚洲久久久我突然🤧极品宝贝无敌妻全文胖子自己也不知道,說就感覺找著找📗火影忍者",
+            "sample_id": "zho_Hant-corpus-0159"
+          },
+          "script": "Symbol/emoji",
+          "unicode_name": "MOTORWAY"
+        },
+        {
+          "char": "🤧",
+          "codepoint": "U+1F927",
+          "count": 1,
+          "example": {
+            "context": "看完整免费在這裡猶豫,也♥️美女脱得只剩皮肤我乘機貓腰從兩個🛣️亚洲久久久我突然🤧极品宝贝无敌妻全文胖子自己也不知道,說就感覺找著找📗火影忍者手游女忍棵图我壓住恐",
+            "sample_id": "zho_Hant-corpus-0159"
+          },
+          "script": "Symbol/emoji",
+          "unicode_name": "SNEEZING FACE"
+        },
+        {
+          "char": "🥔",
+          "codepoint": "U+1F954",
+          "count": 1,
+          "example": {
+            "context": "再✿忘忧草在线免费视频而且地上的(◐钓系美人和疯犬如果這天宮是在中間的三聖山的懸🥔日本天天操我在黑暗🥣chinese小帅gayxxxxx方洞之中🤣stoya在线观",
+            "sample_id": "zho_Hant-corpus-0159"
+          },
+          "script": "Symbol/emoji",
+          "unicode_name": "POTATO"
+        },
+        {
+          "char": "🥣",
+          "codepoint": "U+1F963",
+          "count": 1,
+          "example": {
+            "context": "频而且地上的(◐钓系美人和疯犬如果這天宮是在中間的三聖山的懸🥔日本天天操我在黑暗🥣chinese小帅gayxxxxx方洞之中🤣stoya在线观看「你別不是鬼絆♍外",
+            "sample_id": "zho_Hant-corpus-0159"
+          },
+          "script": "Symbol/emoji",
+          "unicode_name": "BOWL WITH SPOON"
+        },
+        {
+          "char": "🧑",
+          "codepoint": "U+1F9D1",
+          "count": 1,
+          "example": {
+            "context": "极品宝贝无敌妻全文胖子自己也不知道,說就感覺找著找📗火影忍者手游女忍棵图我壓住恐🧑性色在线观看順子嘿嘿一≒﹤﹥じ☆暖暖视频高清图片免费完整版其實,中國和朝鮮兩國曆",
+            "sample_id": "zho_Hant-corpus-0159"
+          },
+          "script": "Symbol/emoji",
+          "unicode_name": "ADULT"
+        },
+        {
+          "char": "𠛴",
+          "codepoint": "U+206F4",
+          "count": 1,
+          "example": {
+            "context": "演曰三𠛴那生滅謂緣境時念念生滅名非常一生故非一滅故非常因果如流是為流轉.",
+            "sample_id": "zho_Hant-corpus-0346"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-206F4"
+        },
+        {
+          "char": "𤦺",
+          "codepoint": "U+249BA",
+          "count": 1,
+          "example": {
+            "context": "居蓄邑注云有所廢有所蓄言其乘時射利也〉琦賂寳貨巨室不能容〈琦瑋也抱朴子曰片玉可以𤦺奚必俟盈尺也〉馬牛羊豕山谷不能受妖童美妾填乎綺室倡謳妓樂列乎深堂賓客待見而不敢去",
+            "sample_id": "zho_Hant-corpus-0437"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-249BA"
+        },
+        {
+          "char": "𩜾",
+          "codepoint": "U+2973E",
+          "count": 1,
+          "example": {
+            "context": "罔極奈何不審自罹荼毒〈父在母亡即雲憂苦〉氣力何如伏乞〈平交雲伏願降等雲惟冀〉強加𩜾粥〈已𦵏則雲疏食〉俯從禮制某役事所縻〈在官即雲職業有守〉未由奔 慰其於憂戀無任下",
+            "sample_id": "zho_Hant-corpus-0042"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-2973E"
+        },
+        {
+          "char": "𬗟",
+          "codepoint": "U+2C5DF",
+          "count": 1,
+          "example": {
+            "context": "封至夫人者亦云薨逝若生者無官即雲奄違色養〉承 訃驚怛不能已已伏惟〈平交雲恭惟降等𬗟惟〉孝心純至思慕號絶何可堪居日月流邁遽踰旬朔〈經時即雲已忽經時已𦵏即雲遽經襄奉卒",
+            "sample_id": "zho_Hant-corpus-0042"
+          },
+          "script": "Han",
+          "unicode_name": "CJK UNIFIED IDEOGRAPH-2C5DF"
+        }
+      ],
+      "unique_character_coverage": 0.9891246684350132
+    }
+  },
+  "chinese_sequence_parity": {
+    "simplified_token_length_p95": 329,
+    "simplified_tokens_per_character": 0.6599179007786106,
+    "traditional_minus_simplified_fertility": 0.04444826417866288,
+    "traditional_to_simplified_fertility_ratio": 1.0673542331950991,
+    "traditional_to_simplified_p95_ratio": 1.7598784194528876,
+    "traditional_token_length_p95": 579,
+    "traditional_tokens_per_character": 0.7043661649572734
+  },
+  "cjk_shared_han": {
+    "covered_shared_han": 878,
+    "mean_standalone_pieces": 1.6150341685649203,
+    "mismatch_examples": [],
+    "shared_han_coverage": 1.0,
+    "shared_unique_han": 878,
+    "simplified_traditional_shared_unique_han": 1570,
+    "source_language_split_mismatches": 0
+  },
+  "corpus_metrics": {
+    "eng_Latn": {
+      "evaluated_non_whitespace_characters": 179389,
+      "exact_roundtrips": 499,
+      "mean_tokens_per_sample": 113.078,
+      "roundtrip_exact_rate": 0.998,
+      "roundtrip_mismatches": [
+        {
+          "decoded": "Binary options lesson plan axis bank login trading definition two stock trading ing BigOption Enveils Its Binary Options Strategy Advisor, a Tool to Help - Paul Wilmott on Quantitative Finance Card online login. ArbitrageurAn individual or ",
+          "sample_id": "eng_Latn-corpus-0007",
+          "source": "Binary options lesson plan axis bank login trading definition two stock trading ing BigOption Enveils Its Binary Options Strategy Advisor, a Tool to Help - Paul Wilmott on Quantitative Finance Card online login. ArbitrageurAn individual or "
+        }
+      ],
+      "samples": 500,
+      "source_character_loss_rate": 5.574477810791074e-06,
+      "source_characters": 214520,
+      "token_length_max": 793,
+      "token_length_p50": 70,
+      "token_length_p95": 420,
+      "token_length_p99": 539,
+      "tokens": 56539,
+      "tokens_per_non_whitespace_character": 0.31517540094431656,
+      "unk_source_characters": 1,
+      "unk_token_ratio": 1.7686906383204514e-05,
+      "unk_tokens": 1,
+      "unmapped_unk_tokens": 0
+    },
+    "jpn_Jpan": {
+      "evaluated_non_whitespace_characters": 83697,
+      "exact_roundtrips": 500,
+      "mean_tokens_per_sample": 89.138,
+      "roundtrip_exact_rate": 1.0,
+      "roundtrip_mismatches": [],
+      "samples": 500,
+      "source_character_loss_rate": 0.0,
+      "source_characters": 85336,
+      "token_length_max": 821,
+      "token_length_p50": 43,
+      "token_length_p95": 350,
+      "token_length_p99": 689,
+      "tokens": 44569,
+      "tokens_per_non_whitespace_character": 0.5325041518811905,
+      "unk_source_characters": 0,
+      "unk_token_ratio": 0.0,
+      "unk_tokens": 0,
+      "unmapped_unk_tokens": 0
+    },
+    "kor_Hang": {
+      "evaluated_non_whitespace_characters": 125677,
+      "exact_roundtrips": 497,
+      "mean_tokens_per_sample": 159.634,
+      "roundtrip_exact_rate": 0.994,
+      "roundtrip_mismatches": [
+        {
+          "decoded": "• 1개월 구독 시 14,536/월",
+          "sample_id": "kor_Hang-corpus-0105",
+          "source": "• 1개월 구독 시 ￦14,536/월"
+        },
+        {
+          "decoded": "(판결요지) (1) 乙은 A토지 위에 지상건물의 소유를 목적으로 하는 甲과의 토지임대차계약에 따라 B건물을 신축하였다. 甲은 토지 임대차기간이 만료한 뒤 임차인 乙을 상대로 건물철거 및 토지인도를 청구하는 소를 제기하였는데, 乙은 위 소송에서 건물매수청구권을 행사하지 아니하여 甲의 승소판결이 선고되어 확정된 뒤, B건물이 철거되기 전에 乙이 甲에 대하여 건물매수청구권을 행사하면서 그 매매대금의 지급을 청구하는 소를 제기하였다.",
+          "sample_id": "kor_Hang-corpus-0303",
+          "source": "(판결요지) (1) 乙은 A토지 위에 지상건물의 소유를 목적으로 하는 甲과의 토지임대차계약에 따라 B건물을 신축하였다. 甲은 토지 임대차기간이 만료한 뒤 임차인 乙을 상대로 건물철거 및 토지인도를 청구하는 소를 제기하였는데, 乙은 위 소송에서 건물매수청구권을 행사하지 아니하여 甲의 승소판결이 선고되어 확정된 뒤, B건물이 철거되기 전에 乙이 甲에 대하여 건물매수청구권을 행사하면서 그 매매대금의 지급을 청구하는 소를 제기하였다."
+        },
+        {
+          "decoded": "연구자들은 화폭의 가장 오른쪽에 있는 젊은 남자를 작가 푸키레프로 추정하며, 자신의 자화상을 화폭에 담아낸 것으로 보고 있다. 한편 푸키레프로 추정되는 인물의 옆에 위치하며 화면 밖 관람자를 향해 시선을 건네는 또 다른 인물은 이 작품의 아이디어를 제공한 푸키레프의 친구 표트르 쉬멜코프(П. MeлbkoB)로 전해진다. 그런데 쉬멜코프의 얼굴은 평생 결혼에 대해 부정적 태도를 취했던 니콜라이 고골과 어딘지 모르게 닮은 구석을 ",
+          "sample_id": "kor_Hang-corpus-0321",
+          "source": "연구자들은 화폭의 가장 오른쪽에 있는 젊은 남자를 작가 푸키레프로 추정하며, 자신의 자화상을 화폭에 담아낸 것으로 보고 있다. 한편 푸키레프로 추정되는 인물의 옆에 위치하며 화면 밖 관람자를 향해 시선을 건네는 또 다른 인물은 이 작품의 아이디어를 제공한 푸키레프의 친구 표트르 쉬멜코프(П. ШMeлbkoB)로 전해진다. 그런데 쉬멜코프의 얼굴은 평생 결혼에 대해 부정적 태도를 취했던 니콜라이 고골과 어딘지 모르게 닮은 구석을"
+        }
+      ],
+      "samples": 500,
+      "source_character_loss_rate": 2.3870716201055087e-05,
+      "source_characters": 161317,
+      "token_length_max": 957,
+      "token_length_p50": 101,
+      "token_length_p95": 411,
+      "token_length_p99": 778,
+      "tokens": 79817,
+      "tokens_per_non_whitespace_character": 0.6350963183398712,
+      "unk_source_characters": 3,
+      "unk_token_ratio": 3.75859779245023e-05,
+      "unk_tokens": 3,
+      "unmapped_unk_tokens": 0
+    },
+    "zho_Hans": {
+      "evaluated_non_whitespace_characters": 82583,
+      "exact_roundtrips": 498,
+      "mean_tokens_per_sample": 108.996,
+      "roundtrip_exact_rate": 0.996,
+      "roundtrip_mismatches": [
+        {
+          "decoded": "SadSubotica原本只打算待一天的苏博蒂察，到达的第二日，梳妆打扮好之后才慢吞吞出门，却被满大街的雾凇惊得又蹦又跳，一夜之间，仿佛被精灵施了魔法。小城装扮得得比人还美。当即决定再呆一天。SuboticaSuboticaSubotica晚餐时，又遇到笑得很好看的小哥哥，更不想走了……Subotica去塞尔维亚之前就知道那里有一个木头城，是塞尔维亚著名导演库斯图里察为了拍电影而建，但是并没有刻意想要去看。那天走到半道，开车的小哥问是否知道木头城，点头。“我们现在就在去木头城",
+          "sample_id": "zho_Hans-corpus-0143",
+          "source": "SadSubotica原本只打算待一天的苏博蒂察，到达的第二日，梳妆打扮好之后才慢吞吞出门，却被满大街的雾凇惊得又蹦又跳，一夜之间，仿佛被精灵施了魔法。小城装扮得得比人还美。当即决定再呆一天。SuboticaSuboticaSubotica晚餐时，又遇到笑得很好看的小哥哥，更不想走了……Subotica去塞尔维亚之前就知道那里有一个木头城，是塞尔维亚著名导演库斯图里察为了拍电影而建，但是并没有刻意想要去看。那天走到半道，开车的小哥问是否知道木头城，点头。“我们现在就在去木头城"
+        },
+        {
+          "decoded": "?。ò耍於Φ卑凑展娑奶跫?，贮存的方式和时间不应当对检定菌的生长特性有不利影响。",
+          "sample_id": "zho_Hans-corpus-0489",
+          "source": "?。ò耍┘於ňΦ卑凑展娑ǖ奶跫?，贮存的方式和时间不应当对检定菌的生长特性有不利影响。"
+        }
+      ],
+      "samples": 500,
+      "source_character_loss_rate": 7.265417822069917e-05,
+      "source_characters": 83223,
+      "token_length_max": 1098,
+      "token_length_p50": 64,
+      "token_length_p95": 329,
+      "token_length_p99": 727,
+      "tokens": 54498,
+      "tokens_per_non_whitespace_character": 0.6599179007786106,
+      "unk_source_characters": 6,
+      "unk_token_ratio": 0.0001100957833314984,
+      "unk_tokens": 6,
+      "unmapped_unk_tokens": 0
+    },
+    "zho_Hant": {
+      "evaluated_non_whitespace_characters": 100523,
+      "exact_roundtrips": 478,
+      "mean_tokens_per_sample": 141.61,
+      "roundtrip_exact_rate": 0.956,
+      "roundtrip_mismatches": [
+        {
+          "decoded": "凡毀罵公侯駙馬伯及京省文職三品以上武職二以上官者杖一百枷號一箇月發落",
+          "sample_id": "zho_Hant-corpus-0024",
+          "source": "凡毀罵公侯駙馬伯及京省文職三品以上武職二碞以上官者杖一百枷號一箇月發落"
+        },
+        {
+          "decoded": "新唐書新羅國畜無羊少驢多馬開元中其王興光獻果下馬朝霞紬魚牙紬海豹皮又上異狗馬黄金美髢諸物",
+          "sample_id": "zho_Hant-corpus-0032",
+          "source": "新唐書新羅國畜無羊少驢驘多馬開元中其王興光獻果下馬朝霞紬魚牙紬海豹皮又上異狗馬黄金美髢諸物"
+        },
+        {
+          "decoded": "某頓首再拜言〈降等雲頓首〉不意凶變〈亡者官尊即雲邦國不幸後皆放此〉先某位〈無官即雲先府君有契即加㡬丈於某位府君之上 母雲先某封無封即雲先夫人 承重則雲尊祖考某位尊祖妣某封餘並同〉奄棄榮養〈亡者官尊即雲奄捐館舎或雲奄忽薨逝母封至夫人者亦云薨逝若生者無官即雲奄違色養〉承 訃驚怛不能已已伏惟〈平交雲恭惟降等惟〉孝心純至思慕號絶何可堪居日月流邁遽踰旬朔〈經時即雲已忽經時已𦵏即雲遽經襄奉卒哭小祥大祥禫除各隨其時〉哀痛奈何罔極奈何不審自罹荼毒〈父在母亡即雲憂苦〉氣力何如伏乞〈平交雲伏願降",
+          "sample_id": "zho_Hant-corpus-0042",
+          "source": "某頓首再拜言〈降等雲頓首〉不意凶變〈亡者官尊即雲邦國不幸後皆放此〉先某位〈無官即雲先府君有契即加㡬丈於某位府君之上 母雲先某封無封即雲先夫人 承重則雲尊祖考某位尊祖妣某封餘並同〉奄棄榮養〈亡者官尊即雲奄捐館舎或雲奄忽薨逝母封至夫人者亦云薨逝若生者無官即雲奄違色養〉承 訃驚怛不能已已伏惟〈平交雲恭惟降等𬗟惟〉孝心純至思慕號絶何可堪居日月流邁遽踰旬朔〈經時即雲已忽經時已𦵏即雲遽經襄奉卒哭小祥大祥禫除各隨其時〉哀痛奈何罔極奈何不審自罹荼毒〈父在母亡即雲憂苦〉氣力何如伏乞〈平交雲伏願"
+        },
+        {
+          "decoded": "列女田氏〈楊妻永樂間囘自北京卒於途田氏聞之哭泣不食暨柩至自經死事聞旌其門曰貞烈〉",
+          "sample_id": "zho_Hant-corpus-0052",
+          "source": "列女田氏〈楊頀妻永樂間頀囘自北京卒於途田氏聞之哭泣不食暨柩至自經死事聞旌其門曰貞烈〉"
+        },
+        {
+          "decoded": "林易廷 呂亭緯 王亭又 洪翊綺 白欣玉 楊詠璇 黃炯達 沈家潁 林晏頎 宋育凱 吳思怡 黃俊翔 黃 詠 蔡明璋 徐子恆 黃欣媚 鄒義峰 莊覲瑄 廖晉賢 郭曰誠 黃紹誠 黃彥文 陳柏廷 謝宜廷 廖宏基 何庚諺 蔡孟峰 林千雯 曾元康 李姿瑄 陳柏勳 李俊毅 洪梓鐘 洪瑞妏 陳泰余 朱紹綺 陳鈞隆 陳映竹 潘哲毅 王立中 柯穎志 陳柏瑞 林亮華 陳芷安 林瑋信 劉尚霖 區穗中 黃 立 楊 震 洪若霓 李彥融 吳佳潔 鄭存翔 林煒楗 何其 林宜衡 廖雅淳 陳怡璇 李嘉文 黃稚雯 吳",
+          "sample_id": "zho_Hant-corpus-0095",
+          "source": "林易廷 呂亭緯 王亭又 洪翊綺 白欣玉 楊詠璇 黃炯達 沈家潁 林晏頎 宋育凱 吳思怡 黃俊翔 黃 詠 蔡明璋 徐子恆 黃欣媚 鄒義峰 莊覲瑄 廖晉賢 郭曰誠 黃紹誠 黃彥文 陳柏廷 謝宜廷 廖宏基 何庚諺 蔡孟峰 林千雯 曾元康 李姿瑄 陳柏勳 李俊毅 洪梓鐘 洪瑞妏 陳泰余 朱紹綺 陳鈞隆 陳映竹 潘哲毅 王立中 柯穎志 陳柏瑞 林亮華 陳芷安 林瑋信 劉尚霖 區穗中 黃 立 楊 震 洪若霓 李彥融 吳佳潔 鄭存翔 林煒楗 何其錩 林宜衡 廖雅淳 陳怡璇 李嘉文 黃稚雯 "
+        }
+      ],
+      "samples": 500,
+      "source_character_loss_rate": 0.0004377107726589935,
+      "source_characters": 104467,
+      "token_length_max": 1245,
+      "token_length_p50": 58,
+      "token_length_p95": 579,
+      "token_length_p99": 951,
+      "tokens": 70805,
+      "tokens_per_non_whitespace_character": 0.7043661649572734,
+      "unk_source_characters": 44,
+      "unk_token_ratio": 0.0006073017442271026,
+      "unk_tokens": 43,
+      "unmapped_unk_tokens": 0
+    }
+  },
+  "english_subwords": {
+    "mean_pieces_per_word": 1.4964036925865096,
+    "most_fragmented_words": [
+      {
+        "count": 1,
+        "has_unk": false,
+        "pieces": 11,
+        "word": "Polyvinylpyrrolidone"
+      },
+      {
+        "count": 1,
+        "has_unk": false,
+        "pieces": 11,
+        "word": "staff-workshops-and-trainings"
+      },
+      {
+        "count": 1,
+        "has_unk": false,
+        "pieces": 11,
+        "word": "THOMAS-GREENFIELD"
+      },
+      {
+        "count": 1,
+        "has_unk": false,
+        "pieces": 11,
+        "word": "Wiesbaden-Schierstein"
+      },
+      {
+        "count": 1,
+        "has_unk": false,
+        "pieces": 10,
+        "word": "Entrepreneur-in-Residence"
+      },
+      {
+        "count": 1,
+        "has_unk": false,
+        "pieces": 10,
+        "word": "three-bottles-to-a-guest"
+      },
+      {
+        "count": 2,
+        "has_unk": false,
+        "pieces": 9,
+        "word": "Nuwara-Eliya"
+      },
+      {
+        "count": 1,
+        "has_unk": false,
+        "pieces": 9,
+        "word": "Co-Emulsifiers"
+      },
+      {
+        "count": 1,
+        "has_unk": false,
+        "pieces": 9,
+        "word": "Cyclopentasiloxane"
+      },
+      {
+        "count": 1,
+        "has_unk": false,
+        "pieces": 9,
+        "word": "methicillin-resistant"
+      },
+      {
+        "count": 1,
+        "has_unk": false,
+        "pieces": 9,
+        "word": "nineteenth-century"
+      },
+      {
+        "count": 2,
+        "has_unk": false,
+        "pieces": 8,
+        "word": "encyclopaedias"
+      },
+      {
+        "count": 2,
+        "has_unk": false,
+        "pieces": 8,
+        "word": "TECHNOLOGY"
+      },
+      {
+        "count": 1,
+        "has_unk": false,
+        "pieces": 8,
+        "word": "heterozygotes"
+      },
+      {
+        "count": 1,
+        "has_unk": false,
+        "pieces": 8,
+        "word": "one-of-a-kind"
+      },
+      {
+        "count": 1,
+        "has_unk": false,
+        "pieces": 8,
+        "word": "Rosgvardiya’s"
+      },
+      {
+        "count": 1,
+        "has_unk": false,
+        "pieces": 8,
+        "word": "Sarbanes-Oxley"
+      },
+      {
+        "count": 1,
+        "has_unk": false,
+        "pieces": 8,
+        "word": "ssgpolicyblog"
+      },
+      {
+        "count": 1,
+        "has_unk": false,
+        "pieces": 8,
+        "word": "staphylococcus"
+      },
+      {
+        "count": 3,
+        "has_unk": false,
+        "pieces": 7,
+        "word": "Colonel-General"
+      }
+    ],
+    "over_four_piece_word_rate": 0.012034887013648977,
+    "single_piece_word_rate": 0.7016480715863397,
+    "unique_words": 8234,
+    "unknown_word_rate": 0.0,
+    "word_occurrences": 35314
+  },
+  "korean_hangul": {
+    "frequency_weighted_coverage": 1.0,
+    "hangul_frequency": 111066,
+    "missing": [],
+    "unique_coverage": 1.0,
+    "unique_hangul": 1174
+  },
+  "label": "mvp-48k",
+  "long_sentence_metrics": {
+    "eng_Latn": {
+      "evaluated_non_whitespace_characters": 118719,
+      "exact_roundtrips": 133,
+      "mean_tokens_per_sample": 279.6940298507463,
+      "roundtrip_exact_rate": 0.9925373134328358,
+      "roundtrip_mismatches": [
+        {
+          "decoded": "Binary options lesson plan axis bank login trading definition two stock trading ing BigOption Enveils Its Binary Options Strategy Advisor, a Tool to Help - Paul Wilmott on Quantitative Finance Card online login. ArbitrageurAn individual or ",
+          "sample_id": "eng_Latn-corpus-0007",
+          "source": "Binary options lesson plan axis bank login trading definition two stock trading ing BigOption Enveils Its Binary Options Strategy Advisor, a Tool to Help - Paul Wilmott on Quantitative Finance Card online login. ArbitrageurAn individual or "
+        }
+      ],
+      "samples": 134,
+      "source_character_loss_rate": 8.423251543560845e-06,
+      "source_characters": 142227,
+      "token_length_max": 793,
+      "token_length_p50": 249,
+      "token_length_p95": 539,
+      "token_length_p99": 590,
+      "tokens": 37479,
+      "tokens_per_non_whitespace_character": 0.3156950446011169,
+      "unk_source_characters": 1,
+      "unk_token_ratio": 2.6681608367352383e-05,
+      "unk_tokens": 1,
+      "unmapped_unk_tokens": 0
+    },
+    "jpn_Jpan": {
+      "evaluated_non_whitespace_characters": 31981,
+      "exact_roundtrips": 38,
+      "mean_tokens_per_sample": 465.07894736842104,
+      "roundtrip_exact_rate": 1.0,
+      "roundtrip_mismatches": [],
+      "samples": 38,
+      "source_character_loss_rate": 0.0,
+      "source_characters": 33116,
+      "token_length_max": 821,
+      "token_length_p50": 433,
+      "token_length_p95": 794,
+      "token_length_p99": 821,
+      "tokens": 17673,
+      "tokens_per_non_whitespace_character": 0.5526093618085739,
+      "unk_source_characters": 0,
+      "unk_token_ratio": 0.0,
+      "unk_tokens": 0,
+      "unmapped_unk_tokens": 0
+    },
+    "kor_Hang": {
+      "evaluated_non_whitespace_characters": 78515,
+      "exact_roundtrips": 139,
+      "mean_tokens_per_sample": 360.2,
+      "roundtrip_exact_rate": 0.9928571428571429,
+      "roundtrip_mismatches": [
+        {
+          "decoded": "(판결요지) (1) 乙은 A토지 위에 지상건물의 소유를 목적으로 하는 甲과의 토지임대차계약에 따라 B건물을 신축하였다. 甲은 토지 임대차기간이 만료한 뒤 임차인 乙을 상대로 건물철거 및 토지인도를 청구하는 소를 제기하였는데, 乙은 위 소송에서 건물매수청구권을 행사하지 아니하여 甲의 승소판결이 선고되어 확정된 뒤, B건물이 철거되기 전에 乙이 甲에 대하여 건물매수청구권을 행사하면서 그 매매대금의 지급을 청구하는 소를 제기하였다.",
+          "sample_id": "kor_Hang-corpus-0303",
+          "source": "(판결요지) (1) 乙은 A토지 위에 지상건물의 소유를 목적으로 하는 甲과의 토지임대차계약에 따라 B건물을 신축하였다. 甲은 토지 임대차기간이 만료한 뒤 임차인 乙을 상대로 건물철거 및 토지인도를 청구하는 소를 제기하였는데, 乙은 위 소송에서 건물매수청구권을 행사하지 아니하여 甲의 승소판결이 선고되어 확정된 뒤, B건물이 철거되기 전에 乙이 甲에 대하여 건물매수청구권을 행사하면서 그 매매대금의 지급을 청구하는 소를 제기하였다."
+        }
+      ],
+      "samples": 140,
+      "source_character_loss_rate": 1.2736419792396357e-05,
+      "source_characters": 100590,
+      "token_length_max": 957,
+      "token_length_p50": 312,
+      "token_length_p95": 699,
+      "token_length_p99": 952,
+      "tokens": 50428,
+      "tokens_per_non_whitespace_character": 0.6422721772909635,
+      "unk_source_characters": 1,
+      "unk_token_ratio": 1.9830253034028715e-05,
+      "unk_tokens": 1,
+      "unmapped_unk_tokens": 0
+    },
+    "zho_Hans": {
+      "evaluated_non_whitespace_characters": 21490,
+      "exact_roundtrips": 24,
+      "mean_tokens_per_sample": 578.48,
+      "roundtrip_exact_rate": 0.96,
+      "roundtrip_mismatches": [
+        {
+          "decoded": "SadSubotica原本只打算待一天的苏博蒂察，到达的第二日，梳妆打扮好之后才慢吞吞出门，却被满大街的雾凇惊得又蹦又跳，一夜之间，仿佛被精灵施了魔法。小城装扮得得比人还美。当即决定再呆一天。SuboticaSuboticaSubotica晚餐时，又遇到笑得很好看的小哥哥，更不想走了……Subotica去塞尔维亚之前就知道那里有一个木头城，是塞尔维亚著名导演库斯图里察为了拍电影而建，但是并没有刻意想要去看。那天走到半道，开车的小哥问是否知道木头城，点头。“我们现在就在去木头城",
+          "sample_id": "zho_Hans-corpus-0143",
+          "source": "SadSubotica原本只打算待一天的苏博蒂察，到达的第二日，梳妆打扮好之后才慢吞吞出门，却被满大街的雾凇惊得又蹦又跳，一夜之间，仿佛被精灵施了魔法。小城装扮得得比人还美。当即决定再呆一天。SuboticaSuboticaSubotica晚餐时，又遇到笑得很好看的小哥哥，更不想走了……Subotica去塞尔维亚之前就知道那里有一个木头城，是塞尔维亚著名导演库斯图里察为了拍电影而建，但是并没有刻意想要去看。那天走到半道，开车的小哥问是否知道木头城，点头。“我们现在就在去木头城"
+        }
+      ],
+      "samples": 25,
+      "source_character_loss_rate": 0.00013959981386691485,
+      "source_characters": 21799,
+      "token_length_max": 1098,
+      "token_length_p50": 524,
+      "token_length_p95": 1044,
+      "token_length_p99": 1098,
+      "tokens": 14462,
+      "tokens_per_non_whitespace_character": 0.6729641693811075,
+      "unk_source_characters": 3,
+      "unk_token_ratio": 0.00020744018807910387,
+      "unk_tokens": 3,
+      "unmapped_unk_tokens": 0
+    },
+    "zho_Hant": {
+      "evaluated_non_whitespace_characters": 60344,
+      "exact_roundtrips": 54,
+      "mean_tokens_per_sample": 597.2307692307693,
+      "roundtrip_exact_rate": 0.8307692307692308,
+      "roundtrip_mismatches": [
+        {
+          "decoded": "林易廷 呂亭緯 王亭又 洪翊綺 白欣玉 楊詠璇 黃炯達 沈家潁 林晏頎 宋育凱 吳思怡 黃俊翔 黃 詠 蔡明璋 徐子恆 黃欣媚 鄒義峰 莊覲瑄 廖晉賢 郭曰誠 黃紹誠 黃彥文 陳柏廷 謝宜廷 廖宏基 何庚諺 蔡孟峰 林千雯 曾元康 李姿瑄 陳柏勳 李俊毅 洪梓鐘 洪瑞妏 陳泰余 朱紹綺 陳鈞隆 陳映竹 潘哲毅 王立中 柯穎志 陳柏瑞 林亮華 陳芷安 林瑋信 劉尚霖 區穗中 黃 立 楊 震 洪若霓 李彥融 吳佳潔 鄭存翔 林煒楗 何其 林宜衡 廖雅淳 陳怡璇 李嘉文 黃稚雯 吳",
+          "sample_id": "zho_Hant-corpus-0095",
+          "source": "林易廷 呂亭緯 王亭又 洪翊綺 白欣玉 楊詠璇 黃炯達 沈家潁 林晏頎 宋育凱 吳思怡 黃俊翔 黃 詠 蔡明璋 徐子恆 黃欣媚 鄒義峰 莊覲瑄 廖晉賢 郭曰誠 黃紹誠 黃彥文 陳柏廷 謝宜廷 廖宏基 何庚諺 蔡孟峰 林千雯 曾元康 李姿瑄 陳柏勳 李俊毅 洪梓鐘 洪瑞妏 陳泰余 朱紹綺 陳鈞隆 陳映竹 潘哲毅 王立中 柯穎志 陳柏瑞 林亮華 陳芷安 林瑋信 劉尚霖 區穗中 黃 立 楊 震 洪若霓 李彥融 吳佳潔 鄭存翔 林煒楗 何其錩 林宜衡 廖雅淳 陳怡璇 李嘉文 黃稚雯 "
+        },
+        {
+          "decoded": "《鬼灭之刃恋柱乳液飙出》被强行糟蹋过程小说下午也不想去๑๑日本黄色一级片视频我們幾個向著那個地板上炸出來的东宫 电视剧「鏡兒宮」上下是杨幂电视剧小红娘免费一剎那間我腦子裡一▆男女搞基免费视频在我們還沒有進入陵墓,還沒○以爱为契我勉強辯認的讀了一會兒.再✿忘忧草在线免费视频而且地上的(钓系美人和疯犬如果這天宮是在中間的三聖山的懸日本天天操我在黑暗chinese小帅gayxxxxx方洞之中🤣stoya在线观看「你別不是鬼絆外婆的家在线观看完整免费在這裡猶豫,也♥️美女脱得只剩皮肤",
+          "sample_id": "zho_Hant-corpus-0159",
+          "source": "《鬼灭之刃恋柱乳液飙出》👤被强行糟蹋过程小说下午也不想去๑۞๑日本黄色一级片视频我們幾個向著那個地板上炸出來的🌍东宫 电视剧「鏡兒宮」上下是🎓杨幂电视剧小红娘免费一剎那間我腦子裡一▆男女搞基免费视频在我們還沒有進入陵墓,還沒○以爱为契我勉強辯認的讀了一會兒.再✿忘忧草在线免费视频而且地上的(◐钓系美人和疯犬如果這天宮是在中間的三聖山的懸🥔日本天天操我在黑暗🥣chinese小帅gayxxxxx方洞之中🤣stoya在线观看「你別不是鬼絆♍外婆的家在线观看完整免费在這裡猶豫,也♥️"
+        },
+        {
+          "decoded": "獠葢蠻之别種往代初出自梁益之間自漢中逹於卭笮川谷之間所在皆有〈北自漢中西南及越嶲以來皆有之笮才各反〉俗不辯姓氏又無名字所生男女長幼次第呼之其丈夫稱阿謩阿叚婦人阿夷阿等之類皆其語之次第稱謂也依樹積木以居其上名曰干欄干欄大小隨其家之口數往往推一酋帥為主亦不能逺相統攝父死則子繼若中國之黨族也獠王各有鼓角一雙使其子弟自吹擊之好殺害多仇怨不敢逺行性同禽獸至於忿怒父子不相避惟手有兵刃者先殺之若殺其父走避於外求得一狗以謝其母然後敢歸母得狗謝不復嫌恨若報怨相攻擊必殺而食之遞相刼掠不避親戚賣如",
+          "sample_id": "zho_Hant-corpus-0222",
+          "source": "獠葢蠻之别種往代初出自梁益之間自漢中逹於卭笮川谷之間所在皆有〈北自漢中西南及越嶲以來皆有之笮才各反〉俗不辯姓氏又無名字所生男女長幼次第呼之其丈夫稱阿謩阿叚婦人阿夷阿等之類皆其語之次第稱謂也依樹積木以居其上名曰干欄干欄大小隨其家之口數往往推一酋帥為主亦不能逺相統攝父死則子繼若中國之黨族也獠王各有鼓角一雙使其子弟自吹擊之好殺害多仇怨不敢逺行性同禽獸至於忿怒父子不相避惟手有兵刃者先殺之若殺其父走避於外求得一狗以謝其母然後敢歸母得狗謝不復嫌恨若報怨相攻擊必殺而食之遞相刼掠不避親戚賣如"
+        },
+        {
+          "decoded": "李懷光頓兵不進數上表暴揚盧𣏌等罪惡〈數所角翻上時掌翻〉衆論諠騰亦咎𣏌等上不得已十二月壬戌貶𣏌為新州司馬白志貞為恩州司馬〈恩州屬漢合浦郡地蕭齊為齊安郡隋廢郡為海安縣唐貞觀二十三年以髙州之西平海安杜陵置恩州海安改曰恩平天寶曰恩平郡乾元復為恩州宋平王則改貝州曰恩州遂以此州為南恩州宋白為此恩州瀕海最為蒸濕當海南五郡汎海路此路自廣汎海行數日方登陸人惮海波不由此路多由新州陸去唯健歩出使與逓符牒經過耳新州治新興縣秦取陸梁地置象郡今州即其地晉永和分蒼梧郡於此置新寧郡梁武帝立新州所謂新興縣漢合",
+          "sample_id": "zho_Hant-corpus-0224",
+          "source": "李懷光頓兵不進數上表暴揚盧𣏌等罪惡〈數所角翻上時掌翻〉衆論諠騰亦咎𣏌等上不得已十二月壬戌貶𣏌為新州司馬白志貞為恩州司馬〈恩州屬漢合浦郡地蕭齊為齊安郡隋廢郡為海安縣唐貞觀二十三年以髙州之西平海安杜陵置恩州海安改曰恩平天寶曰恩平郡乾元復為恩州宋平王則改貝州曰恩州遂以此州為南恩州宋白為此恩州瀕海最為蒸濕當海南五郡汎海路此路自廣汎海行數日方登陸人惮海波不由此路多由新州陸去唯健歩出使與逓符牒經過耳新州治新興縣秦取陸梁地置象郡今州即其地晉永和分蒼梧郡於此置新寧郡梁武帝立新州所謂新興縣漢合"
+        },
+        {
+          "decoded": "「營制操演弓箭、鳥槍、籐牌、刀矛，各有用法，進退跳蕩，騰走擊刺，各有規矩。平時督撫、提鎮較閱之時，皆按一定陣圖演習，此不過死法陳規，練其步伐耳。及至既遇敵衝鋒，則臨機應變，惟以勇敢便捷整齊為上。必使手與器調，器與心調，心與伍調，伍與弁調，弁與將調，然後千人一氣，眾志成城，無不克敵之理。每見市中無賴，皆有膂力相尚。一營之中，豈無嫻長技藝之人？苟能留心拔取，使為眾兵教師，朝夕訓練，將裨親自董率，日省月試，考其優劣，能教十人以上者賞，百人以上者拔用。如此則人爭以技藝見長，勁旅可成，",
+          "sample_id": "zho_Hant-corpus-0351",
+          "source": "「營制操演弓箭、鳥槍、籐牌、刀矛，各有用法，進退跳蕩，騰走擊刺，各有規矩。平時督撫、提鎮較閱之時，皆按一定陣圖演習，此不過死法陳規，練其步伐耳。及至既遇敵衝鋒，則臨機應變，惟以勇敢便捷整齊為上。必使手與器調，器與心調，心與伍調，伍與弁調，弁與將調，然後千人一氣，眾志成城，無不克敵之理。每見市中無賴，皆有膂力相尚。一營之中，豈無嫻長技藝之人？苟能留心拔取，使為眾兵教師，朝夕訓練，將裨親自董率，日省月試，考其優劣，能教十人以上者賞，百人以上者拔用。如此則人爭以技藝見長，勁旅可成，"
+        }
+      ],
+      "samples": 65,
+      "source_character_loss_rate": 0.00048057801935569403,
+      "source_characters": 63522,
+      "token_length_max": 1245,
+      "token_length_p50": 539,
+      "token_length_p95": 985,
+      "token_length_p99": 1245,
+      "tokens": 38820,
+      "tokens_per_non_whitespace_character": 0.6433116797030359,
+      "unk_source_characters": 29,
+      "unk_token_ratio": 0.0007212776919113859,
+      "unk_tokens": 28,
+      "unmapped_unk_tokens": 0
+    }
+  },
+  "observed_unknown_characters": {
+    "eng_Latn": [
+      {
+        "char": "ż",
+        "codepoint": "U+017C",
+        "count": 1,
+        "script": "Other letter"
+      }
+    ],
+    "jpn_Jpan": [],
+    "kor_Hang": [
+      {
+        "char": "￦",
+        "codepoint": "U+FFE6",
+        "count": 1,
+        "script": "Symbol/emoji"
+      },
+      {
+        "char": "ⅰ",
+        "codepoint": "U+2170",
+        "count": 1,
+        "script": "Number"
+      },
+      {
+        "char": "Ш",
+        "codepoint": "U+0428",
+        "count": 1,
+        "script": "Other letter"
+      }
+    ],
+    "zho_Hans": [
+      {
+        "char": "Ž",
+        "codepoint": "U+017D",
+        "count": 3,
+        "script": "Other letter"
+      },
+      {
+        "char": "┘",
+        "codepoint": "U+2518",
+        "count": 1,
+        "script": "Symbol/emoji"
+      },
+      {
+        "char": "ǖ",
+        "codepoint": "U+01D6",
+        "count": 1,
+        "script": "Other letter"
+      },
+      {
+        "char": "ň",
+        "codepoint": "U+0148",
+        "count": 1,
+        "script": "Other letter"
+      }
+    ],
+    "zho_Hant": [
+      {
+        "char": "頀",
+        "codepoint": "U+9800",
+        "count": 2,
+        "script": "Han"
+      },
+      {
+        "char": "牸",
+        "codepoint": "U+7278",
+        "count": 2,
+        "script": "Han"
+      },
+      {
+        "char": "䞇",
+        "codepoint": "U+4787",
+        "count": 2,
+        "script": "Han"
+      },
+      {
+        "char": "碞",
+        "codepoint": "U+789E",
+        "count": 1,
+        "script": "Han"
+      },
+      {
+        "char": "驘",
+        "codepoint": "U+9A58",
+        "count": 1,
+        "script": "Han"
+      },
+      {
+        "char": "𩜾",
+        "codepoint": "U+2973E",
+        "count": 1,
+        "script": "Han"
+      },
+      {
+        "char": "𬗟",
+        "codepoint": "U+2C5DF",
+        "count": 1,
+        "script": "Han"
+      },
+      {
+        "char": "琁",
+        "codepoint": "U+7401",
+        "count": 1,
+        "script": "Han"
+      },
+      {
+        "char": "錩",
+        "codepoint": "U+9329",
+        "count": 1,
+        "script": "Han"
+      },
+      {
+        "char": "凞",
+        "codepoint": "U+51DE",
+        "count": 1,
+        "script": "Han"
+      },
+      {
+        "char": "🛣",
+        "codepoint": "U+1F6E3",
+        "count": 1,
+        "script": "Symbol/emoji"
+      },
+      {
+        "char": "﹤",
+        "codepoint": "U+FE64",
+        "count": 1,
+        "script": "Symbol/emoji"
+      },
+      {
+        "char": "﹥",
+        "codepoint": "U+FE65",
+        "count": 1,
+        "script": "Symbol/emoji"
+      },
+      {
+        "char": "📗",
+        "codepoint": "U+1F4D7",
+        "count": 1,
+        "script": "Symbol/emoji"
+      },
+      {
+        "char": "🎓",
+        "codepoint": "U+1F393",
+        "count": 1,
+        "script": "Symbol/emoji"
+      },
+      {
+        "char": "🥔",
+        "codepoint": "U+1F954",
+        "count": 1,
+        "script": "Symbol/emoji"
+      },
+      {
+        "char": "🤧",
+        "codepoint": "U+1F927",
+        "count": 1,
+        "script": "Symbol/emoji"
+      },
+      {
+        "char": "👤",
+        "codepoint": "U+1F464",
+        "count": 1,
+        "script": "Symbol/emoji"
+      },
+      {
+        "char": "◐",
+        "codepoint": "U+25D0",
+        "count": 1,
+        "script": "Symbol/emoji"
+      },
+      {
+        "char": "🥣",
+        "codepoint": "U+1F963",
+        "count": 1,
+        "script": "Symbol/emoji"
+      },
+      {
+        "char": "🧑",
+        "codepoint": "U+1F9D1",
+        "count": 1,
+        "script": "Symbol/emoji"
+      },
+      {
+        "char": "🌍",
+        "codepoint": "U+1F30D",
+        "count": 1,
+        "script": "Symbol/emoji"
+      },
+      {
+        "char": "♍",
+        "codepoint": "U+264D",
+        "count": 1,
+        "script": "Symbol/emoji"
+      },
+      {
+        "char": "🚶",
+        "codepoint": "U+1F6B6",
+        "count": 1,
+        "script": "Symbol/emoji"
+      },
+      {
+        "char": "۞",
+        "codepoint": "U+06DE",
+        "count": 1,
+        "script": "Symbol/emoji"
+      },
+      {
+        "char": "絈",
+        "codepoint": "U+7D48",
+        "count": 1,
+        "script": "Han"
+      },
+      {
+        "char": "瞖",
+        "codepoint": "U+7796",
+        "count": 1,
+        "script": "Han"
+      },
+      {
+        "char": "僾",
+        "codepoint": "U+50FE",
+        "count": 1,
+        "script": "Han"
+      },
+      {
+        "char": "穄",
+        "codepoint": "U+7A44",
+        "count": 1,
+        "script": "Han"
+      },
+      {
+        "char": "𠛴",
+        "codepoint": "U+206F4",
+        "count": 1,
+        "script": "Han"
+      },
+      {
+        "char": "舺",
+        "codepoint": "U+823A",
+        "count": 1,
+        "script": "Han"
+      },
+      {
+        "char": "寁",
+        "codepoint": "U+5BC1",
+        "count": 1,
+        "script": "Han"
+      },
+      {
+        "char": "蔇",
+        "codepoint": "U+8507",
+        "count": 1,
+        "script": "Han"
+      },
+      {
+        "char": "誎",
+        "codepoint": "U+8A8E",
+        "count": 1,
+        "script": "Han"
+      },
+      {
+        "char": "僎",
+        "codepoint": "U+50CE",
+        "count": 1,
+        "script": "Han"
+      },
+      {
+        "char": "𤦺",
+        "codepoint": "U+249BA",
+        "count": 1,
+        "script": "Han"
+      },
+      {
+        "char": "甡",
+        "codepoint": "U+7521",
+        "count": 1,
+        "script": "Han"
+      },
+      {
+        "char": "偛",
+        "codepoint": "U+505B",
+        "count": 1,
+        "script": "Han"
+      },
+      {
+        "char": "偨",
+        "codepoint": "U+5068",
+        "count": 1,
+        "script": "Han"
+      },
+      {
+        "char": "撔",
+        "codepoint": "U+6494",
+        "count": 1,
+        "script": "Han"
+      },
+      {
+        "char": "袐",
+        "codepoint": "U+8890",
+        "count": 1,
+        "script": "Han"
+      }
+    ]
+  },
+  "sample_set": {
+    "corpus_manifest_sha256": "c5bec116578ea88d37f325c3e18c66a889ef34aa263bb876e821456c500f9ffe",
+    "corpus_samples_per_language": 500,
+    "long_quota_per_language": 25,
+    "path": "data/tokenizer/evaluation/mvp-v0",
+    "seed": 20260713
+  },
+  "schema_version": 1,
+  "total_character_coverage": {
+    "frequency_weighted_coverage": 0.99990557277978,
+    "total_character_frequency": 571869,
+    "total_unique_characters_by_language": 10205,
+    "unique_character_coverage": 0.9951984321411073
+  },
+  "total_corpus_metrics": {
+    "evaluated_non_whitespace_characters": 571869,
+    "exact_roundtrips": 2472,
+    "mean_tokens_per_sample": 122.4912,
+    "roundtrip_exact_rate": 0.9888,
+    "roundtrip_mismatches": [
+      {
+        "decoded": "Binary options lesson plan axis bank login trading definition two stock trading ing BigOption Enveils Its Binary Options Strategy Advisor, a Tool to Help - Paul Wilmott on Quantitative Finance Card online login. ArbitrageurAn individual or ",
+        "sample_id": "eng_Latn-corpus-0007",
+        "source": "Binary options lesson plan axis bank login trading definition two stock trading ing BigOption Enveils Its Binary Options Strategy Advisor, a Tool to Help - Paul Wilmott on Quantitative Finance Card online login. ArbitrageurAn individual or "
+      },
+      {
+        "decoded": "SadSubotica原本只打算待一天的苏博蒂察，到达的第二日，梳妆打扮好之后才慢吞吞出门，却被满大街的雾凇惊得又蹦又跳，一夜之间，仿佛被精灵施了魔法。小城装扮得得比人还美。当即决定再呆一天。SuboticaSuboticaSubotica晚餐时，又遇到笑得很好看的小哥哥，更不想走了……Subotica去塞尔维亚之前就知道那里有一个木头城，是塞尔维亚著名导演库斯图里察为了拍电影而建，但是并没有刻意想要去看。那天走到半道，开车的小哥问是否知道木头城，点头。“我们现在就在去木头城",
+        "sample_id": "zho_Hans-corpus-0143",
+        "source": "SadSubotica原本只打算待一天的苏博蒂察，到达的第二日，梳妆打扮好之后才慢吞吞出门，却被满大街的雾凇惊得又蹦又跳，一夜之间，仿佛被精灵施了魔法。小城装扮得得比人还美。当即决定再呆一天。SuboticaSuboticaSubotica晚餐时，又遇到笑得很好看的小哥哥，更不想走了……Subotica去塞尔维亚之前就知道那里有一个木头城，是塞尔维亚著名导演库斯图里察为了拍电影而建，但是并没有刻意想要去看。那天走到半道，开车的小哥问是否知道木头城，点头。“我们现在就在去木头城"
+      },
+      {
+        "decoded": "?。ò耍於Φ卑凑展娑奶跫?，贮存的方式和时间不应当对检定菌的生长特性有不利影响。",
+        "sample_id": "zho_Hans-corpus-0489",
+        "source": "?。ò耍┘於ňΦ卑凑展娑ǖ奶跫?，贮存的方式和时间不应当对检定菌的生长特性有不利影响。"
+      },
+      {
+        "decoded": "凡毀罵公侯駙馬伯及京省文職三品以上武職二以上官者杖一百枷號一箇月發落",
+        "sample_id": "zho_Hant-corpus-0024",
+        "source": "凡毀罵公侯駙馬伯及京省文職三品以上武職二碞以上官者杖一百枷號一箇月發落"
+      },
+      {
+        "decoded": "新唐書新羅國畜無羊少驢多馬開元中其王興光獻果下馬朝霞紬魚牙紬海豹皮又上異狗馬黄金美髢諸物",
+        "sample_id": "zho_Hant-corpus-0032",
+        "source": "新唐書新羅國畜無羊少驢驘多馬開元中其王興光獻果下馬朝霞紬魚牙紬海豹皮又上異狗馬黄金美髢諸物"
+      },
+      {
+        "decoded": "某頓首再拜言〈降等雲頓首〉不意凶變〈亡者官尊即雲邦國不幸後皆放此〉先某位〈無官即雲先府君有契即加㡬丈於某位府君之上 母雲先某封無封即雲先夫人 承重則雲尊祖考某位尊祖妣某封餘並同〉奄棄榮養〈亡者官尊即雲奄捐館舎或雲奄忽薨逝母封至夫人者亦云薨逝若生者無官即雲奄違色養〉承 訃驚怛不能已已伏惟〈平交雲恭惟降等惟〉孝心純至思慕號絶何可堪居日月流邁遽踰旬朔〈經時即雲已忽經時已𦵏即雲遽經襄奉卒哭小祥大祥禫除各隨其時〉哀痛奈何罔極奈何不審自罹荼毒〈父在母亡即雲憂苦〉氣力何如伏乞〈平交雲伏願降",
+        "sample_id": "zho_Hant-corpus-0042",
+        "source": "某頓首再拜言〈降等雲頓首〉不意凶變〈亡者官尊即雲邦國不幸後皆放此〉先某位〈無官即雲先府君有契即加㡬丈於某位府君之上 母雲先某封無封即雲先夫人 承重則雲尊祖考某位尊祖妣某封餘並同〉奄棄榮養〈亡者官尊即雲奄捐館舎或雲奄忽薨逝母封至夫人者亦云薨逝若生者無官即雲奄違色養〉承 訃驚怛不能已已伏惟〈平交雲恭惟降等𬗟惟〉孝心純至思慕號絶何可堪居日月流邁遽踰旬朔〈經時即雲已忽經時已𦵏即雲遽經襄奉卒哭小祥大祥禫除各隨其時〉哀痛奈何罔極奈何不審自罹荼毒〈父在母亡即雲憂苦〉氣力何如伏乞〈平交雲伏願"
+      },
+      {
+        "decoded": "列女田氏〈楊妻永樂間囘自北京卒於途田氏聞之哭泣不食暨柩至自經死事聞旌其門曰貞烈〉",
+        "sample_id": "zho_Hant-corpus-0052",
+        "source": "列女田氏〈楊頀妻永樂間頀囘自北京卒於途田氏聞之哭泣不食暨柩至自經死事聞旌其門曰貞烈〉"
+      },
+      {
+        "decoded": "林易廷 呂亭緯 王亭又 洪翊綺 白欣玉 楊詠璇 黃炯達 沈家潁 林晏頎 宋育凱 吳思怡 黃俊翔 黃 詠 蔡明璋 徐子恆 黃欣媚 鄒義峰 莊覲瑄 廖晉賢 郭曰誠 黃紹誠 黃彥文 陳柏廷 謝宜廷 廖宏基 何庚諺 蔡孟峰 林千雯 曾元康 李姿瑄 陳柏勳 李俊毅 洪梓鐘 洪瑞妏 陳泰余 朱紹綺 陳鈞隆 陳映竹 潘哲毅 王立中 柯穎志 陳柏瑞 林亮華 陳芷安 林瑋信 劉尚霖 區穗中 黃 立 楊 震 洪若霓 李彥融 吳佳潔 鄭存翔 林煒楗 何其 林宜衡 廖雅淳 陳怡璇 李嘉文 黃稚雯 吳",
+        "sample_id": "zho_Hant-corpus-0095",
+        "source": "林易廷 呂亭緯 王亭又 洪翊綺 白欣玉 楊詠璇 黃炯達 沈家潁 林晏頎 宋育凱 吳思怡 黃俊翔 黃 詠 蔡明璋 徐子恆 黃欣媚 鄒義峰 莊覲瑄 廖晉賢 郭曰誠 黃紹誠 黃彥文 陳柏廷 謝宜廷 廖宏基 何庚諺 蔡孟峰 林千雯 曾元康 李姿瑄 陳柏勳 李俊毅 洪梓鐘 洪瑞妏 陳泰余 朱紹綺 陳鈞隆 陳映竹 潘哲毅 王立中 柯穎志 陳柏瑞 林亮華 陳芷安 林瑋信 劉尚霖 區穗中 黃 立 楊 震 洪若霓 李彥融 吳佳潔 鄭存翔 林煒楗 何其錩 林宜衡 廖雅淳 陳怡璇 李嘉文 黃稚雯 "
+      },
+      {
+        "decoded": "• 1개월 구독 시 14,536/월",
+        "sample_id": "kor_Hang-corpus-0105",
+        "source": "• 1개월 구독 시 ￦14,536/월"
+      },
+      {
+        "decoded": "(판결요지) (1) 乙은 A토지 위에 지상건물의 소유를 목적으로 하는 甲과의 토지임대차계약에 따라 B건물을 신축하였다. 甲은 토지 임대차기간이 만료한 뒤 임차인 乙을 상대로 건물철거 및 토지인도를 청구하는 소를 제기하였는데, 乙은 위 소송에서 건물매수청구권을 행사하지 아니하여 甲의 승소판결이 선고되어 확정된 뒤, B건물이 철거되기 전에 乙이 甲에 대하여 건물매수청구권을 행사하면서 그 매매대금의 지급을 청구하는 소를 제기하였다.",
+        "sample_id": "kor_Hang-corpus-0303",
+        "source": "(판결요지) (1) 乙은 A토지 위에 지상건물의 소유를 목적으로 하는 甲과의 토지임대차계약에 따라 B건물을 신축하였다. 甲은 토지 임대차기간이 만료한 뒤 임차인 乙을 상대로 건물철거 및 토지인도를 청구하는 소를 제기하였는데, 乙은 위 소송에서 건물매수청구권을 행사하지 아니하여 甲의 승소판결이 선고되어 확정된 뒤, B건물이 철거되기 전에 乙이 甲에 대하여 건물매수청구권을 행사하면서 그 매매대금의 지급을 청구하는 소를 제기하였다."
+      },
+      {
+        "decoded": "연구자들은 화폭의 가장 오른쪽에 있는 젊은 남자를 작가 푸키레프로 추정하며, 자신의 자화상을 화폭에 담아낸 것으로 보고 있다. 한편 푸키레프로 추정되는 인물의 옆에 위치하며 화면 밖 관람자를 향해 시선을 건네는 또 다른 인물은 이 작품의 아이디어를 제공한 푸키레프의 친구 표트르 쉬멜코프(П. MeлbkoB)로 전해진다. 그런데 쉬멜코프의 얼굴은 평생 결혼에 대해 부정적 태도를 취했던 니콜라이 고골과 어딘지 모르게 닮은 구석을 ",
+        "sample_id": "kor_Hang-corpus-0321",
+        "source": "연구자들은 화폭의 가장 오른쪽에 있는 젊은 남자를 작가 푸키레프로 추정하며, 자신의 자화상을 화폭에 담아낸 것으로 보고 있다. 한편 푸키레프로 추정되는 인물의 옆에 위치하며 화면 밖 관람자를 향해 시선을 건네는 또 다른 인물은 이 작품의 아이디어를 제공한 푸키레프의 친구 표트르 쉬멜코프(П. ШMeлbkoB)로 전해진다. 그런데 쉬멜코프의 얼굴은 평생 결혼에 대해 부정적 태도를 취했던 니콜라이 고골과 어딘지 모르게 닮은 구석을"
+      }
+    ],
+    "samples": 2500,
+    "source_character_loss_rate": 9.442722022001542e-05,
+    "source_characters": 648863,
+    "token_length_max": 1245,
+    "token_length_p50": 64,
+    "token_length_p95": 450,
+    "token_length_p99": 794,
+    "tokens": 306228,
+    "tokens_per_non_whitespace_character": 0.5354862739543497,
+    "unk_source_characters": 54,
+    "unk_token_ratio": 0.00017307365753621484,
+    "unk_tokens": 53,
+    "unmapped_unk_tokens": 0
+  },
+  "training_metadata": {
+    "balancing_algorithm": "equal-selected-unicode-characters-v1",
+    "batch_size": 1024,
+    "corpus_unique_characters": 31655,
+    "limit_alphabet": 24116,
+    "min_frequency": 2,
+    "sample_fraction": 1.0,
+    "sampling_algorithm": "per-language-seeded-bernoulli-v1",
+    "schema_version": 2,
+    "total_training_characters": 999998180,
+    "total_training_lines": 4277423,
+    "training_meta_sha256": "c3351da889ed272fd9cac51a6cd1a355b4f7e4258e9d7293335fe2646160cfcc",
+    "vocab_size": 49152
+  },
+  "vocab_size": 49152,
+  "vocab_utilization": {
+    "ratio": 0.56597900390625,
+    "used_non_special_ids": 27819,
+    "vocab_size": 49152
+  }
+}

@@ -73,6 +73,16 @@ STRESS_PROBES: dict[str, tuple[tuple[str, str], ...]] = {
         ("empty", ""),
         ("rare_unicode", "𠀀𪚥㐀𫠝，生僻姓名用字与表情🧪🛰️。"),
     ),
+    "zho_Hant": (
+        ("daily", "下班以後我去市場買了蔬菜，晚上和家人一起做飯。"),
+        ("technical_news", "研究團隊週一發布了多語言推理引擎二點一版本，並公布了測試結果。"),
+        ("mixed_language", "繁體中文 English 日本語 한국어 混合文字，API-v2，GPU 16GB 🚀"),
+        ("numeric_punctuation", "2026年07月14日 12:34:56，增長率100%，價格￥3.1415926。"),
+        ("numeric_punctuation", "！@#￥%……&*（）——+-=[]{}；：，。《》？"),
+        ("very_short", "好"),
+        ("empty", ""),
+        ("rare_unicode", "𠀀𪚥㐀𫠝，罕見姓名用字與表情🧪🛰️。"),
+    ),
     "jpn_Jpan": (
         ("daily", "仕事のあとで市場へ野菜を買いに行き、家族と夕食を作りました。"),
         ("technical_news", "研究チームは月曜日、多言語推論エンジンのバージョン2.1を公開しました。"),
@@ -145,6 +155,11 @@ def _load_corpus_manifest(path: Path) -> dict[str, dict]:
     if set(records) != set(TRAINING_LANGUAGES):
         raise EvaluationError(
             f"corpus manifest languages are {sorted(records)}, expected {sorted(TRAINING_LANGUAGES)}"
+        )
+    non_holdout = sorted(language for language, record in records.items() if record.get("split") != "holdout")
+    if non_holdout:
+        raise EvaluationError(
+            f"evaluation input must be the independently generated holdout; non-holdout records: {non_holdout}"
         )
     return records
 
@@ -654,9 +669,11 @@ def _english_subword_metrics(tokenizer, word_counts: Counter[str]) -> dict:
 
 
 def _cjk_shared_metrics(tokenizer, inventories: Mapping[str, Counter[str]]) -> dict:
-    chinese = {char for char in inventories["zho_Hans"] if classify_character(char) == "Han"}
+    simplified = {char for char in inventories["zho_Hans"] if classify_character(char) == "Han"}
+    traditional = {char for char in inventories["zho_Hant"] if classify_character(char) == "Han"}
     japanese = {char for char in inventories["jpn_Jpan"] if classify_character(char) == "Han"}
-    shared = sorted(chinese & japanese, key=ord)
+    shared = sorted(simplified & traditional & japanese, key=ord)
+    simplified_traditional = simplified & traditional
     saved_src_lang = tokenizer.src_lang
     mismatches = []
     covered = 0
@@ -678,11 +695,30 @@ def _cjk_shared_metrics(tokenizer, inventories: Mapping[str, Counter[str]]) -> d
         tokenizer.src_lang = saved_src_lang
     return {
         "shared_unique_han": len(shared),
+        "simplified_traditional_shared_unique_han": len(simplified_traditional),
         "covered_shared_han": covered,
         "shared_han_coverage": _ratio(covered, len(shared)),
         "mean_standalone_pieces": _ratio(piece_total, len(shared)),
         "source_language_split_mismatches": len(mismatches),
         "mismatch_examples": mismatches,
+    }
+
+
+def _chinese_sequence_parity(corpus_metrics: Mapping[str, Mapping]) -> dict:
+    simplified = corpus_metrics["zho_Hans"]
+    traditional = corpus_metrics["zho_Hant"]
+    simplified_fertility = float(simplified["tokens_per_non_whitespace_character"])
+    traditional_fertility = float(traditional["tokens_per_non_whitespace_character"])
+    simplified_p95 = int(simplified["token_length_p95"])
+    traditional_p95 = int(traditional["token_length_p95"])
+    return {
+        "simplified_tokens_per_character": simplified_fertility,
+        "traditional_tokens_per_character": traditional_fertility,
+        "traditional_to_simplified_fertility_ratio": _ratio(traditional_fertility, simplified_fertility),
+        "traditional_minus_simplified_fertility": traditional_fertility - simplified_fertility,
+        "simplified_token_length_p95": simplified_p95,
+        "traditional_token_length_p95": traditional_p95,
+        "traditional_to_simplified_p95_ratio": _ratio(traditional_p95, simplified_p95),
     }
 
 
@@ -784,6 +820,9 @@ def evaluate_tokenizer(
     total_unique_covered = sum(
         coverage["covered_unique_characters"] for coverage in character_coverage.values()
     )
+    corpus_metric_values = {
+        language: corpus_aggregates[language].as_dict() for language in TRAINING_LANGUAGES
+    }
     metrics = {
         "schema_version": METRICS_SCHEMA_VERSION,
         "label": label,
@@ -797,9 +836,7 @@ def evaluate_tokenizer(
             "corpus_samples_per_language": (sample_manifest or {}).get("corpus_samples_per_language"),
             "long_quota_per_language": (sample_manifest or {}).get("long_quota_per_language"),
         },
-        "corpus_metrics": {
-            language: corpus_aggregates[language].as_dict() for language in TRAINING_LANGUAGES
-        },
+        "corpus_metrics": corpus_metric_values,
         "total_corpus_metrics": total_aggregate.as_dict(),
         "all_sample_metrics": {
             language: all_aggregates[language].as_dict() for language in TRAINING_LANGUAGES
@@ -829,6 +866,7 @@ def evaluate_tokenizer(
             for language in TRAINING_LANGUAGES
         },
         "cjk_shared_han": _cjk_shared_metrics(tokenizer, inventories),
+        "chinese_sequence_parity": _chinese_sequence_parity(corpus_metric_values),
         "korean_hangul": _korean_metrics(tokenizer, inventories["kor_Hang"]),
         "english_subwords": _english_subword_metrics(tokenizer, english_words),
         "vocab_utilization": {
@@ -973,12 +1011,18 @@ def render_candidate_report(metrics: Mapping) -> str:
     )
     lines.extend(["", "## Script-specific analysis", ""])
     cjk = metrics["cjk_shared_han"]
+    chinese_parity = metrics["chinese_sequence_parity"]
     korean = metrics["korean_hangul"]
     english = metrics["english_subwords"]
     lines.extend(
         [
             f"- Shared Chinese/Japanese Han: {cjk['shared_unique_han']:,} unique, {_pct(cjk['shared_han_coverage'])} covered, "
             f"{cjk['source_language_split_mismatches']} standalone source-language split mismatches.",
+            f"- Simplified/Traditional sequence parity: tokens/character "
+            f"{_number(chinese_parity['simplified_tokens_per_character'])} vs "
+            f"{_number(chinese_parity['traditional_tokens_per_character'])}; Traditional/Simplified ratio "
+            f"{_number(chinese_parity['traditional_to_simplified_fertility_ratio'])}; P95 ratio "
+            f"{_number(chinese_parity['traditional_to_simplified_p95_ratio'])}.",
             f"- Korean Hangul: {korean['unique_hangul']:,} unique syllables/Jamo, "
             f"{_pct(korean['frequency_weighted_coverage'])} frequency-weighted coverage and {_pct(korean['unique_coverage'])} unique coverage.",
             f"- English subwords: {_number(english['mean_pieces_per_word'])} pieces/word, "
@@ -1139,8 +1183,8 @@ def parse_candidate(value: str) -> tuple[str, Path]:
 
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--corpus-dir", type=Path, default=Path("data/tokenizer/corpus/mvp"))
-    parser.add_argument("--sample-dir", type=Path, default=Path("data/tokenizer/evaluation/mvp"))
+    parser.add_argument("--corpus-dir", type=Path, default=Path("data/tokenizer/holdout/mvp"))
+    parser.add_argument("--sample-dir", type=Path, default=Path("data/tokenizer/evaluation/mvp-v0"))
     parser.add_argument("--report-dir", type=Path, default=Path("artifacts/tokenizers/reports"))
     parser.add_argument("--candidate", action="append", type=parse_candidate, required=True, metavar="LABEL=PATH")
     parser.add_argument("--sample-size", type=int, default=DEFAULT_SAMPLE_SIZE)
