@@ -1,0 +1,934 @@
+{
+  "phases": {
+    "td_01_hf_checkpoint": {
+      "checkpoint": "artifacts/ctranslate2/runtime/hf-micro-checkpoint",
+      "checkpoint_manifest_sha256": "0293d738ac1a063981ec42ddcc6474f594330e7205046452a376d2923d3e7351",
+      "dimensions": {
+        "config_vocab_size": 49152,
+        "decoder_embedding_rows": 49152,
+        "encoder_embedding_rows": 49152,
+        "input_output_embeddings_tied": true,
+        "lm_head_rows": 49152,
+        "shared_embedding_rows": 49152
+      },
+      "files": [
+        {
+          "bytes": 805,
+          "path": "config.json",
+          "sha256": "9c4f9b1050751b42cb764c5a2fb453344f6487bbe30e2844eee360dfb83387fc"
+        },
+        {
+          "bytes": 258,
+          "path": "generation_config.json",
+          "sha256": "8ec3b93222dc8b02a0c243c0e001258c035161906233bd6f00d486c2a45a753a"
+        },
+        {
+          "bytes": 6382408,
+          "path": "model.safetensors",
+          "sha256": "ef41f4f0148d93959af38d921ef53406b544f0fa7760697b9feb1776a67dd3a3"
+        },
+        {
+          "bytes": 2349192,
+          "path": "tokenizer.json",
+          "sha256": "22bceccab939afe1003d1fbdd95d9d4e78eb954b2e9003d70131155666b1201c"
+        },
+        {
+          "bytes": 546,
+          "path": "tokenizer_config.json",
+          "sha256": "8ada58fb9150058d72ab44023f34d7a57ef89b578f5f8e7c6e115c1cb7bb91be"
+        }
+      ],
+      "generated_at_utc": "2026-07-14T14:46:47.216991+00:00",
+      "model_config": {
+        "activation_dropout": 0.0,
+        "attention_dropout": 0.0,
+        "d_model": 32,
+        "decoder_attention_heads": 4,
+        "decoder_ffn_dim": 64,
+        "decoder_layerdrop": 0.0,
+        "decoder_layers": 1,
+        "dropout": 0.0,
+        "encoder_attention_heads": 4,
+        "encoder_ffn_dim": 64,
+        "encoder_layerdrop": 0.0,
+        "encoder_layers": 1,
+        "max_position_embeddings": 128,
+        "scale_embedding": false,
+        "tie_word_embeddings": true,
+        "use_cache": true
+      },
+      "offline_model_reload": true,
+      "offline_tokenizer_reload": true,
+      "parameter_count": 1594368,
+      "random_seed": 20260714,
+      "reproduction_command": ".\\.conda\\python.exe scripts\\build_micro_m2m100_checkpoint.py --spec configs/micro_m2m100_deployment.json --output-dir artifacts/ctranslate2/runtime/hf-micro-checkpoint --overwrite",
+      "schema_version": 1,
+      "smoke_forward": {
+        "decoder_input_ids": [
+          2,
+          6
+        ],
+        "logits_finite": true,
+        "logits_shape": [
+          1,
+          2,
+          49152
+        ],
+        "source_language": "eng_Latn",
+        "source_token_ids": [
+          5,
+          24219,
+          30844,
+          32131,
+          89,
+          30045,
+          39798,
+          24312,
+          24448,
+          24134,
+          24408,
+          28609,
+          24317,
+          26862,
+          35422,
+          23,
+          2
+        ],
+        "target_language": "zho_Hans"
+      },
+      "spec": "configs/micro_m2m100_deployment.json",
+      "spec_file_sha256": "3a88bef2c6dbc63be8cf7e808765286ff23e94490cc5004ed4ff4d6d89439ee3",
+      "spec_sha256": "1a6f9e6a3d24edbb25f1a3dbf1413f84210e1b971cdb34d8e2cfedbb50a04e01",
+      "state_dict_sha256": "c2c82c641eb0b57f89cd077461042b4df87866ac192564ac08c386547c65ed07",
+      "status": "passed",
+      "tokenizer": {
+        "artifact_files_verified": 6,
+        "artifact_manifest_sha256": "eb79ae22f523f1d9c9fcf75b80f2b322e3c2882a8fddb7545b5933dd4053fa7f",
+        "language_token_ids": {
+          "eng_Latn": 5,
+          "jpn_Jpan": 8,
+          "kor_Hang": 9,
+          "zho_Hans": 6,
+          "zho_Hant": 7
+        },
+        "path": "artifacts/tokenizers/mvp-tokenizer-v0",
+        "special_token_ids": {
+          "</s>": 2,
+          "<pad>": 1,
+          "<s>": 0,
+          "<unk>": 3
+        },
+        "vocab_size": 49152
+      },
+      "versions": {
+        "ctranslate2": "4.8.1",
+        "python": "3.11.15",
+        "safetensors": "0.8.0",
+        "tokenizers": "0.22.2",
+        "torch": "2.13.0+cu132",
+        "transformers": "5.13.1"
+      },
+      "warning": "Random weights validate deployment interfaces only and have no translation quality."
+    },
+    "td_02_conversion": {
+      "environment": {
+        "HF_DATASETS_OFFLINE": "1",
+        "HF_HUB_OFFLINE": "1",
+        "TRANSFORMERS_OFFLINE": "1"
+      },
+      "generated_at_utc": "2026-07-14T14:47:00.438981+00:00",
+      "input_checkpoint": "artifacts/ctranslate2/runtime/hf-micro-checkpoint",
+      "input_checkpoint_manifest_sha256": "0293d738ac1a063981ec42ddcc6474f594330e7205046452a376d2923d3e7351",
+      "input_checkpoint_state_dict_sha256": "c2c82c641eb0b57f89cd077461042b4df87866ac192564ac08c386547c65ed07",
+      "models": {
+        "float32": {
+          "conversion_manifest_sha256": "8f1a3c372efb74198ff2978cc157f36f57b3e18b6626a756e0bcf24e27041dee",
+          "cpu_compute_type_actual": "float32",
+          "cpu_compute_type_requested": "float32",
+          "elapsed_seconds": 1.851076,
+          "equivalent_cli": ".\\.conda\\Scripts\\ct2-transformers-converter.exe --model artifacts/ctranslate2/runtime/hf-micro-checkpoint --output_dir artifacts/ctranslate2/runtime/ct2-float32 --quantization float32 --force",
+          "files": [
+            {
+              "bytes": 233,
+              "path": "config.json",
+              "sha256": "72901fbd8abd89fb5cf4a388f26fc681f5c4c58a1e1a88b30b879f107270e7ee"
+            },
+            {
+              "bytes": 6394105,
+              "path": "model.bin",
+              "sha256": "5c0986f8bd23e88139e71ac95e528f5afc8a78f3ad68259211c9d9602156de13"
+            },
+            {
+              "bytes": 915969,
+              "path": "shared_vocabulary.json",
+              "sha256": "ea0143bdbc4fc8ef616bce81371094f4a30129b43bdba7aba20376238c4a4192"
+            }
+          ],
+          "output": "artifacts/ctranslate2/runtime/ct2-float32",
+          "quantization_requested": "float32"
+        },
+        "int8": {
+          "conversion_manifest_sha256": "2e20a9ec780500cba0e7ec155f0f195a29ef9624b526dbc8c898d5ca33bf3512",
+          "cpu_compute_type_actual": "int8_float32",
+          "cpu_compute_type_requested": "int8",
+          "elapsed_seconds": 0.772452,
+          "equivalent_cli": ".\\.conda\\Scripts\\ct2-transformers-converter.exe --model artifacts/ctranslate2/runtime/hf-micro-checkpoint --output_dir artifacts/ctranslate2/runtime/ct2-int8 --quantization int8 --force",
+          "files": [
+            {
+              "bytes": 233,
+              "path": "config.json",
+              "sha256": "72901fbd8abd89fb5cf4a388f26fc681f5c4c58a1e1a88b30b879f107270e7ee"
+            },
+            {
+              "bytes": 1813685,
+              "path": "model.bin",
+              "sha256": "0a980b1bb7b182d3d4a2b4599487cd0bed0f625e2edff9266d5550114c33742e"
+            },
+            {
+              "bytes": 915969,
+              "path": "shared_vocabulary.json",
+              "sha256": "ea0143bdbc4fc8ef616bce81371094f4a30129b43bdba7aba20376238c4a4192"
+            }
+          ],
+          "output": "artifacts/ctranslate2/runtime/ct2-int8",
+          "quantization_requested": "int8"
+        }
+      },
+      "phase": "TD-02",
+      "revision": null,
+      "schema_version": 1,
+      "status": "passed",
+      "supported_cpu_compute_types": [
+        "float32",
+        "int16",
+        "int8",
+        "int8_float32"
+      ],
+      "trust_remote_code": false,
+      "versions": {
+        "ctranslate2": "4.8.1",
+        "python": "3.11.15",
+        "safetensors": "0.8.0",
+        "tokenizers": "0.22.2",
+        "torch": "2.13.0+cu132",
+        "transformers": "5.13.1"
+      }
+    },
+    "td_03_vocab_integrity": {
+      "conversions": {
+        "float32": {
+          "config_semantics": {
+            "add_source_bos": false,
+            "add_source_eos": false,
+            "bos_token": "<s>",
+            "decoder_start_token": "</s>",
+            "eos_token": "</s>",
+            "unk_token": "<unk>"
+          },
+          "conversion_manifest_sha256": "8f1a3c372efb74198ff2978cc157f36f57b3e18b6626a756e0bcf24e27041dee",
+          "cpu_compute_type_actual": "float32",
+          "path": "artifacts/ctranslate2/runtime/ct2-float32",
+          "quantization_requested": "float32",
+          "vocabulary_file_sha256": "ea0143bdbc4fc8ef616bce81371094f4a30129b43bdba7aba20376238c4a4192",
+          "vocabulary_sequence_sha256": "72bc2edcfe44bdfac90d2c101f71f214cdd2c4b70d7c975e5d269011be40c716"
+        },
+        "int8": {
+          "config_semantics": {
+            "add_source_bos": false,
+            "add_source_eos": false,
+            "bos_token": "<s>",
+            "decoder_start_token": "</s>",
+            "eos_token": "</s>",
+            "unk_token": "<unk>"
+          },
+          "conversion_manifest_sha256": "2e20a9ec780500cba0e7ec155f0f195a29ef9624b526dbc8c898d5ca33bf3512",
+          "cpu_compute_type_actual": "int8_float32",
+          "path": "artifacts/ctranslate2/runtime/ct2-int8",
+          "quantization_requested": "int8",
+          "vocabulary_file_sha256": "ea0143bdbc4fc8ef616bce81371094f4a30129b43bdba7aba20376238c4a4192",
+          "vocabulary_sequence_sha256": "72bc2edcfe44bdfac90d2c101f71f214cdd2c4b70d7c975e5d269011be40c716"
+        }
+      },
+      "generated_at_utc": "2026-07-14T14:47:00.438981+00:00",
+      "hf_dimensions": {
+        "config_vocab_size": 49152,
+        "decoder_embedding_rows": 49152,
+        "encoder_embedding_rows": 49152,
+        "input_output_embeddings_tied": true,
+        "lm_head_rows": 49152,
+        "shared_embedding_rows": 49152
+      },
+      "hf_tokenizer_exact_match": true,
+      "language_token_ids": {
+        "eng_Latn": 5,
+        "jpn_Jpan": 8,
+        "kor_Hang": 9,
+        "zho_Hans": 6,
+        "zho_Hant": 7
+      },
+      "phase": "TD-03",
+      "schema_version": 1,
+      "special_token_ids": {
+        "</s>": 2,
+        "<pad>": 1,
+        "<s>": 0,
+        "<unk>": 3
+      },
+      "status": "passed",
+      "tokenizer_manifest_sha256": "eb79ae22f523f1d9c9fcf75b80f2b322e3c2882a8fddb7545b5933dd4053fa7f",
+      "vocab_size": 49152,
+      "vocabulary_sequence_sha256": "72bc2edcfe44bdfac90d2c101f71f214cdd2c4b70d7c975e5d269011be40c716"
+    },
+    "td_04_cpu_inference": {
+      "generated_at_utc": "2026-07-14T14:47:00.438981+00:00",
+      "models": {
+        "float32": {
+          "cases": [
+            {
+              "decoded_text": "諸佛协助协助协助协助呵呵呵呵",
+              "elapsed_seconds": 0.000963,
+              "hypothesis_tokens": [
+                "zho_Hans",
+                "諸佛",
+                "协助",
+                "协助",
+                "协助",
+                "协助",
+                "呵呵",
+                "呵呵"
+              ],
+              "source_language": "eng_Latn",
+              "source_text": "A local model validates the CPU translation interface.",
+              "source_token_ids": [
+                5,
+                24219,
+                30844,
+                34580,
+                48499,
+                26014,
+                24134,
+                24218,
+                38151,
+                26566,
+                85,
+                24228,
+                26862,
+                35422,
+                23,
+                2
+              ],
+              "source_tokens": [
+                "eng_Latn",
+                "▁A",
+                "▁local",
+                "▁model",
+                "▁valid",
+                "ates",
+                "▁the",
+                "▁C",
+                "PU",
+                "▁trans",
+                "l",
+                "ation",
+                "▁inter",
+                "face",
+                ".",
+                "</s>"
+              ],
+              "target_language": "zho_Hans"
+            },
+            {
+              "decoded_text": "諸佛协助协助协助协助呵呵呵呵",
+              "elapsed_seconds": 0.000452,
+              "hypothesis_tokens": [
+                "zho_Hant",
+                "諸佛",
+                "协助",
+                "协助",
+                "协助",
+                "协助",
+                "呵呵",
+                "呵呵"
+              ],
+              "source_language": "zho_Hans",
+              "source_text": "本地模型验证离线推理接口。",
+              "source_token_ids": [
+                6,
+                25581,
+                2793,
+                30445,
+                41123,
+                7420,
+                8114,
+                4525,
+                6670,
+                47145,
+                850,
+                2
+              ],
+              "source_tokens": [
+                "zho_Hans",
+                "▁本",
+                "地",
+                "模型",
+                "验证",
+                "离",
+                "线",
+                "推",
+                "理",
+                "接口",
+                "。",
+                "</s>"
+              ],
+              "target_language": "zho_Hant"
+            },
+            {
+              "decoded_text": "諸佛协助协助协助协助呵呵呵呵",
+              "elapsed_seconds": 0.000429,
+              "hypothesis_tokens": [
+                "jpn_Jpan",
+                "諸佛",
+                "协助",
+                "协助",
+                "协助",
+                "协助",
+                "呵呵",
+                "呵呵"
+              ],
+              "source_language": "zho_Hant",
+              "source_text": "本機模型驗證離線推理介面。",
+              "source_token_ids": [
+                7,
+                25581,
+                5455,
+                30445,
+                11957,
+                9794,
+                11519,
+                7979,
+                4525,
+                6670,
+                1468,
+                47908,
+                2
+              ],
+              "source_tokens": [
+                "zho_Hant",
+                "▁本",
+                "機",
+                "模型",
+                "驗",
+                "證",
+                "離",
+                "線",
+                "推",
+                "理",
+                "介",
+                "面。",
+                "</s>"
+              ],
+              "target_language": "jpn_Jpan"
+            },
+            {
+              "decoded_text": "諸佛协助协助协助协助呵呵呵呵",
+              "elapsed_seconds": 0.000403,
+              "hypothesis_tokens": [
+                "kor_Hang",
+                "諸佛",
+                "协助",
+                "协助",
+                "协助",
+                "协助",
+                "呵呵",
+                "呵呵"
+              ],
+              "source_language": "jpn_Jpan",
+              "source_text": "ローカルモデルでオフライン推論を確認します。",
+              "source_token_ids": [
+                8,
+                731,
+                25823,
+                29214,
+                28862,
+                951,
+                33418,
+                26063,
+                4525,
+                9742,
+                34819,
+                24608,
+                2
+              ],
+              "source_tokens": [
+                "jpn_Jpan",
+                "▁",
+                "ロー",
+                "カル",
+                "モデル",
+                "で",
+                "オフ",
+                "ライン",
+                "推",
+                "論",
+                "を確認",
+                "します。",
+                "</s>"
+              ],
+              "target_language": "kor_Hang"
+            },
+            {
+              "decoded_text": "諸佛协助协助协助协助呵呵呵呵",
+              "elapsed_seconds": 0.000403,
+              "hypothesis_tokens": [
+                "eng_Latn",
+                "諸佛",
+                "协助",
+                "协助",
+                "协助",
+                "协助",
+                "呵呵",
+                "呵呵"
+              ],
+              "source_language": "kor_Hang",
+              "source_text": "로컬 모델로 오프라인 추론을 확인합니다.",
+              "source_token_ids": [
+                9,
+                26417,
+                21535,
+                30291,
+                15759,
+                24407,
+                42582,
+                24663,
+                41312,
+                26215,
+                24564,
+                2
+              ],
+              "source_tokens": [
+                "kor_Hang",
+                "▁로",
+                "컬",
+                "▁모델",
+                "로",
+                "▁오",
+                "프라인",
+                "▁추",
+                "론을",
+                "▁확인",
+                "합니다.",
+                "</s>"
+              ],
+              "target_language": "eng_Latn"
+            }
+          ],
+          "compute_type_actual": "float32",
+          "compute_type_requested": "float32",
+          "elapsed_seconds": 0.003624,
+          "path": "artifacts/ctranslate2/runtime/ct2-float32"
+        },
+        "int8": {
+          "cases": [
+            {
+              "decoded_text": "諸佛协助协助协助协助呵呵呵呵",
+              "elapsed_seconds": 0.001377,
+              "hypothesis_tokens": [
+                "zho_Hans",
+                "諸佛",
+                "协助",
+                "协助",
+                "协助",
+                "协助",
+                "呵呵",
+                "呵呵"
+              ],
+              "source_language": "eng_Latn",
+              "source_text": "A local model validates the CPU translation interface.",
+              "source_token_ids": [
+                5,
+                24219,
+                30844,
+                34580,
+                48499,
+                26014,
+                24134,
+                24218,
+                38151,
+                26566,
+                85,
+                24228,
+                26862,
+                35422,
+                23,
+                2
+              ],
+              "source_tokens": [
+                "eng_Latn",
+                "▁A",
+                "▁local",
+                "▁model",
+                "▁valid",
+                "ates",
+                "▁the",
+                "▁C",
+                "PU",
+                "▁trans",
+                "l",
+                "ation",
+                "▁inter",
+                "face",
+                ".",
+                "</s>"
+              ],
+              "target_language": "zho_Hans"
+            },
+            {
+              "decoded_text": "諸佛协助协助协助协助呵呵呵呵",
+              "elapsed_seconds": 0.000979,
+              "hypothesis_tokens": [
+                "zho_Hant",
+                "諸佛",
+                "协助",
+                "协助",
+                "协助",
+                "协助",
+                "呵呵",
+                "呵呵"
+              ],
+              "source_language": "zho_Hans",
+              "source_text": "本地模型验证离线推理接口。",
+              "source_token_ids": [
+                6,
+                25581,
+                2793,
+                30445,
+                41123,
+                7420,
+                8114,
+                4525,
+                6670,
+                47145,
+                850,
+                2
+              ],
+              "source_tokens": [
+                "zho_Hans",
+                "▁本",
+                "地",
+                "模型",
+                "验证",
+                "离",
+                "线",
+                "推",
+                "理",
+                "接口",
+                "。",
+                "</s>"
+              ],
+              "target_language": "zho_Hant"
+            },
+            {
+              "decoded_text": "諸佛协助协助协助协助呵呵呵呵",
+              "elapsed_seconds": 0.000843,
+              "hypothesis_tokens": [
+                "jpn_Jpan",
+                "諸佛",
+                "协助",
+                "协助",
+                "协助",
+                "协助",
+                "呵呵",
+                "呵呵"
+              ],
+              "source_language": "zho_Hant",
+              "source_text": "本機模型驗證離線推理介面。",
+              "source_token_ids": [
+                7,
+                25581,
+                5455,
+                30445,
+                11957,
+                9794,
+                11519,
+                7979,
+                4525,
+                6670,
+                1468,
+                47908,
+                2
+              ],
+              "source_tokens": [
+                "zho_Hant",
+                "▁本",
+                "機",
+                "模型",
+                "驗",
+                "證",
+                "離",
+                "線",
+                "推",
+                "理",
+                "介",
+                "面。",
+                "</s>"
+              ],
+              "target_language": "jpn_Jpan"
+            },
+            {
+              "decoded_text": "諸佛协助协助协助协助呵呵呵呵",
+              "elapsed_seconds": 0.00063,
+              "hypothesis_tokens": [
+                "kor_Hang",
+                "諸佛",
+                "协助",
+                "协助",
+                "协助",
+                "协助",
+                "呵呵",
+                "呵呵"
+              ],
+              "source_language": "jpn_Jpan",
+              "source_text": "ローカルモデルでオフライン推論を確認します。",
+              "source_token_ids": [
+                8,
+                731,
+                25823,
+                29214,
+                28862,
+                951,
+                33418,
+                26063,
+                4525,
+                9742,
+                34819,
+                24608,
+                2
+              ],
+              "source_tokens": [
+                "jpn_Jpan",
+                "▁",
+                "ロー",
+                "カル",
+                "モデル",
+                "で",
+                "オフ",
+                "ライン",
+                "推",
+                "論",
+                "を確認",
+                "します。",
+                "</s>"
+              ],
+              "target_language": "kor_Hang"
+            },
+            {
+              "decoded_text": "諸佛协助协助协助协助呵呵呵呵",
+              "elapsed_seconds": 0.000584,
+              "hypothesis_tokens": [
+                "eng_Latn",
+                "諸佛",
+                "协助",
+                "协助",
+                "协助",
+                "协助",
+                "呵呵",
+                "呵呵"
+              ],
+              "source_language": "kor_Hang",
+              "source_text": "로컬 모델로 오프라인 추론을 확인합니다.",
+              "source_token_ids": [
+                9,
+                26417,
+                21535,
+                30291,
+                15759,
+                24407,
+                42582,
+                24663,
+                41312,
+                26215,
+                24564,
+                2
+              ],
+              "source_tokens": [
+                "kor_Hang",
+                "▁로",
+                "컬",
+                "▁모델",
+                "로",
+                "▁오",
+                "프라인",
+                "▁추",
+                "론을",
+                "▁확인",
+                "합니다.",
+                "</s>"
+              ],
+              "target_language": "eng_Latn"
+            }
+          ],
+          "compute_type_actual": "int8_float32",
+          "compute_type_requested": "int8",
+          "elapsed_seconds": 0.005381,
+          "path": "artifacts/ctranslate2/runtime/ct2-int8"
+        }
+      },
+      "phase": "TD-04",
+      "schema_version": 1,
+      "source_languages_covered": [
+        "eng_Latn",
+        "zho_Hans",
+        "zho_Hant",
+        "jpn_Jpan",
+        "kor_Hang"
+      ],
+      "status": "passed",
+      "target_languages_covered": [
+        "zho_Hans",
+        "zho_Hant",
+        "jpn_Jpan",
+        "kor_Hang",
+        "eng_Latn"
+      ],
+      "warning": "Random hypotheses validate interfaces only; decoded text has no quality meaning."
+    },
+    "td_05_offline_package": {
+      "deployment_manifest_sha256": "a19a189fb1288cec8d2d232601086b4b1fb0dc4a80902cd7a0f478ce301c5c86",
+      "files": [
+        {
+          "bytes": 233,
+          "path": "model/config.json",
+          "sha256": "72901fbd8abd89fb5cf4a388f26fc681f5c4c58a1e1a88b30b879f107270e7ee"
+        },
+        {
+          "bytes": 845,
+          "path": "model/conversion_manifest.json",
+          "sha256": "2e20a9ec780500cba0e7ec155f0f195a29ef9624b526dbc8c898d5ca33bf3512"
+        },
+        {
+          "bytes": 1813685,
+          "path": "model/model.bin",
+          "sha256": "0a980b1bb7b182d3d4a2b4599487cd0bed0f625e2edff9266d5550114c33742e"
+        },
+        {
+          "bytes": 915969,
+          "path": "model/shared_vocabulary.json",
+          "sha256": "ea0143bdbc4fc8ef616bce81371094f4a30129b43bdba7aba20376238c4a4192"
+        },
+        {
+          "bytes": 5906,
+          "path": "offline_smoke.py",
+          "sha256": "123b327d825273e7bdb1f3c55c205d2c2ce391b262a496bcc6454de144e37d51"
+        },
+        {
+          "bytes": 514,
+          "path": "README.md",
+          "sha256": "53d917aa2968d91353b94de02e303a9b2f82b0af8b9334e013a877da726071c8"
+        },
+        {
+          "bytes": 274,
+          "path": "tokenizer/language_map.json",
+          "sha256": "3ceddd4bca97b9c707706922899a36fd7d4116e3c1fa8a7e5384a2d2794f7bcd"
+        },
+        {
+          "bytes": 2349192,
+          "path": "tokenizer/tokenizer.json",
+          "sha256": "22bceccab939afe1003d1fbdd95d9d4e78eb954b2e9003d70131155666b1201c"
+        },
+        {
+          "bytes": 496,
+          "path": "tokenizer/tokenizer_config.json",
+          "sha256": "3803ce2bf4951e0bd85d7b526e2c76ac2a64f42c67fc5e33c592dfab3ba840c1"
+        }
+      ],
+      "generated_at_utc": "2026-07-14T14:47:00.438981+00:00",
+      "int8_conversion_manifest_sha256": "2e20a9ec780500cba0e7ec155f0f195a29ef9624b526dbc8c898d5ca33bf3512",
+      "known_limitations": [
+        "Random weights do not provide translation quality.",
+        "This smoke test is not a production latency or throughput benchmark.",
+        "The package requires compatible Python, Transformers, and CTranslate2 runtimes."
+      ],
+      "layout": {
+        "model": "model/",
+        "tokenizer": "tokenizer/"
+      },
+      "offline_subprocess": {
+        "clean_working_directory": true,
+        "elapsed_seconds": 3.625452,
+        "environment": {
+          "ALL_PROXY": "http://127.0.0.1:9",
+          "HF_DATASETS_OFFLINE": "1",
+          "HF_HUB_OFFLINE": "1",
+          "HTTPS_PROXY": "http://127.0.0.1:9",
+          "HTTP_PROXY": "http://127.0.0.1:9",
+          "NO_PROXY": "",
+          "PYTHONIOENCODING": "utf-8",
+          "PYTHONPATH": "removed",
+          "PYTHONUTF8": "1",
+          "TRANSFORMERS_OFFLINE": "1"
+        },
+        "result": {
+          "compute_type": "int8_float32",
+          "decoded_text": "諸佛协助协助协助协助呵呵呵呵",
+          "hypothesis_tokens": [
+            "zho_Hans",
+            "諸佛",
+            "协助",
+            "协助",
+            "协助",
+            "协助",
+            "呵呵",
+            "呵呵"
+          ],
+          "network_guard": "Python socket connect/create_connection blocked",
+          "source_tokens": [
+            "eng_Latn",
+            "▁A",
+            "▁clean",
+            "▁process",
+            "▁load",
+            "s",
+            "▁only",
+            "▁the",
+            "▁off",
+            "line",
+            "▁de",
+            "ploy",
+            "ment",
+            "▁pack",
+            "age.",
+            "</s>"
+          ],
+          "status": "passed",
+          "target_prefix": "zho_Hans",
+          "warning": "Random model output; no translation quality is implied."
+        },
+        "returncode": 0,
+        "stderr": ""
+      },
+      "package": "artifacts/ctranslate2/runtime/offline-package-int8",
+      "phase": "TD-05",
+      "reproduction_command": ".\\.conda\\python.exe scripts\\validate_ctranslate2_deployment.py --phase package --overwrite",
+      "schema_version": 1,
+      "status": "passed",
+      "tokenizer_manifest_sha256": "eb79ae22f523f1d9c9fcf75b80f2b322e3c2882a8fddb7545b5933dd4053fa7f",
+      "troubleshooting": [
+        "A manifest mismatch means a package file is missing, added, or modified; rebuild the package.",
+        "A model-load failure should be checked against the recorded CTranslate2 version and CPU compute types.",
+        "A prefix or decode failure should be investigated with TD-03 ordered-vocabulary and special-token hashes."
+      ],
+      "versions": {
+        "ctranslate2": "4.8.1",
+        "python": "3.11.15",
+        "safetensors": "0.8.0",
+        "tokenizers": "0.22.2",
+        "torch": "2.13.0+cu132",
+        "transformers": "5.13.1"
+      }
+    }
+  },
+  "schema_version": 1,
+  "status": "passed",
+  "updated_at_utc": "2026-07-14T14:47:00.438981+00:00",
+  "workflow": "ctranslate2-deployment"
+}

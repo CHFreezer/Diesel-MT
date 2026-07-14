@@ -159,11 +159,11 @@ python -m pip install -r requirements.txt
 
 ### review
 
-`work/review/` 保存正在复核的 task，重点检查可复现性、正确性、数据边界、评估结果和部署风险。实现完成不等于 done；review 通过后，todo、task 和 review 记录分别归档到 `work/done/` 下的对应目录。
+只有一个 todo 下的全部 task 都完成实现和各自验收后，整个 todo 才进入 review。`work/review/` 保存该 todo 及完整 task 集合的统一复核记录，重点检查可复现性、正确性、数据边界、评估结果和部署风险；不为单个 task 提前创建 review。review 通过后，todo、task 和 review 记录分别归档到 `work/done/` 下的对应目录。
 
 ### done
 
-`work/done/` 按 `todo/`、`task/`、`review/` 保存已完成实现、验证和评审记录。done 必须能追溯到代码、实验结果和通过的评审结论，不能只依赖状态字段或口头结论；移入 done 后应同步修正 plan 和归档文档中的相对链接。
+`work/done/` 按 `todo/`、`task/`、`review/` 保存通过统一 review 的完整 todo 工作流；验收叙述合并进对应 task 和统一 review，不额外拆分 report Markdown。需要程序消费的合并 JSON 可与对应生成产物放在 `artifacts/`。done 必须能追溯到代码、实验结果和通过的评审结论，不能只依赖状态字段或口头结论；移入 done 后应同步修正 plan 和归档文档中的相对链接。
 
 ## 常用命令
 
@@ -172,4 +172,5 @@ python -m pip install -r requirements.txt
 .conda\python.exe -m pytest tests/ -k test_name         # 单个测试
 python scripts/calculate_model_parameters.py            # 估算参数量
 python scripts/fetch_tokenizer_datasets.py --profile mvp [--resume]  # 下载语料
+.conda\python.exe scripts/validate_ctranslate2_deployment.py --phase all --overwrite  # CT2 部署验收
 ```

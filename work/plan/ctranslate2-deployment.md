@@ -1,6 +1,6 @@
 # plan: CTranslate2 deployment validation
 
-状态：ready
+状态：done / archived
 
 ## 来源
 
@@ -64,8 +64,17 @@
 
 ## 执行拆解
 
-- todo：[CTranslate2 deployment validation](../todo/ctranslate2-deployment.md)
-- task 索引：[CTranslate2 deployment tasks](../task/ctranslate2-deployment/index.md)
+- todo：[CTranslate2 deployment validation](../done/todo/ctranslate2-deployment.md)
+- task 索引：[CTranslate2 deployment tasks](../done/task/ctranslate2-deployment/index.md)
+
+## 完成记录
+
+- 统一 review：[CTranslate2 deployment validation review](../done/review/ctranslate2-deployment.md)
+- 合并机器记录：[deployment-validation.json](../../artifacts/ctranslate2/deployment-validation.json)
+- 最终自动化回归：`52 passed`
+- 冻结 tokenizer manifest SHA-256：`eb79ae22f523f1d9c9fcf75b80f2b322e3c2882a8fddb7545b5933dd4053fa7f`
+- 有序词表 SHA-256：`72bc2edcfe44bdfac90d2c101f71f214cdd2c4b70d7c975e5d269011be40c716`
+- INT8 离线部署包 manifest SHA-256：`a19a189fb1288cec8d2d232601086b4b1fb0dc4a80902cd7a0f478ce301c5c86`
 
 ## 完成边界
 

@@ -21,5 +21,8 @@ data/tokenizer-smoke-*/
 data/tokenizer-mvp-*/
 data/tokenizer-*/
 
+# Rebuildable local checkpoints and CTranslate2 conversion outputs.
+artifacts/ctranslate2/runtime/
+
 # Keep only documentation placeholders below data/ if added later.
 !data/tokenizer/**/.gitkeep

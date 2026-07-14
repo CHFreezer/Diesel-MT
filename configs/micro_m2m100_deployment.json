@@ -1,0 +1,29 @@
+{
+  "description": "Deterministic random micro M2M100 checkpoint for deployment-interface validation only.",
+  "model_config": {
+    "activation_dropout": 0.0,
+    "attention_dropout": 0.0,
+    "d_model": 32,
+    "decoder_attention_heads": 4,
+    "decoder_ffn_dim": 64,
+    "decoder_layerdrop": 0.0,
+    "decoder_layers": 1,
+    "dropout": 0.0,
+    "encoder_attention_heads": 4,
+    "encoder_ffn_dim": 64,
+    "encoder_layerdrop": 0.0,
+    "encoder_layers": 1,
+    "max_position_embeddings": 128,
+    "scale_embedding": false,
+    "tie_word_embeddings": true,
+    "use_cache": true
+  },
+  "purpose": "CTranslate2 conversion, vocabulary integrity, and CPU inference smoke tests; not translation quality.",
+  "random_seed": 20260714,
+  "schema_version": 1,
+  "tokenizer": {
+    "artifact_manifest_sha256": "eb79ae22f523f1d9c9fcf75b80f2b322e3c2882a8fddb7545b5933dd4053fa7f",
+    "expected_vocab_size": 49152,
+    "path": "artifacts/tokenizers/mvp-tokenizer-v0"
+  }
+}

@@ -8,6 +8,7 @@ from __future__ import annotations
 import json
 import os
 import tempfile
+import time
 from collections.abc import Iterable, Mapping
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -253,6 +254,26 @@ def reload_tokenizer(artifact_dir: Path) -> NllbTokenizer:
     return tokenizer
 
 
+def replace_file_with_retry(
+    source: Path,
+    target: Path,
+    *,
+    attempts: int = 8,
+    initial_delay_seconds: float = 0.05,
+) -> None:
+    """Atomically replace a file, tolerating short-lived Windows file locks."""
+    if attempts < 1:
+        raise ValueError("attempts must be at least 1")
+    for attempt in range(attempts):
+        try:
+            os.replace(source, target)
+            return
+        except PermissionError:
+            if attempt + 1 == attempts:
+                raise
+            time.sleep(initial_delay_seconds * (2**attempt))
+
+
 def atomic_write_json(path: Path, payload: Mapping | list) -> None:
     """Write JSON through a same-directory temporary file and ``os.replace``."""
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -264,7 +285,7 @@ def atomic_write_json(path: Path, payload: Mapping | list) -> None:
             handle.write("\n")
             handle.flush()
             os.fsync(handle.fileno())
-        os.replace(temporary_path, path)
+        replace_file_with_retry(temporary_path, path)
     except BaseException:
         temporary_path.unlink(missing_ok=True)
         raise
