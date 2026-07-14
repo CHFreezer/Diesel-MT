@@ -1,0 +1,156 @@
+schema_version: 1
+
+identity:
+  name: mvp_model_data
+  purpose: bounded human parallel data for the first real Diesel-MT student workflow
+  status: locked-sources
+
+reproducibility:
+  canonical_serialization: UTF-8 JSON, sorted keys, compact separators, LF terminator
+  content_hash: sha256
+  output_encoding: utf-8
+  output_newline: LF
+  final_trailing_newline: true
+  config_hash_scope: entire parsed config
+
+languages:
+  product_languages: [Chinese, English, Japanese, Korean]
+  model_tags: [eng_Latn, zho_Hans, zho_Hant, jpn_Jpan, kor_Hang]
+  model_to_product:
+    eng_Latn: English
+    zho_Hans: Chinese
+    zho_Hant: Chinese
+    jpn_Jpan: Japanese
+    kor_Hang: Korean
+
+directions:
+  undirected_pairs:
+    - pair_id: eng_Latn--jpn_Jpan
+      tags: [eng_Latn, jpn_Jpan]
+    - pair_id: eng_Latn--kor_Hang
+      tags: [eng_Latn, kor_Hang]
+    - pair_id: jpn_Jpan--kor_Hang
+      tags: [jpn_Jpan, kor_Hang]
+    - pair_id: eng_Latn--zho_Hans
+      tags: [eng_Latn, zho_Hans]
+    - pair_id: jpn_Jpan--zho_Hans
+      tags: [jpn_Jpan, zho_Hans]
+    - pair_id: kor_Hang--zho_Hans
+      tags: [kor_Hang, zho_Hans]
+    - pair_id: eng_Latn--zho_Hant
+      tags: [eng_Latn, zho_Hant]
+    - pair_id: jpn_Jpan--zho_Hant
+      tags: [jpn_Jpan, zho_Hant]
+    - pair_id: kor_Hang--zho_Hant
+      tags: [kor_Hang, zho_Hant]
+  excluded_routes:
+    - [zho_Hans, zho_Hant]
+    - [zho_Hant, zho_Hans]
+  counts:
+    product_languages: 4
+    model_tags: 5
+    undirected_pairs: 9
+    directed_routes: 18
+    product_directions: 12
+
+sample_schema:
+  version: 1
+  required_fields:
+    - sample_id
+    - sample_group_id
+    - source_id
+    - source_version
+    - license
+    - src_lang
+    - tgt_lang
+    - source_text
+    - target_text
+    - split
+  optional_fields: [provenance]
+  split_values: [train, dev, test]
+  provenance_fields:
+    human_parallel: [kind, source_record_id, alignment_key]
+    teacher_synthetic:
+      - kind
+      - teacher_model
+      - teacher_revision
+      - prompt_version
+      - decode_config_sha256
+      - generation_manifest_sha256
+    script_conversion:
+      - kind
+      - tool
+      - tool_version
+      - source_sample_id
+      - generation_manifest_sha256
+
+paths:
+  root: data/model
+  raw: data/model/raw
+  cache: data/model/cache
+  interim: data/model/interim
+  corpus: data/model/corpus/mvp
+  reports: data/model/reports
+
+budgets:
+  minimum_accepted_per_undirected_pair:
+    train: 10000
+    dev: 1500
+    test: 2500
+  scan_limit_rows_per_locale: 16521
+  download_max_bytes: 40251390
+  selected_extract_max_bytes: 52000000
+  source_rows_per_locale: 16521
+  source_partition_rows_per_locale:
+    train: 11514
+    dev: 2033
+    test: 2974
+
+sources:
+  - source_id: massive-1.1
+    enabled: true
+    name: MASSIVE 1.1
+    version: "1.1"
+    source_type: human-multiparallel-localization
+    license: CC-BY-4.0
+    license_url: https://github.com/alexa/massive/blob/f966f21846043aabef9b0f974fa7970027f43738/LICENSE.txt
+    homepage: https://github.com/alexa/massive/tree/f966f21846043aabef9b0f974fa7970027f43738
+    download_uri: https://amazon-massive-nlu-dataset.s3.amazonaws.com/amazon-massive-dataset-1.1.tar.gz
+    format: jsonl
+    compression: tar.gz
+    text_field: utt
+    alignment_key: [partition, id]
+    partition_field: partition
+    partition_map:
+      train: train
+      dev: dev
+      test: test
+    locale_to_model_tag:
+      en-US: eng_Latn
+      zh-CN: zho_Hans
+      zh-TW: zho_Hant
+      ja-JP: jpn_Jpan
+      ko-KR: kor_Hang
+    pair_coverage:
+      - eng_Latn--jpn_Jpan
+      - eng_Latn--kor_Hang
+      - jpn_Jpan--kor_Hang
+      - eng_Latn--zho_Hans
+      - jpn_Jpan--zho_Hans
+      - kor_Hang--zho_Hans
+      - eng_Latn--zho_Hant
+      - jpn_Jpan--zho_Hant
+      - kor_Hang--zho_Hant
+    domain: single-turn virtual-assistant utterances across 18 intent domains
+    translation_method: professional human localization of the English SLURP seed into each target locale
+    native_script_evidence:
+      zho_Hans: official MASSIVE locale zh-CN, localized independently for Chinese (China)
+      zho_Hant: official MASSIVE locale zh-TW, localized independently for Chinese (Taiwan)
+    limitations:
+      - Narrow virtual-assistant domain and mostly short utterances.
+      - Localizations may adapt entities or slot values instead of translating literally.
+      - Non-English pairs are aligned through the same English seed rather than translated directly pair-by-pair.
+      - This bounded MVP source is insufficient for production translation-quality claims.
+    citation:
+      paper_url: https://aclanthology.org/2023.acl-long.235/
+      bibkey: fitzgerald-etal-2023-massive

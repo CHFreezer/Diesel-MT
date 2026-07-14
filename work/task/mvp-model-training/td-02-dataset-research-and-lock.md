@@ -1,6 +1,6 @@
 # task TD-02: 调研并锁定有界平行数据来源
 
-状态：pending
+状态：completed
 
 依赖：TD-01
 
@@ -39,3 +39,16 @@
 - 每个正式来源均有稳定版本、SHA-256、许可证和处理顺序。
 - 原生繁体身份与 synthetic 边界单独可查。
 - 任一未关闭的来源或许可缺口都会阻塞 TD-03。
+
+## 实现与验收记录（2026-07-15）
+
+- 调研结论见 [`model-training-dataset-research.md`](../../../docs/model-training-dataset-research.md)：首轮只锁定官方 MASSIVE 1.1，它用 professional human localization 从同一 English SLURP seed 形成多平行数据，单一来源覆盖 9 个无向组。
+- 官方 locale 映射冻结为 `en-US -> eng_Latn`、`zh-CN -> zho_Hans`、`zh-TW -> zho_Hant`、`ja-JP -> jpn_Jpan`、`ko-KR -> kor_Hang`。`zh-TW` 是独立人工本地化 locale，不是简转繁或 `yue_Hant`；后续仍需脚本合规和人工抽检。
+- 官方 1.1 S3 归档实测为 40,251,390 bytes，SHA-256 `4cba5faa11c71437928e17cb1b9b3d8b8e727e7ea363a3a9a8045e19c0491577`。归档内 CC BY 4.0 `LICENSE`、SLURP `NOTICE.md` 和五个 JSONL 的大小/SHA-256 均进入 [`mvp_model_data.lock.json`](../../../configs/mvp_model_data.lock.json)；lock 文件 SHA-256 为 `7508a710d93fbc874d314f455a854367bd2bcdb2b4c4ba0de82c9f35df7d8439`。
+- 逐行解析确认每个 locale 都有 16,521 个唯一 `(partition,id)`：train 11,514、dev 2,033、test 2,974；其余四个 locale 与 `en-US` key 集合均为零差异。官方页面 summary 的 19,521 与 split 表/归档不一致，项目明确以锁定字节实测为准。
+- 每个无向组最低 accepted 门槛为 train 10,000、dev 1,500、test 2,500；每 locale 扫描上限 16,521，下载上限 40,251,390 bytes，选中解压上限 52,000,000 bytes。
+- 当前 9 组没有必须 synthetic 补足的缺口，因此本 task 不启用 synthetic。若 TD-03/TD-05 清洗后低于门槛，必须重新做来源决策并更新 config hash/lock；不得用 teacher output 或转换数据补 human dev/test。
+- FLORES-200 因评测污染风险、OPUS 浮动聚合因来源/许可异质、HPLT 因无平行 alignment、自动简繁/未锁定 LLM 生成因 provenance 不满足而排除或延期，详见调研文档。
+- `mvp_model_data.lock.json` 已通过严格 config-hash、来源顺序、文件身份、预算和对齐统计校验；完整离线测试为 `75 passed in 23.10s`。
+
+本 task 未单独创建 review；状态 `completed` 表示来源方案可供 TD-03 消费，许可归属义务和领域局限必须在后续 manifest/文档中继续保留。

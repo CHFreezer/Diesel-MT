@@ -1,6 +1,6 @@
 # task TD-01: 冻结执行契约、目录与 Git 边界
 
-状态：pending
+状态：completed
 
 依赖：无
 
@@ -40,3 +40,14 @@
 - 5 标签、9 无向组、18 路由、12 产品方向的术语无歧义。
 - 非法路由、未知字段、缺失字段和越界路径均明确失败。
 - 冻结 tokenizer 内容及根哈希未变化。
+
+## 实现与验收记录（2026-07-15）
+
+- 新增严格契约模块 [`model_training_contract.py`](../../../scripts/model_training_contract.py)，统一定义 4 产品语言、5 模型标签、9 无向组、18 路由和 12 产品方向，并对非法路由、schema、provenance、路径和 lock fail-fast。
+- 新增 [`mvp_model_data.yaml`](../../../configs/mvp_model_data.yaml) 与 [`mvp_e8_d2_v48k.yaml`](../../../configs/mvp_e8_d2_v48k.yaml)。解析后使用规范 UTF-8 JSON + SHA-256；当前 data config hash 为 `4b774c6d564b02fef3d6113d3de4b51428248646fe209a9e5a300c9608cb5c93`，student config hash 为 `e2def019a9eb67ab56ea2e2d3432ffaee87aa6ed36186cb551f6e7ce473732d1`。
+- 数据目录与训练 artifact 边界已写入 [`.gitignore`](../../../.gitignore) 和 [`model-training-contract.md`](../../../docs/model-training-contract.md)；逐路径 `git check-ignore -v` 验证 raw/cache/interim/corpus/report、热运行和 HF/CT2 权重均被忽略。
+- 默认热运行根为 `artifacts/model-training/runtime/`；正式本机运行可通过 `DIESEL_MT_MODEL_RUNTIME` 指向绝对 SSD 路径，解析路径必须进入 run manifest，不进入语义 config hash。
+- 专项测试 [`test_model_training_contract.py`](../../../tests/test_model_training_contract.py) 为 `23 passed`，覆盖未知/缺失字段、路径逃逸、非法路由、三类 provenance、source lock、student 身份和 tokenizer 冻结。
+- `artifact_manifest.json` SHA-256 复核仍为 `eb79ae22f523f1d9c9fcf75b80f2b322e3c2882a8fddb7545b5933dd4053fa7f`；未修改 tokenizer 内容。
+
+本 task 未单独创建 review；状态 `completed` 表示可供 TD-02/TD-06/TD-09 消费，最终随整个 todo 统一 review。

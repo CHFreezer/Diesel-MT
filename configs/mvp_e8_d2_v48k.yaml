@@ -1,0 +1,74 @@
+schema_version: 1
+
+identity:
+  name: mvp_e8_d2_v48k
+  architecture: M2M100ForConditionalGeneration
+  initialization: from_scratch
+  random_seed: 20260715
+
+tokenizer:
+  path: artifacts/tokenizers/mvp-tokenizer-v0
+  artifact_manifest_sha256: eb79ae22f523f1d9c9fcf75b80f2b322e3c2882a8fddb7545b5933dd4053fa7f
+  expected_vocab_size: 49152
+  required_language_tokens: [eng_Latn, zho_Hans, zho_Hant, jpn_Jpan, kor_Hang]
+
+model:
+  vocab_size: 49152
+  d_model: 512
+  encoder_ffn_dim: 2048
+  decoder_ffn_dim: 2048
+  encoder_layers: 8
+  decoder_layers: 2
+  encoder_attention_heads: 8
+  decoder_attention_heads: 8
+  max_position_embeddings: 1024
+  activation_function: relu
+  dropout: 0.1
+  attention_dropout: 0.1
+  activation_dropout: 0.0
+  encoder_layerdrop: 0.0
+  decoder_layerdrop: 0.0
+  scale_embedding: true
+  tie_word_embeddings: true
+  use_cache: true
+  bos_token_id: 0
+  pad_token_id: 1
+  eos_token_id: 2
+  decoder_start_token_id: 2
+  forced_eos_token_id: null
+
+runtime:
+  default_hot_root: artifacts/model-training/runtime
+  hot_root_override_env: DIESEL_MT_MODEL_RUNTIME
+  checkpoints_subdir: checkpoints/mvp_e8_d2_v48k
+  staging_subdir: staging/mvp_e8_d2_v48k
+  logs_subdir: logs/mvp_e8_d2_v48k
+
+publish:
+  root: artifacts/models/mvp_e8_d2_v48k
+  hf: artifacts/models/mvp_e8_d2_v48k/hf
+  ct2_float32: artifacts/models/mvp_e8_d2_v48k/ctranslate2-float32
+  ct2_int8: artifacts/models/mvp_e8_d2_v48k/ctranslate2-int8
+
+reproducibility:
+  canonical_serialization: UTF-8 JSON, sorted keys, compact separators, LF terminator
+  content_hash: sha256
+  config_hash_scope: entire parsed config
+
+training_profile:
+  status: requires_td14_benchmark
+  device: cuda
+  precision_preference: bf16
+  unfrozen_fields:
+    - micro_batch_size
+    - gradient_accumulation_steps
+    - gradient_checkpointing
+    - max_source_length
+    - max_target_length
+    - dataloader_workers
+    - optimizer
+    - scheduler
+    - warmup_steps
+    - max_optimizer_steps
+    - validation_frequency
+    - checkpoint_frequency

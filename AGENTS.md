@@ -66,6 +66,7 @@ The project has no `src/` layout, `__init__.py` files, or installable package. P
 - **`scripts/fetch_tokenizer_datasets.py`** — CLI entry point for the tokenizer corpus pipeline. Thin argument parsing + delegation to the pipeline library.
 - **`scripts/tokenizer_dataset_pipeline.py`** (~1543 lines) — Core processing library: config validation, HPLT 3.0 HTTP fetcher with range/resume, text cleaning pipeline, MinHash approximate dedup, deterministic balanced sampling, memory-first builds, per-language checkpointing, atomic file output, quality reports.
 - **`scripts/calculate_model_parameters.py`** — Standalone parameter estimator for 5 model configs (baseline + 4 MVP candidates).
+- **`scripts/model_training_contract.py`** — Strict MVP model-data/student/source-lock contract: five tags, nine undirected pairs, 18 routes, canonical config hashing, provenance schema, path boundaries, and fail-fast validation.
 - **`scripts/build_micro_m2m100_checkpoint.py`** — Deterministically builds and validates the Git-ignored random HF checkpoint consumed by the CTranslate2 deployment workflow.
 - **`scripts/validate_ctranslate2_deployment.py`** — Runs the serial CT2 conversion, ordered-vocabulary validation, five-tag CPU inference, and offline-package phases while merging machine-readable results into one workflow JSON.
 - **`scripts/run_offline_ctranslate2_smoke.py`** — Self-contained deployment-root runner copied into the offline package; verifies its manifest and blocks Python socket connections before local inference.
@@ -74,6 +75,8 @@ The project has no `src/` layout, `__init__.py` files, or installable package. P
 
 - `configs/tokenizer_datasets_mvp.yaml` — Source registry, cleaning rules, MinHash params, quality thresholds, `smoke` and `mvp` profiles.
 - `configs/tokenizer_datasets_mvp.lock.json` — Pinned HPLT 3.0 shard URLs, SHA-256 hashes, byte ranges for deterministic reproducibility. The lock binds to a config hash — if config or profile changes, the lock must be re-resolved.
+- `configs/mvp_model_data.yaml` / `.lock.json` — Strict schema, route matrix, bounded MASSIVE 1.1 registry/budgets, and full archive/selected-file identities for the model-training data workflow.
+- `configs/mvp_e8_d2_v48k.yaml` — From-scratch student identity and logical runtime/publish paths; hardware-sensitive training fields remain explicitly unfrozen until TD-14.
 
 ### Data flow
 
@@ -101,11 +104,11 @@ work/plan/    → work/todo/    → work/task/    → work/review/    → work/d
 Current state:
 - **Completed**: Tokenizer dataset fetch pipeline (TD-01 through TD-12), the bounded MVP tokenizer workflow, and CTranslate2 deployment validation. The frozen `mvp-tokenizer-v0` is a 49,152-token Hugging Face Rust BPE + Metaspace artifact for five model tags: `eng_Latn`, `zho_Hans`, `zho_Hant`, `jpn_Jpan`, and `kor_Hang`.
 - **Archived workflows**: Plans remain under `work/plan/`; completed todos, task sets, and review records are under `work/done/`. Narrative evidence belongs in the task and unified review documents; the CT2 workflow's single machine-readable record is `artifacts/ctranslate2/deployment-validation.json`.
-- **Active workflow**: `work/plan/mvp-model-training.md`, `work/todo/mvp-model-training.md`, and `work/task/mvp-model-training/` (TD-01 through TD-18 are pending). Do not reopen or mutate the frozen tokenizer or reinterpret the random deployment checkpoint as a trained model.
+- **Active workflow**: `work/plan/mvp-model-training.md`, `work/todo/mvp-model-training.md`, and `work/task/mvp-model-training/`. TD-01 and TD-02 are completed; TD-03 through TD-18 are pending. Do not reopen or mutate the frozen tokenizer or reinterpret the random deployment checkpoint as a trained model.
 
 ## Testing
 
-The offline suite currently contains 52 tests across the dataset pipeline, tokenizer training/checkpointing, evaluation, artifact-freeze, micro-checkpoint, and CTranslate2 deployment modules. Small fixtures simulate HPLT sources without network access. Key patterns:
+The offline suite currently contains 75 tests across the tokenizer/model-data pipelines, tokenizer training/checkpointing, evaluation, artifact-freeze, micro-checkpoint, and CTranslate2 deployment modules. Small fixtures simulate HPLT and model-training contracts without network access. Key patterns:
 
 - Config validation (explicit registry, missing fields, error paths)
 - Text cleaning correctness (zh/ja/ko-specific patterns)
@@ -118,6 +121,7 @@ The offline suite currently contains 52 tests across the dataset pipeline, token
 - Save/reload and deterministic tokenizer training
 - Fixed evaluation-set construction and unknown-character accounting
 - Frozen artifact manifest integrity and five-tag micro-M2M100 forwards
+- Model-training schema/provenance, 9-pair/18-route invariants, config/source-lock identity, and path-boundary rejection
 
 Fixtures in `tests/fixtures/tokenizer_datasets/` are small JSONL samples for all five model language tags.
 

@@ -1,0 +1,81 @@
+{
+  "config_sha256": "4b774c6d564b02fef3d6113d3de4b51428248646fe209a9e5a300c9608cb5c93",
+  "schema_version": 1,
+  "source_order": [
+    "massive-1.1"
+  ],
+  "sources": [
+    {
+      "archive": {
+        "bytes": 40251390,
+        "etag": "51e0da2a3ff7a016f109e1d1b4306e93-3",
+        "last_modified": "2022-11-07T16:55:04Z",
+        "sha256": "4cba5faa11c71437928e17cb1b9b3d8b8e727e7ea363a3a9a8045e19c0491577"
+      },
+      "download_uri": "https://amazon-massive-nlu-dataset.s3.amazonaws.com/amazon-massive-dataset-1.1.tar.gz",
+      "homepage": "https://github.com/alexa/massive/tree/f966f21846043aabef9b0f974fa7970027f43738",
+      "license": "CC-BY-4.0",
+      "selected_files": [
+        {
+          "bytes": 18704,
+          "path": "1.1/LICENSE",
+          "role": "license",
+          "sha256": "c2e6ea015269147de02117ebdd91f30ef09831251f5345fa8365273b1db1d435"
+        },
+        {
+          "bytes": 502,
+          "path": "1.1/NOTICE.md",
+          "role": "notice",
+          "sha256": "b90534ccd20c6f0e1e5239567af0d150496339542b75a15bfbc3e1e737593ddb"
+        },
+        {
+          "bytes": 3904197,
+          "path": "1.1/data/en-US.jsonl",
+          "role": "data:eng_Latn",
+          "sha256": "c70f75c6a543a26e249ec383df67733ad9b1066f6c0406c2e04a3f03356e407e"
+        },
+        {
+          "bytes": 11818747,
+          "path": "1.1/data/zh-CN.jsonl",
+          "role": "data:zho_Hans",
+          "sha256": "992bf0bef3d678f08c27e514739bc851163e8f40f530bfb4d5970a2c24408ace"
+        },
+        {
+          "bytes": 11740938,
+          "path": "1.1/data/zh-TW.jsonl",
+          "role": "data:zho_Hant",
+          "sha256": "e529feb6c56988575939fcc94cc837fd3391cfc48d5e62dd4e438e619beeabe7"
+        },
+        {
+          "bytes": 12263054,
+          "path": "1.1/data/ja-JP.jsonl",
+          "role": "data:jpn_Jpan",
+          "sha256": "c22df382db6aa4a23dd1e7f62a2ac8f01c6158865771ad25201696be7201ab79"
+        },
+        {
+          "bytes": 12036096,
+          "path": "1.1/data/ko-KR.jsonl",
+          "role": "data:kor_Hang",
+          "sha256": "3f44944978e95b1b3c083a6b378fc15ddcee996ef3371f1ca10635c772b93037"
+        }
+      ],
+      "source_id": "massive-1.1",
+      "verification": {
+        "alignment_key": [
+          "partition",
+          "id"
+        ],
+        "method": "HTTP HEAD, full archive SHA-256, selected-file SHA-256, and parsed five-locale alignment audit",
+        "partition_rows_per_locale": {
+          "dev": 2033,
+          "test": 2974,
+          "train": 11514
+        },
+        "rows_per_locale": 16521,
+        "selected_bytes": 51782238,
+        "verified_on": "2026-07-15"
+      },
+      "version": "1.1"
+    }
+  ]
+}

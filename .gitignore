@@ -26,3 +26,17 @@ artifacts/ctranslate2/runtime/
 
 # Keep only documentation placeholders below data/ if added later.
 !data/tokenizer/**/.gitkeep
+
+# Model-training source data, caches, corpora, reports, and hot run state.
+data/model/raw/*
+data/model/cache/*
+data/model/interim/*
+data/model/corpus/mvp/*
+data/model/reports/*
+!data/model/raw/.gitkeep
+!data/model/cache/.gitkeep
+!data/model/interim/.gitkeep
+!data/model/corpus/mvp/.gitkeep
+!data/model/reports/.gitkeep
+artifacts/model-training/runtime/
+artifacts/models/

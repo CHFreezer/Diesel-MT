@@ -53,12 +53,12 @@ TD-09 至 TD-11 可在人类数据链构建期间先用 TD-01 的 schema fixture
 
 依赖：无。
 
-- [ ] 定义规范平行样本 schema，至少包含 `sample_id`、`sample_group_id`、`source_id`、`source_version`、`license`、`src_lang`、`tgt_lang`、`source_text`、`target_text`、`split`；teacher/转换增强样本增加生成 provenance。
-- [ ] 固定 5 个允许标签、9 组允许的无向标签对、18 个有向路由，并明确拒绝同标签路由、简繁互转和 allowlist 外标签。
-- [ ] 固定模型数据目录：`data/model/raw/`、`cache/`、`interim/`、`corpus/mvp/`、`reports/`；所有大体积数据默认 Git-ignored，只提交 schema、配置、lock、fixture 和精简报告。
-- [ ] 固定训练运行目录和发布边界：热 checkpoint/staging 可配置到 SSD，完整校验后发布 Git-ignored HF/CT2 产物；提交内只保存配置、manifest、指标和文档。
-- [ ] 定义 `configs/mvp_model_data.yaml`、`configs/mvp_e8_d2_v48k.yaml` 的字段、schema version、稳定序列化和配置哈希规则。
-- [ ] 为 schema、方向矩阵、路径边界、未知字段、缺失字段和非法路由增加配置级自动化测试。
+- [x] 定义规范平行样本 schema，至少包含 `sample_id`、`sample_group_id`、`source_id`、`source_version`、`license`、`src_lang`、`tgt_lang`、`source_text`、`target_text`、`split`；teacher/转换增强样本增加生成 provenance。
+- [x] 固定 5 个允许标签、9 组允许的无向标签对、18 个有向路由，并明确拒绝同标签路由、简繁互转和 allowlist 外标签。
+- [x] 固定模型数据目录：`data/model/raw/`、`cache/`、`interim/`、`corpus/mvp/`、`reports/`；所有大体积数据默认 Git-ignored，只提交 schema、配置、lock、fixture 和精简报告。
+- [x] 固定训练运行目录和发布边界：热 checkpoint/staging 可配置到 SSD，完整校验后发布 Git-ignored HF/CT2 产物；提交内只保存配置、manifest、指标和文档。
+- [x] 定义 `configs/mvp_model_data.yaml`、`configs/mvp_e8_d2_v48k.yaml` 的字段、schema version、稳定序列化和配置哈希规则。
+- [x] 为 schema、方向矩阵、路径边界、未知字段、缺失字段和非法路由增加配置级自动化测试。
 
 产物：数据/训练配置骨架、目录与 Git 边界、schema/方向矩阵测试。
 
@@ -68,12 +68,12 @@ TD-09 至 TD-11 可在人类数据链构建期间先用 TD-01 的 schema fixture
 
 依赖：TD-01。
 
-- [ ] 针对 9 组无向标签对调研可下载版本、语言/脚本标注、许可证、数据卡、对齐质量、规模和获取方式，优先使用许可清晰的人类平行语料。
-- [ ] 对繁体相关的 3 组语料逐一确认繁体侧为原生 `zho_Hant`，不把简转繁、粤语 `yue_Hant` 或脚本未知的中文静默归类为普通话繁体。
-- [ ] 若某组缺少足够的人类平行语料，设计有界 synthetic 补充方案：必须保留原生文本侧、teacher 身份、prompt、解码参数和生成 manifest；不得因此引入大规模蒸馏范围。
-- [ ] 为每组确定 MVP 的 train/dev/test 最小样本预算、扫描上限和下载上限；繁体可低于简体，但 dev/test 不得为空。
-- [ ] 生成来源 registry 和 `configs/mvp_model_data.lock.json`，锁定 URI、版本、文件大小、SHA-256、许可证和逻辑处理顺序。
-- [ ] 记录许可证不兼容、用途不明或无法稳定版本化的候选并排除，不以“能下载”代替可用性结论。
+- [x] 针对 9 组无向标签对调研可下载版本、语言/脚本标注、许可证、数据卡、对齐质量、规模和获取方式，优先使用许可清晰的人类平行语料。
+- [x] 对繁体相关的 3 组语料逐一确认繁体侧为原生 `zho_Hant`，不把简转繁、粤语 `yue_Hant` 或脚本未知的中文静默归类为普通话繁体。
+- [x] 若某组缺少足够的人类平行语料，设计有界 synthetic 补充方案：必须保留原生文本侧、teacher 身份、prompt、解码参数和生成 manifest；不得因此引入大规模蒸馏范围。
+- [x] 为每组确定 MVP 的 train/dev/test 最小样本预算、扫描上限和下载上限；繁体可低于简体，但 dev/test 不得为空。
+- [x] 生成来源 registry 和 `configs/mvp_model_data.lock.json`，锁定 URI、版本、文件大小、SHA-256、许可证和逻辑处理顺序。
+- [x] 记录许可证不兼容、用途不明或无法稳定版本化的候选并排除，不以“能下载”代替可用性结论。
 
 产物：`docs/model-training-dataset-research.md`、数据 registry、source lock 和 9 组覆盖矩阵。
 
