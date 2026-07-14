@@ -6,7 +6,7 @@
 
 ## 目标
 
-实现 `scripts/train_tokenizer.py`，用锁定版本 `NllbTokenizer.train_new_from_iterator()` 从四语均衡语料训练 32k（32,768）和 48k（49,152）两个 BPE tokenizer，产物可复现、可验证。
+实现 `scripts/train_tokenizer.py` 作为一次性训练基线，并实现 `scripts/train_tokenizer_checkpointed.py` 将官方 Rust trainer 的 feed 状态缓存到 D: SSD。从四语均衡语料训练 32k（32,768）和 48k（49,152）两个 BPE tokenizer；训练输入可复核、结果功能等价且可验证。最终候选一旦用于模型训练，必须冻结完整产物并锁定 SHA-256。
 
 ## 输入
 
@@ -28,13 +28,14 @@
 - 训练前统计语料的唯一 Unicode 字符、频次及其是否进入 `initial_alphabet`；训练后输出保留/裁剪字符清单，禁止只记录一个 `limit_alphabet` 数字而不审计实际字符。
 - 保持主线 `byte_fallback=false`；不得仅切换该布尔值规避 `<unk>`。若评估 byte fallback，必须另建实验配置。
 - 训练输入按语言均衡采样（不是简单拼接文件），避免某一语言主导词表。
-- 固定采样随机种子和输入批次顺序；记录 `tokenizers` 并行设置，并实测同环境重复训练的字节级可复现性。
-- **RAM-first 执行**：
+- 固定采样随机种子和输入批次顺序，记录输入顺序 SHA-256 和 `tokenizers` 并行设置。重复训练按功能等价验收，不要求 tokenizer JSON/hash 完全相同；这是因为官方 BPE trainer 在等频 alphabet/merge 边界使用哈希集合和不稳定排序，不承诺跨进程生成相同 ID 排列。
+- **RAM-first 一次性基线（保留用于回归对照）**：
   - 训练开始前从数据盘单次顺序读取四语文件，全部文本行加载到 RAM。
   - `train_new_from_iterator()` 的 text iterator 从内存 list 中按均衡采样后的顺序 yield，不从磁盘流式重读。
   - 32k 和 48k 两次训练共用同一份已加载文本，禁止每个候选单独从数据盘重新读取。
   - 训练产物（`tokenizer.json` 等）先写到 `--staging-dir` 指定的暂存目录，校验 SHA-256 后由后台任务大块搬运到 `--output-dir` 目标目录；搬运完成前不发布 manifest。
   - 禁止在数据盘创建 SQLite、WAL、临时文件或逐条日志；统计信息在线累计到内存后在报告阶段一次性写出。
+- **大语料首选 checkpointed 执行**：Python 只负责生成一次 canonical snapshot，Rust `feed()` 状态保存到 D:；后续候选训练和中断重跑直接读取 feed checkpoint，不再加载原始语料。
 - **CPU 并行度**：支持 `--num-threads` 参数，默认值为 `min(8, os.cpu_count() // 2)`；记录训练吞吐供后续调优。
 - **内存保护**：支持 `--max-memory-gib` 和 `--min-available-memory-gib` 参数；逼近保护线时安全停止（已完成候选继续有效），不回退到磁盘 spill。
 - 记录训练参数、耗时、最终 `vocab_size`、峰值 RSS、语料快照到训练日志。
@@ -53,7 +54,8 @@
 - 训练前后 `tokenizer.is_fast is True` 断言通过。
 - 训练后 `len(tokenizer)` 精确为 32k 或 48k，ID 稠密唯一。
 - `backend_tokenizer.to_str()` 中 `model.type == "BPE"`、`fuse_unk=true`、`byte_fallback=false`。
-- 同参数同输入两次训练产物规范 JSON 一致，encode 行为一致。
+- 同参数同输入重复训练必须满足功能等价：语料及输入顺序一致，normalizer/pre-tokenizer/post-processor/decoder 一致，词表大小与特殊 token 约束一致，must-cover 完整，编码质量和 tokens/char 指标等价；不要求规范 JSON 或文件 SHA-256 相同。
+- 最终选定 tokenizer 后冻结完整目录并记录 SHA-256；模型 embedding 与 token ID 绑定，模型训练开始后不得用仅“功能等价”但 ID 重排的 tokenizer 替换。
 - must-cover alphabet 中的字符不在训练后被裁剪。
 - 代码中不出现 `model_type='unigram'`、`NllbTokenizerFast` 或手工 JSON 编辑。
 - 训练输入为语言均衡采样，非简单文件拼接。
@@ -68,8 +70,8 @@
 - 22,068 字符的 must-cover 集合通过 `initial_alphabet` 直接传入 trainer，并验证 `limit_alphabet >= len(initial_alphabet)`。
 - CLI 使用 supervisor/worker 结构：主 supervisor 固定间隔输出 newline heartbeat，不依赖 Rust 进度条、TTY 或回车刷新。
 - 产物先写到 staging，保存重载验证后逐文件复制并校验 SHA-256，最后用目录替换发布。
-- `tests/test_tokenizer_training.py` 覆盖 seed/allowlist、确定性采样、字符均衡、两次训练 tokenizer JSON 一致、保存重载、artifact manifest 和 supervisor heartbeat。
-- 全套测试：24 passed。
+- `tests/test_tokenizer_training.py` 覆盖 seed/allowlist、确定性采样、字符均衡、小 fixture 重复训练、保存重载、artifact manifest 和 supervisor heartbeat。
+- checkpoint 实现完成后的全套测试：32 passed；Rust helper `cargo test` 构建通过。
 
 ### 10% 真实语料冒烟
 
@@ -98,9 +100,9 @@
 ### review 前保留项
 
 - 本次是 10% 冒烟，不是正式全量候选；正式全量 32,768/49,152 训练仍未执行。
-- 小 fixture 已验证同输入两次训练的规范 tokenizer JSON 完全一致；10% 或全量语料尚未做第二次昂贵重训复核。
+- 小 fixture 可生成完全一致的规范 tokenizer JSON，但这不是大语料验收要求；真实语料重复训练以功能等价为准。
 - 10% 训练语料中有 3,645 个非 must-cover 罕见字符未覆盖，需在 TD-05 按频率、文字系统和原文 offset 评估，而不能仅看唯一字符数。
-- native merge 阶段无法安全中断；内存保护在加载和 iterator feed 阶段检查，merge 阶段由 supervisor 监控 RSS。若要在 merge 阶段越线时保留当前进程，需要 tokenizers/Rust 侧增加可取消训练接口。
+- native merge 阶段本身仍没有中间 checkpoint；越过内存保护线时由 supervisor 终止当前核心训练，但可从已完成的 feed checkpoint 重新开始，不再重复语料加载和 feed。若要保留 merge 的部分进度，仍需 tokenizers/Rust 侧增加可取消且可序列化的训练状态。
 
 ## 独立复核记录（2026-07-13）
 
@@ -108,3 +110,36 @@
 - CLI 参数覆盖任务要求；静态扫描确认 `scripts/` 与 `tests/` 中没有 `NllbTokenizerFast`、`model_type='unigram'` 或伪造 `sentencepiece.bpe.model` 路线。
 - 10% 的 32k/48k 两个产物均重新通过离线加载、精确词表大小、fast backend、BPE、`fuse_unk=true`、`byte_fallback=false`、特殊 token、语言 allowlist 和稠密 ID 验证。
 - 复核未发现阻断问题，TD-03 标记 done。正式全量 32k/48k 执行按本任务“可延后到 TD-05 需要评测对象时再进行”的约定保留为后续运行项，不阻塞训练脚本本身验收。
+
+## Rust feed checkpoint 与内存复核（2026-07-14）
+
+### checkpoint 流程
+
+- Python 继续复用原有语料入口：manifest 校验、seeded sampling、按字符数对齐和四语 round-robin 顺序均保持不变。
+- Python 将最终输入顺序写成 D: SSD 上的 length-prefixed UTF-8 snapshot；Rust helper 通过官方 `Tokenizer::train()` 调用 `BpeTrainer.feed()`，只跳过紧随其后的核心 `train()`。
+- feed 完成后序列化 trainer 状态。独立 `--phase train` 只读取 checkpoint，不再扫描原始语料，也不再读取 snapshot；核心训练中断后可以重新从同一 checkpoint 启动。
+- `feed_complete` 状态再次执行 prepare 可在约 5 秒内完成 checkpoint 校验并命中缓存。
+- 训练日志和 watchdog JSONL 全部写入 `D:\Diesel-MT-tokenizer-stage\`，不得写入 E: HDD。
+
+### 32k 的 5%/10% 实测
+
+| 语料比例 | 训练行数 | 训练字符 | snapshot | feed checkpoint | Rust feed | 核心训练 | 进程树峰值 RSS |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 5% | 572,901 | 198,622,416 | 0.426 GiB | 0.305 GiB | 3.36 s | 67.7 s | 10.99 GiB |
+| 10% | 1,148,922 | 397,823,714 | 0.854 GiB | 0.596 GiB | 7.70 s | 148.3 s | 18.83 GiB |
+
+两组结果均通过精确 32,768 词表、fast BPE、特殊 token、must-cover 缺失为 0、保存/离线重载和 artifact manifest 校验。10% checkpoint 输入顺序 SHA-256 与原一次性 10% 基线相同。
+
+### 功能等价结论
+
+- 新旧 10% 结果的 normalizer、pre-tokenizer、post-processor 和 decoder 完全一致，8,642 个 merge 的集合完全一致；仅 12 个等频 merge 的排名互换。
+- 32,768 个 vocab token 中有 35 个 `limit_alphabet` 边界上的低频字符选择不同。10,000 条真实 snapshot 样本的总 token 数完全相同，仅 4 条的 token 字符串序列不同。
+- 同一个 5% checkpoint 重复执行核心训练时也会出现少量低频字符和 ID 重排，证明该现象来自官方 tokenizers 0.22.2 BPE trainer 的等频排序行为，不是 checkpoint 输入丢失或损坏。
+- 因此 checkpoint 路线通过功能等价验收；不追求 tokenizer JSON/hash 相等。最终正式 tokenizer 仍须在模型训练前锁定完整产物及 SHA-256。
+
+### 全量内存结论
+
+- 旧的一次性 32k 全量尝试在核心阶段仍持续增长时达到进程树 RSS 80.092 GiB，由 watchdog 按 80 GiB 上限终止，没有发布半成品。
+- 用 5%/10% 峰值分别做幂律、带基础开销幂律和线性外推，全量核心训练的进程树峰值约为 **113–160 GiB**，中间估计约 **137 GiB**。
+- 全量 snapshot 预计约 8.54 GiB，feed checkpoint 预计约 5.84 GiB；磁盘和 feed 阶段不是瓶颈，瓶颈是官方 BPE 的 tokenize words/count pairs/merge 内存结构。
+- 当前机器约 100 GiB 可用物理内存，不应直接运行全量 32k。在 80 GiB 进程上限下，可承受比例估算约 49%–64%；为保留安全余量，本机最多按 **50%** 语料训练。正式全量建议使用至少 **192 GB RAM** 的机器。
