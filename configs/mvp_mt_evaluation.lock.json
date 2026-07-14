@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "identity": {
+    "benchmark_id": "flores200-original-dev-devtest",
+    "scope": "external-mt-evaluation-contamination-reference-only",
+    "training_use": "prohibited",
+    "repository_revision": "a6c830c6e1051fb4ac1a44b32358f00463f332bd"
+  },
+  "archive": {
+    "uri": "https://dl.fbaipublicfiles.com/nllb/flores200_dataset.tar.gz",
+    "bytes": 25585843,
+    "sha256": "b8b0b76783024b85797e5cc75064eb83fc5288b41e9654dabc7be6ae944011f6",
+    "etag": "\"b6580e4f865a6cad1bb83cdbbc5f662d-4\"",
+    "last_modified": "Thu, 14 Jul 2022 04:18:34 GMT"
+  },
+  "repository": {
+    "uri": "https://github.com/facebookresearch/flores",
+    "revision": "a6c830c6e1051fb4ac1a44b32358f00463f332bd",
+    "files": [
+      {
+        "path": "README.md",
+        "role": "repository_readme",
+        "bytes": 1671,
+        "sha256": "0ba6a247bcc2a14825c8e69223c715276e44f9630bdb1bdbddbef9136acba7b5"
+      },
+      {
+        "path": "flores200/README.md",
+        "role": "benchmark_readme",
+        "bytes": 11883,
+        "sha256": "74ccbbe29feba9d92cb3ee472387579ab2aa5c0299d47dcec7614b2c06cd49fc"
+      },
+      {
+        "path": "LICENSE_CC-BY-SA",
+        "role": "license",
+        "bytes": 65471,
+        "sha256": "fe38377ee0e52dc6c9c78554055a4e5e78781d73022df4508c9cf284e0f462e9"
+      }
+    ]
+  },
+  "archive_readme": {
+    "member": "./flores200_dataset/README",
+    "bytes": 285,
+    "sha256": "a1b7eb3a097fd332fd541b563d9311c609f07f18b03ac7c0ca48e3cc9b6b937b",
+    "records": 7
+  },
+  "files": [
+    {
+      "language": "eng_Latn",
+      "split": "dev",
+      "member": "./flores200_dataset/dev/eng_Latn.dev",
+      "bytes": 126287,
+      "sha256": "51a25f527fd81f428b6933d85a2f5e5544af92aa82042c7fbf0c4120327fba0a",
+      "records": 997
+    },
+    {
+      "language": "zho_Hans",
+      "split": "dev",
+      "member": "./flores200_dataset/dev/zho_Hans.dev",
+      "bytes": 118256,
+      "sha256": "ae677073476a27d6d11db642df5c18b86ca5dfcbbeefeba7d99ec93b7f5bd177",
+      "records": 997
+    },
+    {
+      "language": "zho_Hant",
+      "split": "dev",
+      "member": "./flores200_dataset/dev/zho_Hant.dev",
+      "bytes": 112476,
+      "sha256": "9bd43d865c6fd8da92f978c425f1ad8a07673cc989ce887fd00dd64cda35e789",
+      "records": 997
+    },
+    {
+      "language": "jpn_Jpan",
+      "split": "dev",
+      "member": "./flores200_dataset/dev/jpn_Jpan.dev",
+      "bytes": 161045,
+      "sha256": "17a422e2729f2eaecf7bf98aea70e3e72b8cac8acd72547d6ec1ada07ff92f4f",
+      "records": 997
+    },
+    {
+      "language": "kor_Hang",
+      "split": "dev",
+      "member": "./flores200_dataset/dev/kor_Hang.dev",
+      "bytes": 151915,
+      "sha256": "b309cfc95f11fcf5be423eb43c31cef9aef91c504ebd25d4ef6b11cb916c29c2",
+      "records": 997
+    },
+    {
+      "language": "eng_Latn",
+      "split": "devtest",
+      "member": "./flores200_dataset/devtest/eng_Latn.devtest",
+      "bytes": 133108,
+      "sha256": "612e9fbe87997617c0fa8fa8929654a4f49b728d96738112c2b86ef6a1d78d88",
+      "records": 1012
+    },
+    {
+      "language": "zho_Hans",
+      "split": "devtest",
+      "member": "./flores200_dataset/devtest/zho_Hans.devtest",
+      "bytes": 121818,
+      "sha256": "b30158b1b76f7cee08530d8127a9769f4512597c7eefe97ae1ccf630d5b6e7fd",
+      "records": 1012
+    },
+    {
+      "language": "zho_Hant",
+      "split": "devtest",
+      "member": "./flores200_dataset/devtest/zho_Hant.devtest",
+      "bytes": 117238,
+      "sha256": "341a38f1b4a1a281d6cd9e8951c3d3d2324e94dad5049f85d7cf549a73b9c4bb",
+      "records": 1012
+    },
+    {
+      "language": "jpn_Jpan",
+      "split": "devtest",
+      "member": "./flores200_dataset/devtest/jpn_Jpan.devtest",
+      "bytes": 168121,
+      "sha256": "36b8e392ae9404a20e8448c731d16d957ac1b94588d97fb691128ae706b63606",
+      "records": 1012
+    },
+    {
+      "language": "kor_Hang",
+      "split": "devtest",
+      "member": "./flores200_dataset/devtest/kor_Hang.devtest",
+      "bytes": 158811,
+      "sha256": "540972696230a56e888f1fbd04b7000135c436351f5e467f99ce67fdccd8df0f",
+      "records": 1012
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+schema_version: 1
+
+identity:
+  name: mvp_direction_sampling
+  status: m0-locked
+
+strategy:
+  unit: directed_sample
+  epoch: one deterministic pass over the frozen train split
+  shuffle: seeded sampler owned by the later training task
+  default_weight: 1.0
+  maximum_repeats_per_epoch: 1
+  low_resource_oversampling: prohibited
+
+routes:
+  - {route: eng_Latn->jpn_Jpan, weight: 1.0, maximum_repeats_per_epoch: 1}
+  - {route: jpn_Jpan->eng_Latn, weight: 1.0, maximum_repeats_per_epoch: 1}
+  - {route: eng_Latn->kor_Hang, weight: 1.0, maximum_repeats_per_epoch: 1}
+  - {route: kor_Hang->eng_Latn, weight: 1.0, maximum_repeats_per_epoch: 1}
+  - {route: jpn_Jpan->kor_Hang, weight: 1.0, maximum_repeats_per_epoch: 1}
+  - {route: kor_Hang->jpn_Jpan, weight: 1.0, maximum_repeats_per_epoch: 1}
+  - {route: eng_Latn->zho_Hans, weight: 1.0, maximum_repeats_per_epoch: 1}
+  - {route: zho_Hans->eng_Latn, weight: 1.0, maximum_repeats_per_epoch: 1}
+  - {route: jpn_Jpan->zho_Hans, weight: 1.0, maximum_repeats_per_epoch: 1}
+  - {route: zho_Hans->jpn_Jpan, weight: 1.0, maximum_repeats_per_epoch: 1}
+  - {route: kor_Hang->zho_Hans, weight: 1.0, maximum_repeats_per_epoch: 1}
+  - {route: zho_Hans->kor_Hang, weight: 1.0, maximum_repeats_per_epoch: 1}
+  - {route: eng_Latn->zho_Hant, weight: 1.0, maximum_repeats_per_epoch: 1}
+  - {route: zho_Hant->eng_Latn, weight: 1.0, maximum_repeats_per_epoch: 1}
+  - {route: jpn_Jpan->zho_Hant, weight: 1.0, maximum_repeats_per_epoch: 1}
+  - {route: zho_Hant->jpn_Jpan, weight: 1.0, maximum_repeats_per_epoch: 1}
+  - {route: kor_Hang->zho_Hant, weight: 1.0, maximum_repeats_per_epoch: 1}
+  - {route: zho_Hant->kor_Hang, weight: 1.0, maximum_repeats_per_epoch: 1}

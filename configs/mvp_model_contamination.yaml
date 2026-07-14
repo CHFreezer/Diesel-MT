@@ -8,6 +8,7 @@ reference_sets:
   - reference_id: tokenizer-corpus-mvp
     kind: tokenizer_corpus
     policy: report
+    match: exact
     manifest:
       path: data/tokenizer/corpus/mvp/manifest.jsonl
       format: tokenizer-manifest-jsonl
@@ -16,6 +17,7 @@ reference_sets:
   - reference_id: tokenizer-holdout-mvp
     kind: tokenizer_holdout
     policy: report
+    match: exact
     manifest:
       path: data/tokenizer/holdout/mvp/manifest.jsonl
       format: tokenizer-manifest-jsonl
@@ -24,17 +26,27 @@ reference_sets:
   - reference_id: tokenizer-evaluation-mvp-v0
     kind: tokenizer_evaluation
     policy: report
+    match: exact
     manifest:
       path: data/tokenizer/evaluation/mvp-v0/manifest.json
       format: tokenizer-evaluation-manifest-json
       bytes: 3177
       sha256: 4175b4063bc8e4a8969eca48a0d60a5da0e0d09ff55b1bce985e9898717244e6
+  - reference_id: flores200-original-dev-devtest
+    kind: mt_evaluation
+    policy: block
+    match: exact-and-near
+    manifest:
+      path: data/model/raw/flores200-original/reference-manifest.json
+      format: locked-reference-manifest-json
+      bytes: 3058
+      sha256: ee08fa777b376ff8119f15a3fae5955f1960efb7e42e133aaf862790abf5e98e
 
 requirements:
   formal_mt_evaluation:
-    status: pending_td05
+    status: locked
     required_before_m0: true
-    note: TD-05 must add a locked mt_evaluation reference set with policy block before formal M0 publication.
+    note: Original FLORES-200 dev/devtest is a blocking external reference only and is prohibited from training.
   same_source_versions:
     status: none_identified
     required_before_m0: true

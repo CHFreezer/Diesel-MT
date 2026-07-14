@@ -324,6 +324,7 @@ def test_reference_scan_distinguishes_report_only_and_blocking_hits(
                 "reference_id": "tokenizer-holdout",
                 "kind": "tokenizer_holdout",
                 "policy": "report",
+                "match": "exact",
                 "records": [
                     {
                         "language": "eng_Latn",
@@ -336,6 +337,7 @@ def test_reference_scan_distinguishes_report_only_and_blocking_hits(
                 "reference_id": "formal-mt-eval",
                 "kind": "mt_evaluation",
                 "policy": "block",
+                "match": "exact-and-near",
                 "records": [
                     {
                         "language": "eng_Latn",
@@ -359,6 +361,21 @@ def test_reference_scan_distinguishes_report_only_and_blocking_hits(
                     "reference_id": "unsafe-eval",
                     "kind": "mt_evaluation",
                     "policy": "report",
+                    "match": "exact-and-near",
+                    "records": [],
+                }
+            ],
+        )
+
+    with pytest.raises(InputError, match="must use match=exact-and-near"):
+        scan_reference_records(
+            prepared["candidate_entries"],
+            [
+                {
+                    "reference_id": "unsafe-exact-only-eval",
+                    "kind": "mt_evaluation",
+                    "policy": "block",
+                    "match": "exact",
                     "records": [],
                 }
             ],
@@ -471,20 +488,32 @@ def test_interrupted_publication_removes_completion_marker(
     assert not (tmp_path / "corpus" / "mvp" / "finalized" / "manifest.json").exists()
 
 
-def test_locked_registry_tracks_tokenizer_inputs_but_not_model_test() -> None:
+def test_locked_registry_tracks_tokenizer_and_external_model_evaluation() -> None:
     registry = load_contamination_registry(REGISTRY_PATH)
     assert [reference["kind"] for reference in registry["reference_sets"]] == [
         "tokenizer_corpus",
         "tokenizer_holdout",
         "tokenizer_evaluation",
+        "mt_evaluation",
     ]
-    assert all(reference["policy"] == "report" for reference in registry["reference_sets"])
-    assert registry["requirements"]["formal_mt_evaluation"]["status"] == "pending_td05"
-    assert pipeline.registry_is_complete(registry) is False
+    assert [reference["policy"] for reference in registry["reference_sets"]] == [
+        "report",
+        "report",
+        "report",
+        "block",
+    ]
+    assert [reference["match"] for reference in registry["reference_sets"]] == [
+        "exact",
+        "exact",
+        "exact",
+        "exact-and-near",
+    ]
+    assert registry["requirements"]["formal_mt_evaluation"]["status"] == "locked"
+    assert pipeline.registry_is_complete(registry) is True
     for reference in registry["reference_sets"]:
         identity, specs = pipeline._manifest_file_specs(reference, ROOT)
         assert identity["manifest_sha256"] == reference["manifest"]["sha256"]
-        assert len(specs) == 5
+        assert len(specs) == (10 if reference["kind"] == "mt_evaluation" else 5)
 
 
 def test_cli_dry_run_is_side_effect_free(
@@ -517,27 +546,5 @@ def test_cli_dry_run_is_side_effect_free(
     plan = json.loads(result.stdout)
     assert plan["status"] == "dry-run"
     assert plan["input_records"] == 9
-    assert plan["reference_registry_complete_for_m0"] is False
-    assert not out_root.exists()
-
-    blocked = subprocess.run(
-        [
-            sys.executable,
-            "scripts/finalize_model_data.py",
-            "--config",
-            str(CONFIG_PATH),
-            "--registry",
-            str(REGISTRY_PATH),
-            "--input-root",
-            str(input_root),
-            "--out",
-            str(out_root),
-        ],
-        cwd=ROOT,
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    assert blocked.returncode == 2
-    assert "reference registry is incomplete" in blocked.stderr
+    assert plan["reference_registry_complete_for_m0"] is True
     assert not out_root.exists()

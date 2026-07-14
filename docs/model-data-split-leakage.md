@@ -1,6 +1,6 @@
 # MVP 模型数据切分、去重与泄漏防护
 
-TD-04 消费 TD-03 的 9 组规范无向样本，在反向扩展前完成 group/component 绑定、确定性 split、精确去重、近重复隔离和外部污染检查，再发布 18 个有向路由。真实规模双构建、人工抽检、正式评测集锁定和 M0 发布决定仍属于 TD-05。
+TD-04 消费 TD-03 的 9 组规范无向样本，在反向扩展前完成 group/component 绑定、确定性 split、精确去重、近重复隔离和外部污染检查，再发布 18 个有向路由。TD-05 已完成真实规模双构建、人工抽检、正式评测引用锁定和 M0 发布。
 
 ## 入口与正式门禁
 
@@ -10,7 +10,7 @@ TD-04 消费 TD-03 的 9 组规范无向样本，在反向扩展前完成 group/
 .conda\python.exe scripts/finalize_model_data.py --dry-run
 ```
 
-正式构建默认要求 `configs/mvp_model_contamination.yaml` 已包含锁定的正式 MT evaluation 身份和所有已知同源重复版本。当前正式 MT evaluation 留给 TD-05 锁定，因此不带开发开关的实际构建会在扫描大型 tokenizer 参考文件前快速失败。
+正式构建默认要求 `configs/mvp_model_contamination.yaml` 已包含锁定的正式 MT evaluation 身份和所有已知同源重复版本。TD-05 已锁定原版 FLORES-200 `dev/devtest`；不带开发开关的实际构建会校验并扫描该引用。
 
 仅 fixture/算法开发允许显式绕过完整性门禁：
 
@@ -50,10 +50,11 @@ split 后执行第二次审计：任一 group、forward/reverse relation、exact
 - tokenizer MVP corpus：`tokenizer_corpus`，report-only；
 - tokenizer MVP holdout：`tokenizer_holdout`，report-only；
 - frozen tokenizer evaluation：`tokenizer_evaluation`，report-only。
+- 原版 FLORES-200 `dev/devtest`：`mt_evaluation`，block。
 
-这些集合用于审计 tokenizer 训练/评估暴露，不是模型质量 test。特别是 tokenizer holdout 不会被重命名或复用为 MT test。扫描器按 manifest 校验文件大小/SHA-256，并流式读取大型文本；候选索引只为模型数据建立。
+前三类集合用于审计 tokenizer 训练/评估暴露，不是模型质量 test。特别是 tokenizer holdout 不会被重命名或复用为 MT test。由于这些文件超过 2.4 GB，它们只做大小/SHA-256 校验与流式 exact 扫描；原版 FLORES-200 使用 exact + near 扫描并阻断命中。候选索引只为模型数据建立。
 
-TD-05 必须在 M0 前加入正式 `mt_evaluation` block reference。如果模型 train/dev/test 任一文本与 block reference exact/near 重叠，管线只写 `td04-contamination-blocked.json` 诊断，不发布 complete manifest。
+正式 M0 对 FLORES-200 的 10,045 条引用记录得到 0 个 exact/near 命中。tokenizer 字符覆盖评测有 2 条与 M0 dev exact 重叠，按冻结的 report-only 语义披露但不把它误称为 MT test 泄漏。如果模型 train/dev/test 任一文本与 block reference exact/near 重叠，管线只写 `td04-contamination-blocked.json` 诊断，不发布 complete manifest。
 
 ## 规范输出
 

@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "status": "complete",
+  "release": "m0-model-training-data",
+  "date": "2026-07-15",
+  "scope": {
+    "model_tags": 5,
+    "undirected_pairs": 9,
+    "directed_routes": 18,
+    "undirected_records": 147443,
+    "directed_records": 294886,
+    "records_by_split": {
+      "train": 203942,
+      "dev": 33490,
+      "test": 57454
+    },
+    "teacher_synthetic": 0,
+    "script_conversion": 0
+  },
+  "identities": {
+    "td03_manifest_sha256": "8af101ed5f5b003fdc56ca439cd16d61579d375e3c9e7f78ef412f038bc7b761",
+    "finalized_manifest_sha256": "6977224aa904a205b8082adaf8913c28f04cfae0d150706e1664412cb439ec8c",
+    "m0_manifest_sha256": "3d517a8adad0871d04f688f8fd50e0e6432ea0738a043bb8977f1dcede3c37aa",
+    "m0_acceptance_report_sha256": "4b64f8f3562978332396c11f6708a2ba507442d230d1615a5a36a09f04a40b1a",
+    "manual_review_queue_sha256": "cbb1a3c47cf963026a92b0562076ec650fad321167d4eb03c8e94851201bb74d",
+    "flores200_reference_manifest_sha256": "ee08fa777b376ff8119f15a3fae5955f1960efb7e42e133aaf862790abf5e98e",
+    "contamination_registry_sha256": "94604f10d39fb6c1083befd8f2752018d139cfae3a1da3390be35ae17469b50a",
+    "direction_sampling_config_sha256": "8c0ec1c2f4686a1b26a2c05487ae6319202e6b6b2d195f61be91bc52be21259b"
+  },
+  "contamination": {
+    "flores200_records": 10045,
+    "flores200_exact_or_near_hits": 0,
+    "tokenizer_reference_hits_report_only": 2
+  },
+  "manual_review": {
+    "records": 489,
+    "accepted": 360,
+    "rejected": 129,
+    "traditional_mixed_script": 9,
+    "accepted_quality_flags": 29,
+    "rejected_rule_mismatches": 0,
+    "status": "pass-with-known-source-quality-warnings"
+  },
+  "reproducibility": {
+    "compared_files": 10,
+    "byte_identical": true,
+    "first": "cold network source acquisition and fresh output",
+    "second": "validated hot cache, network prohibited, fresh output plus resume verification"
+  },
+  "consumers": [
+    "TD-07",
+    "TD-09",
+    "TD-12",
+    "TD-13",
+    "TD-14",
+    "TD-15",
+    "TD-16"
+  ],
+  "quality_boundary": "M0 validates the bounded training system and language routes; it does not establish production translation quality."
+}

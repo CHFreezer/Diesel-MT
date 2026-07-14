@@ -27,7 +27,7 @@ from model_training_contract import (
 )
 
 
-PIPELINE_VERSION = "td04-v1"
+PIPELINE_VERSION = "td04-v2-locked-reference-match"
 SPLIT_PROFILE: dict[str, Any] = {
     "version": "massive-locked-count-hash-v1",
     "hash": "sha256",
@@ -56,9 +56,11 @@ REFERENCE_KINDS = {
     "same_source_version",
 }
 REFERENCE_POLICIES = {"report", "block"}
+REFERENCE_MATCH_MODES = {"exact", "exact-and-near"}
 REFERENCE_FORMATS = {
     "tokenizer-manifest-jsonl",
     "tokenizer-evaluation-manifest-json",
+    "locked-reference-manifest-json",
 }
 SPLIT_ORDER = {"train": 0, "dev": 1, "test": 2}
 MASK64 = (1 << 64) - 1
@@ -191,7 +193,7 @@ def validate_contamination_registry(registry: Mapping[str, Any]) -> dict[str, An
             raise InputError(f"reference_sets[{index}] must be an object")
         _exact_keys(
             reference,
-            {"reference_id", "kind", "policy", "manifest"},
+            {"reference_id", "kind", "policy", "match", "manifest"},
             f"reference_sets[{index}]",
         )
         reference_id = reference["reference_id"]
@@ -202,8 +204,15 @@ def validate_contamination_registry(registry: Mapping[str, Any]) -> dict[str, An
             raise InputError(f"unsupported reference kind: {reference['kind']}")
         if reference["policy"] not in REFERENCE_POLICIES:
             raise InputError(f"unsupported reference policy: {reference['policy']}")
+        if reference["match"] not in REFERENCE_MATCH_MODES:
+            raise InputError(f"unsupported reference match mode: {reference['match']}")
         if reference["kind"] in {"mt_evaluation", "same_source_version"} and reference["policy"] != "block":
             raise InputError(f"{reference['kind']} references must use policy=block")
+        if (
+            reference["kind"] in {"mt_evaluation", "same_source_version"}
+            and reference["match"] != "exact-and-near"
+        ):
+            raise InputError(f"{reference['kind']} references must use match=exact-and-near")
         manifest = reference["manifest"]
         if not isinstance(manifest, dict):
             raise InputError(f"{reference_id}.manifest must be an object")
@@ -779,6 +788,7 @@ def scan_reference_records(
             str(reference_set["reference_id"]),
             str(reference_set["kind"]),
             str(reference_set["policy"]),
+            str(reference_set.get("match", "exact-and-near")),
             iter(records),
         )
         if report["policy"] == "block":
@@ -799,12 +809,19 @@ def _scan_one_reference_set(
     reference_id: str,
     kind: str,
     policy: str,
+    match_mode: str,
     records: Iterable[Mapping[str, Any]],
 ) -> dict[str, Any]:
-    if kind not in REFERENCE_KINDS or policy not in REFERENCE_POLICIES:
+    if (
+        kind not in REFERENCE_KINDS
+        or policy not in REFERENCE_POLICIES
+        or match_mode not in REFERENCE_MATCH_MODES
+    ):
         raise InputError(f"invalid reference set: {reference_id}")
     if kind in {"mt_evaluation", "same_source_version"} and policy != "block":
         raise InputError(f"{kind} reference set must use policy=block")
+    if kind in {"mt_evaluation", "same_source_version"} and match_mode != "exact-and-near":
+        raise InputError(f"{kind} reference set must use match=exact-and-near")
     hits = 0
     record_count = 0
     reported: list[dict[str, Any]] = []
@@ -822,7 +839,7 @@ def _scan_one_reference_set(
         match = "exact" if exact_index.get((language, text)) else None
         score = 1.0 if match else 0.0
         matched_entries = list(exact_index.get((language, text), []))
-        if match is None:
+        if match is None and match_mode == "exact-and-near":
             normalized = _near_normalize(text)
             grams = _ngrams(normalized)
             candidates: dict[tuple[str, str], tuple[TextEntry, frozenset[str]]] = {}
@@ -873,6 +890,7 @@ def _scan_one_reference_set(
         "reference_id": reference_id,
         "kind": kind,
         "policy": policy,
+        "match": match_mode,
         "records": record_count,
         "hits": hits,
         "reported_hits": reported,
@@ -902,7 +920,7 @@ def _manifest_file_specs(
                     "sha256": row["sha256"],
                 }
             )
-    else:
+    elif manifest["format"] == "tokenizer-evaluation-manifest-json":
         value = json.loads(path.read_text(encoding="utf-8"))
         for language, row in sorted(value["files"].items()):
             specs.append(
@@ -915,10 +933,58 @@ def _manifest_file_specs(
                     "sha256": row["sha256"],
                 }
             )
+    else:
+        value = json.loads(path.read_text(encoding="utf-8"))
+        if (
+            value.get("status") != "complete"
+            or value.get("usage")
+            != "external contamination reference and later MT evaluation only; prohibited from training"
+            or not isinstance(value.get("files"), list)
+        ):
+            raise InputError(f"locked reference manifest is incomplete: {manifest['path']}")
+        for index, row in enumerate(value["files"]):
+            if not isinstance(row, dict) or set(row) != {
+                "bytes",
+                "format",
+                "language",
+                "path",
+                "records",
+                "sha256",
+                "split",
+            }:
+                raise InputError(f"invalid locked reference file record: {manifest['path']}[{index}]")
+            relative = PurePosixPath(str(row["path"]))
+            if relative.is_absolute() or ".." in relative.parts or "\\" in str(row["path"]):
+                raise InputError(f"unsafe locked reference path: {row['path']}")
+            if row["format"] != "text-lines":
+                raise InputError(f"unsupported locked reference file format: {row['format']}")
+            if (
+                not isinstance(row["bytes"], int)
+                or row["bytes"] <= 0
+                or not isinstance(row["records"], int)
+                or row["records"] <= 0
+                or not re.fullmatch(r"[0-9a-f]{64}", str(row["sha256"]))
+                or not isinstance(row["language"], str)
+                or not row["language"]
+                or not isinstance(row["split"], str)
+                or not row["split"]
+            ):
+                raise InputError(f"invalid locked reference file identity: {manifest['path']}[{index}]")
+            specs.append(
+                {
+                    "language": row["language"],
+                    "path": path.parent / Path(relative.as_posix()),
+                    "relative_path": f"{PurePosixPath(manifest['path']).parent.as_posix()}/{relative.as_posix()}",
+                    "format": row["format"],
+                    "bytes": int(row["bytes"]),
+                    "sha256": row["sha256"],
+                }
+            )
     identity = {
         "reference_id": reference["reference_id"],
         "kind": reference["kind"],
         "policy": reference["policy"],
+        "match": reference["match"],
         "manifest_sha256": manifest["sha256"],
         "files": [
             {
@@ -987,6 +1053,7 @@ def scan_registry_references(
             str(reference["reference_id"]),
             str(reference["kind"]),
             str(reference["policy"]),
+            str(reference["match"]),
             records(),
         )
         set_reports.append(set_report)
@@ -1157,6 +1224,7 @@ def dry_run_plan(
                 "reference_id": reference["reference_id"],
                 "kind": reference["kind"],
                 "policy": reference["policy"],
+                "match": reference["match"],
                 "manifest_sha256": reference["manifest"]["sha256"],
             }
             for reference in validated_registry["reference_sets"]

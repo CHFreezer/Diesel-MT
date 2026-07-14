@@ -58,7 +58,7 @@ flowchart LR
 | 2 | TD-02 | [调研并锁定有界平行数据来源](td-02-dataset-research-and-lock.md) | TD-01 completed | TD-01 | TD-06、TD-09 | completed |
 | 3 | TD-03 | [实现确定性平行数据构建管线](td-03-data-pipeline.md) | TD-02 completed | TD-01、TD-02 | TD-06、TD-09～TD-11 | completed |
 | 4 | TD-04 | [实现分组切分、去重与泄漏防护](td-04-split-dedup-leakage.md) | TD-03 completed | TD-03 | TD-06、TD-09～TD-11 | completed |
-| 5 | TD-05 | [构建并验收 M0 数据集](td-05-m0-dataset-acceptance.md) | TD-04 completed | TD-04 | TD-06、TD-09～TD-11 | pending |
+| 5 | TD-05 | [构建并验收 M0 数据集](td-05-m0-dataset-acceptance.md) | TD-04 completed | TD-04 | TD-06、TD-09～TD-11 | completed |
 | 2–5 | TD-06 | [锁定并验证 Hy-MT2 7B teacher 运行时](td-06-hymt2-teacher-runtime.md) | TD-01 completed | TD-01 | TD-02～TD-05、TD-09～TD-11 | pending |
 | 6 | TD-07 | [校准 teacher 语言映射、prompt 与解码](td-07-teacher-prompt-decode.md) | TD-05、TD-06 completed | TD-05、TD-06 | TD-12～TD-14 | pending |
 | 7 | TD-08 | [生成并验收有界 sequence-level 蒸馏数据](td-08-distilled-data.md) | TD-07 completed | TD-05、TD-07 | TD-12～TD-14 | pending |
