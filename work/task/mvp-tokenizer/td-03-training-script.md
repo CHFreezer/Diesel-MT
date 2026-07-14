@@ -1,6 +1,6 @@
 # task TD-03: NLLB BPE 训练脚本
 
-状态：review
+状态：done
 
 依赖：TD-01（环境）、TD-02（语料验收）、TD-04（tokenizer 构造规范）
 
@@ -101,3 +101,10 @@
 - 小 fixture 已验证同输入两次训练的规范 tokenizer JSON 完全一致；10% 或全量语料尚未做第二次昂贵重训复核。
 - 10% 训练语料中有 3,645 个非 must-cover 罕见字符未覆盖，需在 TD-05 按频率、文字系统和原文 offset 评估，而不能仅看唯一字符数。
 - native merge 阶段无法安全中断；内存保护在加载和 iterator feed 阶段检查，merge 阶段由 supervisor 监控 RSS。若要在 merge 阶段越线时保留当前进程，需要 tokenizers/Rust 侧增加可取消训练接口。
+
+## 独立复核记录（2026-07-13）
+
+- `python -m pytest tests/test_tokenizer_training.py -q`：6 passed。
+- CLI 参数覆盖任务要求；静态扫描确认 `scripts/` 与 `tests/` 中没有 `NllbTokenizerFast`、`model_type='unigram'` 或伪造 `sentencepiece.bpe.model` 路线。
+- 10% 的 32k/48k 两个产物均重新通过离线加载、精确词表大小、fast backend、BPE、`fuse_unk=true`、`byte_fallback=false`、特殊 token、语言 allowlist 和稠密 ID 验证。
+- 复核未发现阻断问题，TD-03 标记 done。正式全量 32k/48k 执行按本任务“可延后到 TD-05 需要评测对象时再进行”的约定保留为后续运行项，不阻塞训练脚本本身验收。

@@ -152,41 +152,41 @@
 
 ### [TD-03 NLLB BPE 训练脚本]
 
-- [ ] 实现 tokenizer 训练脚本（如 `scripts/train_tokenizer.py`）。
-- [ ] 支持命令行参数：`--corpus-dir`、`--vocab-size`、`--min-frequency`、`--limit-alphabet`、`--output-dir`、`--seed`。
-- [ ] 用空的锁定版本 `NllbTokenizer` 调用 `train_new_from_iterator()`，固定继承 BPE + Metaspace 管线；训练脚本不得出现 `model_type='unigram'`。
-- [ ] 在训练前和 `train_new_from_iterator()` 返回后均断言 `tokenizer.is_fast is True`，避免意外落入旧版 SentencePiece/Python slow backend。
-- [ ] 固定核心特殊 token ID：`<s>=0`、`<pad>=1`、`</s>=2`、`<unk>=3`，并将语言 token 和 `<mask>` 纳入最终 `vocab_size`。
-- [ ] 明确 `--vocab-size` 表示包含全部 special/language token 的最终目标大小；训练结束若 `len(tokenizer)` 不是精确 32k/48k，立即失败并检查 special token 数、initial alphabet、`limit_alphabet` 和语料可用 merge 数。
-- [ ] 训练前后解析 backend JSON，断言 BPE 类型、`fuse_unk=true`、`byte_fallback=false`、Metaspace 参数和 post-processor 模板符合锁定源码。
-- [ ] 在训练配置中固化 must-cover `initial_alphabet`，至少覆盖项目定义的中英日韩基础字符、数字和常用标点；验证 `limit_alphabet >= len(initial_alphabet)`，避免 trainer 在 alphabet 限额下裁掉必保字符。
-- [ ] 训练前统计语料的唯一 Unicode 字符、频次及其是否进入 `initial_alphabet`；训练后输出保留/裁剪字符清单，禁止只记录一个 `limit_alphabet` 数字而不审计实际字符。
-- [ ] 保持主线 `byte_fallback=false`；不得仅切换该布尔值规避 `<unk>`。若评估 byte fallback，必须另建实验配置，显式加入完整字节 token、匹配 decoder，并重新执行全部覆盖率与序列长度测试。
-- [ ] 训练输入按语言均衡采样（不是简单拼接文件），避免某一语言主导词表。
-- [ ] 固定采样随机种子和输入批次顺序；记录 `tokenizers` 并行设置，并实测同环境重复训练的字节级或语义级可复现性。
-- [ ] 记录训练参数、耗时、最终 `vocab_size` 和语料快照到训练日志。
-- [ ] 全量加载四语文本到 RAM 后训练，不从数据盘反复读取。
-- [ ] 禁止通过训练后编辑 JSON 的方式裁剪语言或调整词表大小；任何此类变化都必须从受控配置重新训练并生成新 artifact。
+- [x] 实现 tokenizer 训练脚本（如 `scripts/train_tokenizer.py`）。
+- [x] 支持命令行参数：`--corpus-dir`、`--vocab-size`、`--min-frequency`、`--limit-alphabet`、`--output-dir`、`--seed`。
+- [x] 用空的锁定版本 `NllbTokenizer` 调用 `train_new_from_iterator()`，固定继承 BPE + Metaspace 管线；训练脚本不得出现 `model_type='unigram'`。
+- [x] 在训练前和 `train_new_from_iterator()` 返回后均断言 `tokenizer.is_fast is True`，避免意外落入旧版 SentencePiece/Python slow backend。
+- [x] 固定核心特殊 token ID：`<s>=0`、`<pad>=1`、`</s>=2`、`<unk>=3`，并将语言 token 和 `<mask>` 纳入最终 `vocab_size`。
+- [x] 明确 `--vocab-size` 表示包含全部 special/language token 的最终目标大小；训练结束若 `len(tokenizer)` 不是精确 32k/48k，立即失败并检查 special token 数、initial alphabet、`limit_alphabet` 和语料可用 merge 数。
+- [x] 训练前后解析 backend JSON，断言 BPE 类型、`fuse_unk=true`、`byte_fallback=false`、Metaspace 参数和 post-processor 模板符合锁定源码。
+- [x] 在训练配置中固化 must-cover `initial_alphabet`，至少覆盖项目定义的中英日韩基础字符、数字和常用标点；验证 `limit_alphabet >= len(initial_alphabet)`，避免 trainer 在 alphabet 限额下裁掉必保字符。
+- [x] 训练前统计语料的唯一 Unicode 字符、频次及其是否进入 `initial_alphabet`；训练后输出保留/裁剪字符清单，禁止只记录一个 `limit_alphabet` 数字而不审计实际字符。
+- [x] 保持主线 `byte_fallback=false`；不得仅切换该布尔值规避 `<unk>`。若评估 byte fallback，必须另建实验配置，显式加入完整字节 token、匹配 decoder，并重新执行全部覆盖率与序列长度测试。
+- [x] 训练输入按语言均衡采样（不是简单拼接文件），避免某一语言主导词表。
+- [x] 固定采样随机种子和输入批次顺序；记录 `tokenizers` 并行设置，并实测同环境重复训练的字节级或语义级可复现性。
+- [x] 记录训练参数、耗时、最终 `vocab_size` 和语料快照到训练日志。
+- [x] 全量加载四语文本到 RAM 后训练，不从数据盘反复读取。
+- [x] 禁止通过训练后编辑 JSON 的方式裁剪语言或调整词表大小；任何此类变化都必须从受控配置重新训练并生成新 artifact。
 
 产物：可复现的 NLLB BPE 训练脚本。
 
 ### [TD-04 NllbTokenizer 构造与语言 token 映射]
 
-- [ ] 按锁定的 Transformers 5.x 源码构造空 `NllbTokenizer`，仅传入五种语言 token；生产代码不得引用 4.x `NllbTokenizerFast` 或旧版 `vocab_file` 路线。
-- [ ] 用锁定版本支持的 `extra_special_tokens` 或等价参数替换默认 200+ `FAIRSEQ_LANGUAGE_CODES`，仅保留 `eng_Latn`、`zho_Hans`、`zho_Hant`、`jpn_Jpan`、`kor_Hang`。
-- [ ] 保存后断言 `get_vocab()` 中五个保留语言均存在，抽取若干未保留 NLLB 语言（如 `fra_Latn`、`deu_Latn`、`rus_Cyrl`）断言均不存在；应用层语言校验必须在 `convert_tokens_to_ids()` 之前抛出明确错误。
-- [ ] 从保存后重载的 tokenizer 用 `convert_tokens_to_ids()` 生成语言 token -> ID 映射，不依赖当前源码并未提供的 `lang_code_to_id` 属性。
-- [ ] 验证 `forced_bos_token_id = tokenizer.convert_tokens_to_ids(tgt_lang)` 对每个目标语言都可正确获取。
-- [ ] 确认 `eos_token_id=2`、`pad_token_id=1`、`unk_token_id=3`，与 M2M100/NLLB 约定一致。
-- [ ] 生成并保存语言 token → ID 的 JSON 映射文件。
-- [ ] 验证 32k 和 48k 候选中核心 special token ID 一致，并分别记录语言 token / `<mask>` ID。
-- [ ] 验证最终总词表 ID 稠密、唯一，且 `len(tokenizer)` 恰好为 32k 或 48k。
+- [x] 按锁定的 Transformers 5.x 源码构造空 `NllbTokenizer`，仅传入五种语言 token；生产代码不得引用 4.x `NllbTokenizerFast` 或旧版 `vocab_file` 路线。
+- [x] 用锁定版本支持的 `extra_special_tokens` 或等价参数替换默认 200+ `FAIRSEQ_LANGUAGE_CODES`，仅保留 `eng_Latn`、`zho_Hans`、`zho_Hant`、`jpn_Jpan`、`kor_Hang`。
+- [x] 保存后断言 `get_vocab()` 中五个保留语言均存在，抽取若干未保留 NLLB 语言（如 `fra_Latn`、`deu_Latn`、`rus_Cyrl`）断言均不存在；应用层语言校验必须在 `convert_tokens_to_ids()` 之前抛出明确错误。
+- [x] 从保存后重载的 tokenizer 用 `convert_tokens_to_ids()` 生成语言 token -> ID 映射，不依赖当前源码并未提供的 `lang_code_to_id` 属性。
+- [x] 验证 `forced_bos_token_id = tokenizer.convert_tokens_to_ids(tgt_lang)` 对每个目标语言都可正确获取。
+- [x] 确认 `eos_token_id=2`、`pad_token_id=1`、`unk_token_id=3`，与 M2M100/NLLB 约定一致。
+- [x] 生成并保存语言 token → ID 的 JSON 映射文件。
+- [x] 验证 32k 和 48k 候选中核心 special token ID 一致，并分别记录语言 token / `<mask>` ID。
+- [x] 验证最终总词表 ID 稠密、唯一，且 `len(tokenizer)` 恰好为 32k 或 48k。
 
 产物：可保存和离线重载的 `NllbTokenizer`，以及语言 token 映射 JSON。
 
 ### [TD-05 覆盖率与编码质量报告]
 
-- [ ] 对四种语言各准备固定评测样本集（覆盖日常文本、技术文本、混合语言文本和边缘用例）。
+- [x] 对四种语言各准备固定评测样本集（覆盖日常文本、技术文本、混合语言文本和边缘用例）。
 - [ ] 统计每个候选 tokenizer 的 `<unk>` token 比例、平均 token 数、字符到 token 膨胀比；同时使用 fast tokenizer 的 offset mapping 统计 `<unk>` 覆盖的原文 Unicode 字符数，避免 `fuse_unk=true` 将连续未知字符合并后低估丢失量。
 - [ ] 分别报告字符频率加权覆盖率和唯一字符覆盖率，并列出高频未覆盖字符、按语言/文字系统分类的未覆盖字符以及对应原文样例。
 - [ ] 特别关注中日共享汉字的切分一致性、韩文音节覆盖、英文 subword 粒度。

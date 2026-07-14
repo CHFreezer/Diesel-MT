@@ -1,0 +1,495 @@
+{
+  "candidates": {
+    "32k": {
+      "languages": {
+        "eng_Latn": {
+          "character_coverage": {
+            "frequency_weighted_coverage": 0.9999886061959506,
+            "total_unique_characters": 147,
+            "unique_character_coverage": 0.9795918367346939
+          },
+          "corpus_metrics": {
+            "evaluated_non_whitespace_characters": 263301,
+            "exact_roundtrips": 498,
+            "mean_tokens_per_sample": 197.84,
+            "roundtrip_exact_rate": 0.996,
+            "roundtrip_mismatches": [
+              {
+                "decoded": "Poor Brian can't make a posting on his blog without threatening some form of vexatious litigation against some innocent party. He is like the หมาเห่าบตองแห้ง or the dog who could dry banana leaves by barking.",
+                "sample_id": "eng_Latn-corpus-0046",
+                "source": "Poor Brian can't make a posting on his blog without threatening some form of vexatious litigation against some innocent party. He is like the หมาเห่าใบตองแห้ง or the dog who could dry banana leaves by barking."
+              },
+              {
+                "decoded": "\"O my father! I did see eleven stars and the sun and the moon: I saw them prostrate themselves to me!”",
+                "sample_id": "eng_Latn-corpus-0500",
+                "source": "﴾\"O my father! I did see eleven stars and the sun and the moon: I saw them prostrate themselves to me!”﴿"
+              }
+            ],
+            "samples": 500,
+            "source_character_loss_rate": 1.1393804049357959e-05,
+            "source_characters": 316139,
+            "token_length_max": 4266,
+            "token_length_p50": 92,
+            "token_length_p95": 721,
+            "token_length_p99": 1625,
+            "tokens": 98920,
+            "tokens_per_non_whitespace_character": 0.3756916988541631,
+            "unk_source_characters": 3,
+            "unk_token_ratio": 3.0327537403962798e-05,
+            "unk_tokens": 3,
+            "unmapped_unk_tokens": 0
+          }
+        },
+        "jpn_Jpan": {
+          "character_coverage": {
+            "frequency_weighted_coverage": 0.99999137522101,
+            "total_unique_characters": 2230,
+            "unique_character_coverage": 0.9995515695067264
+          },
+          "corpus_metrics": {
+            "evaluated_non_whitespace_characters": 115945,
+            "exact_roundtrips": 499,
+            "mean_tokens_per_sample": 140.658,
+            "roundtrip_exact_rate": 0.998,
+            "roundtrip_mismatches": [
+              {
+                "decoded": "未経験の子が一番稼いでくれてます.(❁′‵❁)求人で応募してくれた方は※正直お給料は上げやすいです!!（スカウトを通すと、スカウトバックが発生するためです）①客層が若くてよい（20～３０代後半）②頑張りですぐお給料上げます!!③安定する稼ぎ方で皆待機ありません!!④スタッフが皆イケメンですｗ",
+                "sample_id": "jpn_Jpan-corpus-0468",
+                "source": "未経験の子が一番稼いでくれてます.(❁′ᗨ‵❁)求人で応募してくれた方は※正直お給料は上げやすいです!!（スカウトを通すと、スカウトバックが発生するためです）①客層が若くてよい（20～３０代後半）②頑張りですぐお給料上げます!!③安定する稼ぎ方で皆待機ありません!!④スタッフが皆イケメンですｗ"
+              }
+            ],
+            "samples": 500,
+            "source_character_loss_rate": 8.624778990038381e-06,
+            "source_characters": 117489,
+            "token_length_max": 4002,
+            "token_length_p50": 52,
+            "token_length_p95": 485,
+            "token_length_p99": 1548,
+            "tokens": 70329,
+            "tokens_per_non_whitespace_character": 0.6065720815904092,
+            "unk_source_characters": 1,
+            "unk_token_ratio": 1.4218885523752648e-05,
+            "unk_tokens": 1,
+            "unmapped_unk_tokens": 0
+          }
+        },
+        "kor_Hang": {
+          "character_coverage": {
+            "frequency_weighted_coverage": 0.9999884841051861,
+            "total_unique_characters": 1433,
+            "unique_character_coverage": 0.9993021632937893
+          },
+          "corpus_metrics": {
+            "evaluated_non_whitespace_characters": 173673,
+            "exact_roundtrips": 499,
+            "mean_tokens_per_sample": 252.866,
+            "roundtrip_exact_rate": 0.998,
+            "roundtrip_mismatches": [
+              {
+                "decoded": "단홍 스토어 8월 신작 인스에요 이번 작화는 푸른 산호초 팜하니 팬아트 작업했던 얼굴의 한복 버전이에요. 그동안의 한복 인물의 얌전하고 조신했던 얼굴과 달리 아주 쾌 발랄한 이미지입니다. 이름은 하니 💙🤭 하니 파랑 원화 하니 분홍 원화 하니 인스 실물입니다. 인스타에 올라온 금손 다꾸러분들의 꾸밈 소개 할게요.😃 인물의 분위기에 어울리게 너무 예쁘게 꾸며주셔서들 눈호강을 제대로 하고 있습니다🤭 인스타 들어가면 다꾸 보는 재미",
+                "sample_id": "kor_Hang-corpus-0053",
+                "source": "단홍 스토어 8월 신작 인스에요 이번 작화는 푸른 산호초 팜하니 팬아트 작업했던 얼굴의 한복 버전이에요. 그동안의 한복 인물의 얌전하고 조신했던 얼굴과 달리 아주 쾌 발랄한 이미지입니다. 이름은 하니 💙🤭 하니 파랑 원화 하니 분홍 원화 하니 인스 실물입니다. 인스타에 올라온 금손 다꾸러분들의 꾸밈 소개 할게요.😃 인물의 분위기에 어울리게 너무 예쁘게 꾸며주셔서들 눈호강을 제대로 하고 있습니다🤭 인스타 들어가면 다꾸 보는 재미"
+              }
+            ],
+            "samples": 500,
+            "source_character_loss_rate": 1.151589481381677e-05,
+            "source_characters": 222220,
+            "token_length_max": 2090,
+            "token_length_p50": 206,
+            "token_length_p95": 625,
+            "token_length_p99": 1648,
+            "tokens": 126433,
+            "tokens_per_non_whitespace_character": 0.7279945644976479,
+            "unk_source_characters": 2,
+            "unk_token_ratio": 1.581865493977047e-05,
+            "unk_tokens": 2,
+            "unmapped_unk_tokens": 0
+          }
+        },
+        "zho_Hans": {
+          "character_coverage": {
+            "frequency_weighted_coverage": 0.9999607347830924,
+            "total_unique_characters": 3630,
+            "unique_character_coverage": 0.9983471074380166
+          },
+          "corpus_metrics": {
+            "evaluated_non_whitespace_characters": 152807,
+            "exact_roundtrips": 494,
+            "mean_tokens_per_sample": 230.198,
+            "roundtrip_exact_rate": 0.988,
+            "roundtrip_mismatches": [
+              {
+                "decoded": "戈窾货苯ず杜ㄩ，GDC大奖提名出炉 《死亡搁浅》独占七项领衔名单，新年贺词奏响2020奋斗强音。西藏宗教界政协委员：佛事和顺 僧尼生活获保障，全国巾帼建功先进集体——天津市农村合作经济管理站。中国陆军军医大学一团队攻坚“操控抗原”30年，HKC液晶显示器报价第1页..3MT产品库HKC 液晶显示器最新价格，今年浦东新区将新建30家户外驿站和50家爱心妈咪小屋。空气净化不止除霾这么简单 行业专家带你了解生物气溶胶，帝王心术最是无情，察觉到沦为棋子，润玉这是要黑化的节奏吗？。台媒",
+                "sample_id": "zho_Hans-corpus-0109",
+                "source": "戈筄窾货苯ず杜ㄩ，GDC大奖提名出炉 《死亡搁浅》独占七项领衔名单，新年贺词奏响2020奋斗强音。西藏宗教界政协委员：佛事和顺 僧尼生活获保障，全国巾帼建功先进集体——天津市农村合作经济管理站。中国陆军军医大学一团队攻坚“操控抗原”30年，HKC液晶显示器报价第1页..3MT产品库HKC 液晶显示器最新价格，今年浦东新区将新建30家户外驿站和50家爱心妈咪小屋。空气净化不止除霾这么简单 行业专家带你了解生物气溶胶，帝王心术最是无情，察觉到沦为棋子，润玉这是要黑化的节奏吗？。台"
+              },
+              {
+                "decoded": "本期简介深谈丨奇葩姓名，时代的表情包远观丨肯总统难产，部族势力摆不平侃财丨ICO是怎么从大牛产品变大妈产品的艺见丨成功的马东不愿谈悲凉封面人物.CoverStory十九大时间康辉，《新闻联播》里的中国气派奚美娟，30年前主演《中国梦》十九大怎么开图说世情.PhotoStory务农的总统父子一个摄影师和悬崖村世界.World政要丨莫迪换班子，首推女防长英拉失踪，泰国政局更诡异人物丨特朗普私人保镖，在白宫玩不转名流丨邓文迪，第一女儿眼中的大姐大驻外往事丨十八大前摸底拜登中国.Ch",
+                "sample_id": "zho_Hans-corpus-0255",
+                "source": "本期简介深谈丨奇葩姓名，时代的表情包远观丨肯总统难产，部族势力摆不平侃财丨ICO是怎么从大牛产品变大妈产品的艺见丨成功的马东不愿谈悲凉封面人物.CoverStory十九大时间康辉，《新闻联播》里的中国气派奚美娟，30年前主演《中国梦》十九大怎么开图说世情.PhotoStory务农的总统父子一个摄影师和悬崖村世界.World政要丨莫迪换班子，首推女防长英拉失踪，泰国政局更诡异人物丨特朗普私人保镖，在白宫玩不转名流丨邓文迪，第一女儿眼中的大姐大驻外往事丨十八大前摸底拜登中国.Ch"
+              },
+              {
+                "decoded": "惠州市政协科教文卫体委原主任许国安被开除党籍和公职，陆风X7抄袭路虎一案尘埃落定：最高法一锤定音 赔偿150万，兰州市卫生计生委综合监督执法所。测绘资质证书[乙测资字1110434]，科技耀黑 Black Edition。长沙民政职院春运“暖冬行动”启动，第二十一届中国国际高新技术成果交易会智慧城市展，中联重科创下全球塔机销售速度新纪录 每1秒卖1台塔机。广元交警向“十大交通陋习”宣战，省高院公布我省法院依法维护消费者权益情况。湖北省气象能源业务服务创新工作室被授予 “职工（",
+                "sample_id": "zho_Hans-corpus-0345",
+                "source": "惠州市政协科教文卫体委原主任许国安被开除党籍和公职，陆风X7抄袭路虎一案尘埃落定：最高法一锤定音 赔偿150万，兰州市卫生计生委综合监督执法所。测绘资质证书[乙测资字1110434]，科技耀黑 Black Edition。长沙民政职院春运“暖冬行动”启动，第二十一届中国国际高新技术成果交易会智慧城市展，中联重科创下全球塔机销售速度新纪录 每1秒卖1台塔机。广元交警向“十大交通陋习”宣战，省高院公布我省法院依法维护消费者权益情况。湖北省气象能源业务服务创新工作室被授予 “职工（"
+              },
+              {
+                "decoded": "AG真人娱乐，习近平在“不忘初心、牢记使命”主题教育总结大会上强调 以主题教育为新的起点 持续推动全党不忘初心牢记使命，接续奋斗书写更新更美的时代华章，中共中央办公厅 国务院办公厅印发《关于促进劳动力和人才社会性流动体制机制改革的意见》。山东莘县创办乡村红色图书馆，【滚动播报】“利奇马”已致苍南直接经济损失4341.65万元，灾后自救进行时。科学发展新市镇网络展示——嘉兴科技城，今天我值班（武汉城市留言板），銆愭寜娌堥槼涓滆蒋鏁板瓧鍖荤枟绯荤粺鑲′唤鏈夐檺鍏徃鏌ヨ鍖荤枟鍣ㄦ銆",
+                "sample_id": "zho_Hans-corpus-0379",
+                "source": "AG真人娱乐，习近平在“不忘初心、牢记使命”主题教育总结大会上强调 以主题教育为新的起点 持续推动全党不忘初心牢记使命，接续奋斗书写更新更美的时代华章，中共中央办公厅 国务院办公厅印发《关于促进劳动力和人才社会性流动体制机制改革的意见》。山东莘县创办乡村红色图书馆，【滚动播报】“利奇马”已致苍南直接经济损失4341.65万元，灾后自救进行时。科学发展新市镇网络展示——嘉兴科技城，今天我值班（武汉城市留言板），銆愭寜娌堥槼涓滆蒋鏁板瓧鍖荤枟绯荤粺鑲′唤鏈夐檺鍏徃鏌ヨ鍖荤枟鍣ㄦ銆"
+              },
+              {
+                "decoded": "uedbet体育平台，雷克萨斯系列微视频：定义味道，10余名检察官将走进全省贫困地区学校宣讲法治，特朗普政府拒绝透露暗杀苏莱曼尼的证据 这剧情小布什也演过。自治区十三届人大三次会议主席团举行第四次会议，中国战略定力在悄然积累积极因素。渭南河水兵舞队：舞出健康快乐 舞出精彩人生，海南房地产新闻海南别墅新闻海南楼盘新闻海南二手房新闻，漳州公安打造多维报警模式服务百姓。九元航空1月14日开通海口直达仰光航线 每周执飞三班，仲恺高新区民办教育快速发展 办学规模不断扩大。2019111",
+                "sample_id": "zho_Hans-corpus-0399",
+                "source": "uedbet体育平台，雷克萨斯系列微视频：定义味道，10余名检察官将走进全省贫困地区学校宣讲法治，特朗普政府拒绝透露暗杀苏莱曼尼的证据 这剧情小布什也演过。自治区十三届人大三次会议主席团举行第四次会议，中国战略定力在悄然积累积极因素。渭南沋河水兵舞队：舞出健康快乐 舞出精彩人生，海南房地产新闻海南别墅新闻海南楼盘新闻海南二手房新闻，漳州公安打造多维报警模式服务百姓。九元航空1月14日开通海口直达仰光航线 每周执飞三班，仲恺高新区民办教育快速发展 办学规模不断扩大。201911"
+              }
+            ],
+            "samples": 500,
+            "source_character_loss_rate": 3.92652169076024e-05,
+            "source_characters": 154510,
+            "token_length_max": 4063,
+            "token_length_p50": 175,
+            "token_length_p95": 598,
+            "token_length_p99": 1292,
+            "tokens": 115099,
+            "tokens_per_non_whitespace_character": 0.7532312001413548,
+            "unk_source_characters": 6,
+            "unk_token_ratio": 5.212903674228273e-05,
+            "unk_tokens": 6,
+            "unmapped_unk_tokens": 0
+          }
+        }
+      },
+      "total_character_coverage": {
+        "frequency_weighted_coverage": 0.9999829962336657,
+        "total_character_frequency": 705726,
+        "total_unique_characters_by_language": 7440,
+        "unique_character_coverage": 0.9985215053763441
+      },
+      "total_corpus_metrics": {
+        "evaluated_non_whitespace_characters": 705726,
+        "exact_roundtrips": 1990,
+        "mean_tokens_per_sample": 205.3905,
+        "roundtrip_exact_rate": 0.995,
+        "roundtrip_mismatches": [
+          {
+            "decoded": "Poor Brian can't make a posting on his blog without threatening some form of vexatious litigation against some innocent party. He is like the หมาเห่าบตองแห้ง or the dog who could dry banana leaves by barking.",
+            "sample_id": "eng_Latn-corpus-0046",
+            "source": "Poor Brian can't make a posting on his blog without threatening some form of vexatious litigation against some innocent party. He is like the หมาเห่าใบตองแห้ง or the dog who could dry banana leaves by barking."
+          },
+          {
+            "decoded": "\"O my father! I did see eleven stars and the sun and the moon: I saw them prostrate themselves to me!”",
+            "sample_id": "eng_Latn-corpus-0500",
+            "source": "﴾\"O my father! I did see eleven stars and the sun and the moon: I saw them prostrate themselves to me!”﴿"
+          },
+          {
+            "decoded": "戈窾货苯ず杜ㄩ，GDC大奖提名出炉 《死亡搁浅》独占七项领衔名单，新年贺词奏响2020奋斗强音。西藏宗教界政协委员：佛事和顺 僧尼生活获保障，全国巾帼建功先进集体——天津市农村合作经济管理站。中国陆军军医大学一团队攻坚“操控抗原”30年，HKC液晶显示器报价第1页..3MT产品库HKC 液晶显示器最新价格，今年浦东新区将新建30家户外驿站和50家爱心妈咪小屋。空气净化不止除霾这么简单 行业专家带你了解生物气溶胶，帝王心术最是无情，察觉到沦为棋子，润玉这是要黑化的节奏吗？。台媒",
+            "sample_id": "zho_Hans-corpus-0109",
+            "source": "戈筄窾货苯ず杜ㄩ，GDC大奖提名出炉 《死亡搁浅》独占七项领衔名单，新年贺词奏响2020奋斗强音。西藏宗教界政协委员：佛事和顺 僧尼生活获保障，全国巾帼建功先进集体——天津市农村合作经济管理站。中国陆军军医大学一团队攻坚“操控抗原”30年，HKC液晶显示器报价第1页..3MT产品库HKC 液晶显示器最新价格，今年浦东新区将新建30家户外驿站和50家爱心妈咪小屋。空气净化不止除霾这么简单 行业专家带你了解生物气溶胶，帝王心术最是无情，察觉到沦为棋子，润玉这是要黑化的节奏吗？。台"
+          },
+          {
+            "decoded": "本期简介深谈丨奇葩姓名，时代的表情包远观丨肯总统难产，部族势力摆不平侃财丨ICO是怎么从大牛产品变大妈产品的艺见丨成功的马东不愿谈悲凉封面人物.CoverStory十九大时间康辉，《新闻联播》里的中国气派奚美娟，30年前主演《中国梦》十九大怎么开图说世情.PhotoStory务农的总统父子一个摄影师和悬崖村世界.World政要丨莫迪换班子，首推女防长英拉失踪，泰国政局更诡异人物丨特朗普私人保镖，在白宫玩不转名流丨邓文迪，第一女儿眼中的大姐大驻外往事丨十八大前摸底拜登中国.Ch",
+            "sample_id": "zho_Hans-corpus-0255",
+            "source": "本期简介深谈丨奇葩姓名，时代的表情包远观丨肯总统难产，部族势力摆不平侃财丨ICO是怎么从大牛产品变大妈产品的艺见丨成功的马东不愿谈悲凉封面人物.CoverStory十九大时间康辉，《新闻联播》里的中国气派奚美娟，30年前主演《中国梦》十九大怎么开图说世情.PhotoStory务农的总统父子一个摄影师和悬崖村世界.World政要丨莫迪换班子，首推女防长英拉失踪，泰国政局更诡异人物丨特朗普私人保镖，在白宫玩不转名流丨邓文迪，第一女儿眼中的大姐大驻外往事丨十八大前摸底拜登中国.Ch"
+          },
+          {
+            "decoded": "惠州市政协科教文卫体委原主任许国安被开除党籍和公职，陆风X7抄袭路虎一案尘埃落定：最高法一锤定音 赔偿150万，兰州市卫生计生委综合监督执法所。测绘资质证书[乙测资字1110434]，科技耀黑 Black Edition。长沙民政职院春运“暖冬行动”启动，第二十一届中国国际高新技术成果交易会智慧城市展，中联重科创下全球塔机销售速度新纪录 每1秒卖1台塔机。广元交警向“十大交通陋习”宣战，省高院公布我省法院依法维护消费者权益情况。湖北省气象能源业务服务创新工作室被授予 “职工（",
+            "sample_id": "zho_Hans-corpus-0345",
+            "source": "惠州市政协科教文卫体委原主任许国安被开除党籍和公职，陆风X7抄袭路虎一案尘埃落定：最高法一锤定音 赔偿150万，兰州市卫生计生委综合监督执法所。测绘资质证书[乙测资字1110434]，科技耀黑 Black Edition。长沙民政职院春运“暖冬行动”启动，第二十一届中国国际高新技术成果交易会智慧城市展，中联重科创下全球塔机销售速度新纪录 每1秒卖1台塔机。广元交警向“十大交通陋习”宣战，省高院公布我省法院依法维护消费者权益情况。湖北省气象能源业务服务创新工作室被授予 “职工（"
+          },
+          {
+            "decoded": "AG真人娱乐，习近平在“不忘初心、牢记使命”主题教育总结大会上强调 以主题教育为新的起点 持续推动全党不忘初心牢记使命，接续奋斗书写更新更美的时代华章，中共中央办公厅 国务院办公厅印发《关于促进劳动力和人才社会性流动体制机制改革的意见》。山东莘县创办乡村红色图书馆，【滚动播报】“利奇马”已致苍南直接经济损失4341.65万元，灾后自救进行时。科学发展新市镇网络展示——嘉兴科技城，今天我值班（武汉城市留言板），銆愭寜娌堥槼涓滆蒋鏁板瓧鍖荤枟绯荤粺鑲′唤鏈夐檺鍏徃鏌ヨ鍖荤枟鍣ㄦ銆",
+            "sample_id": "zho_Hans-corpus-0379",
+            "source": "AG真人娱乐，习近平在“不忘初心、牢记使命”主题教育总结大会上强调 以主题教育为新的起点 持续推动全党不忘初心牢记使命，接续奋斗书写更新更美的时代华章，中共中央办公厅 国务院办公厅印发《关于促进劳动力和人才社会性流动体制机制改革的意见》。山东莘县创办乡村红色图书馆，【滚动播报】“利奇马”已致苍南直接经济损失4341.65万元，灾后自救进行时。科学发展新市镇网络展示——嘉兴科技城，今天我值班（武汉城市留言板），銆愭寜娌堥槼涓滆蒋鏁板瓧鍖荤枟绯荤粺鑲′唤鏈夐檺鍏徃鏌ヨ鍖荤枟鍣ㄦ銆"
+          },
+          {
+            "decoded": "uedbet体育平台，雷克萨斯系列微视频：定义味道，10余名检察官将走进全省贫困地区学校宣讲法治，特朗普政府拒绝透露暗杀苏莱曼尼的证据 这剧情小布什也演过。自治区十三届人大三次会议主席团举行第四次会议，中国战略定力在悄然积累积极因素。渭南河水兵舞队：舞出健康快乐 舞出精彩人生，海南房地产新闻海南别墅新闻海南楼盘新闻海南二手房新闻，漳州公安打造多维报警模式服务百姓。九元航空1月14日开通海口直达仰光航线 每周执飞三班，仲恺高新区民办教育快速发展 办学规模不断扩大。2019111",
+            "sample_id": "zho_Hans-corpus-0399",
+            "source": "uedbet体育平台，雷克萨斯系列微视频：定义味道，10余名检察官将走进全省贫困地区学校宣讲法治，特朗普政府拒绝透露暗杀苏莱曼尼的证据 这剧情小布什也演过。自治区十三届人大三次会议主席团举行第四次会议，中国战略定力在悄然积累积极因素。渭南沋河水兵舞队：舞出健康快乐 舞出精彩人生，海南房地产新闻海南别墅新闻海南楼盘新闻海南二手房新闻，漳州公安打造多维报警模式服务百姓。九元航空1月14日开通海口直达仰光航线 每周执飞三班，仲恺高新区民办教育快速发展 办学规模不断扩大。201911"
+          },
+          {
+            "decoded": "未経験の子が一番稼いでくれてます.(❁′‵❁)求人で応募してくれた方は※正直お給料は上げやすいです!!（スカウトを通すと、スカウトバックが発生するためです）①客層が若くてよい（20～３０代後半）②頑張りですぐお給料上げます!!③安定する稼ぎ方で皆待機ありません!!④スタッフが皆イケメンですｗ",
+            "sample_id": "jpn_Jpan-corpus-0468",
+            "source": "未経験の子が一番稼いでくれてます.(❁′ᗨ‵❁)求人で応募してくれた方は※正直お給料は上げやすいです!!（スカウトを通すと、スカウトバックが発生するためです）①客層が若くてよい（20～３０代後半）②頑張りですぐお給料上げます!!③安定する稼ぎ方で皆待機ありません!!④スタッフが皆イケメンですｗ"
+          },
+          {
+            "decoded": "단홍 스토어 8월 신작 인스에요 이번 작화는 푸른 산호초 팜하니 팬아트 작업했던 얼굴의 한복 버전이에요. 그동안의 한복 인물의 얌전하고 조신했던 얼굴과 달리 아주 쾌 발랄한 이미지입니다. 이름은 하니 💙🤭 하니 파랑 원화 하니 분홍 원화 하니 인스 실물입니다. 인스타에 올라온 금손 다꾸러분들의 꾸밈 소개 할게요.😃 인물의 분위기에 어울리게 너무 예쁘게 꾸며주셔서들 눈호강을 제대로 하고 있습니다🤭 인스타 들어가면 다꾸 보는 재미",
+            "sample_id": "kor_Hang-corpus-0053",
+            "source": "단홍 스토어 8월 신작 인스에요 이번 작화는 푸른 산호초 팜하니 팬아트 작업했던 얼굴의 한복 버전이에요. 그동안의 한복 인물의 얌전하고 조신했던 얼굴과 달리 아주 쾌 발랄한 이미지입니다. 이름은 하니 💙🤭 하니 파랑 원화 하니 분홍 원화 하니 인스 실물입니다. 인스타에 올라온 금손 다꾸러분들의 꾸밈 소개 할게요.😃 인물의 분위기에 어울리게 너무 예쁘게 꾸며주셔서들 눈호강을 제대로 하고 있습니다🤭 인스타 들어가면 다꾸 보는 재미"
+          }
+        ],
+        "samples": 2000,
+        "source_character_loss_rate": 1.7003766334243035e-05,
+        "source_characters": 810358,
+        "token_length_max": 4266,
+        "token_length_p50": 97,
+        "token_length_p95": 613,
+        "token_length_p99": 1548,
+        "tokens": 410781,
+        "tokens_per_non_whitespace_character": 0.582068678212224,
+        "unk_source_characters": 12,
+        "unk_token_ratio": 2.921264615452029e-05,
+        "unk_tokens": 12,
+        "unmapped_unk_tokens": 0
+      },
+      "training_sample_fraction": 0.1,
+      "vocab_size": 32768,
+      "vocab_utilization": {
+        "ratio": 0.438385009765625,
+        "used_non_special_ids": 14365,
+        "vocab_size": 32768
+      }
+    },
+    "48k": {
+      "languages": {
+        "eng_Latn": {
+          "character_coverage": {
+            "frequency_weighted_coverage": 0.9999886061959506,
+            "total_unique_characters": 147,
+            "unique_character_coverage": 0.9795918367346939
+          },
+          "corpus_metrics": {
+            "evaluated_non_whitespace_characters": 263301,
+            "exact_roundtrips": 498,
+            "mean_tokens_per_sample": 165.9,
+            "roundtrip_exact_rate": 0.996,
+            "roundtrip_mismatches": [
+              {
+                "decoded": "Poor Brian can't make a posting on his blog without threatening some form of vexatious litigation against some innocent party. He is like the หมาเห่าบตองแห้ง or the dog who could dry banana leaves by barking.",
+                "sample_id": "eng_Latn-corpus-0046",
+                "source": "Poor Brian can't make a posting on his blog without threatening some form of vexatious litigation against some innocent party. He is like the หมาเห่าใบตองแห้ง or the dog who could dry banana leaves by barking."
+              },
+              {
+                "decoded": "\"O my father! I did see eleven stars and the sun and the moon: I saw them prostrate themselves to me!”",
+                "sample_id": "eng_Latn-corpus-0500",
+                "source": "﴾\"O my father! I did see eleven stars and the sun and the moon: I saw them prostrate themselves to me!”﴿"
+              }
+            ],
+            "samples": 500,
+            "source_character_loss_rate": 1.1393804049357959e-05,
+            "source_characters": 316139,
+            "token_length_max": 3678,
+            "token_length_p50": 78,
+            "token_length_p95": 578,
+            "token_length_p99": 1399,
+            "tokens": 82950,
+            "tokens_per_non_whitespace_character": 0.31503868196474755,
+            "unk_source_characters": 3,
+            "unk_token_ratio": 3.616636528028933e-05,
+            "unk_tokens": 3,
+            "unmapped_unk_tokens": 0
+          }
+        },
+        "jpn_Jpan": {
+          "character_coverage": {
+            "frequency_weighted_coverage": 0.9999827504420199,
+            "total_unique_characters": 2230,
+            "unique_character_coverage": 0.9991031390134529
+          },
+          "corpus_metrics": {
+            "evaluated_non_whitespace_characters": 115945,
+            "exact_roundtrips": 498,
+            "mean_tokens_per_sample": 118.924,
+            "roundtrip_exact_rate": 0.996,
+            "roundtrip_mismatches": [
+              {
+                "decoded": "展開される沙坪アイテムは、キャラクターをフロントに渝北描いた定海カメラバッグやトートバッグな梅州ど。ニットやフーディー、Tシャツといったウェアも用意されている。",
+                "sample_id": "jpn_Jpan-corpus-0391",
+                "source": "展開される沙坪壩アイテムは、キャラクターをフロントに渝北描いた定海カメラバッグやトートバッグな梅州ど。ニットやフーディー、Tシャツといったウェアも用意されている。"
+              },
+              {
+                "decoded": "未経験の子が一番稼いでくれてます.(❁′‵❁)求人で応募してくれた方は※正直お給料は上げやすいです!!（スカウトを通すと、スカウトバックが発生するためです）①客層が若くてよい（20～３０代後半）②頑張りですぐお給料上げます!!③安定する稼ぎ方で皆待機ありません!!④スタッフが皆イケメンですｗ",
+                "sample_id": "jpn_Jpan-corpus-0468",
+                "source": "未経験の子が一番稼いでくれてます.(❁′ᗨ‵❁)求人で応募してくれた方は※正直お給料は上げやすいです!!（スカウトを通すと、スカウトバックが発生するためです）①客層が若くてよい（20～３０代後半）②頑張りですぐお給料上げます!!③安定する稼ぎ方で皆待機ありません!!④スタッフが皆イケメンですｗ"
+              }
+            ],
+            "samples": 500,
+            "source_character_loss_rate": 1.7249557980076762e-05,
+            "source_characters": 117489,
+            "token_length_max": 3374,
+            "token_length_p50": 43,
+            "token_length_p95": 416,
+            "token_length_p99": 1301,
+            "tokens": 59462,
+            "tokens_per_non_whitespace_character": 0.5128466083056622,
+            "unk_source_characters": 2,
+            "unk_token_ratio": 3.363492650768558e-05,
+            "unk_tokens": 2,
+            "unmapped_unk_tokens": 0
+          }
+        },
+        "kor_Hang": {
+          "character_coverage": {
+            "frequency_weighted_coverage": 0.9999884841051861,
+            "total_unique_characters": 1433,
+            "unique_character_coverage": 0.9993021632937893
+          },
+          "corpus_metrics": {
+            "evaluated_non_whitespace_characters": 173673,
+            "exact_roundtrips": 499,
+            "mean_tokens_per_sample": 212.742,
+            "roundtrip_exact_rate": 0.998,
+            "roundtrip_mismatches": [
+              {
+                "decoded": "단홍 스토어 8월 신작 인스에요 이번 작화는 푸른 산호초 팜하니 팬아트 작업했던 얼굴의 한복 버전이에요. 그동안의 한복 인물의 얌전하고 조신했던 얼굴과 달리 아주 쾌 발랄한 이미지입니다. 이름은 하니 💙🤭 하니 파랑 원화 하니 분홍 원화 하니 인스 실물입니다. 인스타에 올라온 금손 다꾸러분들의 꾸밈 소개 할게요.😃 인물의 분위기에 어울리게 너무 예쁘게 꾸며주셔서들 눈호강을 제대로 하고 있습니다🤭 인스타 들어가면 다꾸 보는 재미",
+                "sample_id": "kor_Hang-corpus-0053",
+                "source": "단홍 스토어 8월 신작 인스에요 이번 작화는 푸른 산호초 팜하니 팬아트 작업했던 얼굴의 한복 버전이에요. 그동안의 한복 인물의 얌전하고 조신했던 얼굴과 달리 아주 쾌 발랄한 이미지입니다. 이름은 하니 💙🤭 하니 파랑 원화 하니 분홍 원화 하니 인스 실물입니다. 인스타에 올라온 금손 다꾸러분들의 꾸밈 소개 할게요.😃 인물의 분위기에 어울리게 너무 예쁘게 꾸며주셔서들 눈호강을 제대로 하고 있습니다🤭 인스타 들어가면 다꾸 보는 재미"
+              }
+            ],
+            "samples": 500,
+            "source_character_loss_rate": 1.151589481381677e-05,
+            "source_characters": 222220,
+            "token_length_max": 1738,
+            "token_length_p50": 167,
+            "token_length_p95": 533,
+            "token_length_p99": 1319,
+            "tokens": 106371,
+            "tokens_per_non_whitespace_character": 0.6124786236202518,
+            "unk_source_characters": 2,
+            "unk_token_ratio": 1.880211711838753e-05,
+            "unk_tokens": 2,
+            "unmapped_unk_tokens": 0
+          }
+        },
+        "zho_Hans": {
+          "character_coverage": {
+            "frequency_weighted_coverage": 0.9999607347830924,
+            "total_unique_characters": 3630,
+            "unique_character_coverage": 0.9983471074380166
+          },
+          "corpus_metrics": {
+            "evaluated_non_whitespace_characters": 152807,
+            "exact_roundtrips": 494,
+            "mean_tokens_per_sample": 201.794,
+            "roundtrip_exact_rate": 0.988,
+            "roundtrip_mismatches": [
+              {
+                "decoded": "戈窾货苯ず杜ㄩ，GDC大奖提名出炉 《死亡搁浅》独占七项领衔名单，新年贺词奏响2020奋斗强音。西藏宗教界政协委员：佛事和顺 僧尼生活获保障，全国巾帼建功先进集体——天津市农村合作经济管理站。中国陆军军医大学一团队攻坚“操控抗原”30年，HKC液晶显示器报价第1页..3MT产品库HKC 液晶显示器最新价格，今年浦东新区将新建30家户外驿站和50家爱心妈咪小屋。空气净化不止除霾这么简单 行业专家带你了解生物气溶胶，帝王心术最是无情，察觉到沦为棋子，润玉这是要黑化的节奏吗？。台媒",
+                "sample_id": "zho_Hans-corpus-0109",
+                "source": "戈筄窾货苯ず杜ㄩ，GDC大奖提名出炉 《死亡搁浅》独占七项领衔名单，新年贺词奏响2020奋斗强音。西藏宗教界政协委员：佛事和顺 僧尼生活获保障，全国巾帼建功先进集体——天津市农村合作经济管理站。中国陆军军医大学一团队攻坚“操控抗原”30年，HKC液晶显示器报价第1页..3MT产品库HKC 液晶显示器最新价格，今年浦东新区将新建30家户外驿站和50家爱心妈咪小屋。空气净化不止除霾这么简单 行业专家带你了解生物气溶胶，帝王心术最是无情，察觉到沦为棋子，润玉这是要黑化的节奏吗？。台"
+              },
+              {
+                "decoded": "本期简介深谈丨奇葩姓名，时代的表情包远观丨肯总统难产，部族势力摆不平侃财丨ICO是怎么从大牛产品变大妈产品的艺见丨成功的马东不愿谈悲凉封面人物.CoverStory十九大时间康辉，《新闻联播》里的中国气派奚美娟，30年前主演《中国梦》十九大怎么开图说世情.PhotoStory务农的总统父子一个摄影师和悬崖村世界.World政要丨莫迪换班子，首推女防长英拉失踪，泰国政局更诡异人物丨特朗普私人保镖，在白宫玩不转名流丨邓文迪，第一女儿眼中的大姐大驻外往事丨十八大前摸底拜登中国.Ch",
+                "sample_id": "zho_Hans-corpus-0255",
+                "source": "本期简介深谈丨奇葩姓名，时代的表情包远观丨肯总统难产，部族势力摆不平侃财丨ICO是怎么从大牛产品变大妈产品的艺见丨成功的马东不愿谈悲凉封面人物.CoverStory十九大时间康辉，《新闻联播》里的中国气派奚美娟，30年前主演《中国梦》十九大怎么开图说世情.PhotoStory务农的总统父子一个摄影师和悬崖村世界.World政要丨莫迪换班子，首推女防长英拉失踪，泰国政局更诡异人物丨特朗普私人保镖，在白宫玩不转名流丨邓文迪，第一女儿眼中的大姐大驻外往事丨十八大前摸底拜登中国.Ch"
+              },
+              {
+                "decoded": "惠州市政协科教文卫体委原主任许国安被开除党籍和公职，陆风X7抄袭路虎一案尘埃落定：最高法一锤定音 赔偿150万，兰州市卫生计生委综合监督执法所。测绘资质证书[乙测资字1110434]，科技耀黑 Black Edition。长沙民政职院春运“暖冬行动”启动，第二十一届中国国际高新技术成果交易会智慧城市展，中联重科创下全球塔机销售速度新纪录 每1秒卖1台塔机。广元交警向“十大交通陋习”宣战，省高院公布我省法院依法维护消费者权益情况。湖北省气象能源业务服务创新工作室被授予 “职工（",
+                "sample_id": "zho_Hans-corpus-0345",
+                "source": "惠州市政协科教文卫体委原主任许国安被开除党籍和公职，陆风X7抄袭路虎一案尘埃落定：最高法一锤定音 赔偿150万，兰州市卫生计生委综合监督执法所。测绘资质证书[乙测资字1110434]，科技耀黑 Black Edition。长沙民政职院春运“暖冬行动”启动，第二十一届中国国际高新技术成果交易会智慧城市展，中联重科创下全球塔机销售速度新纪录 每1秒卖1台塔机。广元交警向“十大交通陋习”宣战，省高院公布我省法院依法维护消费者权益情况。湖北省气象能源业务服务创新工作室被授予 “职工（"
+              },
+              {
+                "decoded": "AG真人娱乐，习近平在“不忘初心、牢记使命”主题教育总结大会上强调 以主题教育为新的起点 持续推动全党不忘初心牢记使命，接续奋斗书写更新更美的时代华章，中共中央办公厅 国务院办公厅印发《关于促进劳动力和人才社会性流动体制机制改革的意见》。山东莘县创办乡村红色图书馆，【滚动播报】“利奇马”已致苍南直接经济损失4341.65万元，灾后自救进行时。科学发展新市镇网络展示——嘉兴科技城，今天我值班（武汉城市留言板），銆愭寜娌堥槼涓滆蒋鏁板瓧鍖荤枟绯荤粺鑲′唤鏈夐檺鍏徃鏌ヨ鍖荤枟鍣ㄦ銆",
+                "sample_id": "zho_Hans-corpus-0379",
+                "source": "AG真人娱乐，习近平在“不忘初心、牢记使命”主题教育总结大会上强调 以主题教育为新的起点 持续推动全党不忘初心牢记使命，接续奋斗书写更新更美的时代华章，中共中央办公厅 国务院办公厅印发《关于促进劳动力和人才社会性流动体制机制改革的意见》。山东莘县创办乡村红色图书馆，【滚动播报】“利奇马”已致苍南直接经济损失4341.65万元，灾后自救进行时。科学发展新市镇网络展示——嘉兴科技城，今天我值班（武汉城市留言板），銆愭寜娌堥槼涓滆蒋鏁板瓧鍖荤枟绯荤粺鑲′唤鏈夐檺鍏徃鏌ヨ鍖荤枟鍣ㄦ銆"
+              },
+              {
+                "decoded": "uedbet体育平台，雷克萨斯系列微视频：定义味道，10余名检察官将走进全省贫困地区学校宣讲法治，特朗普政府拒绝透露暗杀苏莱曼尼的证据 这剧情小布什也演过。自治区十三届人大三次会议主席团举行第四次会议，中国战略定力在悄然积累积极因素。渭南河水兵舞队：舞出健康快乐 舞出精彩人生，海南房地产新闻海南别墅新闻海南楼盘新闻海南二手房新闻，漳州公安打造多维报警模式服务百姓。九元航空1月14日开通海口直达仰光航线 每周执飞三班，仲恺高新区民办教育快速发展 办学规模不断扩大。2019111",
+                "sample_id": "zho_Hans-corpus-0399",
+                "source": "uedbet体育平台，雷克萨斯系列微视频：定义味道，10余名检察官将走进全省贫困地区学校宣讲法治，特朗普政府拒绝透露暗杀苏莱曼尼的证据 这剧情小布什也演过。自治区十三届人大三次会议主席团举行第四次会议，中国战略定力在悄然积累积极因素。渭南沋河水兵舞队：舞出健康快乐 舞出精彩人生，海南房地产新闻海南别墅新闻海南楼盘新闻海南二手房新闻，漳州公安打造多维报警模式服务百姓。九元航空1月14日开通海口直达仰光航线 每周执飞三班，仲恺高新区民办教育快速发展 办学规模不断扩大。201911"
+              }
+            ],
+            "samples": 500,
+            "source_character_loss_rate": 3.92652169076024e-05,
+            "source_characters": 154510,
+            "token_length_max": 3716,
+            "token_length_p50": 150,
+            "token_length_p95": 522,
+            "token_length_p99": 1113,
+            "tokens": 100897,
+            "tokens_per_non_whitespace_character": 0.66029043172106,
+            "unk_source_characters": 6,
+            "unk_token_ratio": 5.94665847349277e-05,
+            "unk_tokens": 6,
+            "unmapped_unk_tokens": 0
+          }
+        }
+      },
+      "total_character_coverage": {
+        "frequency_weighted_coverage": 0.9999815792531379,
+        "total_character_frequency": 705726,
+        "total_unique_characters_by_language": 7440,
+        "unique_character_coverage": 0.9983870967741936
+      },
+      "total_corpus_metrics": {
+        "evaluated_non_whitespace_characters": 705726,
+        "exact_roundtrips": 1989,
+        "mean_tokens_per_sample": 174.84,
+        "roundtrip_exact_rate": 0.9945,
+        "roundtrip_mismatches": [
+          {
+            "decoded": "Poor Brian can't make a posting on his blog without threatening some form of vexatious litigation against some innocent party. He is like the หมาเห่าบตองแห้ง or the dog who could dry banana leaves by barking.",
+            "sample_id": "eng_Latn-corpus-0046",
+            "source": "Poor Brian can't make a posting on his blog without threatening some form of vexatious litigation against some innocent party. He is like the หมาเห่าใบตองแห้ง or the dog who could dry banana leaves by barking."
+          },
+          {
+            "decoded": "\"O my father! I did see eleven stars and the sun and the moon: I saw them prostrate themselves to me!”",
+            "sample_id": "eng_Latn-corpus-0500",
+            "source": "﴾\"O my father! I did see eleven stars and the sun and the moon: I saw them prostrate themselves to me!”﴿"
+          },
+          {
+            "decoded": "戈窾货苯ず杜ㄩ，GDC大奖提名出炉 《死亡搁浅》独占七项领衔名单，新年贺词奏响2020奋斗强音。西藏宗教界政协委员：佛事和顺 僧尼生活获保障，全国巾帼建功先进集体——天津市农村合作经济管理站。中国陆军军医大学一团队攻坚“操控抗原”30年，HKC液晶显示器报价第1页..3MT产品库HKC 液晶显示器最新价格，今年浦东新区将新建30家户外驿站和50家爱心妈咪小屋。空气净化不止除霾这么简单 行业专家带你了解生物气溶胶，帝王心术最是无情，察觉到沦为棋子，润玉这是要黑化的节奏吗？。台媒",
+            "sample_id": "zho_Hans-corpus-0109",
+            "source": "戈筄窾货苯ず杜ㄩ，GDC大奖提名出炉 《死亡搁浅》独占七项领衔名单，新年贺词奏响2020奋斗强音。西藏宗教界政协委员：佛事和顺 僧尼生活获保障，全国巾帼建功先进集体——天津市农村合作经济管理站。中国陆军军医大学一团队攻坚“操控抗原”30年，HKC液晶显示器报价第1页..3MT产品库HKC 液晶显示器最新价格，今年浦东新区将新建30家户外驿站和50家爱心妈咪小屋。空气净化不止除霾这么简单 行业专家带你了解生物气溶胶，帝王心术最是无情，察觉到沦为棋子，润玉这是要黑化的节奏吗？。台"
+          },
+          {
+            "decoded": "本期简介深谈丨奇葩姓名，时代的表情包远观丨肯总统难产，部族势力摆不平侃财丨ICO是怎么从大牛产品变大妈产品的艺见丨成功的马东不愿谈悲凉封面人物.CoverStory十九大时间康辉，《新闻联播》里的中国气派奚美娟，30年前主演《中国梦》十九大怎么开图说世情.PhotoStory务农的总统父子一个摄影师和悬崖村世界.World政要丨莫迪换班子，首推女防长英拉失踪，泰国政局更诡异人物丨特朗普私人保镖，在白宫玩不转名流丨邓文迪，第一女儿眼中的大姐大驻外往事丨十八大前摸底拜登中国.Ch",
+            "sample_id": "zho_Hans-corpus-0255",
+            "source": "本期简介深谈丨奇葩姓名，时代的表情包远观丨肯总统难产，部族势力摆不平侃财丨ICO是怎么从大牛产品变大妈产品的艺见丨成功的马东不愿谈悲凉封面人物.CoverStory十九大时间康辉，《新闻联播》里的中国气派奚美娟，30年前主演《中国梦》十九大怎么开图说世情.PhotoStory务农的总统父子一个摄影师和悬崖村世界.World政要丨莫迪换班子，首推女防长英拉失踪，泰国政局更诡异人物丨特朗普私人保镖，在白宫玩不转名流丨邓文迪，第一女儿眼中的大姐大驻外往事丨十八大前摸底拜登中国.Ch"
+          },
+          {
+            "decoded": "惠州市政协科教文卫体委原主任许国安被开除党籍和公职，陆风X7抄袭路虎一案尘埃落定：最高法一锤定音 赔偿150万，兰州市卫生计生委综合监督执法所。测绘资质证书[乙测资字1110434]，科技耀黑 Black Edition。长沙民政职院春运“暖冬行动”启动，第二十一届中国国际高新技术成果交易会智慧城市展，中联重科创下全球塔机销售速度新纪录 每1秒卖1台塔机。广元交警向“十大交通陋习”宣战，省高院公布我省法院依法维护消费者权益情况。湖北省气象能源业务服务创新工作室被授予 “职工（",
+            "sample_id": "zho_Hans-corpus-0345",
+            "source": "惠州市政协科教文卫体委原主任许国安被开除党籍和公职，陆风X7抄袭路虎一案尘埃落定：最高法一锤定音 赔偿150万，兰州市卫生计生委综合监督执法所。测绘资质证书[乙测资字1110434]，科技耀黑 Black Edition。长沙民政职院春运“暖冬行动”启动，第二十一届中国国际高新技术成果交易会智慧城市展，中联重科创下全球塔机销售速度新纪录 每1秒卖1台塔机。广元交警向“十大交通陋习”宣战，省高院公布我省法院依法维护消费者权益情况。湖北省气象能源业务服务创新工作室被授予 “职工（"
+          },
+          {
+            "decoded": "AG真人娱乐，习近平在“不忘初心、牢记使命”主题教育总结大会上强调 以主题教育为新的起点 持续推动全党不忘初心牢记使命，接续奋斗书写更新更美的时代华章，中共中央办公厅 国务院办公厅印发《关于促进劳动力和人才社会性流动体制机制改革的意见》。山东莘县创办乡村红色图书馆，【滚动播报】“利奇马”已致苍南直接经济损失4341.65万元，灾后自救进行时。科学发展新市镇网络展示——嘉兴科技城，今天我值班（武汉城市留言板），銆愭寜娌堥槼涓滆蒋鏁板瓧鍖荤枟绯荤粺鑲′唤鏈夐檺鍏徃鏌ヨ鍖荤枟鍣ㄦ銆",
+            "sample_id": "zho_Hans-corpus-0379",
+            "source": "AG真人娱乐，习近平在“不忘初心、牢记使命”主题教育总结大会上强调 以主题教育为新的起点 持续推动全党不忘初心牢记使命，接续奋斗书写更新更美的时代华章，中共中央办公厅 国务院办公厅印发《关于促进劳动力和人才社会性流动体制机制改革的意见》。山东莘县创办乡村红色图书馆，【滚动播报】“利奇马”已致苍南直接经济损失4341.65万元，灾后自救进行时。科学发展新市镇网络展示——嘉兴科技城，今天我值班（武汉城市留言板），銆愭寜娌堥槼涓滆蒋鏁板瓧鍖荤枟绯荤粺鑲′唤鏈夐檺鍏徃鏌ヨ鍖荤枟鍣ㄦ銆"
+          },
+          {
+            "decoded": "uedbet体育平台，雷克萨斯系列微视频：定义味道，10余名检察官将走进全省贫困地区学校宣讲法治，特朗普政府拒绝透露暗杀苏莱曼尼的证据 这剧情小布什也演过。自治区十三届人大三次会议主席团举行第四次会议，中国战略定力在悄然积累积极因素。渭南河水兵舞队：舞出健康快乐 舞出精彩人生，海南房地产新闻海南别墅新闻海南楼盘新闻海南二手房新闻，漳州公安打造多维报警模式服务百姓。九元航空1月14日开通海口直达仰光航线 每周执飞三班，仲恺高新区民办教育快速发展 办学规模不断扩大。2019111",
+            "sample_id": "zho_Hans-corpus-0399",
+            "source": "uedbet体育平台，雷克萨斯系列微视频：定义味道，10余名检察官将走进全省贫困地区学校宣讲法治，特朗普政府拒绝透露暗杀苏莱曼尼的证据 这剧情小布什也演过。自治区十三届人大三次会议主席团举行第四次会议，中国战略定力在悄然积累积极因素。渭南沋河水兵舞队：舞出健康快乐 舞出精彩人生，海南房地产新闻海南别墅新闻海南楼盘新闻海南二手房新闻，漳州公安打造多维报警模式服务百姓。九元航空1月14日开通海口直达仰光航线 每周执飞三班，仲恺高新区民办教育快速发展 办学规模不断扩大。201911"
+          },
+          {
+            "decoded": "展開される沙坪アイテムは、キャラクターをフロントに渝北描いた定海カメラバッグやトートバッグな梅州ど。ニットやフーディー、Tシャツといったウェアも用意されている。",
+            "sample_id": "jpn_Jpan-corpus-0391",
+            "source": "展開される沙坪壩アイテムは、キャラクターをフロントに渝北描いた定海カメラバッグやトートバッグな梅州ど。ニットやフーディー、Tシャツといったウェアも用意されている。"
+          },
+          {
+            "decoded": "未経験の子が一番稼いでくれてます.(❁′‵❁)求人で応募してくれた方は※正直お給料は上げやすいです!!（スカウトを通すと、スカウトバックが発生するためです）①客層が若くてよい（20～３０代後半）②頑張りですぐお給料上げます!!③安定する稼ぎ方で皆待機ありません!!④スタッフが皆イケメンですｗ",
+            "sample_id": "jpn_Jpan-corpus-0468",
+            "source": "未経験の子が一番稼いでくれてます.(❁′ᗨ‵❁)求人で応募してくれた方は※正直お給料は上げやすいです!!（スカウトを通すと、スカウトバックが発生するためです）①客層が若くてよい（20～３０代後半）②頑張りですぐお給料上げます!!③安定する稼ぎ方で皆待機ありません!!④スタッフが皆イケメンですｗ"
+          },
+          {
+            "decoded": "단홍 스토어 8월 신작 인스에요 이번 작화는 푸른 산호초 팜하니 팬아트 작업했던 얼굴의 한복 버전이에요. 그동안의 한복 인물의 얌전하고 조신했던 얼굴과 달리 아주 쾌 발랄한 이미지입니다. 이름은 하니 💙🤭 하니 파랑 원화 하니 분홍 원화 하니 인스 실물입니다. 인스타에 올라온 금손 다꾸러분들의 꾸밈 소개 할게요.😃 인물의 분위기에 어울리게 너무 예쁘게 꾸며주셔서들 눈호강을 제대로 하고 있습니다🤭 인스타 들어가면 다꾸 보는 재미",
+            "sample_id": "kor_Hang-corpus-0053",
+            "source": "단홍 스토어 8월 신작 인스에요 이번 작화는 푸른 산호초 팜하니 팬아트 작업했던 얼굴의 한복 버전이에요. 그동안의 한복 인물의 얌전하고 조신했던 얼굴과 달리 아주 쾌 발랄한 이미지입니다. 이름은 하니 💙🤭 하니 파랑 원화 하니 분홍 원화 하니 인스 실물입니다. 인스타에 올라온 금손 다꾸러분들의 꾸밈 소개 할게요.😃 인물의 분위기에 어울리게 너무 예쁘게 꾸며주셔서들 눈호강을 제대로 하고 있습니다🤭 인스타 들어가면 다꾸 보는 재미"
+          }
+        ],
+        "samples": 2000,
+        "source_character_loss_rate": 1.8420746862096622e-05,
+        "source_characters": 810358,
+        "token_length_max": 3716,
+        "token_length_p50": 82,
+        "token_length_p95": 521,
+        "token_length_p99": 1305,
+        "tokens": 349680,
+        "tokens_per_non_whitespace_character": 0.49548975097984205,
+        "unk_source_characters": 13,
+        "unk_token_ratio": 3.71768474033402e-05,
+        "unk_tokens": 13,
+        "unmapped_unk_tokens": 0
+      },
+      "training_sample_fraction": 0.1,
+      "vocab_size": 49152,
+      "vocab_utilization": {
+        "ratio": 0.5755208333333334,
+        "used_non_special_ids": 28288,
+        "vocab_size": 49152
+      }
+    }
+  },
+  "schema_version": 1
+}

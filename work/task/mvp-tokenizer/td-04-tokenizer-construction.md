@@ -1,6 +1,6 @@
 # task TD-04: NllbTokenizer 构造与语言 token 映射
 
-状态：review
+状态：done
 
 依赖：TD-01（训练环境与依赖）
 
@@ -63,4 +63,4 @@
 - `forced_bos_token_id` → 5 个目标语言均可正确获取 ✅
 - 对五个 source language 逐一验证 `TemplateProcessing` 的语言前缀和 `</s>` 后缀 ✅
 - 10% 真实语料产物保存到 staging 和最终目录后均可离线重载，完整 vocab/backend 不变 ✅
-- 当前状态保留为 review，等待独立复核后再标 done。
+- 独立复核再次执行 6 项 tokenizer training 测试，并对两个 10% 真实产物执行离线重载与全部 invariant 验证；未发现阻断问题，状态更新为 done。
