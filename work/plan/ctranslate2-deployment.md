@@ -11,7 +11,7 @@
 
 ## 目标
 
-使用不可变的五语 `mvp-tokenizer-v0` 和随机初始化的微型 `M2M100ForConditionalGeneration` checkpoint，验证 Hugging Face checkpoint 到 CTranslate2 的转换、词表/ID 空间一致性、CPU `int8` 加载、五语言 `target_prefix` 推理、decode 和离线部署目录闭环。
+使用不可变的五标签 `mvp-tokenizer-v0` 和随机初始化的微型 `M2M100ForConditionalGeneration` checkpoint，验证 Hugging Face checkpoint 到 CTranslate2 的转换、词表/ID 空间一致性、CPU `int8` 加载、五标签 `target_prefix` 推理、decode 和离线部署目录闭环。
 
 本 plan 承接 tokenizer 工作流中明确延期的 CTranslate2 事项，不重新训练、修改或重新冻结 tokenizer。
 
@@ -47,7 +47,7 @@
 - 可重建的微型 HF checkpoint 配置、生成脚本或测试 fixture；
 - float32 与 CPU int8 CTranslate2 转换记录；
 - 词表、特殊 token、模型维度和文件哈希校验报告；
-- 五语言 CPU 推理冒烟日志；
+- 五标签 CPU 推理冒烟日志；
 - `tokenizer/` 与 `model/` 分离的离线部署布局说明；
 - 自动化慢速集成测试。
 

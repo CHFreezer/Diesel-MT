@@ -4,6 +4,22 @@
 
 **一个文件小、跑得快、离线可用的中英日韩翻译模型。**
 
+## 语言与方向口径
+
+项目必须区分产品语言、模型语言标签和实际训练路由：
+
+| 口径 | 数量 | 定义 |
+| --- | ---: | --- |
+| 产品语言 | 4 | 中文、英文、日文、韩文 |
+| 模型语言标签 | 5 | `zho_Hans`、`zho_Hant`、`eng_Latn`、`jpn_Jpan`、`kor_Hang` |
+| 产品有向翻译方向 | 12 | 四种产品语言两两互译 |
+| 无向平行语料组 | 9 | 英/日/韩之间 3 组，简体中文与英/日/韩 3 组，繁体中文与英/日/韩 3 组 |
+| 有向模型训练路由 | 18 | 9 组平行语料交换 source/target 后得到 |
+
+`zho_Hans` 和 `zho_Hant` 是中文的两种脚本标签，不算两种产品语言。`zho_Hans -> zho_Hant` 与 `zho_Hant -> zho_Hans` 属于简繁转换，不计入本项目的翻译方向；若未来要支持，应作为独立功能立项。因此项目不是“5 种语言、20 个翻译方向”，而是“4 种产品语言、5 个模型标签、12 个产品方向、18 个跨语言标签路由”。
+
+后续文档中的“中文”只用于同时适用于简体和繁体的产品层汇总；数据、配置、训练、推理和评测必须明确写 `zho_Hans`/简体中文或 `zho_Hant`/繁体中文。中文汇总指标必须保留简体、繁体明细，不能用合并均值掩盖某一脚本缺失或退化。
+
 ## 为什么从零训练
 
 现成模型没有同时满足体积、方向覆盖、许可证和 CPU 推理要求的方案：
@@ -16,9 +32,9 @@
 | **小模型陷阱** | Hy-MT2 1.8B 1.25Bit 只有 462 MB，但依赖 STQ 自定义量化算子，x86 CPU 退回标量回退后性能不可接受；若改用其他运行时的常规 4-bit 权重量化，体积仍约 1.0–1.13 GB，且不属于本项目的 CTranslate2 CPU 路线 |
 | **微型 LLM 不适合翻译** | Decoder-only 做翻译是逐 token 自回归生成，KV cache + 串行解码延迟对 CPU 不友好；同参数规模下，Encoder-Decoder 的双向编码 + 交叉注意力是更强的翻译归纳偏置，微型 LLM 翻译质量通常不如等规模的 Encoder-Decoder |
 
-因此 Diesel-MT 选择从零训练一个 4 语言 × 12 方向的小型 Encoder-Decoder 翻译模型。目标：
+因此 Diesel-MT 选择从零训练一个覆盖 4 种产品语言、12 个产品方向和 18 个跨语言标签路由的小型 Encoder-Decoder 翻译模型。目标：
 
-- **一个模型覆盖 12 方向**，通过语言 token 控制，不拼接多个单向模型
+- **一个模型覆盖 12 个产品方向**，通过 5 个语言 token 控制 18 个跨语言标签路由，不拼接多个单向模型
 - **从零训练、资产可控**：自训练 tokenizer + 自训练权重，无 CC-BY-NC-4.0 污染
 - **CPU / mobile SoC 可部署**：CTranslate2 INT8 量化后模型文件约 192 MiB，支持端侧离线推理
 - **完整闭环**：数据 → tokenizer → 训练 → 评估 → CTranslate2 部署 → 推理，每一步可复现
@@ -52,7 +68,7 @@
 
 从零训练，使用 Transformers 5.x 统一后的 `NllbTokenizer`（BPE + Metaspace），保存为 `tokenizer.json`。
 
-- **语言 token**：只加入项目需要的 `eng_Latn`、`zho_Hans`/`zho_Hant`、`jpn_Jpan`、`kor_Hang`
+- **语言 token**：只加入项目需要的 5 个模型标签：`eng_Latn`、`zho_Hans`、`zho_Hant`、`jpn_Jpan`、`kor_Hang`
 - **输入格式**：`<src_lang> source_text </s>` → `<tgt_lang> target_text </s>`
 - **生成控制**：`forced_bos_token_id = target_lang_id`
 - **许可证边界**：Transformers tokenizer 软件实现是 Apache-2.0，不使用 Meta NLLB-200 的 tokenizer 文件，无 CC-BY-NC-4.0 污染
@@ -61,7 +77,7 @@
 
 Hy-MT2 7B（Apache-2.0）作为离线 teacher，Diesel-MT 从零训练的 Encoder-Decoder 作为 student。
 
-- teacher 用于生成中英日韩 12 方向平行样本，优先补齐 `zh↔ja`、`zh↔ko`、`ja↔ko` 等弱方向
+- teacher 用于生成中英日韩 12 个产品方向、18 个跨语言标签路由的平行样本，优先补齐 `zh↔ja`、`zh↔ko`、`ja↔ko` 等弱方向，并分别保留简体与繁体来源/目标标签
 - student 从零初始化，不继承 teacher 权重、tokenizer 或架构
 - 最终部署只依赖 Diesel-MT + CTranslate2，不依赖 teacher
 
@@ -103,7 +119,7 @@ MVP 阶段只验证路线，不追求最终效果。快速验证配置固定 `d_
 | `e8-d2-v48k` | 48k | 8 | 2 | 58.72M | 56 MiB |
 | `e8-d2-v32k` | 32k | 8 | 2 | 50.33M | 48 MiB |
 
-验收标准：数据预处理可重复 → tokenizer 稳定编码四语言 → 端到端训练 + checkpoint 可恢复 → 固定测试样例回归检查。
+验收标准：数据预处理可重复 → tokenizer 稳定编码 4 种产品语言的 5 个标签 → 9 组平行语料形成 18 个训练路由 → 端到端训练 + checkpoint 可恢复 → 固定测试样例回归检查。
 
 ---
 
