@@ -1,0 +1,19 @@
+[package]
+name = "diesel-mt-tokenizer-checkpoint"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[dependencies]
+anyhow = "1.0.100"
+bincode = { version = "2.0.1", features = ["serde"] }
+clap = { version = "4.5.54", features = ["derive"] }
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.149"
+sha2 = "0.10.9"
+tokenizers = { version = "=0.22.2", default-features = false, features = ["fancy-regex", "progressbar"] }
+
+[profile.release]
+codegen-units = 1
+lto = "thin"
+strip = "symbols"

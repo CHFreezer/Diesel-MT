@@ -3,6 +3,10 @@ __pycache__/
 .pytest_cache/
 *.py[cod]
 
+# Local Rust build outputs.
+target/
+tools/tokenizer-checkpoint/target/
+
 # Local Claude launcher may contain API credentials.
 claude_deepseek.ps1
 

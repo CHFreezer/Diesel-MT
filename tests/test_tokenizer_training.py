@@ -25,9 +25,12 @@ from tokenizer_utils import (  # noqa: E402
     verify_tokenizer,
 )
 from train_tokenizer import (  # noqa: E402
+    BalancedBatchIterator,
     NativeTrainingHeartbeat,
+    ProcessTreeMemorySnapshot,
     TrainingConfig,
     character_is_covered,
+    evaluate_watchdog,
     load_balanced_corpus,
     train_candidate,
 )
@@ -138,6 +141,32 @@ def test_loading_is_deterministic_and_character_balanced(tmp_path: Path) -> None
     assert first.manifest_sha256 == second.manifest_sha256
 
 
+def test_balanced_iterator_can_release_single_candidate_corpus(tmp_path: Path) -> None:
+    corpus_dir = tmp_path / "corpus"
+    write_corpus_fixture(corpus_dir, repeats=24)
+    corpus = load_balanced_corpus(
+        corpus_dir,
+        seed=20260713,
+        sample_fraction=1.0,
+        progress_interval_s=60,
+    )
+    expected_lines = corpus.total_lines
+    expected_characters = corpus.total_characters
+    iterator = BalancedBatchIterator(
+        corpus,
+        batch_size=16,
+        label="release-test",
+        progress_interval_s=60,
+        release_consumed_lines=True,
+    )
+    yielded = [line for batch in iterator for line in batch]
+    assert len(yielded) == expected_lines
+    assert corpus.lines_by_language == {}
+    assert corpus.total_lines == expected_lines
+    assert corpus.total_characters == expected_characters
+    assert iterator.order_sha256
+
+
 def test_train_save_reload_and_repeatability(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.delenv("RAYON_NUM_THREADS", raising=False)
     monkeypatch.delenv("TOKENIZERS_PARALLELISM", raising=False)
@@ -206,9 +235,51 @@ def test_native_heartbeat_is_newline_visible(capfd) -> None:
     assert "HEARTBEAT pytest-heartbeat: still running" in captured.out
 
 
+def test_watchdog_uses_process_and_system_memory_thresholds() -> None:
+    def tree(rss_gib: float) -> ProcessTreeMemorySnapshot:
+        value = int(rss_gib * 1024**3)
+        return ProcessTreeMemorySnapshot(
+            process_ids=(123,),
+            rss_bytes=value,
+            private_bytes=value,
+            root_rss_bytes=value,
+            root_peak_rss_bytes=value,
+            root_private_bytes=value,
+        )
+
+    process_stop = evaluate_watchdog(
+        tree(80.1),
+        available_bytes=40 * 1024**3,
+        max_memory_gib=80,
+        min_available_memory_gib=4,
+        available_memory_warning_gib=16,
+    )
+    assert "process-tree RSS" in process_stop.stop_reason
+
+    system_stop = evaluate_watchdog(
+        tree(60),
+        available_bytes=3 * 1024**3,
+        max_memory_gib=80,
+        min_available_memory_gib=4,
+        available_memory_warning_gib=16,
+    )
+    assert "available RAM" in system_stop.stop_reason
+
+    warning = evaluate_watchdog(
+        tree(60),
+        available_bytes=15 * 1024**3,
+        max_memory_gib=80,
+        min_available_memory_gib=4,
+        available_memory_warning_gib=16,
+    )
+    assert warning.stop_reason is None
+    assert warning.available_memory_warning is True
+
+
 def test_cli_supervisor_emits_heartbeat(tmp_path: Path) -> None:
     corpus_dir = tmp_path / "corpus"
     alphabet = write_corpus_fixture(corpus_dir)
+    memory_log = tmp_path / "memory.jsonl"
     # A small test-only alphabet is injected through the library tests; the CLI
     # uses the production alphabet, so only exercise its supervisor with --help
     # plus a deliberately slow worker import in a failing small-vocab run.
@@ -234,6 +305,12 @@ def test_cli_supervisor_emits_heartbeat(tmp_path: Path) -> None:
             "60",
             "--min-available-memory-gib",
             "0",
+            "--available-memory-warning-gib",
+            "0",
+            "--watchdog-interval",
+            "0.1",
+            "--memory-log",
+            str(memory_log),
             "--no-native-progress",
         ],
         cwd=ROOT,
@@ -247,3 +324,10 @@ def test_cli_supervisor_emits_heartbeat(tmp_path: Path) -> None:
     assert result.returncode != 0
     assert "SUPERVISOR heartbeat" in result.stdout
     assert "initial_alphabet" in result.stdout
+    memory_records = [
+        json.loads(line) for line in memory_log.read_text(encoding="utf-8").splitlines()
+    ]
+    assert any(record["event"] == "sample" for record in memory_records)
+    summary = next(record for record in memory_records if record["event"] == "watchdog_summary")
+    assert summary["samples"] > 0
+    assert summary["sampled_peak_process_tree_rss_bytes"] > 0

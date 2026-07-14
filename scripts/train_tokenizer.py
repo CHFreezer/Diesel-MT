@@ -10,6 +10,7 @@ is blocking the caller.
 from __future__ import annotations
 
 import argparse
+import gc
 import hashlib
 import json
 import math
@@ -56,6 +57,7 @@ from tokenizer_utils import (  # noqa: E402
 
 
 GIB = 1024**3
+WATCHDOG_EXIT_CODE = 86
 ARTIFACT_MANIFEST_NAME = "artifact_manifest.json"
 CORPUS_MANIFEST_NAME = "manifest.jsonl"
 SAMPLING_ALGORITHM = "per-language-seeded-bernoulli-v1"
@@ -145,6 +147,29 @@ class MemoryStatus:
     available_bytes: int | None
 
 
+@dataclass(frozen=True)
+class ProcessMemorySnapshot:
+    rss_bytes: int | None
+    peak_rss_bytes: int | None
+    private_bytes: int | None
+
+
+@dataclass(frozen=True)
+class ProcessTreeMemorySnapshot:
+    process_ids: tuple[int, ...]
+    rss_bytes: int
+    private_bytes: int
+    root_rss_bytes: int | None
+    root_peak_rss_bytes: int | None
+    root_private_bytes: int | None
+
+
+@dataclass(frozen=True)
+class WatchdogDecision:
+    stop_reason: str | None
+    available_memory_warning: bool
+
+
 def memory_status() -> MemoryStatus:
     """Read process and system memory using only the standard library."""
     rss: int | None = None
@@ -226,13 +251,13 @@ def format_gib(value: int | None) -> str:
     return "unknown" if value is None else f"{value / GIB:.2f} GiB"
 
 
-def process_rss_bytes(process_id: int) -> int | None:
-    """Return another process's RSS, or ``None`` after it exits."""
+def process_memory_snapshot(process_id: int) -> ProcessMemorySnapshot:
+    """Return another process's working-set, peak, and private byte counts."""
     if sys.platform == "win32":
         import ctypes
         from ctypes import wintypes
 
-        class ProcessMemoryCounters(ctypes.Structure):
+        class ProcessMemoryCountersEx(ctypes.Structure):
             _fields_ = [
                 ("cb", wintypes.DWORD),
                 ("PageFaultCount", wintypes.DWORD),
@@ -244,6 +269,7 @@ def process_rss_bytes(process_id: int) -> int | None:
                 ("QuotaNonPagedPoolUsage", ctypes.c_size_t),
                 ("PagefileUsage", ctypes.c_size_t),
                 ("PeakPagefileUsage", ctypes.c_size_t),
+                ("PrivateUsage", ctypes.c_size_t),
             ]
 
         kernel32 = ctypes.windll.kernel32
@@ -252,28 +278,200 @@ def process_rss_bytes(process_id: int) -> int | None:
         kernel32.OpenProcess.restype = wintypes.HANDLE
         psapi.GetProcessMemoryInfo.argtypes = [
             wintypes.HANDLE,
-            ctypes.POINTER(ProcessMemoryCounters),
+            ctypes.POINTER(ProcessMemoryCountersEx),
             wintypes.DWORD,
         ]
         psapi.GetProcessMemoryInfo.restype = wintypes.BOOL
         handle = kernel32.OpenProcess(0x1000 | 0x0400, False, process_id)
         if not handle:
-            return None
+            return ProcessMemorySnapshot(None, None, None)
         try:
-            counters = ProcessMemoryCounters()
+            counters = ProcessMemoryCountersEx()
             counters.cb = ctypes.sizeof(counters)
             if not psapi.GetProcessMemoryInfo(handle, ctypes.byref(counters), counters.cb):
-                return 0
-            return int(counters.WorkingSetSize)
+                return ProcessMemorySnapshot(None, None, None)
+            return ProcessMemorySnapshot(
+                rss_bytes=int(counters.WorkingSetSize),
+                peak_rss_bytes=int(counters.PeakWorkingSetSize),
+                private_bytes=int(counters.PrivateUsage),
+            )
         finally:
             kernel32.CloseHandle(handle)
+    values: dict[str, int] = {}
     try:
         for line in (Path("/proc") / str(process_id) / "status").read_text().splitlines():
-            if line.startswith("VmRSS:"):
-                return int(line.split()[1]) * 1024
+            if line.startswith(("VmRSS:", "VmHWM:", "RssAnon:")):
+                key, value, _unit = line.split()
+                values[key.rstrip(":")] = int(value) * 1024
     except OSError:
-        return None
-    return 0
+        return ProcessMemorySnapshot(None, None, None)
+    return ProcessMemorySnapshot(
+        rss_bytes=values.get("VmRSS"),
+        peak_rss_bytes=values.get("VmHWM"),
+        private_bytes=values.get("RssAnon"),
+    )
+
+
+def process_rss_bytes(process_id: int) -> int | None:
+    """Return another process's RSS, or ``None`` after it exits."""
+    return process_memory_snapshot(process_id).rss_bytes
+
+
+def process_parent_map() -> dict[int, int]:
+    """Return a snapshot of process IDs mapped to parent process IDs."""
+    if sys.platform == "win32":
+        import ctypes
+        from ctypes import wintypes
+
+        class ProcessEntry32W(ctypes.Structure):
+            _fields_ = [
+                ("dwSize", wintypes.DWORD),
+                ("cntUsage", wintypes.DWORD),
+                ("th32ProcessID", wintypes.DWORD),
+                ("th32DefaultHeapID", ctypes.c_size_t),
+                ("th32ModuleID", wintypes.DWORD),
+                ("cntThreads", wintypes.DWORD),
+                ("th32ParentProcessID", wintypes.DWORD),
+                ("pcPriClassBase", wintypes.LONG),
+                ("dwFlags", wintypes.DWORD),
+                ("szExeFile", wintypes.WCHAR * 260),
+            ]
+
+        kernel32 = ctypes.windll.kernel32
+        kernel32.CreateToolhelp32Snapshot.argtypes = [wintypes.DWORD, wintypes.DWORD]
+        kernel32.CreateToolhelp32Snapshot.restype = wintypes.HANDLE
+        kernel32.Process32FirstW.argtypes = [wintypes.HANDLE, ctypes.POINTER(ProcessEntry32W)]
+        kernel32.Process32FirstW.restype = wintypes.BOOL
+        kernel32.Process32NextW.argtypes = [wintypes.HANDLE, ctypes.POINTER(ProcessEntry32W)]
+        kernel32.Process32NextW.restype = wintypes.BOOL
+        snapshot = kernel32.CreateToolhelp32Snapshot(0x00000002, 0)
+        invalid_handle = ctypes.c_void_p(-1).value
+        if not snapshot or snapshot == invalid_handle:
+            return {}
+        parents: dict[int, int] = {}
+        try:
+            entry = ProcessEntry32W()
+            entry.dwSize = ctypes.sizeof(entry)
+            if not kernel32.Process32FirstW(snapshot, ctypes.byref(entry)):
+                return parents
+            while True:
+                parents[int(entry.th32ProcessID)] = int(entry.th32ParentProcessID)
+                if not kernel32.Process32NextW(snapshot, ctypes.byref(entry)):
+                    break
+        finally:
+            kernel32.CloseHandle(snapshot)
+        return parents
+
+    parents: dict[int, int] = {}
+    for status_path in Path("/proc").glob("[0-9]*/status"):
+        try:
+            process_id = int(status_path.parent.name)
+            parent_id = 0
+            for line in status_path.read_text(encoding="ascii").splitlines():
+                if line.startswith("PPid:"):
+                    parent_id = int(line.split()[1])
+                    break
+            parents[process_id] = parent_id
+        except (OSError, ValueError):
+            continue
+    return parents
+
+
+def process_tree_ids(root_process_id: int) -> tuple[int, ...]:
+    parents = process_parent_map()
+    children: dict[int, list[int]] = {}
+    for process_id, parent_id in parents.items():
+        children.setdefault(parent_id, []).append(process_id)
+    ordered = [root_process_id]
+    index = 0
+    while index < len(ordered):
+        ordered.extend(sorted(children.get(ordered[index], ())))
+        index += 1
+    return tuple(dict.fromkeys(ordered))
+
+
+def process_tree_memory(root_process_id: int) -> ProcessTreeMemorySnapshot:
+    process_ids = process_tree_ids(root_process_id)
+    snapshots = {process_id: process_memory_snapshot(process_id) for process_id in process_ids}
+    root = snapshots.get(root_process_id, ProcessMemorySnapshot(None, None, None))
+    return ProcessTreeMemorySnapshot(
+        process_ids=tuple(
+            process_id
+            for process_id in process_ids
+            if snapshots[process_id].rss_bytes is not None
+        ),
+        rss_bytes=sum(snapshot.rss_bytes or 0 for snapshot in snapshots.values()),
+        private_bytes=sum(snapshot.private_bytes or 0 for snapshot in snapshots.values()),
+        root_rss_bytes=root.rss_bytes,
+        root_peak_rss_bytes=root.peak_rss_bytes,
+        root_private_bytes=root.private_bytes,
+    )
+
+
+def evaluate_watchdog(
+    tree: ProcessTreeMemorySnapshot,
+    *,
+    available_bytes: int | None,
+    max_memory_gib: float | None,
+    min_available_memory_gib: float,
+    available_memory_warning_gib: float,
+) -> WatchdogDecision:
+    if max_memory_gib is not None and tree.rss_bytes > max_memory_gib * GIB:
+        return WatchdogDecision(
+            stop_reason=(
+                f"process-tree RSS {format_gib(tree.rss_bytes)} exceeded "
+                f"--max-memory-gib={max_memory_gib}"
+            ),
+            available_memory_warning=False,
+        )
+    if (
+        min_available_memory_gib > 0
+        and available_bytes is not None
+        and available_bytes < min_available_memory_gib * GIB
+    ):
+        return WatchdogDecision(
+            stop_reason=(
+                f"available RAM {format_gib(available_bytes)} fell below "
+                f"--min-available-memory-gib={min_available_memory_gib}"
+            ),
+            available_memory_warning=True,
+        )
+    warning = (
+        available_memory_warning_gib > 0
+        and available_bytes is not None
+        and available_bytes < available_memory_warning_gib * GIB
+    )
+    return WatchdogDecision(stop_reason=None, available_memory_warning=warning)
+
+
+def terminate_process_tree(root_process_id: int, *, exit_code: int = 86) -> None:
+    """Force-stop a worker and its descendants, children first."""
+    process_ids = process_tree_ids(root_process_id)
+    if sys.platform == "win32":
+        import ctypes
+        from ctypes import wintypes
+
+        kernel32 = ctypes.windll.kernel32
+        kernel32.OpenProcess.argtypes = [wintypes.DWORD, wintypes.BOOL, wintypes.DWORD]
+        kernel32.OpenProcess.restype = wintypes.HANDLE
+        kernel32.TerminateProcess.argtypes = [wintypes.HANDLE, wintypes.UINT]
+        kernel32.TerminateProcess.restype = wintypes.BOOL
+        for process_id in reversed(process_ids):
+            handle = kernel32.OpenProcess(0x0001, False, process_id)
+            if not handle:
+                continue
+            try:
+                kernel32.TerminateProcess(handle, exit_code)
+            finally:
+                kernel32.CloseHandle(handle)
+        return
+    import signal
+
+    for process_id in reversed(process_ids):
+        try:
+            os.kill(process_id, signal.SIGTERM)
+        except ProcessLookupError:
+            pass
 
 
 def enforce_memory_guards(*, max_memory_gib: float | None, min_available_memory_gib: float) -> None:
@@ -540,6 +738,7 @@ class BalancedBatchIterator:
         progress_interval_s: float,
         max_memory_gib: float | None = None,
         min_available_memory_gib: float = 0.0,
+        release_consumed_lines: bool = False,
     ) -> None:
         if batch_size < len(TRAINING_LANGUAGES):
             raise ValueError(
@@ -551,6 +750,7 @@ class BalancedBatchIterator:
         self.progress_interval_s = progress_interval_s
         self.max_memory_gib = max_memory_gib
         self.min_available_memory_gib = min_available_memory_gib
+        self.release_consumed_lines = release_consumed_lines
         self.order_sha256: str | None = None
         self.yielded_lines = 0
 
@@ -570,7 +770,10 @@ class BalancedBatchIterator:
                 if position >= len(lines):
                     continue
                 line = lines[position]
-                positions[language] = position + 1
+                next_position = position + 1
+                positions[language] = next_position
+                if self.release_consumed_lines:
+                    lines[position] = ""
                 remaining -= 1
                 made_progress = True
                 encoded = line.encode("utf-8")
@@ -592,10 +795,17 @@ class BalancedBatchIterator:
                             f"({100 * self.yielded_lines / total:.1f}%) passed to Rust trainer"
                         )
                         next_report = now + max(self.progress_interval_s, 0.1)
+                if self.release_consumed_lines and next_position == len(lines):
+                    lines.clear()
             if not made_progress:
                 raise RuntimeError("balanced iterator stopped before consuming all lines")
         if batch:
             yield batch
+            batch = []
+        if self.release_consumed_lines:
+            self.corpus.lines_by_language.clear()
+            gc.collect()
+            progress(f"FEED {self.label}: released consumed in-RAM corpus lines")
         self.order_sha256 = digest.hexdigest()
         progress(f"FEED {self.label}: 100.0% of lines passed to Rust trainer")
 
@@ -869,6 +1079,7 @@ def train_candidate(
     initial_alphabet: frozenset[str] = MUST_COVER_ALPHABET,
     max_memory_gib: float | None = None,
     min_available_memory_gib: float = 0.0,
+    release_corpus_after_feed: bool = False,
 ) -> object:
     """Train, validate, stage and atomically publish one vocabulary candidate."""
     import tokenizers
@@ -897,6 +1108,7 @@ def train_candidate(
         progress_interval_s=config.heartbeat_interval_s,
         max_memory_gib=max_memory_gib,
         min_available_memory_gib=min_available_memory_gib,
+        release_consumed_lines=release_corpus_after_feed,
     )
     started = time.perf_counter()
     nested_heartbeat_interval = (
@@ -980,6 +1192,7 @@ def train_candidate(
             ).hexdigest(),
             "batch_size": config.batch_size,
             "input_order_sha256": iterator.order_sha256,
+            "released_corpus_after_feed": release_corpus_after_feed,
             "total_training_lines": corpus.total_lines,
             "total_training_characters": corpus.total_characters,
             "corpus_unique_characters": len(corpus.character_counts),
@@ -1064,6 +1277,14 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--load-progress-interval", type=float, default=10.0)
     parser.add_argument("--max-memory-gib", type=float, default=96.0)
     parser.add_argument("--min-available-memory-gib", type=float, default=8.0)
+    parser.add_argument("--available-memory-warning-gib", type=float, default=16.0)
+    parser.add_argument("--watchdog-interval", type=float, default=1.0)
+    parser.add_argument(
+        "--memory-log",
+        type=Path,
+        default=None,
+        help="Write one JSONL process-tree/system-memory observation per watchdog sample.",
+    )
     parser.add_argument(
         "--no-native-progress",
         action="store_true",
@@ -1123,17 +1344,39 @@ def run_worker(args: argparse.Namespace) -> int:
             staging_dir=staging_root,
             max_memory_gib=args.max_memory_gib,
             min_available_memory_gib=args.min_available_memory_gib,
+            release_corpus_after_feed=not multiple,
         )
     progress("All requested tokenizer candidates completed successfully")
     return 0
 
 
-def supervise_worker(raw_args: Sequence[str], args: argparse.Namespace) -> int:
+def supervise_worker(
+    raw_args: Sequence[str],
+    args: argparse.Namespace,
+    *,
+    worker_script: Path | None = None,
+) -> int:
     """Run all mutable work in one child while this process owns terminal output."""
+    if args.watchdog_interval <= 0:
+        raise ValueError("watchdog_interval must be positive")
+    if args.max_memory_gib is not None and args.max_memory_gib <= 0:
+        raise ValueError("max_memory_gib must be positive")
+    if args.min_available_memory_gib < 0:
+        raise ValueError("min_available_memory_gib cannot be negative")
+    if args.available_memory_warning_gib < 0:
+        raise ValueError("available_memory_warning_gib cannot be negative")
+    if (
+        args.available_memory_warning_gib > 0
+        and args.min_available_memory_gib > 0
+        and args.available_memory_warning_gib <= args.min_available_memory_gib
+    ):
+        raise ValueError(
+            "available_memory_warning_gib must be greater than min_available_memory_gib"
+        )
     command = [
         sys.executable,
         "-u",
-        str(Path(__file__).resolve()),
+        str(Path(__file__).resolve() if worker_script is None else worker_script.resolve()),
         *raw_args,
         "--_worker",
     ]
@@ -1174,13 +1417,56 @@ def supervise_worker(raw_args: Sequence[str], args: argparse.Namespace) -> int:
     reader.start()
     started = time.monotonic()
     heartbeat_interval = max(args.heartbeat_interval, 0.1)
+    watchdog_interval = max(args.watchdog_interval, 0.1)
     next_heartbeat = started + heartbeat_interval
+    next_watchdog = started
     output_closed = False
     last_worker_output = started
+    watchdog_reason: str | None = None
+    available_warning_active = False
+    interrupted = False
+    sample_count = 0
+    sampled_peak_tree_rss = 0
+    sampled_peak_tree_private = 0
+    minimum_available_bytes: int | None = None
+    observed_root_peak_rss = 0
+    latest_tree: ProcessTreeMemorySnapshot | None = None
+    latest_available: int | None = None
+    memory_log_handle = None
+
+    if args.memory_log is not None:
+        memory_log_path = args.memory_log.resolve()
+        memory_log_path.parent.mkdir(parents=True, exist_ok=True)
+        memory_log_handle = memory_log_path.open("w", encoding="utf-8", newline="\n")
+
+    def write_memory_record(payload: Mapping) -> None:
+        if memory_log_handle is None:
+            return
+        record = {
+            "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+            **payload,
+        }
+        memory_log_handle.write(
+            json.dumps(record, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+            + "\n"
+        )
+        memory_log_handle.flush()
+
+    write_memory_record(
+        {
+            "event": "watchdog_start",
+            "worker_pid": worker.pid,
+            "watchdog_interval_s": watchdog_interval,
+            "max_memory_gib": args.max_memory_gib,
+            "min_available_memory_gib": args.min_available_memory_gib,
+            "available_memory_warning_gib": args.available_memory_warning_gib,
+        }
+    )
     try:
         while True:
             now = time.monotonic()
-            timeout = min(0.5, max(0.0, next_heartbeat - now))
+            next_event = min(next_heartbeat, next_watchdog)
+            timeout = min(0.5, max(0.0, next_event - now))
             try:
                 message = messages.get(timeout=timeout)
             except queue.Empty:
@@ -1191,11 +1477,80 @@ def supervise_worker(raw_args: Sequence[str], args: argparse.Namespace) -> int:
                 print(message, end="", flush=True)
                 last_worker_output = time.monotonic()
             now = time.monotonic()
+            if now >= next_watchdog and worker.poll() is None:
+                latest_tree = process_tree_memory(worker.pid)
+                latest_available = memory_status().available_bytes
+                sample_count += 1
+                sampled_peak_tree_rss = max(sampled_peak_tree_rss, latest_tree.rss_bytes)
+                sampled_peak_tree_private = max(
+                    sampled_peak_tree_private, latest_tree.private_bytes
+                )
+                if latest_tree.root_peak_rss_bytes is not None:
+                    observed_root_peak_rss = max(
+                        observed_root_peak_rss, latest_tree.root_peak_rss_bytes
+                    )
+                if latest_available is not None:
+                    minimum_available_bytes = (
+                        latest_available
+                        if minimum_available_bytes is None
+                        else min(minimum_available_bytes, latest_available)
+                    )
+                write_memory_record(
+                    {
+                        "event": "sample",
+                        "elapsed_s": round(now - started, 3),
+                        "worker_pid": worker.pid,
+                        "process_ids": list(latest_tree.process_ids),
+                        "process_tree_rss_bytes": latest_tree.rss_bytes,
+                        "process_tree_private_bytes": latest_tree.private_bytes,
+                        "worker_rss_bytes": latest_tree.root_rss_bytes,
+                        "worker_peak_rss_bytes": latest_tree.root_peak_rss_bytes,
+                        "worker_private_bytes": latest_tree.root_private_bytes,
+                        "system_available_bytes": latest_available,
+                    }
+                )
+                decision = evaluate_watchdog(
+                    latest_tree,
+                    available_bytes=latest_available,
+                    max_memory_gib=args.max_memory_gib,
+                    min_available_memory_gib=args.min_available_memory_gib,
+                    available_memory_warning_gib=args.available_memory_warning_gib,
+                )
+                if decision.available_memory_warning and not available_warning_active:
+                    progress(
+                        "SUPERVISOR WATCHDOG warning: available RAM "
+                        f"{format_gib(latest_available)} is below "
+                        f"{args.available_memory_warning_gib:.2f} GiB"
+                    )
+                    available_warning_active = True
+                elif not decision.available_memory_warning and available_warning_active:
+                    progress(
+                        "SUPERVISOR WATCHDOG recovery: available RAM is now "
+                        f"{format_gib(latest_available)}"
+                    )
+                    available_warning_active = False
+                if decision.stop_reason is not None and watchdog_reason is None:
+                    watchdog_reason = decision.stop_reason
+                    progress(f"SUPERVISOR WATCHDOG STOP: {watchdog_reason}")
+                    write_memory_record(
+                        {
+                            "event": "watchdog_stop",
+                            "elapsed_s": round(now - started, 3),
+                            "reason": watchdog_reason,
+                        }
+                    )
+                    terminate_process_tree(worker.pid, exit_code=WATCHDOG_EXIT_CODE)
+                next_watchdog = now + watchdog_interval
             if now >= next_heartbeat and worker.poll() is None:
-                rss = process_rss_bytes(worker.pid)
+                if latest_tree is None:
+                    latest_tree = process_tree_memory(worker.pid)
+                    latest_available = memory_status().available_bytes
                 progress(
                     f"SUPERVISOR heartbeat: worker_pid={worker.pid}, "
-                    f"elapsed={now - started:.1f}s, rss={format_gib(rss)}, "
+                    f"elapsed={now - started:.1f}s, "
+                    f"tree_rss={format_gib(latest_tree.rss_bytes)}, "
+                    f"tree_private={format_gib(latest_tree.private_bytes)}, "
+                    f"available={format_gib(latest_available)}, "
                     f"last_worker_output={now - last_worker_output:.1f}s ago"
                 )
                 next_heartbeat = now + heartbeat_interval
@@ -1203,20 +1558,43 @@ def supervise_worker(raw_args: Sequence[str], args: argparse.Namespace) -> int:
                 break
     except KeyboardInterrupt:
         progress("SUPERVISOR interrupted; terminating tokenizer worker")
-        worker.terminate()
+        interrupted = True
+        terminate_process_tree(worker.pid, exit_code=130)
         try:
             worker.wait(timeout=10)
         except subprocess.TimeoutExpired:
             worker.kill()
             worker.wait(timeout=5)
-        return 130
     finally:
         reader.join(timeout=5)
         worker.stdout.close()
     return_code = worker.wait()
-    if return_code:
+    supervisor_return_code = (
+        130
+        if interrupted
+        else WATCHDOG_EXIT_CODE
+        if watchdog_reason is not None
+        else return_code
+    )
+    write_memory_record(
+        {
+            "event": "watchdog_summary",
+            "elapsed_s": round(time.monotonic() - started, 3),
+            "samples": sample_count,
+            "sampled_peak_process_tree_rss_bytes": sampled_peak_tree_rss,
+            "sampled_peak_process_tree_private_bytes": sampled_peak_tree_private,
+            "observed_worker_peak_rss_bytes": observed_root_peak_rss,
+            "minimum_system_available_bytes": minimum_available_bytes,
+            "watchdog_stop_reason": watchdog_reason,
+            "worker_return_code": return_code,
+            "supervisor_return_code": supervisor_return_code,
+        }
+    )
+    if memory_log_handle is not None:
+        memory_log_handle.close()
+    if supervisor_return_code:
         progress(f"SUPERVISOR worker failed with exit code {return_code}")
-        return return_code
+        return supervisor_return_code
     progress(f"SUPERVISOR worker completed in {time.monotonic() - started:.1f}s")
     return 0
 
