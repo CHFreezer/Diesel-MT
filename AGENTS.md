@@ -101,7 +101,7 @@ work/plan/    → work/todo/    → work/task/    → work/review/    → work/d
 Current state:
 - **Completed**: Tokenizer dataset fetch pipeline (TD-01 through TD-12), the bounded MVP tokenizer workflow, and CTranslate2 deployment validation. The frozen `mvp-tokenizer-v0` is a 49,152-token Hugging Face Rust BPE + Metaspace artifact for five model tags: `eng_Latn`, `zho_Hans`, `zho_Hant`, `jpn_Jpan`, and `kor_Hang`.
 - **Archived workflows**: Plans remain under `work/plan/`; completed todos, task sets, and review records are under `work/done/`. Narrative evidence belongs in the task and unified review documents; the CT2 workflow's single machine-readable record is `artifacts/ctranslate2/deployment-validation.json`.
-- **Draft workflow**: `work/plan/mvp-model-training.md` exists, but no todo is active until the plan is confirmed. Do not reopen or mutate the frozen tokenizer or reinterpret the random deployment checkpoint as a trained model.
+- **Active workflow**: `work/plan/mvp-model-training.md`, `work/todo/mvp-model-training.md`, and `work/task/mvp-model-training/` (TD-01 through TD-18 are pending). Do not reopen or mutate the frozen tokenizer or reinterpret the random deployment checkpoint as a trained model.
 
 ## Testing
 
