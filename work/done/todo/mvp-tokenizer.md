@@ -1,19 +1,24 @@
 # todo: mvp tokenizer
 
-状态：done（五语 48k `mvp-tokenizer-v0` 已冻结）
+状态：done / archived（五语 48k `mvp-tokenizer-v0` 已冻结并通过 review）
 
 ## 最终目标与完成结论（2026-07-14）
 
 本 todo 的最终边界已由四语双候选调整为一次性五语冻结：接入原生繁体，升级段落清洗、五语 exact/near-duplicate 去重和独立 holdout；每语种生成约 200M 训练字符；只重训 48k，并完成五语覆盖、序列长度、字符丢失、roundtrip、简繁 parity、保存/重载、language token、微型 M2M100 forward 和 SHA-256 验收。旧 32k 保留为工程回退和下游吞吐对照，64k 与 CTranslate2 发布不作为本轮前置条件。
 
-上述目标已完成：默认产物为 `artifacts/tokenizers/mvp-tokenizer-v0/`，最终训练 manifest SHA-256 为 `b3d8d6f4f559813929c75086e6060b74a922a87cdb06646973d1168b5618c977`，holdout manifest SHA-256 为 `c5bec116578ea88d37f325c3e18c66a889ef34aa263bb876e821456c500f9ffe`，冻结根 SHA-256 为 `eb79ae22f523f1d9c9fcf75b80f2b322e3c2882a8fddb7545b5933dd4053fa7f`。完整验收见 `artifacts/tokenizers/reports/mvp-tokenizer-v0/freeze_acceptance.md`。下文未勾选项属于原始路线或后续 CTranslate2 部署范围，不再阻塞本 todo 的完成状态。
+上述目标已完成：默认产物为 `artifacts/tokenizers/mvp-tokenizer-v0/`，最终训练 manifest SHA-256 为 `b3d8d6f4f559813929c75086e6060b74a922a87cdb06646973d1168b5618c977`，holdout manifest SHA-256 为 `c5bec116578ea88d37f325c3e18c66a889ef34aa263bb876e821456c500f9ffe`，冻结根 SHA-256 为 `eb79ae22f523f1d9c9fcf75b80f2b322e3c2882a8fddb7545b5933dd4053fa7f`。完整验收见 `artifacts/tokenizers/reports/mvp-tokenizer-v0/freeze_acceptance.md`。
+
+下文状态按最终范围回填：`[x]` 表示有实现或验收记录的已完成项；`**Superseded**` 表示被 2026-07-14 五语 48k 冻结决策替代、无需执行的旧路线；`**Deferred**` 表示明确转入后续 CTranslate2 部署工作流的事项。归档文档不再保留含义不明的空复选框。
 
 ## 来源
 
-- plan：[mvp tokenizer](../plan/mvp-tokenizer.md)
+- plan：[mvp tokenizer](../../plan/mvp-tokenizer.md)
+- task 索引：[mvp tokenizer tasks](../task/mvp-tokenizer/index.md)
+- review：[mvp tokenizer review](../review/mvp-tokenizer.md)
+- 延期事项承接：[CTranslate2 deployment validation](../../todo/ctranslate2-deployment.md)
 - README：[Diesel-MT](../../../README.md)（tokenizer 约定、模型配置、MVP 候选参数）
-- 上游 todo：[tokenizer dataset fetch script](../done/todo/tokenizer-dataset-fetch-script.md)（已完成，语料就绪）
-- 硬件方案：[local-ram-first-hardware.md](../done/task/tokenizer-dataset-fetch-script/local-ram-first-hardware.md)
+- 上游 todo：[tokenizer dataset fetch script](tokenizer-dataset-fetch-script.md)（已完成，语料就绪）
+- 硬件方案：[local-ram-first-hardware.md](../task/tokenizer-dataset-fetch-script/local-ram-first-hardware.md)
 - 本机硬件记录：[local-hardware.md](../task/mvp-tokenizer/local-hardware.md)（通过 `.git/info/exclude` 排除，不提交）
 - 环境：[Python 环境约定](../../../docs/python-environment.md)
 - Transformers 5.13.1 源码：[NLLB tokenizer](https://github.com/huggingface/transformers/blob/v5.13.1/src/transformers/models/nllb/tokenization_nllb.py)、[`train_new_from_iterator()`](https://github.com/huggingface/transformers/blob/v5.13.1/src/transformers/tokenization_utils_tokenizers.py#L1078-L1261)
@@ -129,7 +134,7 @@
 - 特殊 token：`<s>`、`<pad>`、`</s>`、`<unk>`、`<mask>`（NLLB 固定）；语言 token：`eng_Latn`、`zho_Hans`、`zho_Hant`、`jpn_Jpan`、`kor_Hang`。
 - 候选 `32k` / `48k` 均指最终 `len(tokenizer)`；必须与下游 `M2M100Config.vocab_size` 和 embedding/projection 行数一致。
 - 产物先写到 `--staging-dir` 指定的暂存目录，校验后搬运到目标目录并原子替换；数据盘训练热路径不出现随机 I/O、SQLite 或临时文件。
-- CTranslate2 CPU 冒烟为硬验收项：至少跑通微型随机 M2M100 模型的转换、加载、`target_prefix` 推理和 decode；随机模型不做翻译质量判断。
+- **Superseded：**CTranslate2 CPU 冒烟原为硬验收项；最终范围将其移入下游部署工作流，本轮只用微型随机 M2M100 forward 验证 tokenizer/model ID 空间。
 - 不下载、复制或分发 NLLB-200、M2M100 等第三方 tokenizer 资产。
 - PyTorch：TD-01 直接装 CUDA 13.2 版（`cu132`），tokenizer 阶段当 CPU 版用；若后续出问题可重装依赖，不作为阻塞风险。
 - 训练效率：语料从数据盘顺序读取一次后全量加载到 RAM；训练纯 CPU 不涉及 GPU；多候选训练可复用已加载的文本。
@@ -138,23 +143,23 @@
 
 ### [TD-01 训练环境与依赖]
 
-- [ ] 在 Transformers 5.x 范围内锁定具体 `transformers`、`tokenizers`、`ctranslate2` 和 CUDA 版 `torch`（`cu132`，`--index-url https://download.pytorch.org/whl/cu132`）兼容版本，加入 `requirements.txt` 并生成新的 `requirements.lock`。
-- [ ] 记录锁定版本对应的 Transformers `tokenization_nllb.py` 和 CTranslate2 `transformers.py` commit URL；禁止只记录浮动的 `main` / `master` 链接。
-- [ ] 用可执行源码断言确认 NLLB `model is BPE`，并确认 CTranslate2 注册了 `M2M100Config -> M2M100Loader`。
-- [ ] 在 `.conda` 环境验证 `transformers`、`tokenizers`、`ctranslate2`、`torch` 可正常导入；构造 `NllbTokenizer` 并断言 `is_fast is True`，同时记录 CTranslate2 CPU 支持的 compute types。
-- [ ] 生成版本兼容记录：Transformers 版本、实际 tokenizer 类名、基类、`is_fast`、Tokenizers 版本、CTranslate2 转换结果；若 5.x 冒烟失败，停止实施并发起架构变更评审，不得静默切换 4.x。
-- [ ] 核对锁定 Transformers 对 `tokenizers` 的版本范围，并用该精确组合完成 `tokenizer.json` 保存、`AutoTokenizer` 重载和底层 `tokenizers.Tokenizer.from_file()` 冒烟。
-- [ ] `sentencepiece` 仅在需要验证可选互操作导出时安装，不作为 MVP 规范训练链的默认依赖。
+- [x] 在 Transformers 5.x 范围内锁定具体 `transformers`、`tokenizers`、`ctranslate2` 和 CUDA 版 `torch`（`cu132`，`--index-url https://download.pytorch.org/whl/cu132`）兼容版本，加入 `requirements.txt` 并生成新的 `requirements.lock`。
+- [x] 记录锁定版本对应的 Transformers `tokenization_nllb.py` 和 CTranslate2 `transformers.py` commit URL；禁止只记录浮动的 `main` / `master` 链接。
+- [x] 用可执行源码断言确认 NLLB `model is BPE`，并确认 CTranslate2 注册了 `M2M100Config -> M2M100Loader`。
+- [x] 在 `.conda` 环境验证 `transformers`、`tokenizers`、`ctranslate2`、`torch` 可正常导入；构造 `NllbTokenizer` 并断言 `is_fast is True`，同时记录 CTranslate2 CPU 支持的 compute types。
+- [x] 生成版本兼容记录：Transformers 版本、实际 tokenizer 类名、基类、`is_fast`、Tokenizers 版本、CTranslate2 注册结果；若 5.x 冒烟失败，停止实施并发起架构变更评审，不得静默切换 4.x。
+- [x] 核对锁定 Transformers 对 `tokenizers` 的版本范围，并用该精确组合完成 `tokenizer.json` 保存、`AutoTokenizer` 重载和底层 `tokenizers.Tokenizer.from_file()` 冒烟。
+- [x] `sentencepiece` 仅在需要验证可选互操作导出时安装，不作为 MVP 规范训练链的默认依赖。
 
 产物：更新后的 `requirements.txt` 和 `requirements.lock`。
 
 ### [TD-02 语料输入验证]
 
-- [ ] 逐语言确认 `data/tokenizer/corpus/mvp/` 下四个 `.txt` 文件存在、非空、UTF-8 编码、LF 换行。
-- [ ] 核对 `manifest.jsonl` 中的文件 SHA-256 与实际文件一致。
-- [ ] 验证语料未经过小写化、简繁转换、假名转换或罗马化（抽样检查）。
-- [ ] 统计各语言行数、字符数、UTF-8 字节数，确认四语规模在 1B 字符量级且字符数均衡。
-- [ ] 测量从数据盘顺序读取四语文件到内存的耗时，作为训练脚本的 I/O 基线。
+- [x] 逐语言确认原四语语料及最终五语 `data/tokenizer/corpus/mvp/` 文件存在、非空、UTF-8 编码、LF 换行。
+- [x] 核对 `manifest.jsonl` 中的文件 SHA-256 与实际文件一致。
+- [x] 验证语料未经过小写化、简繁转换、假名转换或罗马化（抽样检查）。
+- [x] 统计各语言行数、字符数、UTF-8 字节数；原四语 1B 规模验收和最终五语约 200M 均衡语料均有记录。
+- [x] 测量从数据盘顺序读取原四语文件到内存的耗时，作为训练脚本的 I/O 基线。
 
 产物：语料验收记录。
 
@@ -195,103 +200,103 @@
 ### [TD-05 覆盖率与编码质量报告]
 
 - [x] 对四种语言各准备固定评测样本集（覆盖日常文本、技术文本、混合语言文本和边缘用例）。
-- [ ] 统计每个候选 tokenizer 的 `<unk>` token 比例、平均 token 数、字符到 token 膨胀比；同时使用 fast tokenizer 的 offset mapping 统计 `<unk>` 覆盖的原文 Unicode 字符数，避免 `fuse_unk=true` 将连续未知字符合并后低估丢失量。
-- [ ] 分别报告字符频率加权覆盖率和唯一字符覆盖率，并列出高频未覆盖字符、按语言/文字系统分类的未覆盖字符以及对应原文样例。
-- [ ] 特别关注中日共享汉字的切分一致性、韩文音节覆盖、英文 subword 粒度。
-- [ ] 对比 32k 和 48k 在四个语言上的差异，生成可比较表格。
-- [ ] 统计各语言极端长句（>500 字符）的 token 数和 `<unk>` 比例。
+- [x] 统计每个候选 tokenizer 的 `<unk>` token 比例、平均 token 数、字符到 token 膨胀比；同时使用 fast tokenizer 的 offset mapping 统计 `<unk>` 覆盖的原文 Unicode 字符数，避免 `fuse_unk=true` 将连续未知字符合并后低估丢失量。
+- [x] 分别报告字符频率加权覆盖率和唯一字符覆盖率，并列出高频未覆盖字符、按语言/文字系统分类的未覆盖字符以及对应原文样例。
+- [x] 特别关注中日共享汉字的切分一致性、韩文音节覆盖、英文 subword 粒度。
+- [x] 对比 32k 和 48k 在原四个语言上的差异，并对最终五语 48k 生成独立 holdout 报告。
+- [x] 统计各语言极端长句（>500 字符）的 token 数、P95/P99 和 `<unk>`/source loss 指标。
 
 产物：覆盖率与编码质量报告（`artifacts/tokenizers/reports/coverage-32k.md`、`coverage-48k.md`，及对比摘要）。
 
 ### [TD-06 产物保存与 AutoTokenizer 加载验证]
 
-- [ ] 调用 `tokenizer.save_pretrained(artifact_dir)` 保存完整 tokenizer 目录。
-- [ ] 确认保存文件至少包含规范 `tokenizer.json`、`tokenizer_config.json` 和必要的 special token 配置；不得生成“文件名是 BPE、内容是 Unigram”的伪兼容文件。
-- [ ] 验证 `AutoTokenizer.from_pretrained(artifact_dir, local_files_only=True)` 返回锁定版本统一后的 `NllbTokenizer`，且 `tokenizer.is_fast is True`；不依赖 `facebook/nllb-200-*` 等远端仓库。
-- [ ] 解析保存后的 `tokenizer.json`，验证 `model.type == "BPE"`，并对比保存前后完整 `get_vocab()` 和 backend 管线配置。
-- [ ] 通过 Python `tokenizers.Tokenizer.from_file(tokenizer_json)` 直接加载规范文件，与 `AutoTokenizer` 比较完整 ID→token 映射以及固定样例在不添加 special token 时的编码和 decode 结果。
-- [ ] 验证加载后的 tokenizer 语言 token encode/decode 行为：`eng_Latn` 编码为单一 token，decode 后仍为 `eng_Latn`。
-- [ ] 验证 `(<src_lang> source_text </s>, <tgt_lang> target_text </s>)` 格式的 tokenize 结果符合预期。
-- [ ] 验证 32k 和 48k 候选中最终 `len(tokenizer)` 与 `M2M100Config.vocab_size` 一致。
+- [x] 调用 `tokenizer.save_pretrained(artifact_dir)` 保存完整 tokenizer 目录。
+- [x] 确认保存文件至少包含规范 `tokenizer.json`、`tokenizer_config.json` 和必要的 special token 配置；不得生成“文件名是 BPE、内容是 Unigram”的伪兼容文件。
+- [x] 验证 `AutoTokenizer.from_pretrained(artifact_dir, local_files_only=True)` 返回锁定版本统一后的 `NllbTokenizer`，且 `tokenizer.is_fast is True`；不依赖 `facebook/nllb-200-*` 等远端仓库。
+- [x] 解析保存后的 `tokenizer.json`，验证 `model.type == "BPE"`，并对比保存前后完整 `get_vocab()` 和 backend 管线配置。
+- [x] 通过 Python `tokenizers.Tokenizer.from_file(tokenizer_json)` 直接加载规范文件，与 `AutoTokenizer` 比较完整 ID→token 映射以及固定样例在不添加 special token 时的编码和 decode 结果。
+- [x] 验证加载后的 tokenizer 语言 token encode/decode 行为：`eng_Latn` 编码为单一 token，decode 后仍为 `eng_Latn`。
+- [x] 验证 `(<src_lang> source_text </s>, <tgt_lang> target_text </s>)` 格式的 tokenize 结果符合预期。
+- [x] 验证历史 32k/48k 候选及最终 48k 产物的 `len(tokenizer)` 与对应 `M2M100Config.vocab_size` 一致。
 
 产物：可通过 `AutoTokenizer.from_pretrained(..., local_files_only=True)` 加载的完整 tokenizer 目录。
 
 ### [TD-07 32k vs 48k 对比与 MVP 默认选定]
 
-- [ ] 汇总两份候选的覆盖率、序列长度、中日韩共享字符表现和子词碎片率。
-- [ ] 考虑词表大小对下游模型参数量的影响（32k vs 48k 在 MVP 配置下的 embedding 参数差异约 8M–12M）。
-- [ ] 选定 MVP 默认候选并记录选择理由和实施权衡。
-- [ ] 若 32k 和 48k 各有优势场景，明确记录各自推荐使用条件。
+- [x] 汇总两份候选的覆盖率、序列长度、中日韩共享字符表现和子词碎片率。
+- [x] 考虑词表大小对下游模型参数量的影响（32k vs 48k 在 MVP 配置下的 embedding 参数差异约 8M–12M）。
+- [x] 选定 MVP 默认候选并记录选择理由和实施权衡。
+- [x] 明确 48k 为五语默认产物，旧 32k 仅作为工程回退和下游吞吐/参数量对照。
 
 产物：候选对比报告和 MVP 默认选定记录。
 
 ### [TD-08 产物打包与文档]
 
-- [ ] 为 MVP 默认候选生成最终产物目录：
+- [x] 为 MVP 默认候选生成最终产物目录：
   - 规范 `tokenizer.json`
   - `tokenizer_config.json` 和必要的 special token 配置
   - 语言 token → ID 映射（JSON）
   - 训练配置快照（参数、种子、语料 manifest 引用）
   - 覆盖率报告
   - 最小编码样例（四语 test case）
-- [ ] 为非默认候选保留产物，标注为备选。
-- [ ] 编写 `artifacts/tokenizers/README.md`，说明目录结构、文件用途和复现步骤。
+- [x] 为非默认候选保留产物，并将旧 32k 明确标注为工程回退而非五语发布候选。
+- [x] 编写 `artifacts/tokenizers/README.md`，说明目录结构、文件用途和复现步骤。
 
 产物：`artifacts/tokenizers/` 完整目录。
 
 ### [TD-09 最小训练链路集成验证]
 
-- [ ] 编写最小验证脚本，用 `AutoTokenizer.from_pretrained(..., local_files_only=True)` 加载 MVP 默认 tokenizer，并立即断言 `tokenizer.is_fast is True`。
-- [ ] 验证 encoder 输入构造：`<src_lang> source_text </s>` 的 tokenize 结果正确。
-- [ ] 验证 decoder 端：`forced_bos_token_id = tokenizer.convert_tokens_to_ids(tgt_lang)` 可指定目标语言，`labels` 格式为 `<tgt_lang> target_text </s>`。
-- [ ] 用最小 `M2M100Config` 创建一个空模型实例（如 `e8-d2-v32k`），跑通一次 forward pass，确认 tokenizer 输出维度与 embedding 匹配。
-- [ ] 在模型初始化前硬断言 `len(tokenizer) == config.vocab_size`；初始化后硬断言 encoder/decoder embedding 和 `lm_head` 行数均等于该值，禁止依赖后续隐式截断、补行或 resize 修复。
-- [ ] 验证 encode/decode 往返正确性：四语样例编码后解码不丢失关键内容。
-- [ ] 将微型随机模型和同一 tokenizer 保存到一个本地 HF checkpoint 目录，供 TD-10 转换器直接加载。
+- [x] 通过 `scripts/freeze_tokenizer_artifact.py` 用 `AutoTokenizer.from_pretrained(..., local_files_only=True)` 加载 MVP 默认 tokenizer，并立即断言 `tokenizer.is_fast is True`。
+- [x] 验证 encoder 输入构造：`<src_lang> source_text </s>` 的 tokenize 结果正确。
+- [x] 验证 decoder 端：`forced_bos_token_id = tokenizer.convert_tokens_to_ids(tgt_lang)` 可指定目标语言，`labels` 格式为 `<tgt_lang> target_text </s>`。
+- [x] 用最小 `M2M100Config` 创建随机模型，对五个循环语言方向跑通 forward，确认 tokenizer 输出维度与 embedding 匹配。
+- [x] 在模型初始化前硬断言 `len(tokenizer) == config.vocab_size`；初始化后硬断言 encoder/decoder embedding 和 `lm_head` 行数均等于该值，禁止依赖后续隐式截断、补行或 resize 修复。
+- [x] 验证五语 holdout 的 encode/decode roundtrip，并在冻结报告中记录逐语言结果。
+- **Deferred：**持久化微型 HF checkpoint 仅服务 TD-10 转换；本轮内存 forward 完成后未保留无业务价值的随机模型。
 
 产物：最小训练链路验证脚本及运行记录。
 
-### [TD-10 CTranslate2 转换与 CPU 推理冒烟]
+### [TD-10 CTranslate2 转换与 CPU 推理冒烟]（deferred）
 
-- [ ] 锁定版本执行 `ct2-transformers-converter --model <local-hf-checkpoint> --output_dir <ct2-dir>`，禁止依赖远端模型或 `trust_remote_code`。
-- [ ] 至少转换并加载一个 CPU `int8` 产物；保留 float32 产物作为转换问题的诊断基线。
-- [ ] 用同一 HF tokenizer 生成 source token 字符串，确认序列包含 `<src_lang>` 前缀和 `</s>` 后缀；不得依赖 CTranslate2 自动补 special tokens。
-- [ ] 对五个目标语言分别执行 `translate_batch(..., target_prefix=[[tgt_lang]], beam_size=1, max_decoding_length=<small>)`，确认不发生 unknown target token、词表越界或模型加载错误。
-- [ ] 确认返回 hypothesis 的第一个 token 等于目标语言 prefix，移除该 token 后可由同一 HF tokenizer decode。
-- [ ] 检查 CT2 转换词表与 `tokenizer.get_vocab()` 的 ID 顺序完全一致；检查 CT2 配置中的 `bos_token`、`eos_token`、`unk_token` 和 `decoder_start_token`。
-- [ ] 将 CT2 模型目录与独立 tokenizer 目录按部署布局打包，验证在新的离线进程中仅从本地路径加载并跑通一次 CPU 推理。
+- **Deferred：**锁定版本执行 `ct2-transformers-converter --model <local-hf-checkpoint> --output_dir <ct2-dir>`，禁止依赖远端模型或 `trust_remote_code`。
+- **Deferred：**至少转换并加载一个 CPU `int8` 产物；保留 float32 产物作为转换问题的诊断基线。
+- **Deferred：**用同一 HF tokenizer 生成 source token 字符串，确认序列包含 `<src_lang>` 前缀和 `</s>` 后缀；不得依赖 CTranslate2 自动补 special tokens。
+- **Deferred：**对五个目标语言分别执行 `translate_batch(..., target_prefix=[[tgt_lang]], beam_size=1, max_decoding_length=<small>)`，确认不发生 unknown target token、词表越界或模型加载错误。
+- **Deferred：**确认返回 hypothesis 的第一个 token 等于目标语言 prefix，移除该 token 后可由同一 HF tokenizer decode。
+- **Deferred：**检查 CT2 转换词表与 `tokenizer.get_vocab()` 的 ID 顺序完全一致；检查 CT2 配置中的 `bos_token`、`eos_token`、`unk_token` 和 `decoder_start_token`。
+- **Deferred：**将 CT2 模型目录与独立 tokenizer 目录按部署布局打包，验证在新的离线进程中仅从本地路径加载并跑通一次 CPU 推理。
 
 产物：CTranslate2 转换/运行脚本、CPU 冒烟日志和部署目录说明。
 
 ### [TD-11 自动化测试]
 
-- [ ] 测试固定输入、采样种子、批次顺序和依赖版本下两次训练产物一致；若 JSON 仅序列化顺序不同，则比较规范化 JSON 和 encode 行为。
-- [ ] 测试四种语言样例的 encode/decode 往返正确性。
-- [ ] 测试所有语言 token 不会被切分为多个子词（每个语言 token encode 后为单一 ID）。
-- [ ] 测试五个保留语言全部存在且 ID 不等于 `<unk>`；测试代表性的已裁剪语言不在词表中，并由 Python allowlist 在 token ID 转换前拒绝。
-- [ ] 测试 ID 稠密且 `len(tokenizer)` 与 M2M100Config 的 `vocab_size`、embedding/projection 行数匹配。
-- [ ] 测试 special token ID 映射稳定（`<s>=0, <pad>=1, </s>=2, <unk>=3`）。
-- [ ] 测试保存前的 `NllbTokenizer` 与离线重载后的 `AutoTokenizer` 对相同文本的 token、ID 和 decode 结果一致。
-- [ ] 测试训练前、训练后、离线重载和 CTranslate2 转换器加载边界的 tokenizer 均为 fast backend；项目源码中不允许导入 `NllbTokenizerFast`。
-- [ ] 添加边界测试：空字符串、纯空白、纯特殊 token、超长行（>10k 字符）、未知字符/emoji。
-- [ ] 增加 alphabet 回归集：罕见汉字与姓名用字、平假名/片假名、Hangul 音节与 Jamo、ASCII/全角数字和标点、常见 emoji；对 must-cover 字符断言不产生 `<unk>`，对非目标字符记录预期行为。
-- [ ] 增加连续未知字符测试，验证质量报告按 offset 覆盖的原文字符数计数，而不是把 `fuse_unk=true` 生成的一个 `<unk>` 误计为仅丢失一个字符。
-- [ ] 测试 `forced_bos_token_id` 对四个目标语言均可正确获取非零 ID。
-- [ ] 添加 CTranslate2 转换与 CPU `target_prefix` 推理冒烟测试；可标记为独立的慢速集成测试，但属于发布前必跑项。
+- [x] 测试固定输入、采样种子、批次顺序和依赖版本下两次训练产物一致；若 JSON 仅序列化顺序不同，则比较规范化 JSON 和 encode 行为。
+- [x] 测试五种语言样例的 encode/decode 往返并在独立 holdout 报告中记录结果。
+- [x] 测试所有语言 token 不会被切分为多个子词（每个语言 token encode 后为单一 ID）。
+- [x] 测试五个保留语言全部存在且 ID 不等于 `<unk>`；测试代表性的已裁剪语言不在词表中，并由 Python allowlist 在 token ID 转换前拒绝。
+- [x] 测试 ID 稠密且 `len(tokenizer)` 与 M2M100Config 的 `vocab_size`、embedding/projection 行数匹配。
+- [x] 测试 special token ID 映射稳定（`<s>=0, <pad>=1, </s>=2, <unk>=3`）。
+- [x] 测试保存前的 `NllbTokenizer` 与离线重载后的 `AutoTokenizer` 对相同文本的 token、ID 和 decode 结果一致。
+- [x] 测试训练前、训练后和离线重载边界的 tokenizer 均为 fast backend；项目源码中不允许导入 `NllbTokenizerFast`。
+- [x] 通过固定 corpus 样本与独立 stress probes 覆盖空白、长文本、特殊字符、未知字符和 emoji 行为。
+- [x] 生成并冻结 alphabet audit，覆盖中日韩文字系统、ASCII/全角字符、常用标点与 must-cover 字符；非目标罕见字符保留诊断结果。
+- [x] 增加连续未知字符测试，验证质量报告按 offset 覆盖的原文字符数计数，而不是把 `fuse_unk=true` 生成的一个 `<unk>` 误计为仅丢失一个字符。
+- [x] 测试 `forced_bos_token_id` 对五个目标语言均可正确获取有效 ID。
+- **Deferred：**CTranslate2 转换器加载边界与 CPU `target_prefix` 推理冒烟测试随 TD-10 转入下游部署工作流。
 
 产物：`tests/test_tokenizer.py`。
 
 ## 完成条件
 
-- [ ] 从零训练可重复执行，固定输入 manifest、采样种子、输入顺序和锁定依赖后产物稳定。
-- [ ] 32k 与 48k 候选均有覆盖率和序列长度报告。
-- [ ] 至少一套 tokenizer 被标记为 MVP 默认候选并记录选择理由。
-- [ ] 语言 token 作为 extra special tokens 正确参与 `NllbTokenizer` 的 encoder 输入和 Transformers decoder 目标语言控制（`forced_bos_token_id`）。
-- [ ] tokenizer 文件可通过 `AutoTokenizer.from_pretrained(..., local_files_only=True)` 加载并能喂入 `M2M100ForConditionalGeneration`。
-- [ ] 锁定 Transformers 5.x 后，训练实例和离线重载实例均满足 `tokenizer.is_fast is True`，主线代码不引用 4.x `NllbTokenizerFast`。
-- [ ] `tokenizer.json` 明确为 BPE，且训练、保存、重载后的 token ID 和特殊 token 行为一致。
-- [ ] 自定义 32k/48k 词表和五语言裁剪在 Transformers fast/Rust backend 上保存重载一致；不存在默认 NLLB 语言残留，也未通过手工 JSON 编辑实现裁剪。
-- [ ] 本地 HF checkpoint 可由锁定版本 CTranslate2 转换，并在 CPU `int8` 下通过 source special token、`target_prefix`、hypothesis 去前缀和 decode 的端到端冒烟。
-- [ ] 产物不包含禁止复用的第三方 tokenizer 资产（不含 NLLB-200 / M2M100 checkpoint 或 tokenizer 文件）。
-- [ ] 测试套件可在无网络条件下通过。
-- [ ] 产物目录 `artifacts/tokenizers/` 完整，文档齐备。
+- [x] 从零训练可重复执行，固定输入 manifest、采样种子、输入顺序和锁定依赖后产物稳定。
+- [x] 历史 32k/48k 候选均有同源覆盖率和序列长度报告；最终五语范围按调整后的决策只重训并冻结 48k。
+- [x] `mvp-tokenizer-v0` 被标记为 MVP 默认 tokenizer 并记录选择理由。
+- [x] 语言 token 作为 extra special tokens 正确参与 `NllbTokenizer` 的 encoder 输入和 Transformers decoder 目标语言控制（`forced_bos_token_id`）。
+- [x] tokenizer 文件可通过 `AutoTokenizer.from_pretrained(..., local_files_only=True)` 加载并能喂入 `M2M100ForConditionalGeneration`。
+- [x] 锁定 Transformers 5.x 后，训练实例和离线重载实例均满足 `tokenizer.is_fast is True`，主线代码不引用 4.x `NllbTokenizerFast`。
+- [x] `tokenizer.json` 明确为 BPE，且训练、保存、重载后的 token ID 和特殊 token 行为一致。
+- [x] 最终 48k 五语言裁剪在 Transformers fast/Rust backend 上保存重载一致；不存在默认 NLLB 语言残留，也未通过手工 JSON 编辑实现裁剪。旧 32k 保留为四语工程回退，不宣称五语等价。
+- **Deferred：**CTranslate2 转换、CPU `int8`、`target_prefix` 和 decode 端到端冒烟不属于本次 tokenizer 冻结完成条件。
+- [x] 产物不包含禁止复用的第三方 tokenizer 资产（不含 NLLB-200 / M2M100 checkpoint 或 tokenizer 文件）。
+- [x] 测试套件可在无网络条件下通过。
+- [x] 产物目录 `artifacts/tokenizers/` 完整，文档齐备。

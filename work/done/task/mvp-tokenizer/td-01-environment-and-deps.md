@@ -11,7 +11,7 @@
 ## 输入
 
 - [mvp tokenizer todo](../../todo/mvp-tokenizer.md)
-- [Python 环境约定](../../../docs/python-environment.md)
+- [Python 环境约定](../../../../docs/python-environment.md)
 - [Transformers 5.13.1 NLLB tokenizer 源码](https://github.com/huggingface/transformers/blob/v5.13.1/src/transformers/models/nllb/tokenization_nllb.py)
 - [CTranslate2 Transformers converter 源码](https://github.com/OpenNMT/CTranslate2/blob/master/python/ctranslate2/converters/transformers.py)
 

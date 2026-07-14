@@ -1,6 +1,6 @@
 # plan: mvp tokenizer
 
-状态：done（`mvp-tokenizer-v0` 已于 2026-07-14 冻结）
+状态：done / archived（`mvp-tokenizer-v0` 已于 2026-07-14 冻结并通过 review）
 
 ## 2026-07-14 目标调整与结果
 
@@ -13,6 +13,13 @@
 - CTranslate2 发布验收移为下游部署任务，不再阻塞本次 tokenizer 重训与冻结。
 
 该目标已经完成。默认产物为 `artifacts/tokenizers/mvp-tokenizer-v0/`，冻结根 SHA-256 为 `eb79ae22f523f1d9c9fcf75b80f2b322e3c2882a8fddb7545b5933dd4053fa7f`；完整记录见 `artifacts/tokenizers/reports/mvp-tokenizer-v0/freeze_acceptance.md`。下文保留最初架构调研和历史候选路线，若与本节冲突，以本节和冻结记录为准。
+
+## 工作流归档
+
+- 已完成 todo：[mvp tokenizer](../done/todo/mvp-tokenizer.md)
+- 已完成 task 索引：[mvp tokenizer tasks](../done/task/mvp-tokenizer/index.md)
+- 通过的 review：[mvp tokenizer review](../done/review/mvp-tokenizer.md)
+- 下游边界：CTranslate2 转换、CPU 推理和部署打包未在本 plan 内执行，现由新的 [CTranslate2 deployment validation](ctranslate2-deployment.md) plan/todo 承接，不重新打开本次 tokenizer 冻结记录。
 
 ## 目标
 

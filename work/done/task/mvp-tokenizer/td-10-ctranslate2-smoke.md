@@ -1,6 +1,8 @@
 # task TD-10: CTranslate2 转换与 CPU 推理冒烟
 
-状态：deferred（下游部署任务，不阻塞 `mvp-tokenizer-v0` 冻结）
+状态：deferred / migrated（已迁移到新的下游部署工作流，不阻塞 `mvp-tokenizer-v0` 冻结）
+
+承接任务：[CTranslate2 deployment validation](../../../todo/ctranslate2-deployment.md)
 
 依赖：TD-09（最小训练链路集成验证）
 

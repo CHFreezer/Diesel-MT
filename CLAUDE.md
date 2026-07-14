@@ -87,12 +87,13 @@ work/plan/    → work/todo/    → work/task/    → work/review/    → work/d
 ```
 
 Current state:
-- **Completed**: Tokenizer dataset fetch pipeline (TD-01 through TD-12, fully tested, MVP corpus built with ~4B characters across 4 languages).
-- **Next phase**: MVP tokenizer training (`work/plan/mvp-tokenizer.md`). Train a SentencePiece-compatible tokenizer from scratch with 32k and 48k vocab sizes, using the corpus in `data/tokenizer/corpus/mvp/`.
+- **Completed**: Tokenizer dataset fetch pipeline (TD-01 through TD-12) and the bounded MVP tokenizer workflow. The frozen `mvp-tokenizer-v0` is a 49,152-token Hugging Face Rust BPE + Metaspace artifact for `eng_Latn`, `zho_Hans`, `zho_Hant`, `jpn_Jpan`, and `kor_Hang`.
+- **Archived workflow**: Plan remains at `work/plan/mvp-tokenizer.md`; the completed todo, task set, and review record are under `work/done/`.
+- **Active workflow**: CTranslate2 deployment validation (`work/plan/ctranslate2-deployment.md`) now owns the deferred checkpoint, conversion, vocabulary-integrity, five-language CPU inference, and offline-package checks. This workflow does not reopen or mutate the frozen tokenizer.
 
 ## Testing
 
-Tests in `tests/test_tokenizer_dataset_pipeline.py` (19 tests, 526 lines). They simulate HPLT sources with in-memory fixtures — no network dependency. Key patterns:
+The offline suite currently contains 45 tests across the dataset pipeline, tokenizer training/checkpointing, evaluation, and artifact-freeze modules. Small fixtures simulate HPLT sources without network access. Key patterns:
 
 - Config validation (explicit registry, missing fields, error paths)
 - Text cleaning correctness (zh/ja/ko-specific patterns)
@@ -102,8 +103,11 @@ Tests in `tests/test_tokenizer_dataset_pipeline.py` (19 tests, 526 lines). They 
 - Cache validation and network-failure handling
 - CLI dry-run output checks
 - Atomic-output guarantee (no half-written manifest)
+- Save/reload and deterministic tokenizer training
+- Fixed evaluation-set construction and unknown-character accounting
+- Frozen artifact manifest integrity and five-language micro-M2M100 forwards
 
-Fixtures in `tests/fixtures/tokenizer_datasets/` are small JSONL samples for each language.
+Fixtures in `tests/fixtures/tokenizer_datasets/` are small JSONL samples for all five languages.
 
 ## Model configuration
 

@@ -1,6 +1,6 @@
 # task index: mvp tokenizer
 
-状态：done（tokenizer 冻结范围）；TD-10 CTranslate2 保留为下游部署任务。
+状态：done / archived（tokenizer 冻结范围）；TD-10 CTranslate2 保留为下游部署任务。
 
 2026-07-14 最终执行边界为五语 48k 一次性重训与冻结。`mvp-tokenizer-v0` 已通过独立 holdout、保存/重载、五语 language token、微型 M2M100 forward 和产物 SHA-256 验收；冻结根为 `eb79ae22f523f1d9c9fcf75b80f2b322e3c2882a8fddb7545b5933dd4053fa7f`。
 
@@ -8,6 +8,7 @@
 
 - todo：[mvp tokenizer](../../todo/mvp-tokenizer.md)
 - plan：[mvp tokenizer](../../../plan/mvp-tokenizer.md)
+- review：[mvp tokenizer review](../../review/mvp-tokenizer.md)
 - 本机硬件记录：[local-hardware.md](local-hardware.md)（通过 `.git/info/exclude` 排除，不提交）
 
 ## 依赖图

@@ -147,7 +147,7 @@ python -m pip install -r requirements.txt
 
 ### plan
 
-`work/plan/` 说明当前阶段要解决的问题、边界、约束和验收标准，用于统一方向，不承载具体执行列表。
+`work/plan/` 说明阶段要解决的问题、边界、约束和验收标准，用于统一方向，不承载具体执行列表。阶段完成后 plan 保留原位作为决策记录，状态改为 `done / archived`，并链接到 `work/done/` 中的归档材料。
 
 ### todo
 
@@ -159,11 +159,11 @@ python -m pip install -r requirements.txt
 
 ### review
 
-`work/review/` 对 task 结果进行复核，重点检查可复现性、正确性、数据边界、评估结果和部署风险。实现完成不等于 done，review 通过后才能进入下一状态。
+`work/review/` 保存正在复核的 task，重点检查可复现性、正确性、数据边界、评估结果和部署风险。实现完成不等于 done；review 通过后，todo、task 和 review 记录分别归档到 `work/done/` 下的对应目录。
 
 ### done
 
-`work/done/` 保存已完成实现、验证和记录的任务。done 必须能追溯到代码、实验结果或评审记录，不能只依赖口头结论。
+`work/done/` 按 `todo/`、`task/`、`review/` 保存已完成实现、验证和评审记录。done 必须能追溯到代码、实验结果和通过的评审结论，不能只依赖状态字段或口头结论；移入 done 后应同步修正 plan 和归档文档中的相对链接。
 
 ## 常用命令
 
