@@ -1,0 +1,11 @@
+{
+  "description": "Diesel-MT language token to ID mapping",
+  "mapping": {
+    "eng_Latn": 5,
+    "jpn_Jpan": 8,
+    "kor_Hang": 9,
+    "zho_Hans": 6,
+    "zho_Hant": 7
+  },
+  "usage": "Validate tgt_lang, then use convert_tokens_to_ids(tgt_lang) as forced_bos_token_id."
+}

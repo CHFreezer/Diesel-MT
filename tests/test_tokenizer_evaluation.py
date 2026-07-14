@@ -134,5 +134,5 @@ def test_evaluation_separates_corpus_and_stress_probes(tmp_path: Path) -> None:
     assert metrics["category_metrics"]["eng_Latn"]["empty"]["samples"] == 1
     assert metrics["total_corpus_metrics"]["source_character_loss_rate"] > 0
     report = render_candidate_report(metrics)
-    assert "Preliminary smoke result" in report
+    assert "Sampled-corpus result" in report
     assert "Synthetic stress probes" in report

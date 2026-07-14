@@ -17,6 +17,7 @@ from tokenizer_checkpoint import (  # noqa: E402
     inspect_length_prefixed_snapshot,
     write_length_prefixed_snapshot,
 )
+from train_tokenizer_checkpointed import training_provenance_from_state  # noqa: E402
 
 
 def test_length_prefixed_snapshot_preserves_exact_python_strings(tmp_path: Path) -> None:
@@ -54,3 +55,29 @@ def test_snapshot_count_mismatch_is_not_published(tmp_path: Path) -> None:
             expected_records=3,
         )
     assert not output.exists()
+
+
+def test_training_provenance_comes_from_checkpoint_state() -> None:
+    snapshot = {"records": 42, "snapshot_sha256": "snapshot-hash"}
+    state = {
+        "config": {
+            "seed": 20260713,
+            "sample_fraction": 0.5,
+            "sampling_algorithm": "seeded-sampling-v1",
+            "balancing_algorithm": "character-budget-v1",
+            "fingerprint": "state-fingerprint",
+        },
+        "snapshot": snapshot,
+    }
+
+    provenance = training_provenance_from_state(state)
+
+    assert provenance == {
+        "seed": 20260713,
+        "sample_fraction": 0.5,
+        "sampling_algorithm": "seeded-sampling-v1",
+        "balancing_algorithm": "character-budget-v1",
+        "checkpoint_config_fingerprint": "state-fingerprint",
+        "snapshot": snapshot,
+    }
+    assert provenance["snapshot"] is not snapshot

@@ -143,3 +143,26 @@
 - 用 5%/10% 峰值分别做幂律、带基础开销幂律和线性外推，全量核心训练的进程树峰值约为 **113–160 GiB**，中间估计约 **137 GiB**。
 - 全量 snapshot 预计约 8.54 GiB，feed checkpoint 预计约 5.84 GiB；磁盘和 feed 阶段不是瓶颈，瓶颈是官方 BPE 的 tokenize words/count pairs/merge 内存结构。
 - 当前机器约 100 GiB 可用物理内存，不应直接运行全量 32k。在 80 GiB 进程上限下，可承受比例估算约 49%–64%；为保留安全余量，本机最多按 **50%** 语料训练。正式全量建议使用至少 **192 GB RAM** 的机器。
+
+## 50% 语料训练记录（2026-07-14）
+
+按本机上限使用 checkpointed 路线顺序训练 32k/48k 两个候选，命令参数为 `sample_fraction=0.5`、`seed=20260713`、16 线程、80 GiB 进程树 RSS 上限、系统可用内存 16 GiB 告警/4 GiB 终止。checkpoint、staging、控制台日志和逐秒 watchdog 日志全部位于 `D:\Diesel-MT-tokenizer-stage\checkpoints\mvp-tokenizer-50pct-20260714-v1\`。
+
+- 四语源文件完成顺序扫描和 manifest/SHA-256 校验；抽样并按字符数对齐后共有 5,763,471 行、1,998,439,416 字符、23,635 个唯一字符。
+- canonical snapshot 为 4,604,567,336 B（SHA-256 `23d21940dac41a5cb9bfc40232d1410375a677b1920503d6051960c432f7482b`）；feed checkpoint 为 3,051,402,382 B（SHA-256 `6aad79b997d3b001b53f95ff2643ab99f147f81ca83d21190a24a26e4cb4c6fe`）。
+- 输入顺序 SHA-256 为 `f276da8d4f0da7cb64f78efd42830c28b95a9ba37a5481cc1c561412dc999698`；state config fingerprint 为 `a1c0fcca1bc597ba185382ebaa7d9d36aa1bbc24ad4fd3fc779c55fc3235face`。
+- 语料加载/均衡耗时 162.6 秒，Rust feed 耗时 466.5 秒；端到端运行 5,763.2 秒。
+
+| 候选 | Rust 核心训练 | 含验证/发布耗时 | 进程树峰值 RSS | 系统最低可用内存 | 最终 vocab | must-cover 缺失 | 产物 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| mvp-32k | 2,359.1 s | 2,399.1 s | 78.977 GiB | 22.529 GiB | 32,768 | 0 | `artifacts/tokenizers/50pct/mvp-32k/` |
+| mvp-48k | 2,593.6 s | 2,626.9 s | 75.740 GiB | 25.345 GiB | 49,152 | 0 | `artifacts/tokenizers/50pct/mvp-48k/` |
+
+独立复核确认两个候选均可由 `AutoTokenizer.from_pretrained(..., local_files_only=True)` 加载为 fast `NllbTokenizer`；backend 为 BPE，`fuse_unk=true`、`byte_fallback=false`，ID 稠密，特殊 token/语言 token ID 与 10% 冒烟一致。各自 6 个 payload 文件均通过 artifact manifest 的字节数和 SHA-256 复核。`tokenizer.json` SHA-256 分别为：
+
+- 32k：`ad750d7a68cb4e3f1ce7b7781152826e59f56f9fdf8710e8ca84c7dfc4e17684`
+- 48k：`9ad394a5a10fd9575f3c3cdcd3b3b8d87975abb67fda779ac795e9a375c7653d`
+
+本次复核发现 checkpointed 产物最初只在 state manifest 记录 `sample_fraction`/`seed`，候选 `training_meta.json` 缺少这两个顶层字段，可能导致后续评测误判为全量。训练脚本已改为从不可变 checkpoint state 写入 `seed`、`sample_fraction`、采样/均衡算法、state fingerprint 和 snapshot 摘要；本次两个候选的元数据与 artifact manifest 已原子更新，tokenizer JSON 和 token ID 未修改。
+
+最终回归：`.conda\python.exe -m pytest -q` 为 33 passed；独立 `--phase prepare` 复核在 14.9 秒内命中并验证既有 feed checkpoint。

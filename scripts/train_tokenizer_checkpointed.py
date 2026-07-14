@@ -159,6 +159,32 @@ def validate_existing_state(state: Mapping, expected_config: Mapping) -> None:
         )
 
 
+def training_provenance_from_state(state: Mapping) -> dict:
+    """Return immutable corpus provenance for candidate training metadata."""
+    config = state.get("config")
+    snapshot = state.get("snapshot")
+    if not isinstance(config, Mapping) or not isinstance(snapshot, Mapping):
+        raise RuntimeError("checkpoint state is missing config or snapshot provenance")
+    required_config = (
+        "seed",
+        "sample_fraction",
+        "sampling_algorithm",
+        "balancing_algorithm",
+        "fingerprint",
+    )
+    missing = [key for key in required_config if key not in config]
+    if missing:
+        raise RuntimeError(f"checkpoint state config is missing provenance fields: {missing}")
+    return {
+        "seed": config["seed"],
+        "sample_fraction": config["sample_fraction"],
+        "sampling_algorithm": config["sampling_algorithm"],
+        "balancing_algorithm": config["balancing_algorithm"],
+        "checkpoint_config_fingerprint": config["fingerprint"],
+        "snapshot": dict(snapshot),
+    }
+
+
 def validate_checkpoint_summary(state: Mapping, actual: Mapping) -> None:
     expected = state.get("checkpoint")
     if not isinstance(expected, dict):
@@ -482,6 +508,7 @@ def train_candidates(args: argparse.Namespace) -> None:
                 "created_at_utc": datetime.now(timezone.utc).isoformat(),
                 "training_mode": "rust-feed-checkpoint-v1",
                 "vocab_size": vocab_size,
+                **training_provenance_from_state(state),
                 "min_frequency": args.min_frequency,
                 "limit_alphabet": alphabet_limit,
                 "num_threads": args.num_threads,

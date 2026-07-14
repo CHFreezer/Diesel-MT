@@ -869,15 +869,16 @@ def _markdown_table(headers: Sequence[str], rows: Iterable[Sequence[object]]) ->
 def render_candidate_report(metrics: Mapping) -> str:
     training = metrics.get("training_metadata") or {}
     sample_fraction = training.get("sample_fraction")
-    preliminary = sample_fraction is not None and float(sample_fraction) < 1.0
+    sampled_corpus = sample_fraction is not None and float(sample_fraction) < 1.0
     lines = [
         f"# Tokenizer coverage report: {metrics['label']}",
         "",
     ]
-    if preliminary:
+    if sampled_corpus:
         lines.extend(
             [
-                f"> Preliminary smoke result: this tokenizer was trained with sample_fraction={sample_fraction}; do not use it for final TD-07 selection.",
+                f"> Sampled-corpus result: this tokenizer was trained with sample_fraction={sample_fraction}. "
+                "Compare it only with candidates that use the same training provenance; this report does not claim full-corpus coverage.",
                 "",
             ]
         )
@@ -1061,7 +1062,8 @@ def render_comparison_report(metrics_by_label: Mapping[str, Mapping]) -> str:
     if any(float((metrics.get("training_metadata") or {}).get("sample_fraction", 1.0)) < 1.0 for metrics in metrics_by_label.values()):
         lines.extend(
             [
-                "> Preliminary smoke comparison. At least one candidate was trained on a corpus sample; final TD-07 selection requires full-corpus artifacts.",
+                "> Sampled-corpus comparison. At least one candidate used sample_fraction < 1. "
+                "Compare candidates only when their training provenance matches; this report does not claim full-corpus coverage.",
                 "",
             ]
         )
