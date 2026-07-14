@@ -69,6 +69,8 @@ The project has no `src/` layout, `__init__.py` files, or installable package. P
 - **`scripts/model_training_contract.py`** — Strict MVP model-data/student/source-lock contract: five tags, nine undirected pairs, 18 routes, canonical config hashing, provenance schema, path boundaries, and fail-fast validation.
 - **`scripts/prepare_model_data.py`** — Thin TD-03 CLI for side-effect-free dry runs, locked-cache/offline builds, and identity-bound locale checkpoint resume.
 - **`scripts/model_data_pipeline.py`** — Deterministic MASSIVE parallel-data adapter: resumable archive fetch, nested file verification, conservative multilingual cleaning, stable sample/group identities, provenance, atomic corpus/report publication, and manifest-last completion.
+- **`scripts/finalize_model_data.py`** — Thin TD-04 CLI that validates the TD-03 manifest, enforces external-reference completeness, and publishes finalized split data only after contamination checks.
+- **`scripts/model_data_split_pipeline.py`** — Group/component hash split, exact/near deduplication, derivation binding, external tokenizer/evaluation contamination scan, reverse-route expansion, test-identity freeze, leakage audit, and manifest-last publication.
 - **`scripts/build_micro_m2m100_checkpoint.py`** — Deterministically builds and validates the Git-ignored random HF checkpoint consumed by the CTranslate2 deployment workflow.
 - **`scripts/validate_ctranslate2_deployment.py`** — Runs the serial CT2 conversion, ordered-vocabulary validation, five-tag CPU inference, and offline-package phases while merging machine-readable results into one workflow JSON.
 - **`scripts/run_offline_ctranslate2_smoke.py`** — Self-contained deployment-root runner copied into the offline package; verifies its manifest and blocks Python socket connections before local inference.
@@ -106,11 +108,11 @@ work/plan/    → work/todo/    → work/task/    → work/review/    → work/d
 Current state:
 - **Completed**: Tokenizer dataset fetch pipeline (TD-01 through TD-12), the bounded MVP tokenizer workflow, and CTranslate2 deployment validation. The frozen `mvp-tokenizer-v0` is a 49,152-token Hugging Face Rust BPE + Metaspace artifact for five model tags: `eng_Latn`, `zho_Hans`, `zho_Hant`, `jpn_Jpan`, and `kor_Hang`.
 - **Archived workflows**: Plans remain under `work/plan/`; completed todos, task sets, and review records are under `work/done/`. Narrative evidence belongs in the task and unified review documents; the CT2 workflow's single machine-readable record is `artifacts/ctranslate2/deployment-validation.json`.
-- **Active workflow**: `work/plan/mvp-model-training.md`, `work/todo/mvp-model-training.md`, and `work/task/mvp-model-training/`. TD-01 through TD-03 are completed; TD-04 through TD-18 are pending. Do not reopen or mutate the frozen tokenizer or reinterpret the random deployment checkpoint as a trained model.
+- **Active workflow**: `work/plan/mvp-model-training.md`, `work/todo/mvp-model-training.md`, and `work/task/mvp-model-training/`. TD-01 through TD-04 are completed; TD-05 through TD-18 are pending. Do not reopen or mutate the frozen tokenizer or reinterpret the random deployment checkpoint as a trained model.
 
 ## Testing
 
-The offline suite currently contains 85 tests across the tokenizer/model-data pipelines, tokenizer training/checkpointing, evaluation, artifact-freeze, micro-checkpoint, and CTranslate2 deployment modules. Small fixtures simulate HPLT, MASSIVE 1.1, and model-training contracts without network access. Key patterns:
+The offline suite currently contains 99 tests across the tokenizer/model-data pipelines, tokenizer training/checkpointing, evaluation, artifact-freeze, micro-checkpoint, and CTranslate2 deployment modules. Small fixtures simulate HPLT, MASSIVE 1.1, group split/dedup/leakage, and model-training contracts without network access. Key patterns:
 
 - Config validation (explicit registry, missing fields, error paths)
 - Text cleaning correctness (zh/ja/ko-specific patterns)
@@ -124,6 +126,7 @@ The offline suite currently contains 85 tests across the tokenizer/model-data pi
 - Fixed evaluation-set construction and unknown-character accounting
 - Frozen artifact manifest integrity and five-tag micro-M2M100 forwards
 - Locked MASSIVE archive/member verification, five-locale alignment, conservative cleaning, stable parallel sample/group IDs, offline/cache/resume reproducibility, and manifest-last failure safety
+- Stable component-hash train/dev/test split, exact/near duplicate binding, forward/reverse isolation, derived-group validation, tokenizer/evaluation reference policies, blocked-contamination reports, frozen test identity, and order-independent finalized manifests
 - Model-training schema/provenance, 9-pair/18-route invariants, config/source-lock identity, and path-boundary rejection
 
 Fixtures in `tests/fixtures/tokenizer_datasets/` are small JSONL samples for all five model language tags.

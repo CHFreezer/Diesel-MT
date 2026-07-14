@@ -1,0 +1,43 @@
+schema_version: 1
+
+identity:
+  name: mvp_model_contamination_registry
+  status: td04-locked-runtime-inputs
+
+reference_sets:
+  - reference_id: tokenizer-corpus-mvp
+    kind: tokenizer_corpus
+    policy: report
+    manifest:
+      path: data/tokenizer/corpus/mvp/manifest.jsonl
+      format: tokenizer-manifest-jsonl
+      bytes: 13071
+      sha256: b3d8d6f4f559813929c75086e6060b74a922a87cdb06646973d1168b5618c977
+  - reference_id: tokenizer-holdout-mvp
+    kind: tokenizer_holdout
+    policy: report
+    manifest:
+      path: data/tokenizer/holdout/mvp/manifest.jsonl
+      format: tokenizer-manifest-jsonl
+      bytes: 11454
+      sha256: c5bec116578ea88d37f325c3e18c66a889ef34aa263bb876e821456c500f9ffe
+  - reference_id: tokenizer-evaluation-mvp-v0
+    kind: tokenizer_evaluation
+    policy: report
+    manifest:
+      path: data/tokenizer/evaluation/mvp-v0/manifest.json
+      format: tokenizer-evaluation-manifest-json
+      bytes: 3177
+      sha256: 4175b4063bc8e4a8969eca48a0d60a5da0e0d09ff55b1bce985e9898717244e6
+
+requirements:
+  formal_mt_evaluation:
+    status: pending_td05
+    required_before_m0: true
+    note: TD-05 must add a locked mt_evaluation reference set with policy block before formal M0 publication.
+  same_source_versions:
+    status: none_identified
+    required_before_m0: true
+    note: Add any newly discovered MASSIVE duplicate version as same_source_version with policy block.
+
+derived_sample_links: []

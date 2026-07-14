@@ -99,13 +99,13 @@ TD-09 至 TD-11 可在人类数据链构建期间先用 TD-01 的 schema fixture
 
 依赖：TD-03。
 
-- [ ] 在扩展正反方向前按无向平行关系生成稳定 group；同一对齐关系、反向样本、同文档片段和已知派生样本必须进入同一个 split。
-- [ ] 在规范文本、source、target 和 pair 层执行 exact 去重；对 train/dev/test 执行跨集合 near-duplicate/污染检查并记录参数与命中原因。
-- [ ] split 使用稳定 group hash 和版本化比例生成，禁止逐行随机拆分；test 身份在数据构建阶段冻结。
-- [ ] 与 tokenizer corpus/holdout、正式 MT 评测集和同一数据源重复版本进行可追溯污染检查，不把 tokenizer holdout 当成模型质量 test。
-- [ ] 在 split 完成后扩展正反方向，验证 18 个路由中任一方向都不会把对应反向关系泄漏到其他 split。
-- [ ] 验证 worker 数、缓存命中、输入完成顺序和 fresh/resume 路径不会改变 corpus、split 或 manifest 字节。
-- [ ] 增加反向泄漏、跨 split 近重复、派生样本、错误 group 和非确定性顺序的失败测试。
+- [x] 在扩展正反方向前按无向平行关系生成稳定 group；同一对齐关系、反向样本、同文档片段和已知派生样本必须进入同一个 split。
+- [x] 在规范文本、source、target 和 pair 层执行 exact 去重；对 train/dev/test 执行跨集合 near-duplicate/污染检查并记录参数与命中原因。
+- [x] split 使用稳定 group hash 和版本化比例生成，禁止逐行随机拆分；test 身份在数据构建阶段冻结。
+- [x] 与 tokenizer corpus/holdout、正式 MT 评测集和同一数据源重复版本进行可追溯污染检查，不把 tokenizer holdout 当成模型质量 test。
+- [x] 在 split 完成后扩展正反方向，验证 18 个路由中任一方向都不会把对应反向关系泄漏到其他 split。
+- [x] 验证 worker 数、缓存命中、输入完成顺序和 fresh/resume 路径不会改变 corpus、split 或 manifest 字节。
+- [x] 增加反向泄漏、跨 split 近重复、派生样本、错误 group 和非确定性顺序的失败测试。
 
 产物：确定性 split/dedup/leakage 模块、污染报告和自动化测试。
 
