@@ -1,0 +1,3 @@
+{"id":1,"partition":"train","utt":"播放一些爵士乐"}
+{"id":2,"partition":"dev","utt":"天气怎么样？"}
+{"id":3,"partition":"test","utt":"设置七点的闹钟。"}

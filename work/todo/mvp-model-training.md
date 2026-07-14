@@ -83,13 +83,13 @@ TD-09 至 TD-11 可在人类数据链构建期间先用 TD-01 的 schema fixture
 
 依赖：TD-01、TD-02。
 
-- [ ] 实现 `scripts/prepare_model_data.py` CLI 和独立的 `scripts/model_data_pipeline.py` 核心模块，保持仓库现有扁平模块结构。
-- [ ] 支持 dry-run、source lock 校验、下载/断点续传、缓存复用、离线重建和失败后安全恢复；不得在正式构建时隐式解析 `latest`。
-- [ ] 将不同来源解析成规范样本，使用稳定来源身份和规范内容生成 `sample_id`/`sample_group_id`，禁止 Python 内置 `hash()`、绝对路径和时间戳进入内容身份。
-- [ ] 实现保守清洗：Unicode/空白规范、空文本、控制字符、HTML 残留、错误脚本占优、长度/长度比和异常内容过滤；禁止小写化、简繁转换、假名转换或韩文转写。
-- [ ] 对原生、人工平行、teacher synthetic 和脚本转换增强数据使用不同 provenance，不允许清洗过程丢失来源类型。
-- [ ] 输出规范 UTF-8/LF JSONL、拒绝原因统计、来源/标签对计数和原子 manifest；manifest 最后发布且逐文件记录大小/SHA-256。
-- [ ] 用小型 fixture 覆盖所有来源适配器、错误路径、缓存损坏、网络失败和半成品清理。
+- [x] 实现 `scripts/prepare_model_data.py` CLI 和独立的 `scripts/model_data_pipeline.py` 核心模块，保持仓库现有扁平模块结构。
+- [x] 支持 dry-run、source lock 校验、下载/断点续传、缓存复用、离线重建和失败后安全恢复；不得在正式构建时隐式解析 `latest`。
+- [x] 将不同来源解析成规范样本，使用稳定来源身份和规范内容生成 `sample_id`/`sample_group_id`，禁止 Python 内置 `hash()`、绝对路径和时间戳进入内容身份。
+- [x] 实现保守清洗：Unicode/空白规范、空文本、控制字符、HTML 残留、错误脚本占优、长度/长度比和异常内容过滤；禁止小写化、简繁转换、假名转换或韩文转写。
+- [x] 对原生、人工平行、teacher synthetic 和脚本转换增强数据使用不同 provenance，不允许清洗过程丢失来源类型。
+- [x] 输出规范 UTF-8/LF JSONL、拒绝原因统计、来源/标签对计数和原子 manifest；manifest 最后发布且逐文件记录大小/SHA-256。
+- [x] 用小型 fixture 覆盖所有来源适配器、错误路径、缓存损坏、网络失败和半成品清理。
 
 产物：模型数据构建 CLI/核心模块、fixture、manifest 和自动化测试。
 

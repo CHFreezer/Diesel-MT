@@ -1,6 +1,6 @@
 # task TD-03: 实现确定性平行数据构建管线
 
-状态：pending
+状态：completed
 
 依赖：TD-01、TD-02
 
@@ -40,3 +40,17 @@
 - 同一输入身份产生稳定 sample/group ID 和规范字节。
 - 清洗不改变语言脚本语义且 provenance 不丢失。
 - 任何失败都不会发布可被误认为 complete 的 corpus/manifest。
+
+## 完成记录
+
+- 实现 [`prepare_model_data.py`](../../../scripts/prepare_model_data.py) 薄 CLI 与 [`model_data_pipeline.py`](../../../scripts/model_data_pipeline.py) 核心模块；严格消费 TD-01 config/schema 和 TD-02 source lock，不解析浮动版本。
+- 锁定归档缓存支持字节范围断点续传、大小/SHA-256 双校验和完全离线复用；tar 只读取 lock 中唯一的普通文件成员，并再次校验所选文件大小/SHA-256，不把归档路径解压到文件系统。
+- MASSIVE adapter 以 `(partition,id)` 对齐五个 locale，在反向扩展前按配置顺序产生 9 个无向样本；同一多平行关系共享绑定来源、alignment key 和五侧内容哈希的 `sample_group_id`，每个标签对另有内容绑定的 `sample_id`。
+- 清洗 profile `td03-v1` 采用 NFC 和 Unicode 空白折叠，只拒绝内容无效项；profile SHA-256 为 `3d44d0e609d2cea22bb3d1ffb65b8de747254048208125caedb8203a529d5651`。没有小写化、简繁转换、假名转换或韩文转写。
+- 规范产物为 `human_parallel.jsonl`、原始许可/NOTICE、拒绝统计、构建报告和最后发布的 `manifest.json`。manifest 记录所有文件大小/SHA-256，且 fresh、独立输出目录与 checkpoint resume 的规范文件字节一致。
+- 运行说明与 corpus/manifest schema 见 [`model-data-pipeline.md`](../../../docs/model-data-pipeline.md)。小型 MASSIVE 五 locale fixture 覆盖 train/dev/test、缓存损坏、网络失败、断点续传、checkpoint 恢复、成员哈希错误和发布中断。
+- 专项验证：`.conda\python.exe -m pytest tests/test_model_data_pipeline.py tests/test_model_training_contract.py -q`，结果 `33 passed in 0.75s`。
+- 全量离线验证：`.conda\python.exe -m pytest -q`，结果 `85 passed in 22.92s`。
+- 正式 40,251,390-byte MASSIVE 归档下载、不同 cache/worker 状态的真实规模双构建、人工抽检与 M0 发布决定仍按原子边界留给 TD-05；TD-03 的完成不代表真实语料已验收。
+
+本 task 未单独创建 review；统一 review 仍由 TD-18 负责。

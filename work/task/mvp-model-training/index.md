@@ -56,7 +56,7 @@ flowchart LR
 | ---: | --- | --- | --- | --- | --- | --- |
 | 1 | TD-01 | [冻结执行契约、目录与 Git 边界](td-01-execution-contract.md) | 无 | 无 | 无 | completed |
 | 2 | TD-02 | [调研并锁定有界平行数据来源](td-02-dataset-research-and-lock.md) | TD-01 completed | TD-01 | TD-06、TD-09 | completed |
-| 3 | TD-03 | [实现确定性平行数据构建管线](td-03-data-pipeline.md) | TD-02 completed | TD-01、TD-02 | TD-06、TD-09～TD-11 | pending |
+| 3 | TD-03 | [实现确定性平行数据构建管线](td-03-data-pipeline.md) | TD-02 completed | TD-01、TD-02 | TD-06、TD-09～TD-11 | completed |
 | 4 | TD-04 | [实现分组切分、去重与泄漏防护](td-04-split-dedup-leakage.md) | TD-03 completed | TD-03 | TD-06、TD-09～TD-11 | pending |
 | 5 | TD-05 | [构建并验收 M0 数据集](td-05-m0-dataset-acceptance.md) | TD-04 completed | TD-04 | TD-06、TD-09～TD-11 | pending |
 | 2–5 | TD-06 | [锁定并验证 Hy-MT2 7B teacher 运行时](td-06-hymt2-teacher-runtime.md) | TD-01 completed | TD-01 | TD-02～TD-05、TD-09～TD-11 | pending |
