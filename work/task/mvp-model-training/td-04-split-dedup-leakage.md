@@ -1,6 +1,6 @@
 # task TD-04: 实现分组切分、去重与泄漏防护
 
-状态：pending（18 路 v1 已完成；等待第 10 组输入）
+状态：completed
 
 依赖：TD-03
 
@@ -55,4 +55,10 @@
 - 全量离线验证：`.conda\python.exe -m pytest -q`，结果 `99 passed in 38.02s`。
 - 正式 MT evaluation 身份锁定、40,251,390-byte MASSIVE 构建、全量 tokenizer/评测污染扫描、不同 cache/worker 的真实规模双构建、人工抽检和 M0 发布决定仍属于 TD-05；TD-04 完成不表示正式 corpus 已发布。
 
-以上是 v1 完成记录。20 路范围下本 task 已退回 `pending`；必须发布新的 20 路 addendum/composite、污染报告和字节级复现证据，且 v1 manifest 哈希不变。
+以上是 v1 完成记录。
+
+## 20 路 schema v2 完成记录（2026-07-16）
+
+- 第 10 组已绑定既有 alignment group/component；完成 exact/near 去重、反向隔离、正式外部污染扫描和 manifest-last 发布。
+- 最终发布 327,508 条有向记录、20 路，train/dev/test 为 226,218/37,508/63,782；finalized manifest SHA-256 为 `33a40b305012325657fff8e1620f0edf769e15c4aba8d3a4c413faf8c863e6cd`。
+- 第二个完全离线 fresh/resume 构建的 corpus、split、test identity、报告与 manifest 全部字节一致；FLORES-200 阻断扫描命中 0，v1 finalized manifest 未修改。

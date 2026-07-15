@@ -1,0 +1,59 @@
+schema_version: 1
+
+identity:
+  name: hymt2-sequence-distillation-d1-20route-composite-v2
+  status: frozen
+  scope: mvp-train-only-twenty-route-distilled-composite
+
+components:
+  - component_id: d1-eighteen-route-v1
+    manifest: data/model/corpus/mvp/distilled/td08-d1-v1/manifest.json
+    manifest_sha256: 9de9a4c251504c9ee157bec2dc4eefea8acd760d808672c15704f5c884b9ff2c
+    accepted: data/model/corpus/mvp/distilled/td08-d1-v1/accepted.jsonl
+    accepted_sha256: 9602480b643954dbd030d4d1b768d140742d25d892d41da1393a99a2fd79dd57
+    accepted_records: 39941
+    routes:
+      - eng_Latn->jpn_Jpan
+      - jpn_Jpan->eng_Latn
+      - eng_Latn->kor_Hang
+      - kor_Hang->eng_Latn
+      - jpn_Jpan->kor_Hang
+      - kor_Hang->jpn_Jpan
+      - eng_Latn->zho_Hans
+      - zho_Hans->eng_Latn
+      - jpn_Jpan->zho_Hans
+      - zho_Hans->jpn_Jpan
+      - kor_Hang->zho_Hans
+      - zho_Hans->kor_Hang
+      - eng_Latn->zho_Hant
+      - zho_Hant->eng_Latn
+      - jpn_Jpan->zho_Hant
+      - zho_Hant->jpn_Jpan
+      - kor_Hang->zho_Hant
+      - zho_Hant->kor_Hang
+  - component_id: d1-zh-conversion-v2
+    manifest: data/model/route20-v2/corpus/mvp/distilled/td08-d1-zh-conversion-v2/manifest.json
+    manifest_sha256: 8700222adb328a4f7aac3dc92c46b53183dba7d1c46c97fd12e4d6eaab7a942f
+    accepted: data/model/route20-v2/corpus/mvp/distilled/td08-d1-zh-conversion-v2/accepted.jsonl
+    accepted_sha256: b9ca2fd5a05d9c9874548b7ea5a3db5dc75b5512438b46dac9ae65ca9e88fcb1
+    accepted_records: 4420
+    routes:
+      - zho_Hans->zho_Hant
+      - zho_Hant->zho_Hans
+
+gates:
+  required_routes: 20
+  minimum_accepted_per_route: 2000
+  require_disjoint_component_routes: true
+  require_zero_dev_test_records: true
+  require_teacher_synthetic_provenance: true
+
+human_m0:
+  manifest: data/model/route20-v2/corpus/mvp/m0-manifest.json
+  manifest_sha256: 5cc369421a705e2eea0076eec06c2bc12de7f278888df2f1ca9add6250ee1d67
+
+outputs:
+  root: data/model/route20-v2/corpus/mvp/distilled/td08-d1-20route-v2
+  accepted: data/model/route20-v2/corpus/mvp/distilled/td08-d1-20route-v2/accepted.jsonl
+  manifest: data/model/route20-v2/corpus/mvp/distilled/td08-d1-20route-v2/manifest.json
+  evidence: artifacts/model-training/td08-d1-20route-composite.json

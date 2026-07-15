@@ -1,18 +1,26 @@
 # M0 模型训练数据验收
 
-状态：TD-05 complete / `m0-model-training-data`
+状态：TD-05 completed / `m0-model-training-data-20route-v2`
 
 验收日期：2026-07-15
 
 ## 结论
 
-M0 v1 数据已发布为 `status=complete`，覆盖 5 个模型标签、9 个无向跨语言组和 18 个有向跨语言路由；`zho_Hans <-> zho_Hant` 为 0，teacher synthetic 与工具转换样本均为 0。其 203,942 条 human train 仍是有效、不可变的跨语言 MVP 语料，但 2026-07-16 完整能力已扩展为 10 组/20 路，因此 v1 不再能单独供 TD-09、TD-15/TD-16 完整验收使用。TD-05 已退回 `pending`，必须发布第 10 组 addendum 与新的 20 路 composite 身份。M0 v1 不代表生产翻译质量。
+M0 schema v2 已发布为 `status=complete`，覆盖 5 个模型标签、10 个无向关系和 20 个有向路由。最终包含 163,754 个无向关系、327,508 条有向样本，train/dev/test 为 226,218/37,508/63,782；teacher synthetic 与工具转换样本均为 0。M0 v1 的 203,942 条 human train 继续作为不可变 18 路历史语料保留，但只有 v2 身份可以供 TD-09 及后续完整路由验收使用。M0 仍只代表有界训练系统 MVP，不代表生产翻译质量。
 
-语料成熟度不得混用：fixture 只用于测试，smoke 只证明真实流程正确，mvp corpus 才允许产生训练/A-B 结论。TD-08 的 D0 v1 只有 2,263 条 accepted teacher targets，属于蒸馏 smoke。D1 v1 已从 40,032 个 train-only 候选中接受 39,941 条并满足 18 路门槛，但它同样缺少两条中文内部路线；只有新的 human + distilled 20 路 composite 可以进入 TD-15。
+语料成熟度不得混用：fixture 只用于测试，smoke 只证明真实流程正确，mvp corpus 才允许产生训练/A-B 结论。TD-08 的 D0 v1 只有 2,263 条 accepted teacher targets，属于蒸馏 smoke。20 路 D1 composite 已引用不可变 D1 v1 和两路简繁 addendum，共 44,361 条 accepted train-only teacher targets；只有该 composite 可以进入 TD-15。
 
-运行时完成标记为 `data/model/corpus/mvp/m0-manifest.json`，精简可提交证据为 [`m0-dataset-acceptance.json`](../artifacts/model-training/m0-dataset-acceptance.json)。完整质量分布、人工审查队列和复现逐文件明细保存在 Git-ignored `data/model/reports/`。
+schema v2 运行时完成标记为 `data/model/route20-v2/corpus/mvp/m0-manifest.json`，精简可提交证据为 [`td05-m0-20route.json`](../artifacts/model-training/td05-m0-20route.json)。完整质量分布、人工审查队列和复现逐文件明细保存在 Git-ignored versioned build root；v1 的完成标记和证据保持不变。
 
-## 正式规模
+## 20 路 v2 验收摘要
+
+- 第 10 组 `zho_Hans--zho_Hant` 最终保留 16,311 个无向关系，train/dev/test 为 11,279/1,868/3,164，反向扩展为两条完整路线。
+- 固定队列逐条检查 549 条：accepted 400、rejected 149；其中第 10 组按 20 train、10 dev、10 test、20 rejected 的预算完成审查。38 个边界质量警告继续保留，未发现 systemic blocker。
+- FLORES-200 五标签 `dev/devtest` 的 10,045 条外部阻断扫描命中 0；所有 20 路 release gate 通过。
+- 冷来源构建与已验证缓存下的完全离线 fresh/resume 构建，10 个规范产物逐文件字节一致。
+- TD-03/TD-04/M0 manifest SHA-256 分别为 `113a33afa2ca6f73e8e10fbd5a3dab876dd470fbf0e570320edb0961901fe0c7`、`33a40b305012325657fff8e1620f0edf769e15c4aba8d3a4c413faf8c863e6cd`、`5cc369421a705e2eea0076eec06c2bc12de7f278888df2f1ca9add6250ee1d67`。
+
+## 历史 v1 正式规模
 
 最终保留 147,443 个无向关系，反向扩展后 294,886 条有向样本：train 203,942、dev 33,490、test 57,454。每条路线每 epoch 权重为 1.0、最多曝光一次，不对低资源路线做重复采样。
 

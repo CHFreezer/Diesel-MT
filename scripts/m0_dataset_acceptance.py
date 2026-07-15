@@ -108,9 +108,9 @@ def load_sampling_config(path: Path) -> dict[str, Any]:
         "routes",
     }:
         raise M0AcceptanceError("direction sampling config fields are incomplete")
-    if value["schema_version"] != 1 or value["identity"] != {
-        "name": "mvp_direction_sampling",
-        "status": "m0-locked",
+    if value["schema_version"] != 2 or value["identity"] != {
+        "name": "mvp_direction_sampling_20route",
+        "status": "m0-20route-locked",
     }:
         raise M0AcceptanceError("direction sampling identity changed")
     strategy = value["strategy"]
@@ -124,8 +124,8 @@ def load_sampling_config(path: Path) -> dict[str, Any]:
     }:
         raise M0AcceptanceError("direction sampling strategy changed")
     records = value["routes"]
-    if not isinstance(records, list) or len(records) != 18:
-        raise M0AcceptanceError("direction sampling must contain exactly 18 routes")
+    if not isinstance(records, list) or len(records) != len(directed_routes()):
+        raise M0AcceptanceError("direction sampling must contain exactly 20 routes")
     expected = {f"{source}->{target}" for source, target in directed_routes()}
     actual: set[str] = set()
     for record in records:
@@ -139,7 +139,7 @@ def load_sampling_config(path: Path) -> dict[str, Any]:
             raise M0AcceptanceError("M0 direction sampling cannot repeat or reweight routes")
         actual.add(str(record["route"]))
     if actual != expected:
-        raise M0AcceptanceError("direction sampling route coverage differs from the 18-route contract")
+        raise M0AcceptanceError("direction sampling route coverage differs from the 20-route contract")
     return value
 
 
@@ -351,9 +351,9 @@ def analyze_dataset(
             },
             "contract": {
                 "model_tags": 5,
-                "undirected_pairs": 9,
+                "undirected_pairs": len(UNDIRECTED_PAIRS),
                 "directed_routes": len(expected_routes),
-                "zho_Hans_zho_Hant_routes": 0,
+                "zho_Hans_zho_Hant_routes": 2,
             },
         },
         canonical,
@@ -683,8 +683,9 @@ def accept_m0(
         "reproducibility": reproducibility,
         "release_gates": {
             "five_model_tags": "pass",
-            "nine_undirected_pairs": "pass",
-            "eighteen_directed_routes": "pass",
+            "ten_undirected_pairs": "pass",
+            "twenty_directed_routes": "pass",
+            "bidirectional_zho_hans_zho_hant": "pass",
             "independent_zho_hans_dev_test": "pass",
             "independent_zho_hant_dev_test": "pass",
             "source_and_license_traceability": "pass",

@@ -5,6 +5,7 @@ import sys
 from pathlib import Path
 
 import pytest
+import yaml
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -27,13 +28,14 @@ from model_training_contract import (  # noqa: E402
 SAMPLING_PATH = ROOT / "configs" / "mvp_direction_sampling.yaml"
 ROUTE_FIXTURE_PATH = ROOT / "tests" / "fixtures" / "model_data" / "m0-routes.json"
 EVIDENCE_PATH = ROOT / "artifacts" / "model-training" / "m0-dataset-acceptance.json"
+LEGACY_SAMPLING_PATH = ROOT / "configs" / "mvp_direction_sampling_v1.yaml"
 
 
 def test_route_fixture_covers_all_routes_and_rejects_counterexamples() -> None:
     fixture = json.loads(ROUTE_FIXTURE_PATH.read_text(encoding="utf-8"))
     assert fixture["schema_version"] == 1
     assert {tuple(route) for route in fixture["routes"]} == set(directed_routes())
-    assert len(fixture["routes"]) == 18
+    assert len(fixture["routes"]) == 20
     for record in fixture["invalid_routes"]:
         with pytest.raises(ContractError):
             validate_route(*record["route"])
@@ -41,15 +43,16 @@ def test_route_fixture_covers_all_routes_and_rejects_counterexamples() -> None:
 
 def test_sampling_config_is_uniform_bounded_and_complete() -> None:
     sampling = load_sampling_config(SAMPLING_PATH)
-    assert len(sampling["routes"]) == 18
+    assert len(sampling["routes"]) == 20
     assert all(record["weight"] == 1.0 for record in sampling["routes"])
     assert all(record["maximum_repeats_per_epoch"] == 1 for record in sampling["routes"])
     assert sampling["strategy"]["low_resource_oversampling"] == "prohibited"
     evidence = json.loads(EVIDENCE_PATH.read_text(encoding="utf-8"))
+    legacy_sampling = yaml.safe_load(LEGACY_SAMPLING_PATH.read_text(encoding="utf-8"))
     assert evidence["status"] == "complete"
     assert evidence["scope"]["directed_routes"] == 18
     assert evidence["scope"]["teacher_synthetic"] == 0
-    assert evidence["identities"]["direction_sampling_config_sha256"] == config_sha256(sampling)
+    assert evidence["identities"]["direction_sampling_config_sha256"] == config_sha256(legacy_sampling)
     assert evidence["reproducibility"]["byte_identical"] is True
 
 

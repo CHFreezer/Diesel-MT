@@ -1,0 +1,80 @@
+schema_version: 2
+
+identity:
+  name: hymt2-sequence-distillation-d1-zh-conversion-v2
+  status: frozen
+  scope: mvp-train-only-two-route-chinese-conversion-addendum
+
+routes:
+  - zho_Hans->zho_Hant
+  - zho_Hant->zho_Hans
+
+prompt_decode:
+  path: configs/hymt2_teacher_prompt_decode_zh_conversion.yaml
+  file_sha256: 02cd096a24d1e9326dd21ce85b6a0bfd5f59aac6f8898e07243056b8858eac42
+  calibration_report: artifacts/model-training/td07-zh-conversion-calibration.json
+  calibration_report_sha256: 1b9c3fd5b71b56f79ce8233116c58f80479b05f61f8e32d8a139d3c0510dcde8
+  selected_profile: greedy-v1
+
+input:
+  path: data/model/route20-v2/corpus/mvp/finalized/train.jsonl
+  file_sha256: ba0a5361fc97ca3ecad76b25ac3cfccfe163be785fb68847d11ae909bddba1d8
+  m0_manifest: data/model/route20-v2/corpus/mvp/m0-manifest.json
+  m0_manifest_sha256: 5cc369421a705e2eea0076eec06c2bc12de7f278888df2f1ca9add6250ee1d67
+  split: train
+  dev_access: prohibited
+  test_access: prohibited
+
+sampling:
+  unit: directed_sample
+  records_per_route: 2224
+  total_records: 4448
+  selection_seed: diesel-mt-td08-zh-conversion-v2
+  order: frozen-route-order-then-selection-hash
+  replacement: false
+
+generation:
+  shard_unit: route
+  checkpoint_granularity: sample
+  resume_identity: generation-contract-sha256
+  raw_and_normalized_separate: true
+  request_failure: stop-without-publish
+  external_network: prohibited
+
+manual_review:
+  accepted_per_route: 20
+  rejected_per_route: 20
+  rejected_if_fewer: inspect-all
+  traditional_targets_extra_review: true
+  attestation: configs/hymt2_distillation_d1_zh_conversion_manual_review.yaml
+
+replay:
+  samples_per_route: 2
+  exact_raw_output_required: true
+  exact_normalized_output_required: true
+
+acceptance_gates:
+  minimum_accepted_per_route: 2000
+  minimum_route_accepted_rate: 0.90
+  minimum_route_script_compliance_rate: 0.98
+  maximum_route_retry_rate: 0.05
+  require_all_configured_routes: true
+  require_manual_review: true
+  require_exact_replay: true
+  require_zero_test_records: true
+
+runtime:
+  work_root_override_env: DIESEL_MT_DISTILLATION_ZH_CONVERSION_WORK_ROOT
+  default_work_root: data/model/route20-v2/interim/td08-d1-zh-conversion-v2
+
+outputs:
+  root: data/model/route20-v2/corpus/mvp/distilled/td08-d1-zh-conversion-v2
+  generation_contract: data/model/route20-v2/corpus/mvp/distilled/td08-d1-zh-conversion-v2/generation-contract.json
+  raw_subdir: raw
+  accepted: data/model/route20-v2/corpus/mvp/distilled/td08-d1-zh-conversion-v2/accepted.jsonl
+  filtered: data/model/route20-v2/corpus/mvp/distilled/td08-d1-zh-conversion-v2/filtered.jsonl
+  manual_review_queue: data/model/route20-v2/reports/td08-d1-zh-conversion-manual-review.jsonl
+  replay_report: data/model/route20-v2/reports/td08-d1-zh-conversion-replay.json
+  quality_report: data/model/route20-v2/reports/td08-d1-zh-conversion-quality.json
+  manifest: data/model/route20-v2/corpus/mvp/distilled/td08-d1-zh-conversion-v2/manifest.json
+  evidence: artifacts/model-training/td08-d1-zh-conversion-addendum.json

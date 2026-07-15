@@ -1,0 +1,103 @@
+schema_version: 2
+
+identity:
+  name: hymt2-teacher-prompt-decode-zh-conversion-v2
+  status: frozen
+  purpose: td07-hans-hant-dev-calibration-and-td08-train-only-addendum
+
+routes:
+  - zho_Hans->zho_Hant
+  - zho_Hant->zho_Hans
+
+teacher_selection:
+  path: configs/hymt2_teacher_selection.yaml
+  file_sha256: b63a29999009af16137459fc38752cdda9aff385533c0baade0050fae4578a57
+  selection_id: hymt2-7b-distillation-teacher-v1
+
+calibration_input:
+  path: data/model/route20-v2/corpus/mvp/finalized/dev.jsonl
+  file_sha256: 28befa6f01cada3965b7fe3a9a24c6718ff47e08008b780c8575f563a98fd8f6
+  split: dev
+  samples_per_route: 12
+  selection_seed: diesel-mt-td07-zh-conversion-v2
+  test_access: prohibited
+
+prompt:
+  version: hymt2-official-default-en-zh-conversion-v2
+  template: "Translate the following text into {target_language}. Note that you should only output the translated result without any additional explanation:\n\n{source_text}"
+  system_prompt: null
+  language_names:
+    eng_Latn: English
+    zho_Hans: Chinese
+    zho_Hant: Traditional Chinese
+    jpn_Jpan: Japanese
+    kor_Hang: Korean
+
+decode_profiles:
+  greedy-v1:
+    temperature: 0.0
+    top_p: 1.0
+    top_k: 0
+    repeat_penalty: 1.0
+    seed: 20260715
+  official-sampling-v1:
+    temperature: 0.7
+    top_p: 0.6
+    top_k: 20
+    repeat_penalty: 1.05
+    seed: 20260715
+
+selection:
+  selected_profile: greedy-v1
+  rule: select official-sampling-v1 only when it is exactly replayable, passes every configured route gate, improves macro chrF by at least the configured delta, and has no format or script regression; otherwise select greedy-v1
+  sampling_minimum_macro_chrf_delta: 2.0
+  tie_breaker: greedy-v1
+
+filter:
+  version: hymt2-output-filter-zh-conversion-v2
+  unicode_normalization: NFC
+  collapse_whitespace: true
+  reject_empty: true
+  reject_prompt_echo: true
+  reject_explanation_prefix: true
+  reject_exact_source_copy: true
+  source_copy_policy: allow-only-when-opencc-script-conversion-is-identity
+  reject_wrong_script_dominance: true
+  reject_chinese_script_counterevidence: true
+  reject_finish_reason_length: true
+  reject_abnormal_repetition: true
+  preserve_placeholders: true
+  minimum_output_source_character_ratio: 0.15
+  maximum_output_source_character_ratio: 6.0
+  length_ratio_floor_characters: 4
+
+calibration_gates:
+  minimum_route_chrf: 12.0
+  reference_interpretation: MASSIVE references are locale-specific professional localizations with entity substitution; chrF is a diagnostic floor and low-scoring routes require source-faithfulness inspection
+  minimum_route_accepted_rate: 0.90
+  minimum_route_script_compliance_rate: 0.95
+  maximum_route_source_copy_rate: 0.10
+  maximum_route_truncation_rate: 0.05
+  replay_samples_per_route: 2
+  require_exact_replay: true
+  sacrebleu_tokenizer: char
+  chrf_word_order: 2
+
+route_limits:
+  - {route: zho_Hans->zho_Hant, max_source_characters: 256, max_output_tokens: 64, stop: []}
+  - {route: zho_Hant->zho_Hans, max_source_characters: 256, max_output_tokens: 64, stop: []}
+
+runtime:
+  host: 127.0.0.1
+  port: 18084
+  request_timeout_seconds: 180
+  request_attempts: 3
+  context_size: 512
+  n_gpu_layers: all
+  flash_attention: true
+  maximum_batch_size: 1
+  external_network: prohibited
+
+outputs:
+  records: data/model/route20-v2/interim/td07/zh-conversion-calibration-records.jsonl
+  report: artifacts/model-training/td07-zh-conversion-calibration.json

@@ -1,0 +1,62 @@
+schema_version: 1
+status: complete
+
+queue:
+  bytes: 258510
+  records: 549
+  sha256: 38c75e55f006c921546a3430442382c958fe1adc65036d95adb420c6403ba7bd
+
+reviewer: Codex manual semantic inspection
+method: Reused 485 byte-identical reviewed rows from the immutable 18-route M0 v1 queue, then read all 60 zho_Hans--zho_Hant rows and all 4 changed rows from the other pairs; locale-specific entity substitution was allowed, while severe truncation, missing requested actions, arithmetic changes, and unrelated meanings were flagged.
+
+decisions:
+  accepted_reviewed: 400
+  accepted_quality_flags:
+    - {review_id: eacb102f93649b84a1eef3f3be46ca139f678762e6c8b55bd4ca0b886db9c4e5, issue: target is severely truncated}
+    - {review_id: 008e7379ca68a39bfb22c672609e69c1f73ba9672f2d5bf75b87f55dd21f6b95, issue: arithmetic operation differs}
+    - {review_id: 92b6b3010feb97d678d9e499a5362d109deea441ef1136fb09825a7cf3d3b873, issue: aligned meanings diverge}
+    - {review_id: 3197c02c3b025c335704efaba22e4b0f2fb2198fff40cf6dec6efb98c1dbc72d, issue: target is severely truncated}
+    - {review_id: 1b917e4c1880c8d3bde7f512dcdf1786109739905d807a2b955f063c00b07c35, issue: target is severely truncated}
+    - {review_id: c5a21d41b2ae87642e317009b390b3c30dccac27e32fd0aed44fe7a44db9ec17, issue: target is severely truncated}
+    - {review_id: def20a49575383a366a6ea66d13d8df301aab6d75b177f92e0b730dbe3badb22, issue: target is severely truncated}
+    - {review_id: 58dfabe915fd82fba63f0f3b8f7d65f8e3368e6093d7e8aef2af60735f51d3b1, issue: target is severely truncated}
+    - {review_id: 0024ad2a4a11085adba706d4dd2bd6444ce63e4502ce4ff29694bd3149a56557, issue: aligned meanings diverge}
+    - {review_id: 0053e0e04f4340f1d0aac087897ae1e0a11eda5d732277b8732957360f90da4f, issue: aligned intents diverge}
+    - {review_id: 738295b1e6052ecbc3969f4f5f17a4f765f7e0fb10816e6a2ddbbe38762c491d, issue: target is severely truncated}
+    - {review_id: 002542a1895996e886ca708da2ffdcdcdf87492b71b5f3efe7ddeea4f3b37ece, issue: target meaning is mistranslated}
+    - {review_id: e444811ae63780c4f781df2187e6c8110795415c26699fcf8b30484f3add0b82, issue: target is severely truncated}
+    - {review_id: 002ebe627bfa30a5f6d292fb83a9f79da914fb0c6786057f0454c256d9c027da, issue: target is severely truncated}
+    - {review_id: bdac67a849ee8ed167bebd09b9e6692a08f8add008d9cf63864bf8b053c10e28, issue: target is severely truncated}
+    - {review_id: a21953639dece19b60da658785f015f770504b26c28f632c4a76e07e1e5acace, issue: target is severely truncated}
+    - {review_id: 001506b5925bcd1407ec5a6c062a8a3404405677ea72ac2386084ad57b3cc16e, issue: aligned meanings diverge}
+    - {review_id: 34904fe6ab16b4624c4f714da26b129fca072fe06d413b270fa710c7ed7d789c, issue: target is severely truncated}
+    - {review_id: 517a2bb55883da6d2ffc1cdf4e8b622c0b53a9d854d3a18a88781cf47b82476d, issue: target is severely truncated}
+    - {review_id: 00921b87004638041f9d0cbb398050878123916237d019ef94014c55b17ed103, issue: target omits reminder action}
+    - {review_id: 002c77a3381774f549924b51ae1bb68713981b0f578ce307fc029115fa6cf566, issue: target omits delete action}
+    - {review_id: 06447452e567af39f699181a4ac39c3a919d56bed214de2724c1f6c40b45de7c, issue: target is severely truncated}
+    - {review_id: a701ee6a1f910f6418632db471e5169d7f7480a607d261af216a0bf64171a73c, issue: aligned meanings diverge}
+    - {review_id: 009bc3343d095e022fbb3cc2f633b95ad7b5e9f7909a8b5ea67524fcd5da3c21, issue: target omits cancel action}
+    - {review_id: d1b7f24d88d612724441ae5fabf08b2ca79200bda759ae7dbd7b248e66fb9e1d, issue: target omits delete action and changes date}
+    - {review_id: 8e240eaf79866f3b40de7805f52cb5450fed9396ed9d6ddeaec05fc161b9d3e7, issue: target is severely truncated}
+    - {review_id: 61e5eaeb9aacdcb0a7d086921599b92bf2e593ea9b42f1a44ca4a7798d2a80e4, issue: target is severely truncated}
+    - {review_id: 6d07d497338150eebb51e052fd9ca334ff30267c3be524a25109d6b9bfb9f5c4, issue: target is severely truncated}
+    - {review_id: bdba8eaa6cf08719413094fecf4bdf84e08ed16615fbf0a253e4ce02668f4a51, issue: target omits the delivery request}
+    - {review_id: 000b6f320027ac80874c04eefe3d8a8b8610a2bed2261c24df45784d33d4fbb9, issue: target omits the calendar delete action}
+    - {review_id: 000e670baca870ffd709ab78481d68f68345cf6a49d232784860e3d56a6140a3, issue: target is garbled and omits resume playback}
+    - {review_id: 003591e495871c006ca50cda7ed35617654ba77d2fc77934571721ef75a22c6a, issue: fried chicken shop is mistranslated as chicken farm}
+    - {review_id: 003615a9cc9a24b1984e2f6630fd1a4ee311e4eb625cf9f471232183bb45369c, issue: target omits the check and delete actions}
+    - {review_id: 264e11794594b967f8430d934063b94e23d77809798323e5fa9ab70455ceb2f6, issue: target is severely truncated}
+    - {review_id: 82f894c9b80c08160a389d92f1e5d13263a7a41e49fe002565e1404912f8cebc, issue: target is severely truncated}
+    - {review_id: 00470f55baddd8a711f9f9695bef0c1313481ad1d08bdefd75a3852554f48873, issue: target omits the dishware object}
+    - {review_id: c2d19619a88aa6ee60d7da5296e35bc4fc591f3d448dede8cbf161e1a4e94fcb, issue: target is severely truncated}
+    - {review_id: fa42b570a617e775e46b3317377850aded7414a3443ac458a1d63cd0a8e73be9, issue: aligned meanings diverge}
+  rejected_reviewed: 149
+  rejected_rule_mismatches: []
+  systemic_blocker: false
+
+notes:
+  - The boundary-biased accepted sample contains 38 known truncation or alignment issues; this count is not an unbiased corpus defect-rate estimate.
+  - All 20 zho_Hans--zho_Hant rejected rows matched the recorded wrong-script-dominance rule; they were not silently restored.
+  - Shared-Han and legitimately unchanged rows such as 明天是晴天吧 and 好 were preserved as valid human alignment examples.
+  - MASSIVE is suitable for route and training-system validation but not for production translation-quality claims.
+  - Locale-specific substitutions of people, services, media, and places were treated as expected professional localization when the action and intent remained aligned.

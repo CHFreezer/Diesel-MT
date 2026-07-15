@@ -1,0 +1,49 @@
+schema_version: 1
+status: complete
+
+queue:
+  path: data/model/route20-v2/reports/td08-d1-zh-conversion-manual-review.jsonl
+  records: 72
+  bytes: 54448
+  sha256: 5a4c101e5bd34b5d16eb14bd172abf2ea6b3608a731acabe190555647221558b
+
+reviewer: Codex manual semantic inspection
+method: >-
+  Read all 72 queued records and compare source_text, MASSIVE human_reference,
+  teacher_output, automated decision, rejection reasons, and Chinese script evidence.
+  Source fidelity is decisive; Traditional Chinese lexical choices are checked against
+  the project's Taiwan-oriented general Traditional standard, while locale-specific
+  entity substitutions in the human reference are not imposed on the teacher output.
+
+decisions:
+  accepted_reviewed_by_route:
+    zho_Hans->zho_Hant: 20
+    zho_Hant->zho_Hans: 20
+  rejected_reviewed_by_route:
+    zho_Hans->zho_Hant: 10
+    zho_Hant->zho_Hans: 17
+  traditional_extra_reviewed_by_route:
+    zho_Hans->zho_Hant: 5
+    zho_Hant->zho_Hans: 0
+  manual_rejections:
+    - review_id: 87266c60c6a17eb96a0c8bda64fbc42422820f17589211bc8b881bd18bf9e398
+      reason: 有聲讀物 retains Mainland vocabulary; the frozen Taiwan-oriented Traditional reference uses 有聲書.
+    - review_id: fcf1b49a0eb7fbeeb02102beec0b502d4a20c77feb1f312b9ae424d694b17119
+      reason: 奶酪比薩 retains Mainland food vocabulary; the Taiwan-oriented form is 起司披薩.
+    - review_id: 3f7a9e33f8db322b0d3d12c7da2f584d5db8b2e8c60cab18b088860523fd5492
+      reason: 播放列表 retains Mainland software vocabulary; the Taiwan-oriented form is 播放清單.
+  rejected_rule_mismatches:
+    - review_id: 1582c8a00f892486deadce0685a027f8709079cb86ba8915af0a86218745ed30
+      rule: source_copy
+      reason: 如何吃得健康 is a valid unchanged Traditional sentence and exactly matches the frozen human reference; OpenCC's 吃/喫 variant is not a Simplified-script failure.
+    - review_id: 87b2262ec392d25f571b2be4204ef0615b3f4223e19260f128767ab2fbd78528
+      rule: source_copy
+      reason: 派克峰有多高 is valid unchanged Traditional text and exactly matches the frozen human reference; the 峰/峯 variant is not a Simplified-script failure.
+  systemic_blocker: false
+
+notes:
+  - All 40 accepted samples, all 27 automated rejects, and all 5 Traditional extras were inspected.
+  - Three script-correct but Mainland-lexicon Traditional targets were manually rejected.
+  - Two exact source copies were restored only because they are valid unchanged Traditional text and byte-match the human reference.
+  - The remaining script-counterevidence rejects stayed filtered; no route-level or systemic teacher failure was observed.
+  - Generation and review accessed train only; replay accessed the frozen train subset only; test was never read.

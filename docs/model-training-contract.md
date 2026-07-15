@@ -1,6 +1,6 @@
 # MVP 模型训练执行契约
 
-本文件说明 TD-01 的 schema、方向、配置身份和存储边界。2026-07-16 已冻结 10 组/20 路范围修正；完整产品语义见 [`chinese-locale-capability-contract.md`](chinese-locale-capability-contract.md)。机器可执行的 [`scripts/model_training_contract.py`](../scripts/model_training_contract.py) 与 [`configs/mvp_model_data.yaml`](../configs/mvp_model_data.yaml) 当前仍是已提交的 9 组/18 路 v1，TD-01 因此退回 `in_progress`，在新版本校验器、配置和 fixture 一致前不得声称 20 路合同完成。下游脚本不得维护第二套常量，也不得回写 v1 artifact。
+本文件说明 TD-01 的 schema、方向、配置身份和存储边界。2026-07-16 已完成 10 组/20 路范围修正；完整产品语义见 [`chinese-locale-capability-contract.md`](chinese-locale-capability-contract.md)。机器可执行的 [`scripts/model_training_contract.py`](../scripts/model_training_contract.py)、[`configs/mvp_model_data.yaml`](../configs/mvp_model_data.yaml) 与 source lock 已统一升级为 schema v2；规范配置哈希为 `1c3fda336a5fae183ea48e813c442daabee5b754bfbd792bad15fabaeb2c52b7`。下游脚本不得维护第二套常量，也不得回写 18 路 v1 runtime artifact。
 
 ## 语言与方向
 
@@ -33,7 +33,7 @@
 - `teacher_synthetic`：另行记录 teacher model/revision、prompt version、decode config hash 和 generation manifest hash；
 - `script_conversion`：另行记录转换工具/version、上游 sample ID 和 generation manifest hash。
 
-未知字段、缺失字段、空文本、非法 split、同标签 route 和 allowlist 外标签都必须 fail-fast。`zho_Hans <-> zho_Hant` 只有在新的 20 路 allowlist 与对应 provenance/质量合同下才合法；旧 v1 校验器继续拒绝它们是预期的迁移状态。下游不得通过忽略字段来兼容浮动 schema。
+未知字段、缺失字段、空文本、非法 split、同标签 route 和 allowlist 外标签都必须 fail-fast。`zho_Hans <-> zho_Hant` 已进入 20 路 allowlist，并使用独立的中文内部转换质量合同。下游不得通过忽略字段来兼容浮动 schema。
 
 ## 配置身份
 
@@ -56,6 +56,6 @@
 | HF/CT2 发布权重 | `artifacts/models/mvp_e8_d2_v48k/` | 忽略 |
 | schema/config/lock/fixture | `scripts/`、`configs/`、`tests/fixtures/` | 可提交 |
 
-默认热运行根是仓库相对路径；本机正式训练可通过 `DIESEL_MT_MODEL_RUNTIME` 指向 D: NVMe 的绝对目录。这个 override 只改变物理 I/O 位置，不改变语义配置哈希；每次 run manifest 必须记录环境变量名、解析后的绝对路径、Git commit/dirty 状态和配置哈希。publish 路径是固定逻辑位置，只有全部文件完成校验后才能从 staging 原子发布。
+默认热运行根是仓库相对路径；本机正式训练可通过 `DIESEL_MT_MODEL_RUNTIME` 指向配置的高吞吐存储绝对目录。这个 override 只改变物理 I/O 位置，不改变语义配置哈希；每次 run manifest 必须记录环境变量名、解析后的绝对路径、Git commit/dirty 状态和配置哈希。publish 路径是固定逻辑位置，只有全部文件完成校验后才能从 staging 原子发布。
 
 任何仓库内配置路径必须使用规范 POSIX 相对路径，禁止盘符、反斜杠、`..`、绝对路径或逃逸固定根目录。外部 SSD 路径只允许通过命名环境变量提供，并在运行记录中显式解析。

@@ -1,6 +1,6 @@
 {
-  "config_sha256": "4b774c6d564b02fef3d6113d3de4b51428248646fe209a9e5a300c9608cb5c93",
-  "schema_version": 1,
+  "config_sha256": "1c3fda336a5fae183ea48e813c442daabee5b754bfbd792bad15fabaeb2c52b7",
+  "schema_version": 2,
   "source_order": [
     "massive-1.1"
   ],

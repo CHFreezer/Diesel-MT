@@ -130,7 +130,7 @@ def write_td03_input(root: Path, samples: list[dict[str, Any]]) -> None:
         "identity": {"fixture": True},
         "identity_sha256": "b" * 64,
         "sample_schema_version": 1,
-        "canonical_sample_scope": "nine undirected pairs; reverse route expansion is TD-04",
+        "canonical_sample_scope": "ten undirected pairs; reverse route expansion is TD-04",
         "records": len(samples),
         "files": [
             {
@@ -173,11 +173,11 @@ def test_group_split_reverse_expansion_and_input_order_are_deterministic(
     second = prepare_finalized_samples(shuffled, config)
     assert canonical_result_bytes(first) == canonical_result_bytes(second)
     assert first["report"]["output"]["samples_by_split"] == {
-        "train": 18,
-        "dev": 18,
-        "test": 18,
+        "train": 20,
+        "dev": 20,
+        "test": 20,
     }
-    assert len(first["report"]["leakage_audit"]["route_counts"]) == 18
+    assert len(first["report"]["leakage_audit"]["route_counts"]) == 20
     assert set(first["report"]["leakage_audit"]["route_counts"].values()) == {3}
     assert len(first["test_groups"]) == 1
 
@@ -194,9 +194,9 @@ def test_exact_text_components_and_pair_dedup_are_deterministic(
     report = prepared["report"]
     assert report["component_binding"]["split_components"] == 1
     assert report["component_binding"]["exact_duplicate_text_keys"] == 5
-    assert report["exact_deduplication"]["pair_exact_duplicates_removed"] == 9
-    assert report["output"]["undirected_samples"] == 9
-    assert report["output"]["directed_samples"] == 18
+    assert report["exact_deduplication"]["pair_exact_duplicates_removed"] == 10
+    assert report["output"]["undirected_samples"] == 10
+    assert report["output"]["directed_samples"] == 20
 
 
 def test_near_duplicates_are_bound_before_split(config: dict[str, Any]) -> None:
@@ -545,6 +545,6 @@ def test_cli_dry_run_is_side_effect_free(
     assert result.returncode == 0, result.stderr
     plan = json.loads(result.stdout)
     assert plan["status"] == "dry-run"
-    assert plan["input_records"] == 9
+    assert plan["input_records"] == 10
     assert plan["reference_registry_complete_for_m0"] is True
     assert not out_root.exists()

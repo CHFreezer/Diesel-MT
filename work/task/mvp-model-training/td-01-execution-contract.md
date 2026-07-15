@@ -1,6 +1,6 @@
 # task TD-01: 冻结执行契约、目录与 Git 边界
 
-状态：in_progress（9 组/18 路 v1 已完成；20 路 amendment 进行中）
+状态：completed
 
 依赖：无
 
@@ -51,4 +51,10 @@
 - 专项测试 [`test_model_training_contract.py`](../../../tests/test_model_training_contract.py) 为 `23 passed`，覆盖未知/缺失字段、路径逃逸、非法路由、三类 provenance、source lock、student 身份和 tokenizer 冻结。
 - `artifact_manifest.json` SHA-256 复核仍为 `eb79ae22f523f1d9c9fcf75b80f2b322e3c2882a8fddb7545b5933dd4053fa7f`；未修改 tokenizer 内容。
 
-以上是不可变 v1 完成记录。2026-07-16 因新增两条简繁互转路线，本 task 退回 `in_progress`；新校验器、配置哈希、20 路 fixture 和回归完成前，不得供 TD-03/TD-09 做完整范围验收。
+以上是不可变 v1 完成记录。
+
+## 20 路 amendment 完成记录（2026-07-16）
+
+- `model_training_contract.py`、`mvp_model_data.yaml` 和 source lock 已统一升级到 schema v2，冻结 5 标签、10 组、20 路；同标签、未知标签和 allowlist 外路由继续 fail-fast。
+- 新规范 data config hash 为 `1c3fda336a5fae183ea48e813c442daabee5b754bfbd792bad15fabaeb2c52b7`；teacher 名称继续使用 `Chinese` / `Traditional Chinese`，tokenizer 未修改。
+- 20 路 fixture、数据构建、split、M0 与蒸馏回归均消费同一合同；versioned build root 已加入 Git ignore，v1 runtime manifest 未改写。

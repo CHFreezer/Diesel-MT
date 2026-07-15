@@ -74,7 +74,7 @@ The project has no `src/` layout, `__init__.py` files, or installable package. P
 - **`scripts/fetch_tokenizer_datasets.py`** — CLI entry point for the tokenizer corpus pipeline. Thin argument parsing + delegation to the pipeline library.
 - **`scripts/tokenizer_dataset_pipeline.py`** (~1543 lines) — Core processing library: config validation, HPLT 3.0 HTTP fetcher with range/resume, text cleaning pipeline, MinHash approximate dedup, deterministic balanced sampling, memory-first builds, per-language checkpointing, atomic file output, quality reports.
 - **`scripts/calculate_model_parameters.py`** — Standalone parameter estimator for 5 model configs (baseline + 4 MVP candidates).
-- **`scripts/model_training_contract.py`** — Strict MVP model-data/student/source-lock contract. The committed v1 still enforces five tags, nine pairs, and 18 routes; reopened TD-01 must version it to ten relations/20 routes without reinterpreting v1 artifacts.
+- **`scripts/model_training_contract.py`** — Strict MVP model-data/student/source-lock contract: five tags, ten undirected relations, 20 routes, canonical config hashing, provenance schema, path boundaries, and fail-fast validation.
 - **`scripts/prepare_model_data.py`** — Thin TD-03 CLI for side-effect-free dry runs, locked-cache/offline builds, and identity-bound locale checkpoint resume.
 - **`scripts/model_data_pipeline.py`** — Deterministic MASSIVE parallel-data adapter: resumable archive fetch, nested file verification, conservative multilingual cleaning, stable sample/group identities, provenance, atomic corpus/report publication, and manifest-last completion.
 - **`scripts/finalize_model_data.py`** — Thin TD-04 CLI that validates the TD-03 manifest, enforces external-reference completeness, and publishes finalized split data only after contamination checks.
@@ -93,12 +93,12 @@ The project has no `src/` layout, `__init__.py` files, or installable package. P
 
 - `configs/tokenizer_datasets_mvp.yaml` — Source registry, cleaning rules, MinHash params, quality thresholds, `smoke` and `mvp` profiles.
 - `configs/tokenizer_datasets_mvp.lock.json` — Pinned HPLT 3.0 shard URLs, SHA-256 hashes, byte ranges for deterministic reproducibility. The lock binds to a config hash — if config or profile changes, the lock must be re-resolved.
-- `configs/mvp_model_data.yaml` / `.lock.json` — Current immutable-v1 schema and identities for the nine-pair/18-route MASSIVE build. Reopened TD-01/TD-02 must publish a new identity that includes the `zho_Hans--zho_Hant` relation from the already locked `zh-CN`/`zh-TW` source files; do not edit old runtime manifests in place.
+- `configs/mvp_model_data.yaml` / `.lock.json` — Schema v2 identities for the ten-relation/20-route MASSIVE build, including `zho_Hans--zho_Hant` from the locked `zh-CN`/`zh-TW` source files. Old runtime manifests remain immutable.
 - `configs/mvp_e8_d2_v48k.yaml` — From-scratch student identity, logical runtime/publish paths, runtime-probed device/precision preferences, and an explicit configurable resource-budget schema. The canonical base keeps candidate values null; TD-10/TD-12/TD-14 candidate profiles may fill all budget fields, and TD-14 freezes the selected profile.
 - `configs/hymt2_teacher_selection.yaml` — Canonical frozen TD-06 selection: official Hy-MT2 7B GGUF Q8_0 through pinned llama.cpp CUDA. Original unquantized BF16 is the quantization-quality baseline. Both reside under Git-ignored `artifacts/model-training/runtime/` and are read-mostly/sequential-load assets. TD-07/TD-08 must consume the selected identity and may not silently fall back to another backend.
 - `configs/hymt2_teacher_runtime.yaml` / `hymt2_teacher_artifact.lock.json` — Non-selected FP8 baseline profile and immutable evidence. The validated native-Windows path decompresses to BF16 and is retained only for audit/comparison.
 - `configs/hymt2_teacher_benchmark.yaml` / `.lock.json` — Common five-tag benchmark contract plus byte-exact identities for official Hy-MT2 7B BF16, official GGUF Q8_0, and the pinned llama.cpp CUDA runtime.
-- `configs/hymt2_teacher_prompt_decode.yaml` / `hymt2_distillation.yaml` / `hymt2_distillation_d1.yaml` — Frozen 18-route v1 TD-07/TD-08 identities. D0 is historical smoke evidence and D1 is a valid 18-route cross-language MVP, but neither alone satisfies the new 20-route TD-15/TD-16 gate. Reopened TD-07/TD-08 must publish new-route addenda and a composite identity rather than mutate v1.
+- `configs/hymt2_teacher_prompt_decode.yaml` / `hymt2_distillation.yaml` / `hymt2_distillation_d1.yaml` — Frozen 18-route v1 TD-07/TD-08 identities. The `*_zh_conversion.yaml` configs and `hymt2_distillation_d1_20route_composite.yaml` freeze the completed two-route addendum and 20-route D1 identity without mutating v1.
 
 ### Data flow
 
@@ -126,11 +126,11 @@ work/plan/    → work/todo/    → work/task/    → work/review/    → work/d
 Current state:
 - **Completed**: Tokenizer dataset fetch pipeline (TD-01 through TD-12), the bounded MVP tokenizer workflow, and CTranslate2 deployment validation. The frozen `mvp-tokenizer-v0` is a 49,152-token Hugging Face Rust BPE + Metaspace artifact for five model tags: `eng_Latn`, `zho_Hans`, `zho_Hant`, `jpn_Jpan`, and `kor_Hang`.
 - **Archived workflows**: Plans remain under `work/plan/`; completed todos, task sets, and review records are under `work/done/`. Narrative evidence belongs in the task and unified review documents; the CT2 workflow's single machine-readable record is `artifacts/ctranslate2/deployment-validation.json`.
-- **Active workflow**: `work/plan/mvp-model-training.md`, `work/todo/mvp-model-training.md`, and `work/task/mvp-model-training/`. A 2026-07-16 scope correction expanded the required capability from nine relations/18 routes to ten relations/20 routes. TD-01 and TD-02 are `in_progress`; TD-03 through TD-05 and TD-07/TD-08 are pending amendment work; TD-06 remains completed; TD-09 through TD-18 remain pending. The committed M0 v1 (203,942 human train), D0 v1 (2,263 accepted smoke targets), and D1 v1 (39,941 accepted targets from 40,032 candidates across 18 routes) remain immutable evidence, but only a new human + distilled 20-route composite may enter formal downstream training. The frozen tokenizer already has both Chinese tags and must not be rebuilt for this change. Do not reinterpret v1 artifacts or the random deployment checkpoint as the new completed model/data contract.
+- **Active workflow**: `work/plan/mvp-model-training.md`, `work/todo/mvp-model-training.md`, and `work/task/mvp-model-training/`. TD-01 through TD-08 are completed; TD-09 through TD-18 remain pending. The 20-route M0 contains 226,218 human train records, while the frozen D1 composite contains 44,361 accepted train-only teacher targets. M0 v1, D0 v1, and D1 v1 remain immutable component evidence. The frozen tokenizer already has both Chinese tags and must not be rebuilt for this change. Do not reinterpret the random deployment checkpoint as a trained model.
 
 ## Testing
 
-The offline suite currently contains 143 tests across the tokenizer/model-data pipelines, teacher runtime/calibration/distillation and runtime benchmarks, tokenizer training/checkpointing, evaluation, artifact-freeze, micro-checkpoint, and CTranslate2 deployment modules. Small fixtures simulate HPLT, MASSIVE 1.1, group split/dedup/leakage, M0/D0/D1 route and acceptance evidence, teacher artifact/offline boundaries, and model-training contracts without network access. Key patterns:
+The offline suite currently contains 148 tests across the tokenizer/model-data pipelines, teacher runtime/calibration/distillation and runtime benchmarks, tokenizer training/checkpointing, evaluation, artifact-freeze, micro-checkpoint, and CTranslate2 deployment modules. Small fixtures simulate HPLT, MASSIVE 1.1, group split/dedup/leakage, M0/D0/D1 route and acceptance evidence, teacher artifact/offline boundaries, and model-training contracts without network access. Key patterns:
 
 - Config validation (explicit registry, missing fields, error paths)
 - Text cleaning correctness (zh/ja/ko-specific patterns)
@@ -145,7 +145,7 @@ The offline suite currently contains 143 tests across the tokenizer/model-data p
 - Frozen artifact manifest integrity and five-tag micro-M2M100 forwards
 - Locked MASSIVE archive/member verification, five-locale alignment, conservative cleaning, stable parallel sample/group IDs, offline/cache/resume reproducibility, and manifest-last failure safety
 - Stable component-hash train/dev/test split, exact/near duplicate binding, forward/reverse isolation, derived-group validation, tokenizer/evaluation reference policies, blocked-contamination reports, frozen test identity, and order-independent finalized manifests
-- Model-training schema/provenance, 9-pair/18-route invariants, config/source-lock identity, and path-boundary rejection
+- Model-training schema/provenance, 10-pair/20-route invariants, config/source-lock identity, and path-boundary rejection
 
 Fixtures in `tests/fixtures/tokenizer_datasets/` are small JSONL samples for all five model language tags.
 

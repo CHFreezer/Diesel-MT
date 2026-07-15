@@ -1,6 +1,6 @@
 # task TD-03: 实现确定性平行数据构建管线
 
-状态：pending（9 组/18 路 v1 已完成；等待 TD-01/TD-02 amendment）
+状态：completed
 
 依赖：TD-01、TD-02
 
@@ -54,4 +54,10 @@
 - 全量离线验证：`.conda\python.exe -m pytest -q`，结果 `85 passed in 22.92s`。
 - 正式 40,251,390-byte MASSIVE 归档下载、不同 cache/worker 状态的真实规模双构建、人工抽检与 M0 发布决定仍按原子边界留给 TD-05；TD-03 的完成不代表真实语料已验收。
 
-以上是 v1 完成记录。20 路范围下本 task 已退回 `pending`，等待新 config/lock 后发布第 10 组 addendum 或 10 组 composite，并完成离线重建与 resume 复验。
+以上是 v1 完成记录。
+
+## 10 组 schema v2 完成记录（2026-07-16）
+
+- 在独立 `data/model/route20-v2/` 根从锁定 MASSIVE 缓存生成 164,778 条清洗后无向记录，拒绝 432 条；每个完整 alignment group 生成第 10 个 `zho_Hans--zho_Hant` relation。
+- TD-03 manifest SHA-256 为 `113a33afa2ca6f73e8e10fbd5a3dab876dd470fbf0e570320edb0961901fe0c7`，构建报告 SHA-256 为 `8718f7e494580c79377f1b614b12d5a7e7ff34ae7b11a570006963341dd843c1`。
+- 使用相同锁定缓存在第二个独立根完成完全离线 fresh build 和五 locale resume；所有规范产物逐字节一致，v1 corpus 未覆盖。

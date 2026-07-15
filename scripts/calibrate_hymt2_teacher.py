@@ -12,7 +12,6 @@ from pathlib import Path, PurePosixPath
 from typing import Any, Mapping, Sequence
 
 from hymt2_distillation import (
-    ROUTES,
     DistillationError,
     LlamaCppTeacher,
     atomic_write_json,
@@ -21,6 +20,7 @@ from hymt2_distillation import (
     config_sha256,
     deterministic_route_sample,
     load_prompt_config,
+    prompt_routes,
     read_parallel_jsonl,
     route_gate_failures,
     run_profile,
@@ -45,9 +45,13 @@ def parser() -> argparse.ArgumentParser:
     return result
 
 
-def _replay_samples(samples: Sequence[Mapping[str, Any]], per_route: int) -> list[dict[str, Any]]:
+def _replay_samples(
+    samples: Sequence[Mapping[str, Any]],
+    per_route: int,
+    routes: Sequence[str],
+) -> list[dict[str, Any]]:
     selected: list[dict[str, Any]] = []
-    for route in ROUTES:
+    for route in routes:
         route_records = [sample for sample in samples if f"{sample['src_lang']}->{sample['tgt_lang']}" == route]
         selected.extend(dict(sample) for sample in route_records[:per_route])
     return selected
@@ -127,6 +131,7 @@ def calibrate(repository_root: Path, config_path: Path, *, dry_run: bool) -> dic
     repository_root = repository_root.resolve()
     config_path = (repository_root / config_path).resolve() if not config_path.is_absolute() else config_path.resolve()
     config = load_prompt_config(config_path)
+    routes = prompt_routes(config)
     input_path = repository_root / PurePosixPath(str(config["calibration_input"]["path"]))
     records = read_parallel_jsonl(
         input_path,
@@ -137,6 +142,7 @@ def calibrate(repository_root: Path, config_path: Path, *, dry_run: bool) -> dic
         records,
         per_route=int(config["calibration_input"]["samples_per_route"]),
         seed=str(config["calibration_input"]["selection_seed"]),
+        routes=routes,
     )
     sample_identity = sha256_bytes(
         b"".join(canonical_json_bytes({"sample_id": sample["sample_id"]}) for sample in samples)
@@ -163,7 +169,11 @@ def calibrate(repository_root: Path, config_path: Path, *, dry_run: bool) -> dic
     started = time.perf_counter()
     profile_records: dict[str, list[dict[str, Any]]] = {}
     replay_reports: dict[str, dict[str, Any]] = {}
-    replay_samples = _replay_samples(samples, int(config["calibration_gates"]["replay_samples_per_route"]))
+    replay_samples = _replay_samples(
+        samples,
+        int(config["calibration_gates"]["replay_samples_per_route"]),
+        routes,
+    )
     with LlamaCppTeacher(repository_root, config) as teacher:
         for profile_name in config["decode_profiles"]:
             generated = run_profile(

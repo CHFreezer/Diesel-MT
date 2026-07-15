@@ -1,8 +1,8 @@
-schema_version: 2
+schema_version: 1
 
 identity:
-  name: mvp_direction_sampling_20route
-  status: m0-20route-locked
+  name: mvp_direction_sampling
+  status: m0-locked
 
 strategy:
   unit: directed_sample
@@ -31,5 +31,3 @@ routes:
   - {route: zho_Hant->jpn_Jpan, weight: 1.0, maximum_repeats_per_epoch: 1}
   - {route: kor_Hang->zho_Hant, weight: 1.0, maximum_repeats_per_epoch: 1}
   - {route: zho_Hant->kor_Hang, weight: 1.0, maximum_repeats_per_epoch: 1}
-  - {route: zho_Hans->zho_Hant, weight: 1.0, maximum_repeats_per_epoch: 1}
-  - {route: zho_Hant->zho_Hans, weight: 1.0, maximum_repeats_per_epoch: 1}

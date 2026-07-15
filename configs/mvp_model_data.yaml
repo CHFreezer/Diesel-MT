@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 
 identity:
   name: mvp_model_data
@@ -43,14 +43,14 @@ directions:
       tags: [jpn_Jpan, zho_Hant]
     - pair_id: kor_Hang--zho_Hant
       tags: [kor_Hang, zho_Hant]
-  excluded_routes:
-    - [zho_Hans, zho_Hant]
-    - [zho_Hant, zho_Hans]
+    - pair_id: zho_Hans--zho_Hant
+      tags: [zho_Hans, zho_Hant]
+  excluded_routes: []
   counts:
     product_languages: 4
     model_tags: 5
-    undirected_pairs: 9
-    directed_routes: 18
+    undirected_pairs: 10
+    directed_routes: 20
     product_directions: 12
 
 sample_schema:
@@ -141,6 +141,7 @@ sources:
       - eng_Latn--zho_Hant
       - jpn_Jpan--zho_Hant
       - kor_Hang--zho_Hant
+      - zho_Hans--zho_Hant
     domain: single-turn virtual-assistant utterances across 18 intent domains
     translation_method: professional human localization of the English SLURP seed into each target locale
     native_script_evidence:

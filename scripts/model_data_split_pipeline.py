@@ -1079,7 +1079,7 @@ def load_td03_samples(
     except (OSError, UnicodeError, json.JSONDecodeError) as exc:
         raise InputError(f"cannot load TD-03 manifest: {exc}") from exc
     if manifest.get("status") != "complete" or manifest.get("canonical_sample_scope") != (
-        "nine undirected pairs; reverse route expansion is TD-04"
+        "ten undirected pairs; reverse route expansion is TD-04"
     ):
         raise InputError("TD-03 manifest is incomplete or has the wrong sample scope")
     records = [record for record in manifest.get("files", []) if record.get("path") == "corpus/mvp/human_parallel.jsonl"]
@@ -1178,7 +1178,7 @@ def publish_finalized_data(
         "status": "complete",
         "identity": identity,
         "identity_sha256": config_sha256(identity),
-        "scope": "18 directed routes after group split and deduplication",
+        "scope": "20 directed routes after group split and deduplication",
         "records": sum(len(records) for records in prepared["by_split"].values()),
         "files": file_records,
     }

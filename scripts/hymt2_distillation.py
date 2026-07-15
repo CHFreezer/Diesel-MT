@@ -30,7 +30,23 @@ class DistillationError(RuntimeError):
     """Raised when a TD-07/TD-08 contract or runtime invariant is violated."""
 
 
-ROUTES = tuple(f"{source}->{target}" for source, target in directed_routes())
+ALL_ROUTES = tuple(f"{source}->{target}" for source, target in directed_routes())
+CHINESE_CONVERSION_ROUTES = (
+    "zho_Hans->zho_Hant",
+    "zho_Hant->zho_Hans",
+)
+# Backward-compatible name for immutable TD-07/TD-08 v1 artifacts.
+ROUTES = tuple(route for route in ALL_ROUTES if route not in CHINESE_CONVERSION_ROUTES)
+LEGACY_PROMPT_IDENTITY = {
+    "name": "hymt2-teacher-prompt-decode-v1",
+    "status": "frozen",
+    "purpose": "td07-human-dev-calibration-and-td08-train-only-generation",
+}
+CHINESE_CONVERSION_PROMPT_IDENTITY = {
+    "name": "hymt2-teacher-prompt-decode-zh-conversion-v2",
+    "status": "frozen",
+    "purpose": "td07-hans-hant-dev-calibration-and-td08-train-only-addendum",
+}
 _SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 _PLACEHOLDER_RE = re.compile(
     r"\{\{[^{}]+\}\}|\$\{[^{}]+\}|\{[^{}]+\}|%(?:\d+\$)?[a-zA-Z]|<[^<>\s]+>"
@@ -158,9 +174,7 @@ def _repo_path(value: Any, context: str) -> str:
 
 
 def validate_prompt_config(config: Mapping[str, Any]) -> dict[str, Any]:
-    _exact_keys(
-        config,
-        {
+    base_keys = {
             "schema_version",
             "identity",
             "teacher_selection",
@@ -173,20 +187,25 @@ def validate_prompt_config(config: Mapping[str, Any]) -> dict[str, Any]:
             "route_limits",
             "runtime",
             "outputs",
-        },
-        "prompt config",
-    )
-    if config["schema_version"] != 1:
-        raise DistillationError("prompt config schema_version must be 1")
+    }
 
     identity = _mapping(config["identity"], "identity")
     _exact_keys(identity, {"name", "status", "purpose"}, "identity")
-    if identity != {
-        "name": "hymt2-teacher-prompt-decode-v1",
-        "status": "frozen",
-        "purpose": "td07-human-dev-calibration-and-td08-train-only-generation",
-    }:
+    if dict(identity) == LEGACY_PROMPT_IDENTITY:
+        expected_keys = base_keys
+        expected_routes = ROUTES
+        expected_schema = 1
+    elif dict(identity) == CHINESE_CONVERSION_PROMPT_IDENTITY:
+        expected_keys = base_keys | {"routes"}
+        expected_routes = CHINESE_CONVERSION_ROUTES
+        expected_schema = 2
+    else:
         raise DistillationError("prompt identity is not the frozen TD-07 identity")
+    _exact_keys(config, expected_keys, "prompt config")
+    if config["schema_version"] != expected_schema:
+        raise DistillationError(f"prompt config schema_version must be {expected_schema}")
+    if "routes" in config and tuple(config["routes"]) != expected_routes:
+        raise DistillationError("prompt config route scope changed")
 
     selection = _mapping(config["teacher_selection"], "teacher_selection")
     _exact_keys(selection, {"path", "file_sha256", "selection_id"}, "teacher_selection")
@@ -266,8 +285,15 @@ def validate_prompt_config(config: Mapping[str, Any]) -> dict[str, Any]:
         "maximum_output_source_character_ratio",
         "length_ratio_floor_characters",
     }
+    if expected_routes == CHINESE_CONVERSION_ROUTES:
+        filter_fields.add("source_copy_policy")
     _exact_keys(filters, filter_fields, "filter")
-    if filters["unicode_normalization"] != "NFC" or filters["version"] != "hymt2-output-filter-v1":
+    expected_filter_version = (
+        "hymt2-output-filter-zh-conversion-v2"
+        if expected_routes == CHINESE_CONVERSION_ROUTES
+        else "hymt2-output-filter-v1"
+    )
+    if filters["unicode_normalization"] != "NFC" or filters["version"] != expected_filter_version:
         raise DistillationError("output filter identity changed")
     for field in filter_fields - {
         "version",
@@ -275,9 +301,14 @@ def validate_prompt_config(config: Mapping[str, Any]) -> dict[str, Any]:
         "minimum_output_source_character_ratio",
         "maximum_output_source_character_ratio",
         "length_ratio_floor_characters",
+        "source_copy_policy",
     }:
         if filters[field] is not True:
             raise DistillationError(f"filter.{field} must be true")
+    if expected_routes == CHINESE_CONVERSION_ROUTES and filters["source_copy_policy"] != (
+        "allow-only-when-opencc-script-conversion-is-identity"
+    ):
+        raise DistillationError("Chinese conversion source-copy policy changed")
     minimum_ratio = float(filters["minimum_output_source_character_ratio"])
     maximum_ratio = float(filters["maximum_output_source_character_ratio"])
     if not 0 < minimum_ratio < maximum_ratio:
@@ -318,21 +349,21 @@ def validate_prompt_config(config: Mapping[str, Any]) -> dict[str, Any]:
     _positive_integer(gates["chrf_word_order"], "chrf_word_order", allow_zero=True)
 
     limits = config["route_limits"]
-    if not isinstance(limits, list) or len(limits) != 18:
-        raise DistillationError("route_limits must contain all 18 routes")
+    if not isinstance(limits, list) or len(limits) != len(expected_routes):
+        raise DistillationError("route_limits must contain every configured route")
     found: set[str] = set()
     for index, raw_limit in enumerate(limits):
         limit = _mapping(raw_limit, f"route_limits[{index}]")
         _exact_keys(limit, {"route", "max_source_characters", "max_output_tokens", "stop"}, f"route_limits[{index}]")
         route = str(limit["route"])
-        if route in found or route not in ROUTES:
+        if route in found or route not in expected_routes:
             raise DistillationError(f"invalid or duplicate route limit: {route}")
         found.add(route)
         _positive_integer(limit["max_source_characters"], f"{route}.max_source_characters")
         _positive_integer(limit["max_output_tokens"], f"{route}.max_output_tokens")
         if not isinstance(limit["stop"], list) or any(not isinstance(item, str) for item in limit["stop"]):
             raise DistillationError(f"{route}.stop must be a string list")
-    if found != set(ROUTES):
+    if found != set(expected_routes):
         raise DistillationError("route_limits coverage is incomplete")
 
     runtime = _mapping(config["runtime"], "runtime")
@@ -378,6 +409,10 @@ def route_limits(config: Mapping[str, Any]) -> dict[str, Mapping[str, Any]]:
     return {str(record["route"]): record for record in config["route_limits"]}
 
 
+def prompt_routes(config: Mapping[str, Any]) -> tuple[str, ...]:
+    return tuple(config.get("routes", ROUTES))
+
+
 def read_parallel_jsonl(
     path: Path,
     *,
@@ -416,18 +451,20 @@ def deterministic_route_sample(
     *,
     per_route: int,
     seed: str,
+    routes: Sequence[str] | None = None,
 ) -> list[dict[str, Any]]:
+    selected_routes = tuple(routes or ROUTES)
     by_route: dict[str, list[tuple[str, Mapping[str, Any]]]] = defaultdict(list)
     for record in records:
         route = route_id(str(record["src_lang"]), str(record["tgt_lang"]))
         identity = str(record["sample_id"])
         score = sha256_bytes(f"{seed}\0{route}\0{identity}".encode("utf-8"))
         by_route[route].append((score, record))
-    missing = sorted(set(ROUTES) - set(by_route))
+    missing = sorted(set(selected_routes) - set(by_route))
     if missing:
         raise DistillationError(f"input does not cover all routes: {', '.join(missing)}")
     selected: list[dict[str, Any]] = []
-    for route in ROUTES:
+    for route in selected_routes:
         candidates = sorted(by_route[route], key=lambda item: (item[0], str(item[1]["sample_id"])))
         if len(candidates) < per_route:
             raise DistillationError(f"{route} has only {len(candidates)} records, needs {per_route}")
@@ -494,7 +531,14 @@ def filter_output(
     if filters["reject_explanation_prefix"] and _EXPLANATION_RE.search(normalized):
         reasons.append("extra_explanation")
     if filters["reject_exact_source_copy"] and source_compact and source_compact == target_compact:
-        reasons.append("source_copy")
+        conversion_is_identity = False
+        if filters.get("source_copy_policy") == "allow-only-when-opencc-script-conversion-is-identity":
+            if target_language == "zho_Hant":
+                conversion_is_identity = _S2T.convert(source_text) == source_text
+            elif target_language == "zho_Hans":
+                conversion_is_identity = _T2S.convert(source_text) == source_text
+        if not conversion_is_identity:
+            reasons.append("source_copy")
     if filters["reject_finish_reason_length"] and finish_reason == "length":
         reasons.append("truncated")
     if filters["reject_abnormal_repetition"] and (
@@ -566,7 +610,7 @@ def summarize_generation_records(records: Sequence[Mapping[str, Any]], config: M
     for record in records:
         by_route[str(record["route"])].append(record)
     summaries: dict[str, Any] = {}
-    for route in ROUTES:
+    for route in prompt_routes(config):
         route_records = by_route.get(route, [])
         if not route_records:
             raise DistillationError(f"generation records missing route {route}")
@@ -599,7 +643,7 @@ def summarize_generation_records(records: Sequence[Mapping[str, Any]], config: M
 def route_gate_failures(summary: Mapping[str, Any], config: Mapping[str, Any]) -> list[str]:
     gates = config["calibration_gates"]
     failures: list[str] = []
-    for route in ROUTES:
+    for route in prompt_routes(config):
         record = summary["routes"][route]
         checks = {
             "chrf": float(record["chrf"]) >= float(gates["minimum_route_chrf"]),

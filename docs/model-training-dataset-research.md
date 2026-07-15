@@ -1,6 +1,6 @@
 # MVP 模型训练数据集调研与来源锁定
 
-状态：TD-02 `in_progress`；9 组 v1 source 已锁定，第 10 组合同/lock 补充待完成
+状态：TD-02 `completed`；10 组 schema v2 source/lock 已冻结
 
 调研日期：2026-07-15
 
@@ -10,7 +10,7 @@
 
 官方 1.1 发布同时包含 `en-US`、`zh-CN`、`zh-TW`、`ja-JP`、`ko-KR`，因此一个 `(partition, id)` group 可以在不做脚本推断、自动简繁转换或跨来源拼接的情况下形成项目所需的 10 个无向模型关系：9 个跨语言关系和 `zh-CN--zh-TW` 中文内部本地化关系。官方仓库明确提供 1.1 S3 归档、JSONL 结构、`train/dev/test` 字段和 `utt` 原文含义。[MASSIVE 官方仓库的数据说明](https://github.com/alexa/massive#accessing-and-processing-the-data)
 
-数据归档内的 `LICENSE` 是 CC BY 4.0；`NOTICE.md` 说明 English 数据来自同为 CC BY 4.0 的 SLURP。归档、许可、notice 和五个 locale 文件的实际字节身份已经锁定，因此第 10 组不需要重新下载；但当前 [`mvp_model_data.lock.json`](../configs/mvp_model_data.lock.json) 仍绑定 9 组 v1 配置哈希，TD-02 必须发布新的配置/lock 身份并增加该 pair coverage 后才能关闭。对外再分发数据或其改编版本时必须保留归属、许可链接和修改说明；模型许可不能替代数据许可审查。
+数据归档内的 `LICENSE` 是 CC BY 4.0；`NOTICE.md` 说明 English 数据来自同为 CC BY 4.0 的 SLURP。归档、许可、notice 和五个 locale 文件的实际字节身份已经锁定，第 10 组复用同一锁定字节且无需重新下载。[`mvp_model_data.lock.json`](../configs/mvp_model_data.lock.json) 已绑定 10 组 schema v2 配置哈希 `1c3fda336a5fae183ea48e813c442daabee5b754bfbd792bad15fabaeb2c52b7`。对外再分发数据或其改编版本时必须保留归属、许可链接和修改说明；模型许可不能替代数据许可审查。
 
 ## 为什么适合本轮 MVP
 
@@ -77,7 +77,7 @@
 | HPLT 3.0 monolingual corpus | 不作为人类平行来源 | 当前冻结 HPLT 数据没有跨语言 alignment key，只能服务 tokenizer/未来单语增强。 |
 | 自动简繁转换或未锁定 LLM 生成 | 不作为 human source | 不能证明原生繁体，也不满足本 task 的人工平行与完整 provenance 要求。 |
 
-当前 10 组都可以由同一锁定 MASSIVE 归档提供，不需要 synthetic 才能关闭来源缺口。TD-02 的未完成项是把第 10 组写入新 config hash/source lock 与覆盖统计，而不是寻找或下载新数据。后续若清洗使 accepted 数低于门槛，应新立来源变更；不得在现有 v1 lock 下临时改义。
+当前 10 组都由同一锁定 MASSIVE 归档提供，不需要 synthetic 才能关闭来源缺口。第 10 组已经进入新 config hash/source lock 与覆盖统计；归档 URI、成员大小和 SHA-256 均未改变。后续若清洗使 accepted 数低于门槛，应新立来源变更；不得临时改义。
 
 ## TD-05 独立评测污染引用结论
 

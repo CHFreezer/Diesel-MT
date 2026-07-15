@@ -1,6 +1,6 @@
 # task TD-02: 调研并锁定有界平行数据来源
 
-状态：in_progress（9 组 v1 已完成；第 10 组 lock amendment 进行中）
+状态：completed
 
 依赖：TD-01
 
@@ -51,4 +51,10 @@
 - FLORES-200 因评测污染风险、OPUS 浮动聚合因来源/许可异质、HPLT 因无平行 alignment、自动简繁/未锁定 LLM 生成因 provenance 不满足而排除或延期，详见调研文档。
 - `mvp_model_data.lock.json` 已通过严格 config-hash、来源顺序、文件身份、预算和对齐统计校验；完整离线测试为 `75 passed in 23.10s`。
 
-以上是不可变 v1 完成记录。2026-07-16 本 task 退回 `in_progress`；第 10 组 pair coverage、新 config hash/source lock 和验证完成前不得启动 TD-03 正式 amendment 构建。
+以上是不可变 v1 完成记录。
+
+## 第 10 组 lock amendment 完成记录（2026-07-16）
+
+- 已把锁定归档中的 `zh-CN`/`zh-TW` 登记为 `zho_Hans--zho_Hant` 第 10 组人工 multiparallel localization；train/dev/test 原始上限为 11,514/2,033/2,974，无需重新下载。
+- schema v2 source lock 保留官方归档、许可、notice 和五个成员文件的原始字节身份，并绑定新 config hash；lock 文件 SHA-256 为 `de24d2989ef21063a3c437b6c9bcf12362115c25d36a86cafa663e86b0ab8f88`。
+- 10 组覆盖、预算与许可证缺口全部关闭，未使用 synthetic 补充 human dev/test。

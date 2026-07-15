@@ -1,6 +1,6 @@
 # task TD-08: 生成 D0 smoke 并验收 D1 最小可用蒸馏数据
 
-状态：pending（D0/D1 v1 已完成；等待两路 addendum 与 20 路 composite）
+状态：completed
 
 依赖：TD-05、TD-07
 
@@ -74,4 +74,13 @@
 
 - 2026-07-15 复核发现 D0 仅占 M0 human train source 的约 1.11%，每路由只有 123～128 条 accepted；它足以证明 teacher 数据链正确，但不足以支撑 `mvp_e8_d2_v48k` 的正式训练或 human-only/distilled A/B 结论。
 - D0 artifact、哈希和审查证据继续作为 immutable smoke 记录保留，不回写为 D1，也不删除成功证据。
-- TD-08 曾因 D0 规模不足退回并完成 18 路 D1 v1。2026-07-16 又因完整能力增加两条简繁互转路线退回 `pending`；D1 v1 的 40,032 个候选、39,941 条 accepted 及全部哈希保持不可变，TD-09 仍未启动。
+- TD-08 曾因 D0 规模不足退回并完成 18 路 D1 v1；D1 v1 的 40,032 个候选、39,941 条 accepted 及全部哈希保持不可变。
+
+## 20 路 D1 完成记录（2026-07-16）
+
+- 从 20 路 M0 train 为两条中文内部路线各确定性选择 2,224 个候选；实际生成 4,448 条，墙钟 1,583.418523 秒，重试率均为 0。
+- `zho_Hans->zho_Hant` 接受 2,213、过滤 11；`zho_Hant->zho_Hans` 接受 2,207、过滤 17。两路接受率与脚本合规率均通过冻结 gate，失败项为空。
+- 人工逐条审查 72 条队列，剔除 3 条大陆词汇残留，恢复 2 条与 human reference 精确一致的合法不变繁体句。4 条独立 replay 的 raw/normalized 输出完全一致；dev/test 均未读取。
+- addendum accepted/manifest SHA-256 分别为 `b9ca2fd5a05d9c9874548b7ea5a3db5dc75b5512438b46dac9ae65ca9e88fcb1` / `8700222adb328a4f7aac3dc92c46b53183dba7d1c46c97fd12e4d6eaab7a942f`。
+- 最终 composite 只引用不可变 D1 v1 与两路 addendum，包含 44,361 条 accepted、20 路，每路至少 2,207 条；accepted/manifest SHA-256 为 `30178717aa24cf9a14a80db6cf9ed236469c7032b25fe82811999d2e09317604` / `fe72be6a588fda2a328e8c300d799061cab62ecfaabf13a702e637eb4dd8cd1e`。重复构建三类哈希全部一致，TD-09 未启动。
+- 收口专项测试为 `33 passed`，全量离线回归为 `148 passed in 28.76s`。

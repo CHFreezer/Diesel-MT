@@ -37,11 +37,9 @@ UNDIRECTED_PAIRS = (
     ("eng_Latn", "zho_Hant"),
     ("jpn_Jpan", "zho_Hant"),
     ("kor_Hang", "zho_Hant"),
-)
-EXCLUDED_ROUTES = (
     ("zho_Hans", "zho_Hant"),
-    ("zho_Hant", "zho_Hans"),
 )
+EXCLUDED_ROUTES: tuple[tuple[str, str], ...] = ()
 TOKENIZER_MANIFEST_SHA256 = (
     "eb79ae22f523f1d9c9fcf75b80f2b322e3c2882a8fddb7545b5933dd4053fa7f"
 )
@@ -174,10 +172,8 @@ def validate_route(source: str, target: str) -> tuple[str, str]:
         raise ContractError(f"route uses unknown language tags: {', '.join(unknown)}")
     if source == target:
         raise ContractError("same-language routes are forbidden")
-    if (source, target) in EXCLUDED_ROUTES:
-        raise ContractError("Simplified/Traditional conversion routes are forbidden")
     if frozenset((source, target)) not in _PAIR_SETS:
-        raise ContractError(f"route is outside the 18-route allowlist: {source}->{target}")
+        raise ContractError(f"route is outside the 20-route allowlist: {source}->{target}")
     return source, target
 
 
@@ -252,11 +248,11 @@ def _validate_languages_and_directions(config: Mapping[str, Any]) -> None:
         seen.add(pair)
         pair_ids.append(str(record["pair_id"]))
     if seen != _PAIR_SETS:
-        raise ContractError("undirected_pairs must contain the frozen nine-pair set")
+        raise ContractError("undirected_pairs must contain the frozen ten-pair set")
 
     excluded = [tuple(item) for item in _list(directions["excluded_routes"], "excluded_routes")]
     if tuple(excluded) != EXCLUDED_ROUTES:
-        raise ContractError("excluded_routes must contain both Hans/Hant conversions")
+        raise ContractError("excluded_routes must be empty for the complete 20-route contract")
     counts = _mapping(directions["counts"], "direction counts")
     _exact_keys(
         counts,
@@ -266,8 +262,8 @@ def _validate_languages_and_directions(config: Mapping[str, Any]) -> None:
     if dict(counts) != {
         "product_languages": 4,
         "model_tags": 5,
-        "undirected_pairs": 9,
-        "directed_routes": 18,
+        "undirected_pairs": 10,
+        "directed_routes": 20,
         "product_directions": 12,
     }:
         raise ContractError("direction counts do not match the frozen terminology")
@@ -419,8 +415,8 @@ def validate_model_data_config(config: Mapping[str, Any]) -> dict[str, Any]:
         },
         "model data config",
     )
-    if config["schema_version"] != 1:
-        raise ContractError("model data schema_version must be 1")
+    if config["schema_version"] != 2:
+        raise ContractError("model data schema_version must be 2")
     identity = _mapping(config["identity"], "data.identity")
     _exact_keys(identity, {"name", "purpose", "status"}, "data.identity")
     if identity["name"] != "mvp_model_data" or identity["status"] != "locked-sources":
@@ -505,7 +501,7 @@ def validate_model_data_config(config: Mapping[str, Any]) -> dict[str, Any]:
     expected_ids = {pair_id(list(pair)) for pair in UNDIRECTED_PAIRS}
     if coverage != expected_ids:
         missing = sorted(expected_ids - coverage)
-        raise ContractError(f"enabled sources do not cover all nine pairs: {', '.join(missing)}")
+        raise ContractError(f"enabled sources do not cover all ten pairs: {', '.join(missing)}")
     return dict(config)
 
 
@@ -806,8 +802,8 @@ def validate_parallel_sample(sample: Mapping[str, Any], config: Mapping[str, Any
 
 def validate_source_lock(lock: Mapping[str, Any], config: Mapping[str, Any]) -> dict[str, Any]:
     _exact_keys(lock, {"schema_version", "config_sha256", "source_order", "sources"}, "source lock")
-    if lock["schema_version"] != 1:
-        raise ContractError("source lock schema_version must be 1")
+    if lock["schema_version"] != 2:
+        raise ContractError("source lock schema_version must be 2")
     if _sha256(lock["config_sha256"], "source lock config hash") != config_sha256(config):
         raise ContractError("source lock does not match the model data config")
     enabled = [source for source in config["sources"] if source["enabled"]]

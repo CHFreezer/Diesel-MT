@@ -897,7 +897,7 @@ def build_model_data(
         "identity": identity,
         "identity_sha256": config_sha256(identity),
         "sample_schema_version": validated_config["sample_schema"]["version"],
-        "canonical_sample_scope": "nine undirected pairs; reverse route expansion is TD-04",
+        "canonical_sample_scope": "ten undirected pairs; reverse route expansion is TD-04",
         "records": len(all_samples),
         "files": file_records,
     }
@@ -970,7 +970,7 @@ def dry_run_plan(
             "verify exact regular tar members by byte size and SHA-256",
             "parse aligned locales and conservatively normalize text",
             "reuse identity-bound locale checkpoints when requested",
-            "build stable group/sample identities for nine undirected pairs",
+            "build stable group/sample identities for ten undirected pairs",
             "atomically publish corpus and reports, then completion manifest",
         ],
         "runtime_roots": {

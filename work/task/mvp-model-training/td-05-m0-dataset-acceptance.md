@@ -1,6 +1,6 @@
 # task TD-05: 构建并验收 M0 数据集
 
-状态：pending（M0 v1 已完成；等待第 10 组与 20 路 composite 验收）
+状态：completed
 
 依赖：TD-04
 
@@ -51,4 +51,11 @@
 - runtime `m0-manifest.json` SHA-256 为 `3d517a8adad0871d04f688f8fd50e0e6432ea0738a043bb8977f1dcede3c37aa`，acceptance report SHA-256 为 `4b64f8f3562978332396c11f6708a2ba507442d230d1615a5a36a09f04a40b1a`；精简证据见 `artifacts/model-training/m0-dataset-acceptance.json` 与 `docs/m0-dataset-acceptance.md`。
 - 专项测试 `20 passed`；完整离线回归 `105 passed in 22.89s`。冻结 tokenizer artifact manifest 仍为 `eb79ae22f523f1d9c9fcf75b80f2b322e3c2882a8fddb7545b5933dd4053fa7f`。
 
-以上是 2026-07-15 的 M0 v1 完成记录。2026-07-16 因新增两条简繁互转路线，本 task 退回 `pending`；v1 artifact/哈希保持不变，新的双构建、人工审查和 20 路 composite 尚待执行。
+以上是 2026-07-15 的 M0 v1 完成记录。
+
+## 20 路 M0 完成记录（2026-07-16）
+
+- M0 v2 覆盖 10 组/20 路、327,508 条有向记录；train/dev/test 为 226,218/37,508/63,782。第 10 组最终无向 train/dev/test 为 11,279/1,868/3,164。
+- 固定人工队列逐条检查 549 条：accepted 400、rejected 149；第 10 组 accepted train/dev/test 和 rejected 均达到冻结抽检预算。保留 38 个已知 MASSIVE 边界质量警告，无 systemic blocker。
+- 双构建、污染、脚本、来源/许可、20 路非空与方向采样 gate 全部通过。M0 manifest SHA-256 为 `5cc369421a705e2eea0076eec06c2bc12de7f278888df2f1ca9add6250ee1d67`；提交内证据为 `artifacts/model-training/td05-m0-20route.json`。
+- v1 artifact 与哈希保持不变；TD-09 未启动。

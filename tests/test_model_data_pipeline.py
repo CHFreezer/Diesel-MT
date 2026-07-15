@@ -109,7 +109,7 @@ def fixture_inputs(
     ]
     source = config["sources"][0]
     lock = {
-        "schema_version": 1,
+        "schema_version": 2,
         "config_sha256": config_sha256(config),
         "source_order": ["massive-1.1"],
         "sources": [
@@ -167,7 +167,7 @@ def test_source_adapter_registry_and_dry_run_are_explicit_and_side_effect_free(
         resume=True,
     )
     assert plan["status"] == "dry-run"
-    assert plan["maximum_canonical_samples"] == 27
+    assert plan["maximum_canonical_samples"] == 30
     assert plan["sources"][0]["cache_status"] == "missing"
     assert plan["network_allowed"] is False
     assert not out_root.exists()
@@ -195,19 +195,19 @@ def test_offline_build_is_byte_stable_and_preserves_group_and_provenance(
     assert first_manifest.read_bytes() == second_manifest.read_bytes()
     assert first_result["manifest_sha256"] == second_result["manifest_sha256"]
     samples = _read_jsonl(first_corpus)
-    assert len(samples) == 27
-    assert len({sample["sample_id"] for sample in samples}) == 27
+    assert len(samples) == 30
+    assert len({sample["sample_id"] for sample in samples}) == 30
     group_counts = Counter(sample["sample_group_id"] for sample in samples)
-    assert sorted(group_counts.values()) == [9, 9, 9]
+    assert sorted(group_counts.values()) == [10, 10, 10]
     assert {sample["split"] for sample in samples} == {"train", "dev", "test"}
     assert all(sample["provenance"]["kind"] == "human_parallel" for sample in samples)
     assert all(sample["license"] == "CC-BY-4.0" for sample in samples)
     manifest = json.loads(first_manifest.read_text(encoding="utf-8"))
     assert manifest["status"] == "complete"
-    assert manifest["records"] == 27
+    assert manifest["records"] == 30
     assert len(manifest["files"]) == 5
     report = json.loads((first / "reports" / "td03-build.json").read_text(encoding="utf-8"))
-    assert len(report["directed_route_potential_counts"]) == 18
+    assert len(report["directed_route_potential_counts"]) == 20
     assert set(first_result["resume_checkpoints_used"]["massive-1.1"].values()) == {False}
 
 

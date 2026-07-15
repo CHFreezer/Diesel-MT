@@ -18,11 +18,11 @@
     ["jpn_Jpan", "zho_Hant"],
     ["zho_Hant", "jpn_Jpan"],
     ["kor_Hang", "zho_Hant"],
-    ["zho_Hant", "kor_Hang"]
+    ["zho_Hant", "kor_Hang"],
+    ["zho_Hans", "zho_Hant"],
+    ["zho_Hant", "zho_Hans"]
   ],
   "invalid_routes": [
-    {"route": ["zho_Hans", "zho_Hant"], "reason": "script conversion is outside translation scope"},
-    {"route": ["zho_Hant", "zho_Hans"], "reason": "script conversion is outside translation scope"},
     {"route": ["eng_Latn", "eng_Latn"], "reason": "same-tag route"},
     {"route": ["fra_Latn", "eng_Latn"], "reason": "tag outside allowlist"}
   ]

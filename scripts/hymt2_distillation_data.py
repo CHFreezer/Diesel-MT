@@ -12,6 +12,7 @@ from pathlib import Path, PurePosixPath
 from typing import Any, Mapping, Sequence
 
 from hymt2_distillation import (
+    CHINESE_CONVERSION_ROUTES,
     ROUTES,
     DistillationError,
     LlamaCppTeacher,
@@ -51,6 +52,15 @@ D1_IDENTITY = {
     "status": "frozen",
     "scope": "mvp-train-only-eighteen-route-distilled-corpus",
 }
+D1_ZH_CONVERSION_IDENTITY = {
+    "name": "hymt2-sequence-distillation-d1-zh-conversion-v2",
+    "status": "frozen",
+    "scope": "mvp-train-only-two-route-chinese-conversion-addendum",
+}
+
+
+def distillation_routes(config: Mapping[str, Any]) -> tuple[str, ...]:
+    return tuple(config.get("routes", ROUTES))
 
 
 def _exact_keys(value: Mapping[str, Any], required: set[str], context: str) -> None:
@@ -111,10 +121,17 @@ def validate_distillation_config(config: Mapping[str, Any]) -> dict[str, Any]:
     elif dict(identity) == D1_IDENTITY:
         maturity = "d1"
         _exact_keys(config, base_keys | {"reuse"}, "distillation config")
+    elif dict(identity) == D1_ZH_CONVERSION_IDENTITY:
+        maturity = "d1-zh-addendum"
+        _exact_keys(config, base_keys | {"routes"}, "distillation config")
+        if tuple(config["routes"]) != CHINESE_CONVERSION_ROUTES:
+            raise DistillationError("Chinese conversion addendum route scope changed")
     else:
         raise DistillationError("distillation identity changed")
-    if config["schema_version"] != 1:
-        raise DistillationError("distillation schema_version must be 1")
+    expected_schema = 2 if maturity == "d1-zh-addendum" else 1
+    if config["schema_version"] != expected_schema:
+        raise DistillationError(f"distillation schema_version must be {expected_schema}")
+    routes = distillation_routes(config)
 
     prompt = _mapping(config["prompt_decode"], "prompt_decode")
     _exact_keys(
@@ -156,8 +173,10 @@ def validate_distillation_config(config: Mapping[str, Any]) -> dict[str, Any]:
         "sampling",
     )
     per_route = _positive_integer(sampling["records_per_route"], "sampling.records_per_route")
-    if sampling["total_records"] != per_route * len(ROUTES):
-        raise DistillationError("sampling.total_records must equal records_per_route * 18")
+    if sampling["total_records"] != per_route * len(routes):
+        raise DistillationError(
+            "sampling.total_records must equal records_per_route * configured routes"
+        )
     if sampling["unit"] != "directed_sample" or sampling["replacement"] is not False:
         raise DistillationError("D0 sampling must use directed samples without replacement")
     if sampling["order"] != "frozen-route-order-then-selection-hash":
@@ -167,6 +186,7 @@ def validate_distillation_config(config: Mapping[str, Any]) -> dict[str, Any]:
     expected_sampling = {
         "d0": (128, 2_304, "diesel-mt-td08-d0-v1"),
         "d1": (2_224, 40_032, "diesel-mt-td08-d0-v1"),
+        "d1-zh-addendum": (2_224, 4_448, "diesel-mt-td08-zh-conversion-v2"),
     }[maturity]
     if (
         per_route,
@@ -217,6 +237,11 @@ def validate_distillation_config(config: Mapping[str, Any]) -> dict[str, Any]:
         raise DistillationError("replay must require exact raw and normalized output")
 
     gates = _mapping(config["acceptance_gates"], "acceptance_gates")
+    gate_route_field = (
+        "require_all_configured_routes"
+        if maturity == "d1-zh-addendum"
+        else "require_all_eighteen_routes"
+    )
     _exact_keys(
         gates,
         {
@@ -224,7 +249,7 @@ def validate_distillation_config(config: Mapping[str, Any]) -> dict[str, Any]:
             "minimum_route_accepted_rate",
             "minimum_route_script_compliance_rate",
             "maximum_route_retry_rate",
-            "require_all_eighteen_routes",
+            gate_route_field,
             "require_manual_review",
             "require_exact_replay",
             "require_zero_test_records",
@@ -237,7 +262,7 @@ def validate_distillation_config(config: Mapping[str, Any]) -> dict[str, Any]:
     for field in ("minimum_route_accepted_rate", "minimum_route_script_compliance_rate", "maximum_route_retry_rate"):
         _rate(gates[field], f"acceptance_gates.{field}")
     for field in (
-        "require_all_eighteen_routes",
+        gate_route_field,
         "require_manual_review",
         "require_exact_replay",
         "require_zero_test_records",
@@ -365,6 +390,7 @@ def generation_contract(
     samples: Sequence[Mapping[str, Any]],
 ) -> dict[str, Any]:
     counts = Counter(route_id(str(sample["src_lang"]), str(sample["tgt_lang"])) for sample in samples)
+    routes = distillation_routes(config)
     return {
         "schema_version": 1,
         "pipeline_version": PIPELINE_VERSION,
@@ -388,7 +414,7 @@ def generation_contract(
         "sampling": {
             **config["sampling"],
             "selected_sample_ids_sha256": _selected_identity(samples),
-            "records_by_route": {route: int(counts[route]) for route in ROUTES},
+            "records_by_route": {route: int(counts[route]) for route in routes},
         },
     }
 
@@ -411,6 +437,7 @@ def prepare_inputs(
         records,
         per_route=int(config["sampling"]["records_per_route"]),
         seed=str(config["sampling"]["selection_seed"]),
+        routes=distillation_routes(config),
     )
     contract = generation_contract(config, prompt_config, selected)
     digest = sha256_bytes(canonical_json_bytes(contract))
@@ -596,7 +623,10 @@ def load_reused_results(
         / PurePosixPath(str(source_config["outputs"]["root"]))
         / str(source_config["outputs"]["raw_subdir"])
     )
-    if source_manifest.get("outputs", {}).get("raw_shards") != route_file_identities(source_raw_root):
+    if source_manifest.get("outputs", {}).get("raw_shards") != route_file_identities(
+        source_raw_root,
+        distillation_routes(source_config),
+    ):
         raise DistillationError("D0 raw shards differ from the frozen D0 manifest")
     source_raw = load_raw_results(repository_root, source_config)
 
@@ -612,7 +642,8 @@ def load_reused_results(
     rebound: dict[str, dict[str, Any]] = {}
     profile_name = str(config["prompt_decode"]["selected_profile"])
     expected_decode_sha256 = config_sha256(prompt_config["decode_profiles"][profile_name])
-    for route in ROUTES:
+    routes = distillation_routes(config)
+    for route in routes:
         source_route = source_samples_by_route[route]
         target_prefix = target_samples_by_route[route][:required]
         if len(source_route) != required or [sample["sample_id"] for sample in source_route] != [
@@ -663,7 +694,7 @@ def load_reused_results(
                     "verification": "byte-identical-output-rebound-to-d1-contract",
                 },
             }
-    if len(rebound) != required * len(ROUTES):
+    if len(rebound) != required * len(routes):
         raise DistillationError("D1 reused record count differs from the frozen contract")
     return rebound
 
@@ -712,7 +743,7 @@ def generate_d0(
     started = time.perf_counter()
     all_results: list[dict[str, Any]] = []
     with LlamaCppTeacher(repository_root, prompt_config) as teacher:
-        for route in ROUTES:
+        for route in distillation_routes(config):
             route_samples = by_route[route]
             results = _load_route_checkpoints(
                 state_root,
@@ -786,7 +817,7 @@ def generate_d0(
         **common,
         "elapsed_seconds": round(time.perf_counter() - started, 6),
         "work_root": str(work_root),
-        "raw_shards": route_file_identities(raw_root),
+        "raw_shards": route_file_identities(raw_root, distillation_routes(config)),
         "review_queue": {
             "path": config["outputs"]["manual_review_queue"],
             "records": len(queue),
@@ -800,7 +831,7 @@ def generate_d0(
 def load_raw_results(repository_root: Path, config: Mapping[str, Any]) -> list[dict[str, Any]]:
     raw_root = repository_root / PurePosixPath(str(config["outputs"]["root"])) / str(config["outputs"]["raw_subdir"])
     results: list[dict[str, Any]] = []
-    for route in ROUTES:
+    for route in distillation_routes(config):
         path = raw_root / _raw_shard_filename(route)
         if not path.is_file():
             raise DistillationError(f"raw route shard is missing: {path}")
@@ -828,7 +859,7 @@ def prepare_review_queue(
     queue: list[dict[str, Any]] = []
     accepted_limit = int(config["manual_review"]["accepted_per_route"])
     rejected_limit = int(config["manual_review"]["rejected_per_route"])
-    for route in ROUTES:
+    for route in distillation_routes(config):
         route_records = by_route[route]
         accepted = sorted(
             (record for record in route_records if record["accepted"]),
@@ -882,9 +913,12 @@ def prepare_review_queue(
     return queue
 
 
-def route_file_identities(root: Path) -> list[dict[str, Any]]:
+def route_file_identities(
+    root: Path,
+    routes: Sequence[str] = ROUTES,
+) -> list[dict[str, Any]]:
     identities: list[dict[str, Any]] = []
-    for route in ROUTES:
+    for route in routes:
         path = root / _raw_shard_filename(route)
         identities.append(
             {
@@ -909,7 +943,7 @@ def replay_d0(repository_root: Path, config_path: Path) -> dict[str, Any]:
         by_route[route_id(str(sample["src_lang"]), str(sample["tgt_lang"]))].append(sample)
     replay_samples = [
         sample
-        for route in ROUTES
+        for route in distillation_routes(config)
         for sample in by_route[route][: int(config["replay"]["samples_per_route"])]
     ]
     profile_name = str(config["prompt_decode"]["selected_profile"])
@@ -1045,7 +1079,10 @@ def validate_manual_attestation(
         ("traditional_extra_reviewed_by_route", "traditional-extra"),
     ):
         values = _mapping(decisions[field], f"decisions.{field}")
-        expected = {route: int(expected_counts[route][tag]) for route in ROUTES}
+        expected = {
+            route: int(expected_counts[route][tag])
+            for route in distillation_routes(config)
+        }
         if dict(values) != expected:
             raise DistillationError(f"manual review counts differ for {field}")
     if decisions["systemic_blocker"] is not False:
@@ -1083,9 +1120,24 @@ def validate_manual_attestation(
         reviewed = queue_by_id[review_id]
         if reviewed["automated_accepted"]:
             raise DistillationError("manual filter override must refer to an automated-rejected record")
-        if mismatch["rule"] != "source_copy" or reviewed["automated_rejection_reasons"] != ["source_copy"]:
+        allowed_reasons = [["source_copy"]]
+        if (
+            config["identity"] == D1_ZH_CONVERSION_IDENTITY
+            and reviewed["route"] in CHINESE_CONVERSION_ROUTES
+            and reviewed["teacher_output"] == reviewed["human_reference"]
+        ):
+            allowed_reasons.extend(
+                [
+                    ["source_copy", "simplified_output_for_traditional_target"],
+                    ["source_copy", "traditional_output_for_simplified_target"],
+                ]
+            )
+        if (
+            mismatch["rule"] != "source_copy"
+            or reviewed["automated_rejection_reasons"] not in allowed_reasons
+        ):
             raise DistillationError(
-                "manual filter override is restricted to source_copy-only false positives"
+                "manual filter override is restricted to reviewed Chinese source-copy false positives"
             )
         if not isinstance(mismatch["reason"], str) or not str(mismatch["reason"]).strip():
             raise DistillationError("manual filter override reason must be non-empty")
@@ -1140,7 +1192,7 @@ def _quality_summary(
     routes: dict[str, Any] = {}
     failures: list[str] = []
     gates = config["acceptance_gates"]
-    for route in ROUTES:
+    for route in distillation_routes(config):
         records = raw_by_route[route]
         count = len(records)
         reason_counts = Counter(reason for record in records for reason in record["rejection_reasons"])
@@ -1286,7 +1338,8 @@ def finalize_d0(repository_root: Path, config_path: Path) -> dict[str, Any]:
             "sha256": sha256_file(contract_path),
         },
         "raw_shards": route_file_identities(
-            repository_root / PurePosixPath(str(config["outputs"]["root"])) / str(config["outputs"]["raw_subdir"])
+            repository_root / PurePosixPath(str(config["outputs"]["root"])) / str(config["outputs"]["raw_subdir"]),
+            distillation_routes(config),
         ),
         "accepted": {
             "path": config["outputs"]["accepted"],
@@ -1323,9 +1376,11 @@ def finalize_d0(repository_root: Path, config_path: Path) -> dict[str, Any]:
         },
     }
     is_d1 = config["identity"] == D1_IDENTITY
+    is_zh_addendum = config["identity"] == D1_ZH_CONVERSION_IDENTITY
+    routes = distillation_routes(config)
     reused_records = sum("reuse_provenance" in record for record in raw_records)
     scope = {
-        "routes": 18,
+        "routes": len(routes),
         "input": len(raw_records),
         "accepted": len(accepted),
         "filtered": len(filtered),
@@ -1355,8 +1410,14 @@ def finalize_d0(repository_root: Path, config_path: Path) -> dict[str, Any]:
         "schema_version": 1,
         "pipeline_version": PIPELINE_VERSION,
         "status": "complete",
-        "release": "d1-hymt2-distillation-mvp" if is_d1 else "d0-hymt2-bounded-distillation",
-        "corpus_maturity": "mvp" if is_d1 else "smoke",
+        "release": (
+            "d1-hymt2-distillation-mvp"
+            if is_d1
+            else "d1-hymt2-zh-conversion-addendum"
+            if is_zh_addendum
+            else "d0-hymt2-bounded-distillation"
+        ),
+        "corpus_maturity": "mvp" if is_d1 else "mvp-addendum" if is_zh_addendum else "smoke",
         "date": str(replay["created_at"])[:10],
         "scope": manifest["scope"],
         "identities": {

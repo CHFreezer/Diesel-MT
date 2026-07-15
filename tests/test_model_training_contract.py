@@ -52,7 +52,7 @@ def test_configs_and_source_lock_are_strict_and_hash_bound(
 ) -> None:
     lock = load_source_lock(SOURCE_LOCK_PATH, data_config)
 
-    assert config_sha256(data_config) == "4b774c6d564b02fef3d6113d3de4b51428248646fe209a9e5a300c9608cb5c93"
+    assert config_sha256(data_config) == "1c3fda336a5fae183ea48e813c442daabee5b754bfbd792bad15fabaeb2c52b7"
     assert config_sha256(student_config) == "ce2b50c258ffe2accee58697300e680f7871b51a6241eff2a986ea0bc2146252"
     assert lock["config_sha256"] == config_sha256(data_config)
     assert lock["source_order"] == ["massive-1.1"]
@@ -69,9 +69,9 @@ def test_canonical_hash_ignores_mapping_order(data_config: dict[str, object]) ->
 
 def test_language_pair_and_direction_counts_are_frozen(data_config: dict[str, object]) -> None:
     assert tuple(data_config["languages"]["model_tags"]) == contract.LANGUAGE_TAGS
-    assert len(data_config["directions"]["undirected_pairs"]) == 9
-    assert len(directed_routes()) == 18
-    assert len(set(directed_routes())) == 18
+    assert len(data_config["directions"]["undirected_pairs"]) == 10
+    assert len(directed_routes()) == 20
+    assert len(set(directed_routes())) == 20
     assert len(product_directions()) == 12
     assert len(set(product_directions())) == 12
     assert not set(directed_routes()) & set(contract.EXCLUDED_ROUTES)
@@ -81,8 +81,6 @@ def test_language_pair_and_direction_counts_are_frozen(data_config: dict[str, ob
     ("source", "target", "message"),
     [
         ("eng_Latn", "eng_Latn", "same-language"),
-        ("zho_Hans", "zho_Hant", "Simplified/Traditional"),
-        ("zho_Hant", "zho_Hans", "Simplified/Traditional"),
         ("fra_Latn", "eng_Latn", "unknown language"),
     ],
 )
@@ -177,8 +175,8 @@ def test_data_config_rejects_unknown_missing_and_changed_pairs(data_config: dict
         validate_model_data_config(missing)
 
     wrong_pair = copy.deepcopy(data_config)
-    wrong_pair["directions"]["undirected_pairs"][0]["tags"] = ["zho_Hans", "zho_Hant"]
-    with pytest.raises(ContractError, match="outside the allowlist"):
+    wrong_pair["directions"]["undirected_pairs"][0]["tags"] = ["eng_Latn", "kor_Hang"]
+    with pytest.raises(ContractError, match="pair_id does not match"):
         validate_model_data_config(wrong_pair)
 
 
@@ -282,11 +280,12 @@ def test_frozen_tokenizer_manifest_is_unchanged(student_config: dict[str, object
     assert student_config["tokenizer"]["artifact_manifest_sha256"] == digest
 
 
-def test_source_covers_nine_pairs_and_preserves_native_script_locales(
+def test_source_covers_ten_pairs_and_preserves_native_script_locales(
     data_config: dict[str, object]
 ) -> None:
     source = data_config["sources"][0]
-    assert len(source["pair_coverage"]) == 9
+    assert len(source["pair_coverage"]) == 10
+    assert "zho_Hans--zho_Hant" in source["pair_coverage"]
     assert source["locale_to_model_tag"] == {
         "en-US": "eng_Latn",
         "zh-CN": "zho_Hans",

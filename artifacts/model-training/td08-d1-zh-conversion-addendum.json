@@ -1,0 +1,81 @@
+{
+  "corpus_maturity": "mvp-addendum",
+  "date": "2026-07-15",
+  "dev_accessed": false,
+  "downstream_consumer": null,
+  "identities": {
+    "accepted_sha256": "b9ca2fd5a05d9c9874548b7ea5a3db5dc75b5512438b46dac9ae65ca9e88fcb1",
+    "distillation_config_sha256": "a94f6ed7ecdface57c5ec0f1ba4a6452c69dc767db9f20c4336287ae2b14a8e3",
+    "generation_contract_sha256": "974685445ee7241f9ee3dc4eac4f37c1445e5aae69383cabc2208c8a0f1e76d4",
+    "manifest_sha256": "8700222adb328a4f7aac3dc92c46b53183dba7d1c46c97fd12e4d6eaab7a942f",
+    "manual_review_sha256": "c08d7908da84843ef765095aa26fc2abedfaf27add354cbb856b52efe68714a5",
+    "prompt_config_file_sha256": "02cd096a24d1e9326dd21ce85b6a0bfd5f59aac6f8898e07243056b8858eac42",
+    "quality_report_sha256": "42de8e8825d10747008964e8d73e8a32d543bf5b2f1b37bb5cd7175a2742af6b",
+    "replay_report_sha256": "474d45886d87143b861cc83e72c6fe1ebc2d9ef289da5f208a99dabe910fb3bb",
+    "td07_calibration_report_sha256": "1b9c3fd5b71b56f79ce8233116c58f80479b05f61f8e32d8a139d3c0510dcde8"
+  },
+  "manual_review": {
+    "manual_acceptances": 2,
+    "manual_rejections": 3,
+    "queue_records": 72,
+    "systemic_blocker": false
+  },
+  "pipeline_version": "td08-hymt2-distillation-v1",
+  "quality": {
+    "gate_failures": [],
+    "routes": {
+      "zho_Hans->zho_Hant": {
+        "accepted": 2213,
+        "accepted_rate": 0.995054,
+        "completion_tokens": 22409,
+        "filtered": 11,
+        "input": 2224,
+        "latency_seconds": 807.292317,
+        "manual_acceptances": 2,
+        "manual_rejections": 3,
+        "rejection_reasons": {
+          "simplified_output_for_traditional_target": 10,
+          "source_copy": 9
+        },
+        "retry_rate": 0.0,
+        "script_compliance_rate": 0.995504
+      },
+      "zho_Hant->zho_Hans": {
+        "accepted": 2207,
+        "accepted_rate": 0.992356,
+        "completion_tokens": 15518,
+        "filtered": 17,
+        "input": 2224,
+        "latency_seconds": 581.638558,
+        "manual_acceptances": 0,
+        "manual_rejections": 0,
+        "rejection_reasons": {
+          "source_copy": 16,
+          "traditional_output_for_simplified_target": 16
+        },
+        "retry_rate": 0.0,
+        "script_compliance_rate": 0.992806
+      }
+    }
+  },
+  "release": "d1-hymt2-zh-conversion-addendum",
+  "replay": {
+    "exact_normalized": true,
+    "exact_raw": true,
+    "records": 4
+  },
+  "schema_version": 1,
+  "scope": {
+    "accepted": 4420,
+    "dev_records": 0,
+    "filtered": 28,
+    "input": 4448,
+    "routes": 2,
+    "teacher_synthetic": 4420,
+    "test_records": 0
+  },
+  "status": "complete",
+  "td08_completed": false,
+  "td09_started": false,
+  "test_accessed": false
+}

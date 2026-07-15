@@ -12,6 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from hymt2_distillation import (  # noqa: E402
+    CHINESE_CONVERSION_ROUTES,
     ROUTES,
     DistillationError,
     build_prompt,
@@ -19,6 +20,7 @@ from hymt2_distillation import (  # noqa: E402
     filter_output,
     load_prompt_config,
     metric_scores,
+    prompt_routes,
     read_parallel_jsonl,
     validate_prompt_config,
 )
@@ -26,6 +28,7 @@ from model_training_contract import directed_routes  # noqa: E402
 
 
 CONFIG_PATH = ROOT / "configs" / "hymt2_teacher_prompt_decode.yaml"
+ZH_CONVERSION_CONFIG_PATH = ROOT / "configs" / "hymt2_teacher_prompt_decode_zh_conversion.yaml"
 CALIBRATION_EVIDENCE_PATH = ROOT / "artifacts" / "model-training" / "td07-teacher-calibration.json"
 
 
@@ -49,7 +52,11 @@ def _sample(source: str, target: str, index: int, *, split: str = "dev") -> dict
 def test_prompt_contract_freezes_five_names_and_eighteen_routes(
     prompt_config: dict[str, object],
 ) -> None:
-    assert tuple(ROUTES) == tuple(f"{source}->{target}" for source, target in directed_routes())
+    assert tuple(ROUTES) == tuple(
+        f"{source}->{target}"
+        for source, target in directed_routes()
+        if f"{source}->{target}" not in CHINESE_CONVERSION_ROUTES
+    )
     assert len(prompt_config["route_limits"]) == 18
     assert prompt_config["prompt"]["language_names"]["zho_Hans"] == "Chinese"
     assert prompt_config["prompt"]["language_names"]["zho_Hant"] == "Traditional Chinese"
@@ -57,6 +64,35 @@ def test_prompt_contract_freezes_five_names_and_eighteen_routes(
     prompt = build_prompt(prompt_config, "天气很好", "zho_Hant")
     assert "Traditional Chinese" in prompt
     assert prompt.endswith("天气很好")
+
+
+def test_chinese_conversion_prompt_addendum_keeps_existing_language_names() -> None:
+    config = load_prompt_config(ZH_CONVERSION_CONFIG_PATH)
+    assert prompt_routes(config) == CHINESE_CONVERSION_ROUTES
+    assert config["prompt"]["language_names"]["zho_Hans"] == "Chinese"
+    assert config["prompt"]["language_names"]["zho_Hant"] == "Traditional Chinese"
+    assert len(config["route_limits"]) == 2
+
+
+def test_chinese_conversion_source_copy_policy_is_route_specific() -> None:
+    config = load_prompt_config(ZH_CONVERSION_CONFIG_PATH)
+    unchanged = filter_output(
+        source_text="今天",
+        target_text="今天",
+        target_language="zho_Hant",
+        finish_reason="stop",
+        config=config,
+    )
+    assert unchanged["accepted"] is True
+    convertible_copy = filter_output(
+        source_text="软件",
+        target_text="软件",
+        target_language="zho_Hant",
+        finish_reason="stop",
+        config=config,
+    )
+    assert convertible_copy["accepted"] is False
+    assert "source_copy" in convertible_copy["rejection_reasons"]
 
 
 def test_prompt_contract_rejects_hardware_or_test_drift(

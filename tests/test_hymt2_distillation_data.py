@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from hymt2_distillation import (  # noqa: E402
+    CHINESE_CONVERSION_ROUTES,
     ROUTES,
     DistillationError,
     deterministic_route_sample,
@@ -25,6 +26,7 @@ from hymt2_distillation_data import (  # noqa: E402
     _write_sample_checkpoint,
     _write_route_state,
     generation_contract,
+    distillation_routes,
     load_distillation_config,
     prepare_review_queue,
     resolve_work_root,
@@ -36,6 +38,9 @@ from model_training_contract import directed_routes  # noqa: E402
 
 CONFIG_PATH = ROOT / "configs" / "hymt2_distillation.yaml"
 D1_CONFIG_PATH = ROOT / "configs" / "hymt2_distillation_d1.yaml"
+ZH_ADDENDUM_CONFIG_PATH = (
+    ROOT / "configs" / "hymt2_distillation_d1_zh_conversion.yaml"
+)
 PROMPT_PATH = ROOT / "configs" / "hymt2_teacher_prompt_decode.yaml"
 
 
@@ -88,6 +93,22 @@ def test_d1_contract_is_mvp_sized_and_reuses_the_d0_prefix() -> None:
     assert config["acceptance_gates"]["minimum_accepted_per_route"] == 2_000
     assert config["reuse"]["required_records_per_route"] == 128
     assert config["reuse"]["require_selected_prefix"] is True
+
+
+def test_zh_conversion_addendum_contract_is_two_route_and_mvp_sized() -> None:
+    config = load_distillation_config(ZH_ADDENDUM_CONFIG_PATH)
+    assert distillation_routes(config) == CHINESE_CONVERSION_ROUTES
+    assert config["sampling"] == {
+        "unit": "directed_sample",
+        "records_per_route": 2_224,
+        "total_records": 4_448,
+        "selection_seed": "diesel-mt-td08-zh-conversion-v2",
+        "order": "frozen-route-order-then-selection-hash",
+        "replacement": False,
+    }
+    assert config["acceptance_gates"]["minimum_accepted_per_route"] == 2_000
+    assert config["input"]["dev_access"] == "prohibited"
+    assert config["input"]["test_access"] == "prohibited"
 
 
 def test_deterministic_sampling_keeps_the_small_run_as_an_exact_prefix() -> None:
@@ -313,7 +334,7 @@ def test_manual_review_can_only_restore_source_copy_false_positives(
         yaml.safe_dump(attestation, allow_unicode=True, sort_keys=False),
         encoding="utf-8",
     )
-    with pytest.raises(DistillationError, match="source_copy-only"):
+    with pytest.raises(DistillationError, match="source-copy false positives"):
         validate_manual_attestation(
             attestation_path,
             queue_path,
@@ -407,3 +428,57 @@ def test_td08_d1_evidence_is_mvp_sized_and_closes_td08() -> None:
     assert evidence["td09_started"] is False
     assert evidence["test_accessed"] is False
     assert evidence["dev_accessed"] is False
+
+
+def test_td08_zh_addendum_and_twenty_route_composite_close_the_reopened_scope() -> None:
+    addendum = json.loads(
+        (
+            ROOT
+            / "artifacts"
+            / "model-training"
+            / "td08-d1-zh-conversion-addendum.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert addendum["status"] == "complete"
+    assert addendum["scope"] == {
+        "accepted": 4_420,
+        "dev_records": 0,
+        "filtered": 28,
+        "input": 4_448,
+        "routes": 2,
+        "teacher_synthetic": 4_420,
+        "test_records": 0,
+    }
+    assert set(addendum["quality"]["routes"]) == set(CHINESE_CONVERSION_ROUTES)
+    assert addendum["quality"]["gate_failures"] == []
+    assert addendum["replay"] == {
+        "exact_normalized": True,
+        "exact_raw": True,
+        "records": 4,
+    }
+    assert addendum["td08_completed"] is False
+
+    composite = json.loads(
+        (
+            ROOT
+            / "artifacts"
+            / "model-training"
+            / "td08-d1-20route-composite.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert composite["status"] == "complete"
+    assert composite["corpus_maturity"] == "mvp-20route-composite"
+    assert composite["scope"] == {
+        "accepted": 44_361,
+        "dev_records": 0,
+        "input": 44_361,
+        "routes": 20,
+        "teacher_synthetic": 44_361,
+        "test_records": 0,
+    }
+    assert set(composite["route_counts"]) == {
+        f"{source}->{target}" for source, target in directed_routes()
+    }
+    assert min(composite["route_counts"].values()) >= 2_000
+    assert composite["td08_completed"] is True
+    assert composite["td09_started"] is False
