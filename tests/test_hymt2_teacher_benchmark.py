@@ -29,6 +29,10 @@ def test_repository_benchmark_config_locks_requested_variants() -> None:
     assert original["repo_id"] == "tencent/Hy-MT2-7B"
     assert original["dtype"] == "bfloat16"
     assert original["device_map"] == "auto"
+    assert original["runtime_subdir"] == "teacher/hymt2-7b-bf16"
+    assert config["variants"]["bnb-int8"]["runtime_subdir"] == (
+        original["runtime_subdir"]
+    )
     assert config["benchmark"]["quality_reference_variant"] == "original-bf16"
     assert all(
         "expected_smoke_output" in probe and "fp8_reference" not in probe
@@ -62,6 +66,9 @@ def test_frozen_teacher_selection_uses_original_bf16_quality_baseline() -> None:
     assert selection["evidence"]["quality_reference"] == "original-bf16"
     assert selection["evidence"]["five_tag_reference_matches"] == 10
     assert selection["decision"]["use"] == "sequence-level-distillation-source"
+    assert selection["runtime"]["retained_quality_reference_subdir"] == (
+        "teacher/hymt2-7b-bf16/snapshot"
+    )
     comparison = json.loads(
         (ROOT / "artifacts/model-training/hymt2-teacher-runtime-comparison.json").read_text(
             encoding="utf-8"
@@ -69,6 +76,9 @@ def test_frozen_teacher_selection_uses_original_bf16_quality_baseline() -> None:
     )
     selection_sha256 = hashlib.sha256(
         (ROOT / "configs/hymt2_teacher_selection.yaml").read_bytes()
+    ).hexdigest()
+    benchmark_config_sha256 = hashlib.sha256(
+        (ROOT / "configs/hymt2_teacher_benchmark.yaml").read_bytes()
     ).hexdigest()
     assert comparison["status"] == "complete"
     assert comparison["common_protocol"]["quality_reference_variant"] == (
@@ -80,6 +90,12 @@ def test_frozen_teacher_selection_uses_original_bf16_quality_baseline() -> None:
         "runs": 10,
     }
     assert comparison["identities"]["teacher_selection_sha256"] == selection_sha256
+    assert comparison["identities"]["current_benchmark_config_sha256"] == (
+        benchmark_config_sha256
+    )
+    assert comparison["post_benchmark_storage_layout"][
+        "current_shared_weight_subdir"
+    ] == "teacher/hymt2-7b-bf16"
 
 
 def test_benchmark_runtime_override_must_be_absolute(tmp_path: Path) -> None:

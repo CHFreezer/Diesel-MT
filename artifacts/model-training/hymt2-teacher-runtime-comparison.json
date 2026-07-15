@@ -27,15 +27,24 @@
     "throughput_definition": "completion tokens divided by end-to-end generation request latency"
   },
   "identities": {
-    "benchmark_config_sha256": "a9331f20985f339f65d442bd76d918fb9724470748ae27f35829bc154ff63023",
+    "benchmark_execution_config_sha256": "a9331f20985f339f65d442bd76d918fb9724470748ae27f35829bc154ff63023",
+    "benchmark_execution_config_git_commit": "c0dec7a91bb298a0d3abab4fb8be32c9e27e89ae",
+    "current_benchmark_config_sha256": "a2f4ee4584c41fcba78f3daee0da2bd223af35292baea7641ff3ac6f2473b8bf",
     "benchmark_lock_sha256": "c448f19bb26bae45b1d7ab7766d51232b42471c7e5062b3d8784d89f2b1596bf",
     "benchmark_script_sha256": "8b6ab16b48c0f579bbaf83838397241f1e28bfae92a110467ad83a37d4b87ee3",
-    "teacher_selection_sha256": "959b7ebcb8170d09b4640724efcd1e58b47ee317be8022b08bbff354092b8066",
+    "teacher_selection_sha256": "b63a29999009af16137459fc38752cdda9aff385533c0baade0050fae4578a57",
     "transformers_requirements_sha256": "d5c413ac18f2e2057be24babd6b24bb8da98a6fcacd1abcbb59d1dd384f831c6",
     "gguf_requirements_sha256": "7b6f1cd96087644778e40f727cd994af35cdd15c404accce0e981b65ce60474b",
     "original_bf16_raw_report_sha256": "d77a5bef8e33de140686fabf5e21267033adeeb6ab05294c77cb796d37bbc344",
     "bnb_int8_raw_report_sha256": "5e467d445392a3e2c084b7c1e48a93704c38d843e5b29b14f754f5ced6907e64",
     "gguf_q8_raw_report_sha256": "744f1ad01568d77111fc26390c3f490f04d9dd2463168de1e8ebd8745b4dabbd"
+  },
+  "post_benchmark_storage_layout": {
+    "date": "2026-07-15",
+    "previous_shared_weight_subdir": "teacher/hymt2-7b-bnb-int8",
+    "current_shared_weight_subdir": "teacher/hymt2-7b-bf16",
+    "reason": "The directory stores original BF16 weights. bitsandbytes LLM.int8 reuses and dynamically quantizes those weights instead of owning a separate checkpoint.",
+    "benchmark_effect": "Storage-only rename after the v2 measurements; raw reports and execution-config hash remain historical, while the current config hash records the reproducible new path."
   },
   "variants": {
     "original-bf16": {

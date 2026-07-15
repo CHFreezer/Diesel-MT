@@ -11,7 +11,7 @@ variants:
     repo_id: tencent/Hy-MT2-7B
     revision: 9b0eb4e8f001def3e5ff6469a0ac96fdb39ec223
     artifact_format: safetensors-bf16
-    runtime_subdir: teacher/hymt2-7b-bnb-int8
+    runtime_subdir: teacher/hymt2-7b-bf16
     snapshot_subdir: snapshot
     backend: transformers
     requirements: requirements-teacher-hymt2-bnb.txt
@@ -26,7 +26,7 @@ variants:
     repo_id: tencent/Hy-MT2-7B
     revision: 9b0eb4e8f001def3e5ff6469a0ac96fdb39ec223
     artifact_format: safetensors-bf16
-    runtime_subdir: teacher/hymt2-7b-bnb-int8
+    runtime_subdir: teacher/hymt2-7b-bf16
     snapshot_subdir: snapshot
     backend: transformers-bitsandbytes
     requirements: requirements-teacher-hymt2-bnb.txt

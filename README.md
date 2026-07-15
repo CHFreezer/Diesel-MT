@@ -63,7 +63,7 @@
 
 - teacher 用于生成中英日韩 12 个产品方向、18 个跨语言标签路由的平行样本，优先补齐 `zh↔ja`、`zh↔ko`、`ja↔ko` 等弱方向，并分别保留简体与繁体来源/目标标签
 - teacher artifact 固定为 `tencent/Hy-MT2-7B-GGUF` 的 `HY-MT2-7B-Q8_0.gguf`；官方原版 BF16 是量化输出的质量基线，FP8 与 bitsandbytes 路径仅保留为 TD-06 对比证据
-- GGUF、llama.cpp 后端和原版 BF16 基线保存在 Git-ignored 的 `artifacts/model-training/runtime/`；该 HDD 目录只做顺序加载和低频只读访问，不承载热 checkpoint、随机写缓存或频繁日志
+- GGUF、llama.cpp 后端和原版 BF16 基线保存在 Git-ignored 的 `artifacts/model-training/runtime/`；BF16 位于 `teacher/hymt2-7b-bf16/`，bitsandbytes INT8 复用这套权重。该 HDD 目录只做顺序加载和低频只读访问，不承载热 checkpoint、随机写缓存或频繁日志
 - student 从零初始化，不继承 teacher 权重、tokenizer 或架构
 - 最终部署只依赖 Diesel-MT + CTranslate2，不依赖 teacher
 

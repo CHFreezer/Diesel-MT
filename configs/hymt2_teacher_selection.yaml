@@ -28,12 +28,13 @@ runtime:
   default_root: artifacts/model-training/runtime
   artifact_subdir: teacher/hymt2-7b-gguf-q8/snapshot
   backend_subdir: teacher/hymt2-7b-gguf-q8/llama.cpp-b10012-cuda13.3/bin
-  retained_quality_reference_subdir: teacher/hymt2-7b-bnb-int8/snapshot
-  retained_transformers_overlay_subdir: teacher/hymt2-7b-bnb-int8/venv
+  retained_quality_reference_subdir: teacher/hymt2-7b-bf16/snapshot
+  retained_transformers_overlay_subdir: teacher/hymt2-7b-bf16/venv
   storage_policy: workspace-hdd-gitignored-read-mostly
   io_policy:
     - load model files sequentially into RAM/VRAM
     - do not use the model directories for hot checkpoints, random-write caches, or frequent logs
+  naming_note: the BF16 snapshot is shared by original-bf16 and bitsandbytes LLM.int8 loading; quantization does not create a second weight directory
 
 evidence:
   benchmark_id: td06-teacher-runtime-comparison-v2

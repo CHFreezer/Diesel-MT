@@ -56,8 +56,8 @@ FP8 报告 [`artifacts/model-training/hymt2-teacher-runtime.json`](../artifacts/
 
 - `teacher/hymt2-7b-gguf-q8/snapshot/`：选定 GGUF Q8_0 与官方仓库元数据。
 - `teacher/hymt2-7b-gguf-q8/llama.cpp-b10012-cuda13.3/bin/`：锁定的 llama.cpp CUDA 后端。
-- `teacher/hymt2-7b-bnb-int8/snapshot/`：原版 BF16 质量基线；INT8 复用同一份权重，不存第二份模型。
-- `teacher/hymt2-7b-bnb-int8/venv/`：可迁移的 BF16/INT8 隔离 overlay。
+- `teacher/hymt2-7b-bf16/snapshot/`：原版 BF16 质量基线；bitsandbytes 从这同一套 BF16 权重加载并动态量化为 INT8，不存第二份模型。
+- `teacher/hymt2-7b-bf16/venv/`：BF16/INT8 共用的可迁移隔离 overlay。
 - `teacher/hymt2-7b-comparison/reports/` 与 `teacher/hymt2-7b-fp8/reports/`：小型原始 JSON 审计证据。
 
 迁移后保留约 24.96 GB。已删除 FP8 权重、Hugging Face 下载缓存、llama.cpp 下载压缩包、GGUF 测试 venv 和临时日志。HDD 目录只用于模型文件到 RAM/VRAM 的顺序加载和低频只读访问；不要把 checkpoint、随机写缓存或持续日志放入模型目录。
@@ -71,7 +71,7 @@ FP8 报告 [`artifacts/model-training/hymt2-teacher-runtime.json`](../artifacts/
 ```pwsh
 $runtime = (Resolve-Path 'artifacts\model-training\runtime').Path
 $env:DIESEL_MT_MODEL_RUNTIME = $runtime
-$transformersPython = Join-Path $runtime 'teacher\hymt2-7b-bnb-int8\venv\Scripts\python.exe'
+$transformersPython = Join-Path $runtime 'teacher\hymt2-7b-bf16\venv\Scripts\python.exe'
 
 # 原版未量化 BF16：性能与质量基线
 & $transformersPython scripts\benchmark_hymt2_teacher_variants.py --variant original-bf16
