@@ -12,7 +12,7 @@
 
 - [MVP model training todo](../../todo/mvp-model-training.md)
 - TD-15 共同 cohort、两份 recipe、等预算校验和 dev 选择规则
-- TD-14 唯一 RTX 4060 Ti profile
+- TD-14 唯一冻结的训练资源 profile 与运行时容量校验
 - TD-10～TD-13 训练、恢复和评测链
 
 ## 原子边界

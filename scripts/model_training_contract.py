@@ -118,6 +118,27 @@ def _nonempty_string(value: Any, context: str) -> str:
     return value
 
 
+def _optional_integer(
+    value: Any,
+    context: str,
+    *,
+    minimum: int,
+) -> int | None:
+    if value is None:
+        return None
+    if isinstance(value, bool) or not isinstance(value, int) or value < minimum:
+        raise ContractError(f"{context} must be null or an integer >= {minimum}")
+    return value
+
+
+def _optional_utilization(value: Any, context: str) -> float | None:
+    if value is None:
+        return None
+    if isinstance(value, bool) or not isinstance(value, (int, float)) or not 0 < value <= 1:
+        raise ContractError(f"{context} must be null or a number in (0, 1]")
+    return float(value)
+
+
 def _sha256(value: Any, context: str) -> str:
     text = _nonempty_string(value, context)
     if not _SHA256_RE.fullmatch(text):
@@ -507,8 +528,8 @@ def validate_student_config(config: Mapping[str, Any]) -> dict[str, Any]:
         },
         "student config",
     )
-    if config["schema_version"] != 1:
-        raise ContractError("student schema_version must be 1")
+    if config["schema_version"] != 2:
+        raise ContractError("student schema_version must be 2")
     identity = _mapping(config["identity"], "student.identity")
     _exact_keys(identity, {"name", "architecture", "initialization", "random_seed"}, "student.identity")
     if identity["name"] != "mvp_e8_d2_v48k":
@@ -624,14 +645,109 @@ def validate_student_config(config: Mapping[str, Any]) -> dict[str, Any]:
     profile = _mapping(config["training_profile"], "student.training_profile")
     _exact_keys(
         profile,
-        {"status", "device", "precision_preference", "unfrozen_fields"},
+        {
+            "status",
+            "selection_mode",
+            "hardware_identity_source",
+            "device_preference_order",
+            "precision_preference_order",
+            "resource_budget",
+            "unfrozen_fields",
+        },
         "student.training_profile",
     )
     if profile["status"] != "requires_td14_benchmark":
         raise ContractError("training profile must remain provisional until TD-14")
-    if profile["device"] != "cuda" or profile["precision_preference"] != "bf16":
-        raise ContractError("training profile must preserve the local CUDA/BF16 preference")
+    if profile["selection_mode"] != "benchmark_current_host":
+        raise ContractError("training profile must be selected by a current-host benchmark")
+    if profile["hardware_identity_source"] != "runtime_probe_and_run_manifest":
+        raise ContractError("hardware identity must come from runtime probing and the run manifest")
+
+    device_preferences = _list(
+        profile["device_preference_order"], "student.training_profile.device_preference_order"
+    )
+    if (
+        not device_preferences
+        or any(not isinstance(value, str) for value in device_preferences)
+        or len(device_preferences) != len(set(device_preferences))
+        or not set(device_preferences) <= {"cuda", "cpu"}
+    ):
+        raise ContractError("device preferences must be a unique non-empty cuda/cpu subset")
+    precision_preferences = _list(
+        profile["precision_preference_order"],
+        "student.training_profile.precision_preference_order",
+    )
+    if (
+        not precision_preferences
+        or any(not isinstance(value, str) for value in precision_preferences)
+        or len(precision_preferences) != len(set(precision_preferences))
+        or not set(precision_preferences) <= {"bf16", "fp16", "fp32"}
+    ):
+        raise ContractError("precision preferences must be a unique non-empty supported subset")
+
+    resource_budget = _mapping(
+        profile["resource_budget"], "student.training_profile.resource_budget"
+    )
+    resource_budget_fields = {
+        "device_memory_budget_mib",
+        "device_memory_reserve_mib",
+        "max_device_memory_utilization",
+        "host_memory_budget_mib",
+        "dataloader_memory_budget_mib",
+        "oom_retry_limit",
+    }
+    _exact_keys(
+        resource_budget,
+        resource_budget_fields,
+        "student.training_profile.resource_budget",
+    )
+    present_budget_fields = [value is not None for value in resource_budget.values()]
+    if any(present_budget_fields) and not all(present_budget_fields):
+        raise ContractError("resource budget candidates must fill every field or leave all fields null")
+    _optional_integer(
+        resource_budget["device_memory_budget_mib"],
+        "student.training_profile.resource_budget.device_memory_budget_mib",
+        minimum=1,
+    )
+    _optional_integer(
+        resource_budget["device_memory_reserve_mib"],
+        "student.training_profile.resource_budget.device_memory_reserve_mib",
+        minimum=0,
+    )
+    _optional_utilization(
+        resource_budget["max_device_memory_utilization"],
+        "student.training_profile.resource_budget.max_device_memory_utilization",
+    )
+    host_memory_budget = _optional_integer(
+        resource_budget["host_memory_budget_mib"],
+        "student.training_profile.resource_budget.host_memory_budget_mib",
+        minimum=1,
+    )
+    dataloader_memory_budget = _optional_integer(
+        resource_budget["dataloader_memory_budget_mib"],
+        "student.training_profile.resource_budget.dataloader_memory_budget_mib",
+        minimum=1,
+    )
+    _optional_integer(
+        resource_budget["oom_retry_limit"],
+        "student.training_profile.resource_budget.oom_retry_limit",
+        minimum=0,
+    )
+    if (
+        host_memory_budget is not None
+        and dataloader_memory_budget is not None
+        and dataloader_memory_budget > host_memory_budget
+    ):
+        raise ContractError("dataloader memory budget must not exceed the host memory budget")
     expected_unfrozen = [
+        "device",
+        "precision",
+        "resource_budget.device_memory_budget_mib",
+        "resource_budget.device_memory_reserve_mib",
+        "resource_budget.max_device_memory_utilization",
+        "resource_budget.host_memory_budget_mib",
+        "resource_budget.dataloader_memory_budget_mib",
+        "resource_budget.oom_retry_limit",
         "micro_batch_size",
         "gradient_accumulation_steps",
         "gradient_checkpointing",

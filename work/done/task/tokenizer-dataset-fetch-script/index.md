@@ -4,6 +4,7 @@
 
 - todo：[tokenizer dataset fetch script](../../todo/tokenizer-dataset-fetch-script.md)
 - plan：[tokenizer dataset fetch script](../../../plan/tokenizer-dataset-fetch-script.md)
+- 本机硬件记录：[根目录 LOCAL_HARDWARE.md](../../../../LOCAL_HARDWARE.md)（本地合并记录，通过 `.git/info/exclude` 排除，不提交）
 
 ## 依赖图
 

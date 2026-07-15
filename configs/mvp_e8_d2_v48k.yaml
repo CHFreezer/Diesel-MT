@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 
 identity:
   name: mvp_e8_d2_v48k
@@ -57,9 +57,26 @@ reproducibility:
 
 training_profile:
   status: requires_td14_benchmark
-  device: cuda
-  precision_preference: bf16
+  selection_mode: benchmark_current_host
+  hardware_identity_source: runtime_probe_and_run_manifest
+  device_preference_order: [cuda, cpu]
+  precision_preference_order: [bf16, fp16, fp32]
+  resource_budget:
+    device_memory_budget_mib: null
+    device_memory_reserve_mib: null
+    max_device_memory_utilization: null
+    host_memory_budget_mib: null
+    dataloader_memory_budget_mib: null
+    oom_retry_limit: null
   unfrozen_fields:
+    - device
+    - precision
+    - resource_budget.device_memory_budget_mib
+    - resource_budget.device_memory_reserve_mib
+    - resource_budget.max_device_memory_utilization
+    - resource_budget.host_memory_budget_mib
+    - resource_budget.dataloader_memory_budget_mib
+    - resource_budget.oom_retry_limit
     - micro_batch_size
     - gradient_accumulation_steps
     - gradient_checkpointing

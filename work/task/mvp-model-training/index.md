@@ -33,7 +33,7 @@ flowchart LR
 
     TD05 --> TD13["TD-13 独立评测"]
     TD09 --> TD13
-    TD05 --> TD14["TD-14 4060 Ti profile"]
+    TD05 --> TD14["TD-14 资源 profile"]
     TD12 --> TD14
 
     TD05 --> TD15["TD-15 蒸馏 A/B 契约"]
@@ -67,7 +67,7 @@ flowchart LR
 | 4–5 | TD-11 | [实现原子 checkpoint 与精确恢复](td-11-checkpoint-resume.md) | TD-10 completed | TD-10 | TD-04～TD-06 | pending |
 | 6 | TD-12 | [完成 M1 小样本过拟合与恢复验收](td-12-m1-overfit-resume.md) | TD-05、TD-11 completed | TD-05、TD-11 | TD-07、TD-13 | pending |
 | 6 | TD-13 | [实现独立评测与方向汇总](td-13-evaluation.md) | TD-05、TD-09 completed | TD-05、TD-09 | TD-07、TD-12 | pending |
-| 7 | TD-14 | [基准测试并冻结 RTX 4060 Ti 训练配置](td-14-rtx4060ti-profile.md) | TD-05、TD-12 completed | TD-05、TD-12 | TD-08、TD-13 | pending |
+| 7 | TD-14 | [基准测试并冻结可配置训练资源 profile](td-14-training-resource-profile.md) | TD-05、TD-12 completed | TD-05、TD-12 | TD-08、TD-13 | pending |
 | 8 | TD-15 | [冻结蒸馏配方与等预算 A/B 契约](td-15-distillation-ab-contract.md) | TD-05、TD-08、TD-13 completed | TD-05、TD-08、TD-13 | TD-14 | pending |
 | 9 | TD-16 | [执行 M2 human-only/distilled 等预算训练](td-16-m2-training.md) | TD-05、TD-08、TD-12～TD-15 completed | TD-05、TD-08、TD-12～TD-15 | 无 | pending |
 | 10 | TD-17 | [完成 M3 CTranslate2 回接与量化诊断](td-17-ctranslate2-deployment.md) | TD-16 completed | TD-16 | 无 | pending |
@@ -79,7 +79,7 @@ flowchart LR
 2. TD-09 只能先用 schema fixture 完成接口开发；涉及 18 路由和 M0 关闭的验收必须等待 TD-05。
 3. TD-05 和 TD-06 汇合后才能启动 TD-07；TD-07 完成后 TD-08 独占 teacher 生成目录。
 4. TD-12、TD-13 可并行；TD-14 必须等待 TD-12。TD-15 可与 TD-14 并行准备，但 TD-16 必须等待两者都完成。
-5. RTX 4060 Ti 只有一张：TD-06～TD-08 的 teacher GPU 运行、TD-14 的 student 基准和 TD-16 的两组正式训练在执行层面互斥，不得并发争用显存或混写监控记录。
+5. 若运行时探测只有一个可用 accelerator，TD-06～TD-08 的 teacher 运行、TD-14 的 student 基准和 TD-16 的两组正式训练在执行层面互斥；资源互斥依据探测结果和 profile，不依据 GPU 型号。
 6. TD-16、TD-17、TD-18 为严格串行收口；正式 test 只允许 TD-16 在唯一候选冻结后读取一次。
 
 ## 关键路径

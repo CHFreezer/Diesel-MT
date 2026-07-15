@@ -13,7 +13,7 @@
 - [MVP model training todo](../../todo/mvp-model-training.md)
 - TD-01 artifact、路径与 Git 边界
 - 官方 [`tencent/Hy-MT2-7B`](https://huggingface.co/tencent/Hy-MT2-7B) 模型卡与 [Apache-2.0 许可证](https://huggingface.co/tencent/Hy-MT2-7B/blob/main/LICENSE.txt)
-- RTX 4060 Ti 16 GB、CPU/RAM 与可用 SSD staging
+- 当前执行主机的 accelerator、CPU/RAM 与可配置 staging；实际硬件身份写入运行证据
 
 ## 原子边界
 
@@ -25,7 +25,7 @@
 - 记录 Apache-2.0 模型许可证，并明确其不自动解决输入语料或生成数据的权利边界。
 - 审查并锁定 `trust_remote_code` 内容；正式运行从本地固定快照加载，启用离线和网络阻断，不执行浮动 `main`。
 - 建立与 student 隔离或明确兼容的 teacher profile，锁定 Python、Transformers、PyTorch、CUDA/后端和命令。
-- 在 RTX 4060 Ti/CPU 上比较官方 BF16 offload、FP8、GGUF 等可行路径；只接受官方来源且通过参考集验证的 artifact。
+- 在当前执行主机的 accelerator/CPU 上比较官方 BF16 offload、FP8、GGUF 等可行路径；只接受官方来源且通过参考集验证的 artifact。
 - 对 `zho_Hans`、`zho_Hant`、`eng_Latn`、`jpn_Jpan`、`kor_Hang` 完成最小离线推理，确保输出非空。
 - 记录峰值 RAM/VRAM、延迟、吞吐、输出稳定性和限制；无可接受路径则阻塞 D0，不替换 teacher。
 

@@ -56,7 +56,7 @@ TD-09 至 TD-11 可在人类数据链构建期间先用 TD-01 的 schema fixture
 - [x] 定义规范平行样本 schema，至少包含 `sample_id`、`sample_group_id`、`source_id`、`source_version`、`license`、`src_lang`、`tgt_lang`、`source_text`、`target_text`、`split`；teacher/转换增强样本增加生成 provenance。
 - [x] 固定 5 个允许标签、9 组允许的无向标签对、18 个有向路由，并明确拒绝同标签路由、简繁互转和 allowlist 外标签。
 - [x] 固定模型数据目录：`data/model/raw/`、`cache/`、`interim/`、`corpus/mvp/`、`reports/`；所有大体积数据默认 Git-ignored，只提交 schema、配置、lock、fixture 和精简报告。
-- [x] 固定训练运行目录和发布边界：热 checkpoint/staging 可配置到 SSD，完整校验后发布 Git-ignored HF/CT2 产物；提交内只保存配置、manifest、指标和文档。
+- [x] 固定训练运行目录和发布边界：热 checkpoint/staging 根可配置到高吞吐存储，完整校验后发布 Git-ignored HF/CT2 产物；提交内只保存配置、manifest、指标和文档。
 - [x] 定义 `configs/mvp_model_data.yaml`、`configs/mvp_e8_d2_v48k.yaml` 的字段、schema version、稳定序列化和配置哈希规则。
 - [x] 为 schema、方向矩阵、路径边界、未知字段、缺失字段和非法路由增加配置级自动化测试。
 
@@ -135,7 +135,7 @@ TD-09 至 TD-11 可在人类数据链构建期间先用 TD-01 的 schema fixture
 - [x] 记录官方 [Apache-2.0 许可证](https://huggingface.co/tencent/Hy-MT2-7B/blob/main/LICENSE.txt)，并明确模型许可证不自动解决输入语料或生成数据的权利边界。
 - [x] 审查并锁定官方示例要求的 `trust_remote_code` 内容；正式生成只从本地固定快照加载，启用离线标志和网络阻断，不执行浮动 `main` 或运行时下载。
 - [x] 为 teacher 建立与 student 依赖隔离或明确兼容的运行 profile，锁定 Python、Transformers、PyTorch、CUDA/后端和启动命令，不让 teacher 依赖改写 student 主环境。
-- [x] 在 RTX 4060 Ti 16 GB/CPU 上比较可行的官方 BF16 offload、FP8 或 GGUF 等运行路径；只选择官方来源且通过参考集验证的 artifact，不使用来源不明的社区量化。
+- [x] 在当前执行主机的 accelerator/CPU 上比较可行的官方 BF16 offload、FP8 或 GGUF 等运行路径；只选择官方来源且通过参考集验证的 artifact，不使用来源不明的社区量化。
 - [x] 对 5 个项目标签完成最小离线推理，验证官方支持的 Chinese、Traditional Chinese、English、Japanese、Korean 均能生成非空结果。
 - [x] 记录加载峰值内存/显存、单样本延迟、吞吐、输出稳定性和已知限制；若无可接受运行路径，D0 阻塞，不降级为其他 teacher。
 
@@ -147,7 +147,7 @@ TD-09 至 TD-11 可在人类数据链构建期间先用 TD-01 的 schema fixture
 
 最终冻结官方 `tencent/Hy-MT2-7B-GGUF` Q8_0 为 sequence-level 蒸馏源：revision `ab8472660ac61fac25f1af43fac2599d52a8a775`、`HY-MT2-7B-Q8_0.gguf`、SHA-256 `58b3ad55dd6f6fa08c695cddc34fb5f8f708a844f78ae10508071914b0ed67c0`、llama.cpp `b10012` CUDA 13.3。唯一规范入口为 `configs/hymt2_teacher_selection.yaml`；TD-07 负责 prompt/decode、逐路由人类 reference 质量和相对原版 BF16 的量化差异校准，失败时阻塞 D0 而不是静默更换后端。
 
-本地存储记录：选定 GGUF/llama.cpp 与原版 BF16 基线已迁入 Git-ignored 的 `artifacts/model-training/runtime/`，迁移后分别完成实际加载冒烟；D 盘旧 runtime、FP8 权重、重复缓存、下载压缩包和临时日志已清理。该 HDD 目录只允许模型顺序加载与低频只读访问。
+本地存储记录：选定 GGUF/llama.cpp 与原版 BF16 基线已迁入 Git-ignored 的 `artifacts/model-training/runtime/`，迁移后分别完成实际加载冒烟；旧 runtime、FP8 权重、重复缓存、下载压缩包和临时日志已清理。该目录只允许模型顺序加载与低频只读访问，物理盘映射统一记录在根目录 Git-excluded `LOCAL_HARDWARE.md`。
 
 ### TD-07 校准 teacher 语言映射、prompt 与解码
 
@@ -203,12 +203,14 @@ TD-09 至 TD-11 可在人类数据链构建期间先用 TD-01 的 schema fixture
 依赖：TD-09。
 
 - [ ] 实现 `scripts/train_mvp_model.py`，支持配置文件、dry-run、train/dev、固定 seed、设备/精度选择、梯度累积、gradient checkpointing、梯度裁剪和受控 dataloader worker。
+- [ ] 启动时探测设备、精度、总/可用内存和后端身份并写入 run manifest；训练代码不得按 GPU 型号、固定显存容量或盘符分支。
+- [ ] 从配置读取设备内存预算/预留/最大利用率、主机与 dataloader 内存预算、micro batch、累积、最大长度和 worker；有效设备内存上限取绝对预算、总容量乘最大利用率、总容量减预留三者的最小值，预算缺失或探测容量不足时明确失败。
 - [ ] 实现方向感知采样器，记录每个 batch/step 的路由组成、epoch、样本位置和实际 token 数；低资源方向权重必须来自冻结配置。
 - [ ] 固定 optimizer、scheduler、warmup、label smoothing（若使用）、最大 step/token 预算和验证频率，所有有效超参数进入配置哈希。
 - [ ] 记录 global/optimizer step、train/dev loss、学习率、梯度范数、tokens/s、样本/s、显存峰值、wall time、截断率和异常跳过数。
-- [ ] 对 NaN/Inf loss/gradient、OOM、空 batch、数据耗尽、配置/数据哈希变化明确失败；不得静默跳过并继续发布候选。
+- [ ] 对 NaN/Inf loss/gradient、OOM、空 batch、数据耗尽、配置/数据哈希变化明确失败；仅 TD-14 benchmark 模式可按配置的有限重试预算搜索候选，正式训练不得静默调参或继续发布。
 - [ ] checkpoint 选择只读取 dev 指标；训练脚本不得打开 test split。
-- [ ] 增加 CPU/小模型单步、梯度累积边界、采样重现、非法 loss 和训练日志 schema 测试。
+- [ ] 增加 CPU/小模型单步、梯度累积边界、采样重现、非法 loss、资源预算不足、profile 切换和训练日志 schema 测试，证明修改显存预算不需要改代码。
 
 产物：可配置训练 CLI、方向采样器、结构化运行日志和自动化测试。
 
@@ -261,20 +263,21 @@ TD-09 至 TD-11 可在人类数据链构建期间先用 TD-01 的 schema fixture
 
 完成条件：任意合法 checkpoint 可在相同数据和生成配置下得到可复现的 18 路由明细与 12 方向汇总。
 
-### TD-14 基准测试并冻结 RTX 4060 Ti 训练配置
+### TD-14 基准测试并冻结可配置训练资源 profile
 
 依赖：TD-05、TD-12。
 
-- [ ] 在本机 RTX 4060 Ti 16 GB 上验证 BF16 可用性与锁定 CUDA/PyTorch 稳定性；若回退精度或环境，记录理由和新依赖身份。
-- [ ] 使用真实长度分布的 train/dev 小切片比较 micro batch、梯度累积、gradient checkpointing、最大 source/target 长度和 dataloader worker。
-- [ ] 对每个候选记录峰值显存、tokens/s、samples/s、step time、验证耗时、OOM/重试和截断率；不得只用短 synthetic 句估算正式容量。
-- [ ] 选择满足显存安全余量、吞吐和截断门槛的唯一 M2 profile，冻结 optimizer/scheduler、batch、累积、长度、验证/checkpoint 频率和训练 token/step 预算。
-- [ ] 验证 checkpoint 写入位置不会让 E: 机械盘成为训练热路径；SSD staging 和最终发布遵守 TD-01 边界。
+- [ ] 探测当前执行主机的 accelerator/CPU、支持精度、后端/驱动、设备与主机内存，把真实硬件身份写入 benchmark/run manifest；语义配置不保存 GPU 型号。
+- [ ] 从配置读取设备/精度候选和设备内存预算、预留显存、最大利用率、主机/dataloader 内存预算及 OOM 重试上限；若回退精度或环境，记录理由和新 profile 身份。
+- [ ] 使用真实长度分布的 train/dev 小切片比较 micro batch、梯度累积、gradient checkpointing、最大 source/target 长度和 dataloader worker，候选组合不得来自隐藏常量。
+- [ ] 对每个候选记录峰值设备/主机内存、tokens/s、samples/s、step time、验证耗时、OOM/重试和截断率；不得只用短 synthetic 句估算正式容量。
+- [ ] 选择满足配置预算、安全余量、吞吐和截断门槛的唯一 M2 profile，冻结资源预算、optimizer/scheduler、batch、累积、长度、验证/checkpoint 频率和训练 token/step 预算。
+- [ ] 验证 checkpoint/staging/log 热路径使用配置的高吞吐运行根，最终发布遵守 TD-01 边界，不依赖盘符。
 - [ ] 完成至少 100 个 optimizer step 的 soak，期间至少执行 2 次 dev 验证和 2 次 checkpoint 发布，确认无显存持续增长、NaN/Inf、数据停顿或 checkpoint 阻塞。
 
-产物：硬件基准报告和冻结的 M2 本机训练 profile。
+产物：硬件基准报告、运行时硬件 manifest 和冻结的 M2 训练资源 profile。
 
-完成条件：存在一个在 16 GB 显存内稳定运行、可恢复且数据截断可接受的唯一 M2 配置。
+完成条件：存在一个实测峰值不超过配置预算、满足预留内存约束、可恢复且数据截断可接受的唯一 M2 配置；自动化测试证明换显存容量只需调整 profile。
 
 ### TD-15 冻结蒸馏配方与等预算 A/B 契约
 

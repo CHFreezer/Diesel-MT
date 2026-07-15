@@ -9,7 +9,7 @@
 - todo：[mvp tokenizer](../../todo/mvp-tokenizer.md)
 - plan：[mvp tokenizer](../../../plan/mvp-tokenizer.md)
 - review：[mvp tokenizer review](../../review/mvp-tokenizer.md)
-- 本机硬件记录：[local-hardware.md](local-hardware.md)（通过 `.git/info/exclude` 排除，不提交）
+- 本机硬件记录：[根目录 LOCAL_HARDWARE.md](../../../../LOCAL_HARDWARE.md)（本地合并记录，通过 `.git/info/exclude` 排除，不提交）
 
 ## 依赖图
 

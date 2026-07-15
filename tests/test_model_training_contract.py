@@ -53,7 +53,7 @@ def test_configs_and_source_lock_are_strict_and_hash_bound(
     lock = load_source_lock(SOURCE_LOCK_PATH, data_config)
 
     assert config_sha256(data_config) == "4b774c6d564b02fef3d6113d3de4b51428248646fe209a9e5a300c9608cb5c93"
-    assert config_sha256(student_config) == "e2def019a9eb67ab56ea2e2d3432ffaee87aa6ed36186cb551f6e7ce473732d1"
+    assert config_sha256(student_config) == "ce2b50c258ffe2accee58697300e680f7871b51a6241eff2a986ea0bc2146252"
     assert lock["config_sha256"] == config_sha256(data_config)
     assert lock["source_order"] == ["massive-1.1"]
     assert lock["sources"][0]["archive"]["bytes"] == 40_251_390
@@ -224,11 +224,44 @@ def test_student_identity_is_from_scratch_and_vocab_bound(student_config: dict[s
     assert student_config["model"]["decoder_layers"] == 2
     assert student_config["model"]["tie_word_embeddings"] is True
     assert student_config["training_profile"]["status"] == "requires_td14_benchmark"
+    assert student_config["training_profile"]["selection_mode"] == "benchmark_current_host"
+    assert student_config["training_profile"]["hardware_identity_source"] == (
+        "runtime_probe_and_run_manifest"
+    )
+    assert student_config["training_profile"]["device_preference_order"] == ["cuda", "cpu"]
+    assert student_config["training_profile"]["precision_preference_order"] == [
+        "bf16",
+        "fp16",
+        "fp32",
+    ]
+    assert all(
+        value is None
+        for value in student_config["training_profile"]["resource_budget"].values()
+    )
 
     changed = copy.deepcopy(student_config)
     changed["model"]["vocab_size"] = 32_768
     with pytest.raises(ContractError, match="frozen MVP identity"):
         validate_student_config(changed)
+
+    candidate = copy.deepcopy(student_config)
+    candidate["training_profile"]["resource_budget"] = {
+        "device_memory_budget_mib": 12_345,
+        "device_memory_reserve_mib": 1_024,
+        "max_device_memory_utilization": 0.85,
+        "host_memory_budget_mib": 32_768,
+        "dataloader_memory_budget_mib": 4_096,
+        "oom_retry_limit": 2,
+    }
+    assert validate_student_config(candidate) == candidate
+    assert config_sha256(candidate) != config_sha256(student_config)
+
+    invalid_memory = copy.deepcopy(candidate)
+    invalid_memory["training_profile"]["resource_budget"][
+        "device_memory_budget_mib"
+    ] = 0
+    with pytest.raises(ContractError, match="integer >= 1"):
+        validate_student_config(invalid_memory)
 
 
 def test_student_config_rejects_unknown_fields(student_config: dict[str, object]) -> None:
@@ -236,6 +269,11 @@ def test_student_config_rejects_unknown_fields(student_config: dict[str, object]
     changed["model"]["pretrained_model"] = "third-party/model"
     with pytest.raises(ContractError, match="unknown fields: pretrained_model"):
         validate_student_config(changed)
+
+    hardware_bound = copy.deepcopy(student_config)
+    hardware_bound["training_profile"]["gpu_model"] = "specific-device"
+    with pytest.raises(ContractError, match="unknown fields: gpu_model"):
+        validate_student_config(hardware_bound)
 
 
 def test_frozen_tokenizer_manifest_is_unchanged(student_config: dict[str, object]) -> None:

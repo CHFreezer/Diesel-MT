@@ -11,7 +11,7 @@ Diesel-MT is a lightweight multilingual machine translation experiment targeting
 - **Python**: 3.11.15 in a project-local `.conda/` prefix (not a named environment)
 - **Shell**: PowerShell 7.6 (`pwsh.exe`)
 - **Package manager**: pip only (no `pyproject.toml` or conda packages); always use `python -m pip`, never bare `pip`
-- **Platform**: Windows 11 Pro; the E: workspace HDD holds source data and the Git-ignored read-mostly teacher runtime. D: NVMe may be used for temporary hot runs, but it is not the canonical teacher location.
+- **Platform**: Windows 11 Pro. Machine-specific CPU/GPU, memory, drive mapping, and measured execution envelopes live only in the optional Git-excluded root `LOCAL_HARDWARE.md`.
 
 Activate the environment in every new PowerShell session:
 ```pwsh
@@ -23,6 +23,12 @@ Install dependencies:
 ```pwsh
 python -m pip install -r requirements.txt
 ```
+
+### Local hardware boundary
+
+- `LOCAL_HARDWARE.md` is the single local hardware/execution record. It is excluded through `.git/info/exclude` and must never be committed.
+- Do not copy GPU model names, fixed VRAM/RAM sizes, drive letters, or host-specific worker counts into reusable task titles or implementation branches.
+- Training code must consume configurable resource budgets and probe the current runtime. The run manifest records actual device, driver/backend, memory, and storage roots; changing hardware changes the resource profile, not the algorithm.
 
 ## Commands
 
@@ -83,7 +89,7 @@ The project has no `src/` layout, `__init__.py` files, or installable package. P
 - `configs/tokenizer_datasets_mvp.yaml` — Source registry, cleaning rules, MinHash params, quality thresholds, `smoke` and `mvp` profiles.
 - `configs/tokenizer_datasets_mvp.lock.json` — Pinned HPLT 3.0 shard URLs, SHA-256 hashes, byte ranges for deterministic reproducibility. The lock binds to a config hash — if config or profile changes, the lock must be re-resolved.
 - `configs/mvp_model_data.yaml` / `.lock.json` — Strict schema, route matrix, bounded MASSIVE 1.1 registry/budgets, and full archive/selected-file identities for the model-training data workflow.
-- `configs/mvp_e8_d2_v48k.yaml` — From-scratch student identity and logical runtime/publish paths; hardware-sensitive training fields remain explicitly unfrozen until TD-14.
+- `configs/mvp_e8_d2_v48k.yaml` — From-scratch student identity, logical runtime/publish paths, runtime-probed device/precision preferences, and an explicit configurable resource-budget schema. The canonical base keeps candidate values null; TD-10/TD-12/TD-14 candidate profiles may fill all budget fields, and TD-14 freezes the selected profile.
 - `configs/hymt2_teacher_selection.yaml` — Canonical frozen TD-06 selection: official Hy-MT2 7B GGUF Q8_0 through pinned llama.cpp CUDA. Original unquantized BF16 is the quantization-quality baseline. Both reside under Git-ignored `artifacts/model-training/runtime/` and are read-mostly/sequential-load assets. TD-07/TD-08 must consume the selected identity and may not silently fall back to another backend.
 - `configs/hymt2_teacher_runtime.yaml` / `hymt2_teacher_artifact.lock.json` — Non-selected FP8 baseline profile and immutable evidence. The validated native-Windows path decompresses to BF16 and is retained only for audit/comparison.
 - `configs/hymt2_teacher_benchmark.yaml` / `.lock.json` — Common five-tag benchmark contract plus byte-exact identities for official Hy-MT2 7B BF16, official GGUF Q8_0, and the pinned llama.cpp CUDA runtime.
@@ -100,7 +106,7 @@ Output layout under `data/tokenizer/` (all gitignored except `.gitkeep`): `raw/`
 ### Design invariants
 
 1. **Deterministic reproducibility**: byte-level determinism via seeded algorithms, locked sources, and config hashing. Same inputs must produce identical outputs.
-2. **Memory-first**: optimized for single-language in-RAM processing on 128 GB; fingerprints via `ProcessPoolExecutor`, decisions serial in main process.
+2. **Memory-first with explicit budgets**: single-language candidates stay in RAM; fingerprints use `ProcessPoolExecutor` and decisions remain serial in the main process. Memory, worker, and staging limits come from configuration/local execution profiles rather than assumed host capacity.
 3. **Conservative cleaning**: never lowercases, normalizes scripts, or does character-set folding. Only removes content-invalid lines (garbled characters, wrong-script dominance).
 4. **Atomic output**: all files written via temp file + `os.replace()`. Manifest is written last, after all content is verified.
 5. **Per-language checkpointing**: resume at language granularity; identity hash = config + lock + seed + code version.
