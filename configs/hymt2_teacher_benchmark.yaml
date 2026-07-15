@@ -1,0 +1,91 @@
+schema_version: 1
+benchmark_id: td06-teacher-runtime-comparison-v2
+
+runtime:
+  override_env: DIESEL_MT_MODEL_RUNTIME
+  default_root: artifacts/model-training/runtime
+  reports_subdir: teacher/hymt2-7b-comparison/reports
+
+variants:
+  original-bf16:
+    repo_id: tencent/Hy-MT2-7B
+    revision: 9b0eb4e8f001def3e5ff6469a0ac96fdb39ec223
+    artifact_format: safetensors-bf16
+    runtime_subdir: teacher/hymt2-7b-bnb-int8
+    snapshot_subdir: snapshot
+    backend: transformers
+    requirements: requirements-teacher-hymt2-bnb.txt
+    python_version: 3.11.15
+    transformers_version: 5.13.1
+    torch_version: 2.13.0+cu132
+    dtype: bfloat16
+    device_map: auto
+    trust_remote_code: false
+    local_files_only: true
+  bnb-int8:
+    repo_id: tencent/Hy-MT2-7B
+    revision: 9b0eb4e8f001def3e5ff6469a0ac96fdb39ec223
+    artifact_format: safetensors-bf16
+    runtime_subdir: teacher/hymt2-7b-bnb-int8
+    snapshot_subdir: snapshot
+    backend: transformers-bitsandbytes
+    requirements: requirements-teacher-hymt2-bnb.txt
+    python_version: 3.11.15
+    transformers_version: 5.13.1
+    torch_version: 2.13.0+cu132
+    bitsandbytes_version: 0.49.2
+    bnb_cuda_version: "130"
+    load_in_8bit: true
+    dtype: bfloat16
+    device_map: auto
+    trust_remote_code: false
+    local_files_only: true
+  gguf-q8:
+    repo_id: tencent/Hy-MT2-7B-GGUF
+    revision: ab8472660ac61fac25f1af43fac2599d52a8a775
+    artifact_format: gguf-q8_0
+    runtime_subdir: teacher/hymt2-7b-gguf-q8
+    model_subpath: snapshot/HY-MT2-7B-Q8_0.gguf
+    model_bytes: 7981928896
+    model_sha256: 58b3ad55dd6f6fa08c695cddc34fb5f8f708a844f78ae10508071914b0ed67c0
+    backend: llama.cpp-cuda
+    monitor_requirements: requirements-teacher-hymt2-gguf.txt
+    llama_release: b10012
+    llama_commit: c71854292f7c367cc3b35939f88121d81945472f
+    llama_subdir: llama.cpp-b10012-cuda13.3/bin
+    cuda_version: "13.3"
+    n_gpu_layers: all
+    flash_attention: true
+    host: 127.0.0.1
+    port: 18082
+
+benchmark:
+  quality_reference_variant: original-bf16
+  seed: 20260715
+  repeats: 2
+  warmup_new_tokens: 8
+  max_new_tokens: 32
+  context_size: 512
+  do_sample: false
+  probes:
+    - target_tag: eng_Latn
+      prompt: "Translate the following text into English. Output only the translation, without explanation:\n\n今天天气很好。"
+      expected_smoke_output: "The weather is nice today."
+    - target_tag: zho_Hans
+      prompt: "将以下文本翻译成简体中文，只输出译文，不要解释：\n\nThe weather is nice today."
+      expected_smoke_output: "今天天气很好。"
+    - target_tag: zho_Hant
+      prompt: "將以下文本翻譯成繁體中文，只輸出譯文，不要解釋：\n\nThe weather is nice today."
+      expected_smoke_output: "今天天氣很好。"
+    - target_tag: jpn_Jpan
+      prompt: "Translate the following text into Japanese. Output only the translation, without explanation:\n\nThe weather is nice today."
+      expected_smoke_output: "今日は天気がいいですね。"
+    - target_tag: kor_Hang
+      prompt: "Translate the following text into Korean. Output only the translation, without explanation:\n\nThe weather is nice today."
+      expected_smoke_output: "오늘 날씨가 좋아요."
+  capacity_probe:
+    scope: m0-maximum-train-source-characters
+    source_characters: 189
+    target_tag: jpn_Jpan
+    max_new_tokens: 64
+    prompt: "Translate the following text into Japanese. Output only the translation, without explanation:\n\nstart the gas stove adjust the flame to cooking the dish and put all cooking ingredient to pressure cooker to cook the ingredients keep it on the stove wait for the ingredients to be cooked"

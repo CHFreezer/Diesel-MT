@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "resolved_at": "2026-07-15T05:20:00+08:00",
+  "selected": {
+    "source_model": "tencent/Hy-MT2-7B",
+    "repo_id": "tencent/Hy-MT2-7B-FP8",
+    "revision": "883d09eb21d9be92058556cd0a4016d8a648c7db",
+    "artifact_format": "compressed-tensors-fp8",
+    "license": "Apache-2.0",
+    "file_count": 14,
+    "total_bytes": 8046445711,
+    "files": [
+      {"path": ".gitattributes", "bytes": 1749, "sha256": "5fa862361990f0c426213dce47db4ed9f2b0609a882b70955ff011137fe0cff5", "role": "repository-metadata", "runtime_required": false},
+      {"path": "LICENSE.txt", "bytes": 11633, "sha256": "1b4b70fe592c3ed4857449fc5d12f538a06a9e37f821a9bab4a0b30be7462892", "role": "license", "runtime_required": false},
+      {"path": "README.md", "bytes": 15274, "sha256": "8f79acbe317e6f4166b518a9262c13714b41d429ddfea4f0d509d491915f92b2", "role": "model-card", "runtime_required": false},
+      {"path": "README_CN.md", "bytes": 14486, "sha256": "aed595b4866e2e3acbb8542c189215095a90bc9dbd77da460577f3bfc2ece4d6", "role": "model-card", "runtime_required": false},
+      {"path": "chat_template.jinja", "bytes": 662, "sha256": "788ac16c5d7bfefc28655928ad524c8f378a44cb24d24fb125d6a5859b167677", "role": "chat-template", "runtime_required": true},
+      {"path": "config.json", "bytes": 2004, "sha256": "d8157d51a5ddb0d7d81b36d9704320f2dff07726dd7ef0c927c967bb28913f59", "role": "model-config", "runtime_required": true},
+      {"path": "generation_config.json", "bytes": 217, "sha256": "56cd0974cae79f49ecaec4a02936bcabed2a4c8d8b6a780bf4a94ccbf344a78b", "role": "generation-config", "runtime_required": true},
+      {"path": "hf_quant_config.json", "bytes": 158, "sha256": "53ee00e0d886e5d4ff8b67aac0a7a96197ecad61774c04c3263c6d69dd596e7c", "role": "quantization-config", "runtime_required": true},
+      {"path": "model-00001-of-00002.safetensors", "bytes": 4997139976, "sha256": "8c9af976e108b1266d84c2b4b3a4ccf3bd3180e58a510b2061effcef5971b913", "role": "model-weights", "runtime_required": true},
+      {"path": "model-00002-of-00002.safetensors", "bytes": 3032764328, "sha256": "edd1ee48b180966a55b5ec86db1b16b31590ee4b3c2588ef3e51a9732c104ef8", "role": "model-weights", "runtime_required": true},
+      {"path": "model.safetensors.index.json", "bytes": 68535, "sha256": "9197bc9890101ed8c637840563c3da66c5bd9d90a6b8a52e3f1c604839716632", "role": "model-index", "runtime_required": true},
+      {"path": "special_tokens_map.json", "bytes": 431, "sha256": "c6571f2ee67c36fa93d7f688ee6fd43f5b84784e895f3e6a4eb8c2657379758e", "role": "tokenizer-config", "runtime_required": true},
+      {"path": "tokenizer.json", "bytes": 16388495, "sha256": "a07abfc4611977f262d1789910d53ee76af28620f285af80cc4051a8db09b509", "role": "tokenizer", "runtime_required": true},
+      {"path": "tokenizer_config.json", "bytes": 37763, "sha256": "1fffdb809549222938f4a732645dd984c7c0b2973d592c2d01e05425274317da", "role": "tokenizer-config", "runtime_required": true}
+    ]
+  },
+  "remote_code_audit": {
+    "python_files": [],
+    "config_auto_map": null,
+    "architecture": "HunYuanDenseV1ForCausalLM",
+    "model_type": "hunyuan_v1_dense",
+    "native_transformers_module": "transformers.models.hunyuan_v1_dense",
+    "official_example_trust_remote_code": true,
+    "locked_runtime_trust_remote_code": false,
+    "decision": "The official example was executed once with trust_remote_code=true. The immutable snapshot contains no Python files and config.json has no auto_map, so both true and false resolve to the native Transformers implementation; the locked offline profile uses false."
+  },
+  "chat_template_audit": {
+    "path": "chat_template.jinja",
+    "sha256": "788ac16c5d7bfefc28655928ad524c8f378a44cb24d24fb125d6a5859b167677",
+    "default_system_prompt": false,
+    "decision": "Use the exact locked template. TD-06 smoke prompts are diagnostic only; TD-07 owns final prompt and decode calibration."
+  },
+  "generation_config_audit": {
+    "file_top_p": 0.8,
+    "model_card_top_p": 0.6,
+    "decision": "The discrepancy is recorded but not resolved in TD-06. Offline smoke uses deterministic decoding; TD-07 selects the production decode profile."
+  },
+  "candidates": [
+    {
+      "repo_id": "tencent/Hy-MT2-7B-FP8",
+      "revision": "883d09eb21d9be92058556cd0a4016d8a648c7db",
+      "format": "compressed-tensors-fp8",
+      "top_level_bytes": 8046445711,
+      "assessment": "Selected official artifact. The official Transformers example passed locally, but compressed-tensors 0.17.1 decompresses all 224 quantized modules before the first forward. This path is accepted only for batch-one short-text controlled generation and retains a strict near-capacity VRAM warning."
+    },
+    {
+      "repo_id": "tencent/Hy-MT2-7B",
+      "revision": "9b0eb4e8f001def3e5ff6469a0ac96fdb39ec223",
+      "format": "bf16-safetensors",
+      "top_level_bytes": 16075624007,
+      "assessment": "CPU/disk offload is possible with 128 GB RAM but cannot remain fully resident on the 16 GB GPU. A bitsandbytes 0.49.2 CUDA kernel probe passed using its cuda130 binary under PyTorch CUDA 13.2; the base-weight download was stopped before completion at user request, so this is not the selected or validated artifact."
+    },
+    {
+      "repo_id": "tencent/Hy-MT2-7B-GGUF",
+      "revision": "ab8472660ac61fac25f1af43fac2599d52a8a775",
+      "format": "gguf-q4-q6-q8",
+      "smallest_weight_bytes": 4624648896,
+      "assessment": "Fallback only. The official page exposes ordinary Q4/Q6/Q8 launch commands but its own model card also says the GGUF depends on an open STQ pull request. The contradictory backend contract requires separate parity validation."
+    },
+    {
+      "backend": "vllm-compressed-tensors-fp8",
+      "assessment": "Technically preferred for true W8A8 FP8 on the RTX 4060 Ti (compute capability 8.9), but official vLLM does not run natively on Windows and this host has no WSL distribution installed. Enabling WSL is a separate system-level decision, outside TD-06's current authority."
+    }
+  ],
+  "official_transformers_example": {
+    "status": "pass-with-capacity-warning",
+    "dtype": "bfloat16",
+    "device_map": "auto",
+    "trust_remote_code": true,
+    "prompt_output": "The weather is really nice today.",
+    "load_seconds": 5.026282200007699,
+    "generate_seconds": 3.399425399955362,
+    "new_tokens": 8,
+    "torch_peak_allocated_bytes": 15185548800,
+    "torch_peak_reserved_bytes": 16970153984,
+    "gpu_free_after_bytes": 0,
+    "post_forward_linear_modules": 225,
+    "post_forward_compressed_modules": 0,
+    "observed_behavior": "The model loaded from the FP8 files, then compressed-tensors ran Decompressing model on the first forward and restored ordinary BF16 Linear modules."
+  },
+  "rights_boundary": "Apache-2.0 covers the locked model artifact. It does not grant rights to teacher inputs, source corpora, references, or generated-data use; those remain separately governed and must retain provenance."
+}

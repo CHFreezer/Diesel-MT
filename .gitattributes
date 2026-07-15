@@ -1,3 +1,11 @@
 # Tokenizer artifacts carry their own SHA-256 manifest and must survive
 # checkout byte-for-byte, independent of core.autocrlf.
 artifacts/tokenizers/** -text
+
+# TD-06 evidence hashes these files byte-for-byte; do not apply line-ending
+# conversion even when the local checkout has core.autocrlf enabled.
+configs/hymt2_teacher_*.yaml -text
+configs/hymt2_teacher_*.json -text
+requirements-teacher-hymt2*.txt -text
+scripts/*hymt2_teacher*.py -text
+artifacts/model-training/hymt2-teacher-runtime*.json -text

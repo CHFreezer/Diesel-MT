@@ -1,0 +1,159 @@
+{
+  "schema_version": 1,
+  "status": "complete",
+  "task": "TD-06",
+  "date": "2026-07-15",
+  "benchmark_id": "td06-teacher-runtime-comparison-v2",
+  "scope": "Common-protocol comparison of original unquantized BF16, bitsandbytes LLM.int8, and official GGUF Q8_0; original BF16 is the diagnostic quality baseline.",
+  "hardware": {
+    "gpu": "NVIDIA GeForce RTX 4060 Ti",
+    "gpu_memory_mib": 16380,
+    "driver": "610.74",
+    "operating_system": "Windows 11 Pro"
+  },
+  "common_protocol": {
+    "batch_size": 1,
+    "context_size": 512,
+    "seed": 20260715,
+    "sampling": "greedy",
+    "warmup": true,
+    "five_tag_probes": 5,
+    "repeats_per_probe": 2,
+    "short_probe_max_new_tokens": 32,
+    "capacity_probe_source_characters": 189,
+    "capacity_probe_max_new_tokens": 64,
+    "resource_sample_interval_milliseconds": 200,
+    "quality_reference_variant": "original-bf16",
+    "throughput_definition": "completion tokens divided by end-to-end generation request latency"
+  },
+  "identities": {
+    "benchmark_config_sha256": "a9331f20985f339f65d442bd76d918fb9724470748ae27f35829bc154ff63023",
+    "benchmark_lock_sha256": "c448f19bb26bae45b1d7ab7766d51232b42471c7e5062b3d8784d89f2b1596bf",
+    "benchmark_script_sha256": "8b6ab16b48c0f579bbaf83838397241f1e28bfae92a110467ad83a37d4b87ee3",
+    "teacher_selection_sha256": "959b7ebcb8170d09b4640724efcd1e58b47ee317be8022b08bbff354092b8066",
+    "transformers_requirements_sha256": "d5c413ac18f2e2057be24babd6b24bb8da98a6fcacd1abcbb59d1dd384f831c6",
+    "gguf_requirements_sha256": "7b6f1cd96087644778e40f727cd994af35cdd15c404accce0e981b65ce60474b",
+    "original_bf16_raw_report_sha256": "d77a5bef8e33de140686fabf5e21267033adeeb6ab05294c77cb796d37bbc344",
+    "bnb_int8_raw_report_sha256": "5e467d445392a3e2c084b7c1e48a93704c38d843e5b29b14f754f5ced6907e64",
+    "gguf_q8_raw_report_sha256": "744f1ad01568d77111fc26390c3f490f04d9dd2463168de1e8ebd8745b4dabbd"
+  },
+  "variants": {
+    "original-bf16": {
+      "source": "tencent/Hy-MT2-7B",
+      "revision": "9b0eb4e8f001def3e5ff6469a0ac96fdb39ec223",
+      "source_format": "BF16 Safetensors",
+      "source_files": 15,
+      "source_bytes": 16075624007,
+      "backend": "Transformers 5.13.1 + PyTorch 2.13.0+cu132",
+      "dtype": "bfloat16",
+      "device_map": "auto",
+      "cpu_offloaded_modules": [
+        "model.layers.29",
+        "model.layers.30",
+        "model.layers.31",
+        "model.norm",
+        "model.rotary_emb"
+      ],
+      "load_seconds": 5.64513779990375,
+      "mean_probe_latency_seconds": 2.10113060999429,
+      "median_probe_latency_seconds": 1.73189575003926,
+      "mean_probe_tokens_per_second": 4.16696368282578,
+      "median_probe_tokens_per_second": 4.17831166607818,
+      "peak_gpu_delta_mib": 14543,
+      "peak_process_rss_bytes": 17738473472,
+      "capacity_probe_tokens_per_second": 4.53453224854799,
+      "five_tag_outputs_match_expected_smoke_outputs": true,
+      "quality_reference": true
+    },
+    "bnb-int8": {
+      "source": "tencent/Hy-MT2-7B",
+      "revision": "9b0eb4e8f001def3e5ff6469a0ac96fdb39ec223",
+      "source_format": "BF16 Safetensors loaded through LLM.int8",
+      "source_files": 15,
+      "source_bytes": 16075624007,
+      "backend": "Transformers 5.13.1 + bitsandbytes 0.49.2 LLM.int8",
+      "torch": "2.13.0+cu132",
+      "bnb_cuda_version": "130",
+      "loaded_library": "libbitsandbytes_cuda130.dll",
+      "load_in_8bit": true,
+      "linear_8bit_modules": 224,
+      "cpu_or_disk_offload": false,
+      "load_seconds": 12.8914765999652,
+      "mean_probe_latency_seconds": 0.99548234998947,
+      "median_probe_latency_seconds": 0.79977245000191,
+      "mean_probe_tokens_per_second": 8.79032551792971,
+      "median_probe_tokens_per_second": 8.77441943958032,
+      "peak_gpu_delta_mib": 9687,
+      "peak_process_rss_bytes": 17030828032,
+      "capacity_probe_tokens_per_second": 9.09224373934216
+    },
+    "gguf-q8": {
+      "source": "tencent/Hy-MT2-7B-GGUF",
+      "revision": "ab8472660ac61fac25f1af43fac2599d52a8a775",
+      "source_format": "GGUF Q8_0",
+      "model_file": "HY-MT2-7B-Q8_0.gguf",
+      "model_bytes": 7981928896,
+      "model_sha256": "58b3ad55dd6f6fa08c695cddc34fb5f8f708a844f78ae10508071914b0ed67c0",
+      "backend": "llama.cpp b10012 CUDA 13.3",
+      "llama_commit": "c71854292f7c367cc3b35939f88121d81945472f",
+      "n_gpu_layers": "all",
+      "flash_attention": true,
+      "load_seconds": 3.27981410000939,
+      "mean_probe_latency_seconds": 0.313584879983682,
+      "median_probe_latency_seconds": 0.248993349960074,
+      "mean_probe_tokens_per_second": 27.7058420355544,
+      "median_probe_tokens_per_second": 28.1686107572572,
+      "peak_gpu_delta_mib": 7909,
+      "peak_process_rss_bytes": 8462090240,
+      "capacity_probe_tokens_per_second": 29.437789280928
+    }
+  },
+  "quality_comparison": {
+    "reference": "original-bf16",
+    "short_probes": {
+      "bnb_int8_exact_matches": 10,
+      "gguf_q8_exact_matches": 10,
+      "runs": 10
+    },
+    "capacity_probe": {
+      "all_variants_generated_tokens": 64,
+      "bnb_int8_exact_match": true,
+      "gguf_q8_exact_match": false,
+      "original_bf16_output_sha256": "8204b49671a53b405e3b8a463efb0152176293841f5afbbbe56f2c2d2cda0806",
+      "bnb_int8_output_sha256": "8204b49671a53b405e3b8a463efb0152176293841f5afbbbe56f2c2d2cda0806",
+      "gguf_q8_output_sha256": "db9769034b8d928b415a6f5a160e1f2a7aa5649f3ae7e770fc2b14b25388d45e",
+      "observed_difference": "GGUF used 調理 where original BF16 and bitsandbytes used 加熱; every output reached the 64-token diagnostic limit.",
+      "interpretation": "Recorded as a quantization/backend wording difference, not as a quality win or loss. TD-07 owns reference-based quality calibration."
+    }
+  },
+  "performance_comparison": {
+    "bnb_mean_speedup_over_original_bf16": 2.10952774898404,
+    "gguf_mean_speedup_over_original_bf16": 6.64892812715036,
+    "gguf_mean_speedup_over_bnb_int8": 3.15185620589847,
+    "gguf_peak_gpu_saved_vs_original_bf16_mib": 6634,
+    "gguf_peak_gpu_saved_vs_bnb_int8_mib": 1778,
+    "gguf_peak_process_rss_saved_vs_original_bf16_bytes": 9276383232,
+    "gguf_peak_process_rss_saved_vs_bnb_int8_bytes": 8568737792,
+    "runtime_winner": "gguf-q8"
+  },
+  "selection": {
+    "status": "frozen",
+    "selection_id": "hymt2-7b-distillation-teacher-v1",
+    "use": "sequence-level-distillation-source",
+    "artifact_repo": "tencent/Hy-MT2-7B-GGUF",
+    "revision": "ab8472660ac61fac25f1af43fac2599d52a8a775",
+    "filename": "HY-MT2-7B-Q8_0.gguf",
+    "sha256": "58b3ad55dd6f6fa08c695cddc34fb5f8f708a844f78ae10508071914b0ed67c0",
+    "backend": "llama.cpp b10012 CUDA 13.3",
+    "selection_config": "configs/hymt2_teacher_selection.yaml",
+    "downstream_consumers": [
+      "TD-07",
+      "TD-08"
+    ],
+    "prompt_decode_status": "not yet frozen; TD-07 owns calibration"
+  },
+  "quality_boundary": {
+    "baseline": "Original unquantized BF16 outputs are the sole diagnostic quality baseline; FP8 outputs are not used as the reference.",
+    "decision": "The runtime selection remains official GGUF Q8_0. TD-07 must evaluate quantization-induced output changes against original BF16 and frozen human references before bulk generation."
+  }
+}

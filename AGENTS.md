@@ -4,14 +4,14 @@ This file provides repository guidance to coding agents working in this project.
 
 ## Project overview
 
-Diesel-MT is a lightweight multilingual machine translation experiment targeting four product languages: Chinese, English, Japanese, and Korean. They form 12 directed product translation pairs. Chinese uses two model-facing script tags (`zho_Hans` and `zho_Hant`), so the frozen tokenizer has five language tags and model-training data has 18 directed cross-language tag routes. The two `zho_Hans`/`zho_Hant` conversion routes are not translation directions. The model uses an M2M100-style Encoder-Decoder Transformer trained from scratch, with a baseline target of ~200M parameters for CPU/mobile SoC deployment. Hy-MT2 7B serves as an offline distillation teacher.
+Diesel-MT is a lightweight multilingual machine translation experiment targeting four product languages: Chinese, English, Japanese, and Korean. They form 12 directed product translation pairs. Chinese uses two model-facing script tags (`zho_Hans` and `zho_Hant`), so the frozen tokenizer has five language tags and model-training data has 18 directed cross-language tag routes. The two `zho_Hans`/`zho_Hant` conversion routes are not translation directions. The model uses an M2M100-style Encoder-Decoder Transformer trained from scratch, with a baseline target of ~200M parameters for CPU/mobile SoC deployment. The frozen offline distillation teacher is the official Hy-MT2 7B GGUF Q8_0 artifact running through pinned llama.cpp CUDA.
 
 ## Development environment
 
 - **Python**: 3.11.15 in a project-local `.conda/` prefix (not a named environment)
 - **Shell**: PowerShell 7.6 (`pwsh.exe`)
 - **Package manager**: pip only (no `pyproject.toml` or conda packages); always use `python -m pip`, never bare `pip`
-- **Platform**: Windows 11 Pro, E: spinning disk for data, D: NVMe SSD
+- **Platform**: Windows 11 Pro; the E: workspace HDD holds source data and the Git-ignored read-mostly teacher runtime. D: NVMe may be used for temporary hot runs, but it is not the canonical teacher location.
 
 Activate the environment in every new PowerShell session:
 ```pwsh
@@ -71,6 +71,9 @@ The project has no `src/` layout, `__init__.py` files, or installable package. P
 - **`scripts/model_data_pipeline.py`** — Deterministic MASSIVE parallel-data adapter: resumable archive fetch, nested file verification, conservative multilingual cleaning, stable sample/group identities, provenance, atomic corpus/report publication, and manifest-last completion.
 - **`scripts/finalize_model_data.py`** — Thin TD-04 CLI that validates the TD-03 manifest, enforces external-reference completeness, and publishes finalized split data only after contamination checks.
 - **`scripts/model_data_split_pipeline.py`** — Group/component hash split, exact/near deduplication, derivation binding, external tokenizer/evaluation contamination scan, reverse-route expansion, test-identity freeze, leakage audit, and manifest-last publication.
+- **`scripts/hymt2_teacher_runtime.py`** — TD-06 teacher contract, artifact/hash verification, isolated overlay audit, socket-blocked five-tag inference, M0 capacity probe, and runtime/resource evidence.
+- **`scripts/prepare_hymt2_teacher.py`** / **`scripts/validate_hymt2_teacher_runtime.py`** — Thin CLIs for locked teacher snapshot preparation and fully offline validation.
+- **`scripts/benchmark_hymt2_teacher_variants.py`** — TD-06 common-protocol benchmark for original unquantized BF16, bitsandbytes LLM.int8, and official GGUF Q8_0 + llama.cpp CUDA, including full artifact verification, BF16-based output comparison, and 200 ms RAM/VRAM sampling.
 - **`scripts/build_micro_m2m100_checkpoint.py`** — Deterministically builds and validates the Git-ignored random HF checkpoint consumed by the CTranslate2 deployment workflow.
 - **`scripts/validate_ctranslate2_deployment.py`** — Runs the serial CT2 conversion, ordered-vocabulary validation, five-tag CPU inference, and offline-package phases while merging machine-readable results into one workflow JSON.
 - **`scripts/run_offline_ctranslate2_smoke.py`** — Self-contained deployment-root runner copied into the offline package; verifies its manifest and blocks Python socket connections before local inference.
@@ -81,6 +84,9 @@ The project has no `src/` layout, `__init__.py` files, or installable package. P
 - `configs/tokenizer_datasets_mvp.lock.json` — Pinned HPLT 3.0 shard URLs, SHA-256 hashes, byte ranges for deterministic reproducibility. The lock binds to a config hash — if config or profile changes, the lock must be re-resolved.
 - `configs/mvp_model_data.yaml` / `.lock.json` — Strict schema, route matrix, bounded MASSIVE 1.1 registry/budgets, and full archive/selected-file identities for the model-training data workflow.
 - `configs/mvp_e8_d2_v48k.yaml` — From-scratch student identity and logical runtime/publish paths; hardware-sensitive training fields remain explicitly unfrozen until TD-14.
+- `configs/hymt2_teacher_selection.yaml` — Canonical frozen TD-06 selection: official Hy-MT2 7B GGUF Q8_0 through pinned llama.cpp CUDA. Original unquantized BF16 is the quantization-quality baseline. Both reside under Git-ignored `artifacts/model-training/runtime/` and are read-mostly/sequential-load assets. TD-07/TD-08 must consume the selected identity and may not silently fall back to another backend.
+- `configs/hymt2_teacher_runtime.yaml` / `hymt2_teacher_artifact.lock.json` — Non-selected FP8 baseline profile and immutable evidence. The validated native-Windows path decompresses to BF16 and is retained only for audit/comparison.
+- `configs/hymt2_teacher_benchmark.yaml` / `.lock.json` — Common five-tag benchmark contract plus byte-exact identities for official Hy-MT2 7B BF16, official GGUF Q8_0, and the pinned llama.cpp CUDA runtime.
 
 ### Data flow
 
@@ -108,11 +114,11 @@ work/plan/    → work/todo/    → work/task/    → work/review/    → work/d
 Current state:
 - **Completed**: Tokenizer dataset fetch pipeline (TD-01 through TD-12), the bounded MVP tokenizer workflow, and CTranslate2 deployment validation. The frozen `mvp-tokenizer-v0` is a 49,152-token Hugging Face Rust BPE + Metaspace artifact for five model tags: `eng_Latn`, `zho_Hans`, `zho_Hant`, `jpn_Jpan`, and `kor_Hang`.
 - **Archived workflows**: Plans remain under `work/plan/`; completed todos, task sets, and review records are under `work/done/`. Narrative evidence belongs in the task and unified review documents; the CT2 workflow's single machine-readable record is `artifacts/ctranslate2/deployment-validation.json`.
-- **Active workflow**: `work/plan/mvp-model-training.md`, `work/todo/mvp-model-training.md`, and `work/task/mvp-model-training/`. TD-01 through TD-05 are completed; TD-06 through TD-18 are pending. M0 is the bounded MASSIVE-based route/training-system dataset and carries known localization-quality warnings; it is not a production translation-quality corpus. Do not reopen or mutate the frozen tokenizer or reinterpret the random deployment checkpoint as a trained model.
+- **Active workflow**: `work/plan/mvp-model-training.md`, `work/todo/mvp-model-training.md`, and `work/task/mvp-model-training/`. TD-01 through TD-06 are completed, and TD-07 through TD-18 are pending. M0 is the bounded MASSIVE-based route/training-system dataset and carries known localization-quality warnings; it is not a production translation-quality corpus. Do not reopen or mutate the frozen tokenizer or reinterpret the random deployment checkpoint as a trained model.
 
 ## Testing
 
-The offline suite currently contains 105 tests across the tokenizer/model-data pipelines, tokenizer training/checkpointing, evaluation, artifact-freeze, micro-checkpoint, and CTranslate2 deployment modules. Small fixtures simulate HPLT, MASSIVE 1.1, group split/dedup/leakage, M0 route/acceptance evidence, and model-training contracts without network access. Key patterns:
+The offline suite currently contains 117 tests across the tokenizer/model-data pipelines, teacher runtime and runtime benchmarks, tokenizer training/checkpointing, evaluation, artifact-freeze, micro-checkpoint, and CTranslate2 deployment modules. Small fixtures simulate HPLT, MASSIVE 1.1, group split/dedup/leakage, M0 route/acceptance evidence, teacher artifact/offline boundaries, and model-training contracts without network access. Key patterns:
 
 - Config validation (explicit registry, missing fields, error paths)
 - Text cleaning correctness (zh/ja/ko-specific patterns)

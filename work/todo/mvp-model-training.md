@@ -24,7 +24,7 @@
 - `zho_Hans <-> zho_Hant` 是简繁转换，不进入训练、评测或部署验收。
 - 繁体可以少于简体，但必须有原生繁体样本和独立 dev/test；转换数据只能作为显式标注的增强数据，不能替代原生繁体验收。
 - student 只使用 49,152 词表的 `mvp_e8_d2_v48k`，从零初始化，不加载任何第三方模型权重或随机部署验证 checkpoint。
-- teacher 固定为锁定 revision/hash 的官方 Hy-MT2 7B artifact，只生成离散 UTF-8 译文；teacher 不进入 student 训练图，student 不继承其 tokenizer、权重或架构。
+- teacher 固定为 `configs/hymt2_teacher_selection.yaml` 中的官方 Hy-MT2 7B GGUF Q8_0 + llama.cpp CUDA，只生成离散 UTF-8 译文；teacher 不进入 student 训练图，student 不继承其 tokenizer、权重或架构。
 - 正式蒸馏 corpus 只从 train source 生成；仅允许在冻结的有界 human dev 子集上运行 teacher 以校准 prompt/decode，校准输出不得进入 student train，test 不得送入 teacher。
 - test 只在最终候选冻结后执行一次正式评测；训练配置和 checkpoint 选择只使用 train/dev。
 
@@ -131,17 +131,23 @@ TD-09 至 TD-11 可在人类数据链构建期间先用 TD-01 的 schema fixture
 
 依赖：TD-01。
 
-- [ ] 锁定腾讯官方 [`tencent/Hy-MT2-7B`](https://huggingface.co/tencent/Hy-MT2-7B) 或经验证的官方同模型运行 artifact，记录 Hugging Face revision、模型/代码/chat template/许可证文件清单、大小和 SHA-256。
-- [ ] 记录官方 [Apache-2.0 许可证](https://huggingface.co/tencent/Hy-MT2-7B/blob/main/LICENSE.txt)，并明确模型许可证不自动解决输入语料或生成数据的权利边界。
-- [ ] 审查并锁定官方示例要求的 `trust_remote_code` 内容；正式生成只从本地固定快照加载，启用离线标志和网络阻断，不执行浮动 `main` 或运行时下载。
-- [ ] 为 teacher 建立与 student 依赖隔离或明确兼容的运行 profile，锁定 Python、Transformers、PyTorch、CUDA/后端和启动命令，不让 teacher 依赖改写 student 主环境。
-- [ ] 在 RTX 4060 Ti 16 GB/CPU 上比较可行的官方 BF16 offload、FP8 或 GGUF 等运行路径；只选择官方来源且通过参考集验证的 artifact，不使用来源不明的社区量化。
-- [ ] 对 5 个项目标签完成最小离线推理，验证官方支持的 Chinese、Traditional Chinese、English、Japanese、Korean 均能生成非空结果。
-- [ ] 记录加载峰值内存/显存、单样本延迟、吞吐、输出稳定性和已知限制；若无可接受运行路径，D0 阻塞，不降级为其他 teacher。
+- [x] 锁定腾讯官方 [`tencent/Hy-MT2-7B`](https://huggingface.co/tencent/Hy-MT2-7B) 或经验证的官方同模型运行 artifact，记录 Hugging Face revision、模型/代码/chat template/许可证文件清单、大小和 SHA-256。
+- [x] 记录官方 [Apache-2.0 许可证](https://huggingface.co/tencent/Hy-MT2-7B/blob/main/LICENSE.txt)，并明确模型许可证不自动解决输入语料或生成数据的权利边界。
+- [x] 审查并锁定官方示例要求的 `trust_remote_code` 内容；正式生成只从本地固定快照加载，启用离线标志和网络阻断，不执行浮动 `main` 或运行时下载。
+- [x] 为 teacher 建立与 student 依赖隔离或明确兼容的运行 profile，锁定 Python、Transformers、PyTorch、CUDA/后端和启动命令，不让 teacher 依赖改写 student 主环境。
+- [x] 在 RTX 4060 Ti 16 GB/CPU 上比较可行的官方 BF16 offload、FP8 或 GGUF 等运行路径；只选择官方来源且通过参考集验证的 artifact，不使用来源不明的社区量化。
+- [x] 对 5 个项目标签完成最小离线推理，验证官方支持的 Chinese、Traditional Chinese、English、Japanese、Korean 均能生成非空结果。
+- [x] 记录加载峰值内存/显存、单样本延迟、吞吐、输出稳定性和已知限制；若无可接受运行路径，D0 阻塞，不降级为其他 teacher。
 
-产物：teacher artifact lock、remote-code 审查记录、离线运行 profile 和五标签冒烟报告。
+产物：teacher artifact lock、remote-code/后端审查记录、离线运行 profile、五标签冒烟报告、运行时对比和冻结选型配置。
 
 完成条件：固定 teacher artifact 可在完全离线环境重载并完成五标签推理，所有执行代码和文件身份可审计。
+
+完成记录：TD-06 于 2026-07-15 完成。官方原版未量化 BF16、bitsandbytes 0.49.2 LLM.int8 和官方 GGUF Q8_0 + llama.cpp CUDA 均按同一 v2 协议完成可审计测评；平均吞吐分别为 4.17 / 8.79 / 27.71 tokens/s，峰值显存增量为 14,543 / 9,687 / 7,909 MiB。原版 BF16 是唯一诊断质量基线，INT8 与 GGUF 的五标签短探针均 10/10 逐字匹配；GGUF 容量探针的一处措辞差异留给 TD-07 在人类 reference 上判断。
+
+最终冻结官方 `tencent/Hy-MT2-7B-GGUF` Q8_0 为 sequence-level 蒸馏源：revision `ab8472660ac61fac25f1af43fac2599d52a8a775`、`HY-MT2-7B-Q8_0.gguf`、SHA-256 `58b3ad55dd6f6fa08c695cddc34fb5f8f708a844f78ae10508071914b0ed67c0`、llama.cpp `b10012` CUDA 13.3。唯一规范入口为 `configs/hymt2_teacher_selection.yaml`；TD-07 负责 prompt/decode、逐路由人类 reference 质量和相对原版 BF16 的量化差异校准，失败时阻塞 D0 而不是静默更换后端。
+
+本地存储记录：选定 GGUF/llama.cpp 与原版 BF16 基线已迁入 Git-ignored 的 `artifacts/model-training/runtime/`，迁移后分别完成实际加载冒烟；D 盘旧 runtime、FP8 权重、重复缓存、下载压缩包和临时日志已清理。该 HDD 目录只允许模型顺序加载与低频只读访问。
 
 ### TD-07 校准 teacher 语言映射、prompt 与解码
 

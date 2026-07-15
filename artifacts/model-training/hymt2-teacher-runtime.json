@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "status": "complete",
+  "task": "TD-06",
+  "role": "evaluated-non-selected-fp8-path",
+  "selection": "not-selected; superseded by configs/hymt2_teacher_selection.yaml",
+  "quality_reference": false,
+  "date": "2026-07-15",
+  "teacher": {
+    "source_model": "tencent/Hy-MT2-7B",
+    "selected_artifact": "tencent/Hy-MT2-7B-FP8",
+    "revision": "883d09eb21d9be92058556cd0a4016d8a648c7db",
+    "format": "compressed-tensors-fp8",
+    "license": "Apache-2.0",
+    "files": 14,
+    "bytes": 8046445711
+  },
+  "identities": {
+    "artifact_lock_sha256": "89e24fb5ffdd3766b1d6016616ff3ba3d9de8e2d5e85eed8fe33c6aa69be878e",
+    "runtime_profile_sha256": "ea4a496a941ac119584392c084d4ac582db7e511c2df6ab368bf96eab2f5d41e",
+    "teacher_requirements_sha256": "5222ac77519796e4d655ece84b1b894d569b3b92ef0304b9b3025cffd1cc305d",
+    "runtime_library_sha256": "6e13963a3f6a789369afc2e470fc4859a042582d12bcb1d6a412ded9119bb05b",
+    "prepare_cli_sha256": "88d33d2defe45686c8a8fd6d9c591c162d27cae9f8b31fbe7446f956ce273c7d",
+    "validate_cli_sha256": "498af8f6218310240283915e96b7e5949ed7c8915844f54c2f047d8044f124c9",
+    "artifact_verification_report_sha256": "cbb51fa8814c48d9098c213a833ef93576eafea56b6ab866c4e5eb58cad37bc5",
+    "offline_smoke_report_sha256": "627c7c2461543426013d7dea54002bb69add3ee65d61c044fd9f876cd73a66b6"
+  },
+  "remote_code": {
+    "snapshot_python_files": 0,
+    "config_auto_map": null,
+    "native_architecture": "HunYuanDenseV1ForCausalLM",
+    "official_example_trust_remote_code": true,
+    "locked_offline_trust_remote_code": false,
+    "official_example_passed": true
+  },
+  "environment": {
+    "strategy": "student-compatible-overlay",
+    "student_environment_mutated": false,
+    "python": "3.11.15",
+    "torch": "2.13.0+cu132",
+    "transformers": "5.13.1",
+    "compressed_tensors": "0.17.1",
+    "accelerate": "1.14.0",
+    "cuda_runtime": "13.2",
+    "gpu": "NVIDIA GeForce RTX 4060 Ti",
+    "compute_capability": "8.9"
+  },
+  "official_transformers_example": {
+    "status": "pass-with-capacity-warning",
+    "dtype": "bfloat16",
+    "device_map": "auto",
+    "trust_remote_code": true,
+    "output": "The weather is really nice today.",
+    "load_seconds": 5.026282200007699,
+    "generate_seconds": 3.399425399955362,
+    "new_tokens": 8,
+    "torch_peak_allocated_bytes": 15185548800,
+    "torch_peak_reserved_bytes": 16970153984,
+    "gpu_free_after_bytes": 0
+  },
+  "offline_smoke": {
+    "status": "pass",
+    "socket_attempts": 0,
+    "five_tags": [
+      "eng_Latn",
+      "zho_Hans",
+      "zho_Hant",
+      "jpn_Jpan",
+      "kor_Hang"
+    ],
+    "runs": 10,
+    "nonempty": 10,
+    "repeat_stable": true,
+    "reference_outputs_match": true,
+    "outputs": {
+      "eng_Latn": "The weather is nice today.",
+      "zho_Hans": "今天天气很好。",
+      "zho_Hant": "今天天氣很好。",
+      "jpn_Jpan": "今日は天気がいいですね。",
+      "kor_Hang": "오늘 날씨가 좋아요."
+    },
+    "load_seconds": 5.63535470003262,
+    "mean_probe_latency_seconds": 2.40797379998257,
+    "mean_probe_tokens_per_second": 3.78524139198055,
+    "process_rss_after_bytes": 2621546496,
+    "torch_peak_allocated_bytes": 15185548800,
+    "torch_peak_reserved_bytes": 16743661568,
+    "pre_forward_model_footprint_bytes": 8029816192,
+    "post_forward_model_footprint_bytes": 15009138048,
+    "checkpoint_decompressed_on_first_forward": true
+  },
+  "capacity_probe": {
+    "scope": "m0-maximum-train-source-characters",
+    "batch_size": 1,
+    "source_characters": 189,
+    "input_tokens": 52,
+    "generated_tokens": 64,
+    "latency_seconds": 16.02649359998759,
+    "tokens_per_second": 3.9933875492297055,
+    "status": "pass-with-decode-limit-reached",
+    "boundary": "This proves bounded runtime capacity only. TD-07 owns final prompt and decode length."
+  },
+  "limitations": [
+    "Transformers/compressed-tensors treats the selected FP8 checkpoint as a storage format and decompresses 224 quantized modules to ordinary BF16 Linear modules before first forward.",
+    "The validated native-Windows path is restricted to batch size 1 and M0 train sources up to 189 characters; no concurrent teacher/student GPU work is permitted.",
+    "True W8A8 FP8 execution is available through vLLM on compute capability 8.9, but official vLLM has no native Windows support and this host has no WSL distribution installed.",
+    "Transformers reports unrecognized extended rope parameters; TD-06 only validates short M0 text and makes no long-context claim.",
+    "The official model-card top_p of 0.6 differs from generation_config.json top_p of 0.8; TD-07 must resolve prompt and decode settings."
+  ],
+  "rights_boundary": "Apache-2.0 covers the locked model artifact only. Input corpora, references, prompts, outputs, and generated-data use retain their own rights and provenance requirements.",
+  "consumers": [
+    "TD-07",
+    "TD-08"
+  ]
+}

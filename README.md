@@ -59,9 +59,11 @@
 
 ### 蒸馏
 
-Hy-MT2 7B（Apache-2.0）作为离线 teacher，Diesel-MT 从零训练的 Encoder-Decoder 作为 student。
+官方 Hy-MT2 7B GGUF Q8_0（Apache-2.0）通过锁定的 llama.cpp CUDA 后端作为离线 teacher，Diesel-MT 从零训练的 Encoder-Decoder 作为 student。
 
 - teacher 用于生成中英日韩 12 个产品方向、18 个跨语言标签路由的平行样本，优先补齐 `zh↔ja`、`zh↔ko`、`ja↔ko` 等弱方向，并分别保留简体与繁体来源/目标标签
+- teacher artifact 固定为 `tencent/Hy-MT2-7B-GGUF` 的 `HY-MT2-7B-Q8_0.gguf`；官方原版 BF16 是量化输出的质量基线，FP8 与 bitsandbytes 路径仅保留为 TD-06 对比证据
+- GGUF、llama.cpp 后端和原版 BF16 基线保存在 Git-ignored 的 `artifacts/model-training/runtime/`；该 HDD 目录只做顺序加载和低频只读访问，不承载热 checkpoint、随机写缓存或频繁日志
 - student 从零初始化，不继承 teacher 权重、tokenizer 或架构
 - 最终部署只依赖 Diesel-MT + CTranslate2，不依赖 teacher
 
@@ -141,7 +143,7 @@ MVP 阶段只验证路线，不追求最终效果。快速验证配置固定 `d_
 | [MADLAD-400 3B](https://huggingface.co/google/madlad400-3b-mt) | 2023 | Apache-2.0 | T5 架构 MT | 证明 T5 可做 MT |
 | [SeamlessM4T v2](https://huggingface.co/facebook/seamless-m4t-v2-large) | 2023 | CC-BY-NC-4.0 | 语音+文本，~2B | 体积和许可不匹配 |
 | [LMT-60 0.6B](https://huggingface.co/NiuTrans/LMT-60-0.6B) | 2025-11 | Apache-2.0 | decoder-only，0.8B | 非 Encoder-Decoder |
-| [Hy-MT2 7B](https://huggingface.co/tencent/Hy-MT2-7B) | 2026-05 | Apache-2.0 | 翻译专用，~8B | **离线蒸馏 teacher** |
+| [Hy-MT2 7B GGUF](https://huggingface.co/tencent/Hy-MT2-7B-GGUF) | 2026-05 | Apache-2.0 | 翻译专用，Q8_0 约 7.98 GB | **冻结离线蒸馏 teacher** |
 | [Hy-MT2 1.8B](https://huggingface.co/tencent/Hy-MT2-1.8B) | 2026-05 | Apache-2.0 | 1.25Bit 462MB / Q4 1.13GB | x86 性能不可接受 |
 | ALMA-7B / TowerInstruct / Aya-23 / Seed-X | 2023–2025 | 混合 | 7B–8B | 太大，可参考数据 |
 

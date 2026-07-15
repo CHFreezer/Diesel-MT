@@ -1,0 +1,83 @@
+schema_version: 1
+selection_id: hymt2-7b-distillation-teacher-v1
+status: frozen
+effective_date: 2026-07-15
+
+teacher:
+  source_model: tencent/Hy-MT2-7B
+  artifact_repo: tencent/Hy-MT2-7B-GGUF
+  revision: ab8472660ac61fac25f1af43fac2599d52a8a775
+  artifact_format: gguf-q8_0
+  filename: HY-MT2-7B-Q8_0.gguf
+  bytes: 7981928896
+  sha256: 58b3ad55dd6f6fa08c695cddc34fb5f8f708a844f78ae10508071914b0ed67c0
+  license: Apache-2.0
+
+backend:
+  name: llama.cpp-cuda
+  release: b10012
+  commit: c71854292f7c367cc3b35939f88121d81945472f
+  cuda_version: "13.3"
+  n_gpu_layers: all
+  flash_attention: true
+  context_size: 512
+  maximum_batch_size: 1
+
+runtime:
+  override_env: DIESEL_MT_MODEL_RUNTIME
+  default_root: artifacts/model-training/runtime
+  artifact_subdir: teacher/hymt2-7b-gguf-q8/snapshot
+  backend_subdir: teacher/hymt2-7b-gguf-q8/llama.cpp-b10012-cuda13.3/bin
+  retained_quality_reference_subdir: teacher/hymt2-7b-bnb-int8/snapshot
+  retained_transformers_overlay_subdir: teacher/hymt2-7b-bnb-int8/venv
+  storage_policy: workspace-hdd-gitignored-read-mostly
+  io_policy:
+    - load model files sequentially into RAM/VRAM
+    - do not use the model directories for hot checkpoints, random-write caches, or frequent logs
+
+evidence:
+  benchmark_id: td06-teacher-runtime-comparison-v2
+  benchmark_lock: configs/hymt2_teacher_benchmark.lock.json
+  benchmark_lock_sha256: c448f19bb26bae45b1d7ab7766d51232b42471c7e5062b3d8784d89f2b1596bf
+  benchmark_report: artifacts/model-training/hymt2-teacher-runtime-comparison.json
+  raw_original_bf16_report_sha256: d77a5bef8e33de140686fabf5e21267033adeeb6ab05294c77cb796d37bbc344
+  raw_bnb_int8_report_sha256: 5e467d445392a3e2c084b7c1e48a93704c38d843e5b29b14f754f5ced6907e64
+  raw_gguf_report_sha256: 744f1ad01568d77111fc26390c3f490f04d9dd2463168de1e8ebd8745b4dabbd
+  quality_reference: original-bf16
+  five_tag_reference_matches: 10
+  capacity_probe_exact_match: false
+  mean_tokens_per_second: 27.7058420355544
+  peak_gpu_delta_mib: 7909
+
+decision:
+  use: sequence-level-distillation-source
+  rationale:
+    - official Tencent artifact with immutable revision and byte-exact lock
+    - 6.65x the measured generation throughput of the original unquantized BF16 path with CPU offload
+    - 3.15x the measured generation throughput of the official bitsandbytes LLM.int8 path
+    - 6634 MiB lower measured peak GPU-memory delta than original BF16 and 1778 MiB lower than bitsandbytes
+    - all ten five-tag diagnostic outputs exactly matched the original BF16 quality baseline
+    - the capacity probe had one wording difference and reached the diagnostic token limit, so TD-07 retains the full quality gate
+  non_selected_alternatives:
+    - artifact: tencent/Hy-MT2-7B original BF16
+      reason: quality baseline passed, but device_map=auto offloads the final three transformer layers plus norm/rotary to CPU and is 6.65x slower
+    - artifact: tencent/Hy-MT2-7B-FP8
+      reason: Transformers decompresses the checkpoint to BF16 on first forward and nearly fills 16 GB VRAM
+    - artifact: tencent/Hy-MT2-7B + bitsandbytes LLM.int8
+      reason: matched original BF16 on all diagnostic outputs but is 3.15x slower and 1778 MiB higher in peak GPU-memory delta
+
+downstream_boundary:
+  td07_owns:
+    - five-tag language-name mapping
+    - route-specific prompt template
+    - decode parameters and stopping rules
+    - quality and format calibration on frozen human dev references
+    - comparison against original BF16 outputs when evaluating quantization-induced changes
+  td08_owns:
+    - train-only bounded generation
+    - raw/accepted/filtered outputs
+    - per-sample teacher and backend provenance
+  forbidden:
+    - sending test data to the teacher
+    - silently changing GGUF quantization, revision, llama.cpp release, or CUDA backend
+    - falling back to FP8, bitsandbytes, community quantization, or another teacher without a new recorded decision

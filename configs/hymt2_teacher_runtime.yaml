@@ -1,0 +1,92 @@
+schema_version: 1
+
+identity:
+  source_model: tencent/Hy-MT2-7B
+  selected_artifact: tencent/Hy-MT2-7B-FP8
+  selected_revision: 883d09eb21d9be92058556cd0a4016d8a648c7db
+  artifact_format: compressed-tensors-fp8
+  backend: transformers
+  license: Apache-2.0
+
+runtime:
+  default_root: artifacts/model-training/runtime/teacher/hymt2-7b-fp8
+  override_env: DIESEL_MT_MODEL_RUNTIME
+  override_subdir: teacher/hymt2-7b-fp8
+  snapshot_subdir: snapshot
+  overlay_subdir: venv
+  reports_subdir: reports
+
+environment:
+  strategy: student-compatible-overlay
+  python_version: 3.11.15
+  requirements: requirements-teacher-hymt2.txt
+  inherited_packages:
+    torch: 2.13.0+cu132
+    transformers: 5.13.1
+    huggingface-hub: 1.23.0
+    safetensors: 0.8.0
+    tokenizers: 0.22.2
+    PyYAML: 6.0.2
+  overlay_packages:
+    accelerate: 1.14.0
+    annotated-types: 0.7.0
+    compressed-tensors: 0.17.1
+    loguru: 0.7.3
+    psutil: 7.2.2
+    pydantic: 2.13.4
+    pydantic-core: 2.46.4
+    typing-inspection: 0.4.2
+    win32-setctime: 1.2.0
+  variables:
+    PYTHONUTF8: "1"
+    HF_HUB_OFFLINE: "1"
+    TRANSFORMERS_OFFLINE: "1"
+    HF_DATASETS_OFFLINE: "1"
+    TOKENIZERS_PARALLELISM: "false"
+
+loading:
+  local_files_only: true
+  trust_remote_code: false
+  dtype: bfloat16
+  device_map: auto
+
+smoke:
+  profile_id: td06-offline-smoke-v1
+  diagnostic_only: true
+  seed: 20260715
+  repeats: 2
+  max_new_tokens: 32
+  do_sample: false
+  required_tags: [eng_Latn, zho_Hans, zho_Hant, jpn_Jpan, kor_Hang]
+  probes:
+    - target_tag: eng_Latn
+      prompt: "Translate the following text into English. Output only the translation, without explanation:\n\n今天天气很好。"
+      expected_output: "The weather is nice today."
+    - target_tag: zho_Hans
+      prompt: "将以下文本翻译成简体中文，只输出译文，不要解释：\n\nThe weather is nice today."
+      expected_output: "今天天气很好。"
+    - target_tag: zho_Hant
+      prompt: "將以下文本翻譯成繁體中文，只輸出譯文，不要解釋：\n\nThe weather is nice today."
+      expected_output: "今天天氣很好。"
+    - target_tag: jpn_Jpan
+      prompt: "Translate the following text into Japanese. Output only the translation, without explanation:\n\nThe weather is nice today."
+      expected_output: "今日は天気がいいですね。"
+    - target_tag: kor_Hang
+      prompt: "Translate the following text into Korean. Output only the translation, without explanation:\n\nThe weather is nice today."
+      expected_output: "오늘 날씨가 좋아요."
+  capacity_probe:
+    scope: m0-maximum-train-source-characters
+    source_characters: 189
+    target_tag: jpn_Jpan
+    max_new_tokens: 64
+    prompt: "Translate the following text into Japanese. Output only the translation, without explanation:\n\nstart the gas stove adjust the flame to cooking the dish and put all cooking ingredient to pressure cooker to cook the ingredients keep it on the stove wait for the ingredients to be cooked"
+
+acceptance:
+  require_offline_socket_attempts: 0
+  require_nonempty_outputs: true
+  require_repeat_stability: true
+  require_all_parameters_on_cuda: true
+  minimum_gpu_free_bytes: 0
+  maximum_batch_size: 1
+  maximum_validated_source_characters: 189
+  forbidden_snapshot_suffixes: [.py, .pyc, .pyd, .so, .dll]
