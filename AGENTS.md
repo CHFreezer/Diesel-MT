@@ -4,7 +4,7 @@ This file provides repository guidance to coding agents working in this project.
 
 ## Project overview
 
-Diesel-MT is a lightweight multilingual machine translation experiment targeting four product languages: Chinese, English, Japanese, and Korean. They form 12 directed product translation pairs. Chinese uses two model-facing script tags (`zho_Hans` and `zho_Hant`), so the frozen tokenizer has five language tags and model-training data has 18 directed cross-language tag routes. The two `zho_Hans`/`zho_Hant` conversion routes are not translation directions. The model uses an M2M100-style Encoder-Decoder Transformer trained from scratch, with a baseline target of ~200M parameters for CPU/mobile SoC deployment. The frozen offline distillation teacher is the official Hy-MT2 7B GGUF Q8_0 artifact running through pinned llama.cpp CUDA.
+Diesel-MT is a lightweight multilingual machine translation experiment targeting four product languages: Chinese, English, Japanese, and Korean. They form 12 directed cross-language product translation directions. Chinese uses two independently selectable model-facing tags, `zho_Hans` for Simplified Chinese and `zho_Hant` for Traditional Chinese. The frozen tokenizer therefore has five language tags, while the complete model capability matrix has 20 directed routes: 18 cross-language translation routes plus two Simplified/Traditional Chinese conversion routes. The model uses an M2M100-style Encoder-Decoder Transformer trained from scratch, with a baseline target of ~200M parameters for CPU/mobile SoC deployment. The frozen offline distillation teacher is the official Hy-MT2 7B GGUF Q8_0 artifact running through pinned llama.cpp CUDA.
 
 ## Development environment
 
@@ -58,10 +58,12 @@ python scripts/fetch_tokenizer_datasets.py --resolve-lock
 
 - **Product languages**: 4 — Chinese, English, Japanese, Korean.
 - **Model language tags**: 5 — `zho_Hans`, `zho_Hant`, `eng_Latn`, `jpn_Jpan`, `kor_Hang`.
-- **Product translation directions**: 12.
-- **Parallel-data groups**: 9 undirected tag pairs; reversing them yields 18 directed model-training routes.
-- `zho_Hans <-> zho_Hant` is script conversion and is outside the translation scope.
-- Use “Chinese” only for a product-level statement that applies to both scripts. Data, configs, training, inference, and metrics must name `zho_Hans`/Simplified Chinese or `zho_Hant`/Traditional Chinese explicitly. Aggregated Chinese metrics must retain both script-level breakdowns.
+- **Cross-language product translation directions**: 12.
+- **Model relation groups**: 10 undirected tag pairs — nine cross-language translation relations plus one `zho_Hans--zho_Hant` Chinese-internal conversion relation.
+- **Model routes**: 20 — 18 cross-language translation routes plus `zho_Hans -> zho_Hant` and `zho_Hant -> zho_Hans`.
+- Keep the existing teacher language names: `zho_Hans -> Chinese` and `zho_Hant -> Traditional Chinese`; do not introduce locale-specific prompt names for this amendment.
+- Use “Chinese” only for a product-level statement that applies to both Chinese states. Data, configs, training, inference, and metrics must name `zho_Hans` or `zho_Hant` explicitly. Aggregated Chinese metrics must retain both tag-level route breakdowns.
+- The transition contract and immutable-v1 boundary are frozen in `docs/chinese-locale-capability-contract.md`.
 
 ### No package structure
 
@@ -72,7 +74,7 @@ The project has no `src/` layout, `__init__.py` files, or installable package. P
 - **`scripts/fetch_tokenizer_datasets.py`** — CLI entry point for the tokenizer corpus pipeline. Thin argument parsing + delegation to the pipeline library.
 - **`scripts/tokenizer_dataset_pipeline.py`** (~1543 lines) — Core processing library: config validation, HPLT 3.0 HTTP fetcher with range/resume, text cleaning pipeline, MinHash approximate dedup, deterministic balanced sampling, memory-first builds, per-language checkpointing, atomic file output, quality reports.
 - **`scripts/calculate_model_parameters.py`** — Standalone parameter estimator for 5 model configs (baseline + 4 MVP candidates).
-- **`scripts/model_training_contract.py`** — Strict MVP model-data/student/source-lock contract: five tags, nine undirected pairs, 18 routes, canonical config hashing, provenance schema, path boundaries, and fail-fast validation.
+- **`scripts/model_training_contract.py`** — Strict MVP model-data/student/source-lock contract. The committed v1 still enforces five tags, nine pairs, and 18 routes; reopened TD-01 must version it to ten relations/20 routes without reinterpreting v1 artifacts.
 - **`scripts/prepare_model_data.py`** — Thin TD-03 CLI for side-effect-free dry runs, locked-cache/offline builds, and identity-bound locale checkpoint resume.
 - **`scripts/model_data_pipeline.py`** — Deterministic MASSIVE parallel-data adapter: resumable archive fetch, nested file verification, conservative multilingual cleaning, stable sample/group identities, provenance, atomic corpus/report publication, and manifest-last completion.
 - **`scripts/finalize_model_data.py`** — Thin TD-04 CLI that validates the TD-03 manifest, enforces external-reference completeness, and publishes finalized split data only after contamination checks.
@@ -91,12 +93,12 @@ The project has no `src/` layout, `__init__.py` files, or installable package. P
 
 - `configs/tokenizer_datasets_mvp.yaml` — Source registry, cleaning rules, MinHash params, quality thresholds, `smoke` and `mvp` profiles.
 - `configs/tokenizer_datasets_mvp.lock.json` — Pinned HPLT 3.0 shard URLs, SHA-256 hashes, byte ranges for deterministic reproducibility. The lock binds to a config hash — if config or profile changes, the lock must be re-resolved.
-- `configs/mvp_model_data.yaml` / `.lock.json` — Strict schema, route matrix, bounded MASSIVE 1.1 registry/budgets, and full archive/selected-file identities for the model-training data workflow.
+- `configs/mvp_model_data.yaml` / `.lock.json` — Current immutable-v1 schema and identities for the nine-pair/18-route MASSIVE build. Reopened TD-01/TD-02 must publish a new identity that includes the `zho_Hans--zho_Hant` relation from the already locked `zh-CN`/`zh-TW` source files; do not edit old runtime manifests in place.
 - `configs/mvp_e8_d2_v48k.yaml` — From-scratch student identity, logical runtime/publish paths, runtime-probed device/precision preferences, and an explicit configurable resource-budget schema. The canonical base keeps candidate values null; TD-10/TD-12/TD-14 candidate profiles may fill all budget fields, and TD-14 freezes the selected profile.
 - `configs/hymt2_teacher_selection.yaml` — Canonical frozen TD-06 selection: official Hy-MT2 7B GGUF Q8_0 through pinned llama.cpp CUDA. Original unquantized BF16 is the quantization-quality baseline. Both reside under Git-ignored `artifacts/model-training/runtime/` and are read-mostly/sequential-load assets. TD-07/TD-08 must consume the selected identity and may not silently fall back to another backend.
 - `configs/hymt2_teacher_runtime.yaml` / `hymt2_teacher_artifact.lock.json` — Non-selected FP8 baseline profile and immutable evidence. The validated native-Windows path decompresses to BF16 and is retained only for audit/comparison.
 - `configs/hymt2_teacher_benchmark.yaml` / `.lock.json` — Common five-tag benchmark contract plus byte-exact identities for official Hy-MT2 7B BF16, official GGUF Q8_0, and the pinned llama.cpp CUDA runtime.
-- `configs/hymt2_teacher_prompt_decode.yaml` / `hymt2_distillation.yaml` / `hymt2_distillation_d1.yaml` — Frozen TD-07 teacher prompt/decode/filter contract, immutable D0 real-data smoke identity, and the completed D1 MVP distillation identity. D0 is historical smoke evidence only; TD-15/TD-16 may consume only the separately published D1 artifact.
+- `configs/hymt2_teacher_prompt_decode.yaml` / `hymt2_distillation.yaml` / `hymt2_distillation_d1.yaml` — Frozen 18-route v1 TD-07/TD-08 identities. D0 is historical smoke evidence and D1 is a valid 18-route cross-language MVP, but neither alone satisfies the new 20-route TD-15/TD-16 gate. Reopened TD-07/TD-08 must publish new-route addenda and a composite identity rather than mutate v1.
 
 ### Data flow
 
@@ -124,7 +126,7 @@ work/plan/    → work/todo/    → work/task/    → work/review/    → work/d
 Current state:
 - **Completed**: Tokenizer dataset fetch pipeline (TD-01 through TD-12), the bounded MVP tokenizer workflow, and CTranslate2 deployment validation. The frozen `mvp-tokenizer-v0` is a 49,152-token Hugging Face Rust BPE + Metaspace artifact for five model tags: `eng_Latn`, `zho_Hans`, `zho_Hant`, `jpn_Jpan`, and `kor_Hang`.
 - **Archived workflows**: Plans remain under `work/plan/`; completed todos, task sets, and review records are under `work/done/`. Narrative evidence belongs in the task and unified review documents; the CT2 workflow's single machine-readable record is `artifacts/ctranslate2/deployment-validation.json`.
-- **Active workflow**: `work/plan/mvp-model-training.md`, `work/todo/mvp-model-training.md`, and `work/task/mvp-model-training/`. TD-01 through TD-08 are completed, and TD-09 through TD-18 are pending. Corpus maturity is explicit: fixtures are test-only; D0 is a real-data distillation smoke corpus; M0 human train and D1 distilled data are MVP-level training corpora; scale/production corpora are out of scope. M0 contains 203,942 human train samples and carries known MASSIVE localization-quality warnings. D0 contains 2,263 accepted Hy-MT2 targets and remains immutable smoke evidence at `artifacts/model-training/td08-distilled-data.json`; it may not enter TD-15/TD-16. D1 contains 39,941 accepted targets from 40,032 candidates across all 18 routes, including 2,304 byte-verified D0-prefix inputs rebound to the D1 contract; its complete evidence is `artifacts/model-training/td08-d1-distilled-data.json`, and it is the only teacher corpus eligible for TD-15. Do not reopen or mutate the frozen tokenizer or reinterpret the random deployment checkpoint as a trained model.
+- **Active workflow**: `work/plan/mvp-model-training.md`, `work/todo/mvp-model-training.md`, and `work/task/mvp-model-training/`. A 2026-07-16 scope correction expanded the required capability from nine relations/18 routes to ten relations/20 routes. TD-01 and TD-02 are `in_progress`; TD-03 through TD-05 and TD-07/TD-08 are pending amendment work; TD-06 remains completed; TD-09 through TD-18 remain pending. The committed M0 v1 (203,942 human train), D0 v1 (2,263 accepted smoke targets), and D1 v1 (39,941 accepted targets from 40,032 candidates across 18 routes) remain immutable evidence, but only a new human + distilled 20-route composite may enter formal downstream training. The frozen tokenizer already has both Chinese tags and must not be rebuilt for this change. Do not reinterpret v1 artifacts or the random deployment checkpoint as the new completed model/data contract.
 
 ## Testing
 

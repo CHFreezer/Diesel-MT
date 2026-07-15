@@ -6,6 +6,7 @@
 
 - plan：[MVP model training](../plan/mvp-model-training.md)
 - task 索引：[MVP model training tasks](../task/mvp-model-training/index.md)
+- 中文脚本/locale 能力合同：[20 路范围修正](../../docs/chinese-locale-capability-contract.md)
 - 项目语言与方向口径：[README](../../README.md#语言与方向口径)
 - 冻结 tokenizer：[mvp-tokenizer-v0](../../artifacts/tokenizers/mvp-tokenizer-v0/)
 - tokenizer review：[mvp tokenizer review](../done/review/mvp-tokenizer.md)
@@ -20,15 +21,15 @@
 ## 固定口径
 
 - 产品语言为中文、英文、日文、韩文 4 种；模型标签为 `eng_Latn`、`zho_Hans`、`zho_Hant`、`jpn_Jpan`、`kor_Hang` 5 个。
-- MVP 数据必须覆盖 9 组无向平行语料；交换 source/target 后形成 18 个有向训练路由，并汇总为 12 个产品翻译方向。
-- `zho_Hans <-> zho_Hant` 是简繁转换，不进入训练、评测或部署验收。
-- 繁体可以少于简体，但必须有原生繁体样本和独立 dev/test；转换数据只能作为显式标注的增强数据，不能替代原生繁体验收。
+- 模型与 teacher 名称继续使用 `zho_Hans -> Chinese`、`zho_Hant -> Traditional Chinese`，本次扩展不增加 locale-specific 名称或控制标签。
+- MVP 数据必须覆盖 10 组无向模型关系和 20 个有向训练路由：18 路跨语言翻译，以及 `zho_Hans <-> zho_Hant` 两路中文内部转换。
+- 产品层仍为 12 个跨语言翻译方向，另有 2 个简繁中文互转操作。繁体必须有原生 `zho_Hant` 样本和独立 dev/test；当前来源 locale `zh-TW` 只作为 provenance，工具转换数据不能替代原生验收。
 - student 只使用 49,152 词表的 `mvp_e8_d2_v48k`，从零初始化，不加载任何第三方模型权重或随机部署验证 checkpoint。
 - teacher 固定为 `configs/hymt2_teacher_selection.yaml` 中的官方 Hy-MT2 7B GGUF Q8_0 + llama.cpp CUDA，只生成离散 UTF-8 译文；teacher 不进入 student 训练图，student 不继承其 tokenizer、权重或架构。
 - 正式蒸馏 corpus 只从 train source 生成；仅允许在冻结的有界 human dev 子集上运行 teacher 以校准 prompt/decode，校准输出不得进入 student train，test 不得送入 teacher。
 - test 只在最终候选冻结后执行一次正式评测；训练配置和 checkpoint 选择只使用 train/dev。
-- 成熟度与版本号分开：fixture 只用于测试，smoke 只证明真实流程正确，mvp corpus 才允许产生训练/A-B 结论。M0 human train 属于 mvp；D0 属于 smoke；已完成的 D1 是 distilled mvp。
-- D1 固定每路由 2,224 个候选（40,032 总计），每路由至少 2,000 个 accepted、总 accepted 至少 36,000；D0 的 2,263 个 accepted 不能替代 D1 进入 TD-15/TD-16。
+- 成熟度与版本号分开：M0/D1 v1 分别是有效的 18 路 human/distilled MVP，D0 v1 属于 smoke；三者都保持不可变，但不能单独代表完整 20 路能力。
+- D1 v1 保留 39,941 条 accepted。新增两路各固定 2,224 个候选、accepted 至少 2,000；只有引用 v1 与 addendum 的 20 路 composite 可进入 TD-15/TD-16。
 
 ## 依赖关系
 
@@ -47,7 +48,7 @@ TD-08 + TD-12 + TD-13 + TD-14 + TD-15 -> TD-16
 TD-16 -> TD-17 -> TD-18
 ```
 
-TD-09 至 TD-11 可在人类数据链构建期间先用 TD-01 的 schema fixture 开发，但涉及全路由和阶段验收时必须消费 TD-05 冻结的 fixture/manifest。M0 在 TD-05 与 TD-09 都完成后关闭；D0 smoke 已完成但不关闭 TD-08，TD-08 只有在 D1 distilled mvp 完成后才关闭；M1 在 TD-12 完成后关闭；M2 在 TD-16 完成后关闭；M3 在 TD-17 完成后关闭。TD-18 负责整个 todo 的统一回归与 review 准备。
+TD-09 至 TD-11 可使用 schema fixture 开发，但当前不得启动正式全路由验收。TD-01/TD-02 因 20 路范围修正退回 `in_progress`；TD-03～TD-05、TD-07/TD-08 退回 `pending`；TD-06 保持 `completed`。完整 human/distilled composite 发布后才能继续 TD-09 及正式下游门槛。M1 在 TD-12 完成后关闭；M2 在 TD-16 完成后关闭；M3 在 TD-17 完成后关闭。
 
 ## 待办
 
@@ -56,30 +57,34 @@ TD-09 至 TD-11 可在人类数据链构建期间先用 TD-01 的 schema fixture
 依赖：无。
 
 - [x] 定义规范平行样本 schema，至少包含 `sample_id`、`sample_group_id`、`source_id`、`source_version`、`license`、`src_lang`、`tgt_lang`、`source_text`、`target_text`、`split`；teacher/转换增强样本增加生成 provenance。
-- [x] 固定 5 个允许标签、9 组允许的无向标签对、18 个有向路由，并明确拒绝同标签路由、简繁互转和 allowlist 外标签。
+- [x] 冻结并完成 5 标签、9 组/18 路 v1 合同与非法路由测试，保留其历史 artifact 身份。
 - [x] 固定模型数据目录：`data/model/raw/`、`cache/`、`interim/`、`corpus/mvp/`、`reports/`；所有大体积数据默认 Git-ignored，只提交 schema、配置、lock、fixture 和精简报告。
 - [x] 固定训练运行目录和发布边界：热 checkpoint/staging 根可配置到高吞吐存储，完整校验后发布 Git-ignored HF/CT2 产物；提交内只保存配置、manifest、指标和文档。
 - [x] 定义 `configs/mvp_model_data.yaml`、`configs/mvp_e8_d2_v48k.yaml` 的字段、schema version、稳定序列化和配置哈希规则。
 - [x] 为 schema、方向矩阵、路径边界、未知字段、缺失字段和非法路由增加配置级自动化测试。
+- [ ] 版本化扩展 allowlist 为 10 组/20 路，使 `zho_Hans <-> zho_Hant` 两路合法，同标签和 allowlist 外路由继续 fail-fast；不得修改 v1 runtime manifest。
+- [ ] 保持 teacher 名称 `Chinese` / `Traditional Chinese` 和既有 tokenizer token ID，不新增 locale-specific 标签；更新 config schema、规范哈希和 20 路 fixture/反例测试。
 
 产物：数据/训练配置骨架、目录与 Git 边界、schema/方向矩阵测试。
 
-完成条件：同一配置可以唯一确定允许的数据形态、模型身份和产物位置；未触碰冻结 tokenizer。
+完成条件：新版本配置可以唯一确定 10 组/20 路数据形态、模型身份和产物位置；v1 身份与冻结 tokenizer 均未被改写。
 
 ### TD-02 调研并锁定有界平行数据来源
 
 依赖：TD-01。
 
-- [x] 针对 9 组无向标签对调研可下载版本、语言/脚本标注、许可证、数据卡、对齐质量、规模和获取方式，优先使用许可清晰的人类平行语料。
+- [x] 完成 9 组 v1 来源调研和锁定。
 - [x] 对繁体相关的 3 组语料逐一确认繁体侧为原生 `zho_Hant`，不把简转繁、粤语 `yue_Hant` 或脚本未知的中文静默归类为普通话繁体。
 - [x] 若某组缺少足够的人类平行语料，设计有界 synthetic 补充方案：必须保留原生文本侧、teacher 身份、prompt、解码参数和生成 manifest；不得因此引入大规模蒸馏范围。
 - [x] 为每组确定 MVP 的 train/dev/test 最小样本预算、扫描上限和下载上限；繁体可低于简体，但 dev/test 不得为空。
 - [x] 生成来源 registry 和 `configs/mvp_model_data.lock.json`，锁定 URI、版本、文件大小、SHA-256、许可证和逻辑处理顺序。
 - [x] 记录许可证不兼容、用途不明或无法稳定版本化的候选并排除，不以“能下载”代替可用性结论。
+- [ ] 将现有 MASSIVE `zh-CN`/`zh-TW` 对齐文件登记为 `zho_Hans--zho_Hant` 第 10 组；确认 train/dev/test 原始上限为 11,514/2,033/2,974，无需新下载。
+- [ ] 发布绑定新 config hash 的 source lock/覆盖矩阵，保留相同归档与成员字节身份，并记录第 10 组是人工 multiparallel localization 而非工具转换。
 
-产物：`docs/model-training-dataset-research.md`、数据 registry、source lock 和 9 组覆盖矩阵。
+产物：更新后的数据 registry、source lock 和 10 组覆盖矩阵。
 
-完成条件：9 组语料均有明确、可审计的 MVP 来源方案；任何未关闭的来源或许可缺口都会阻塞 TD-03 正式构建。
+完成条件：10 组关系均有明确、可审计的 MVP 来源与锁定身份；任何未关闭的 config/lock 或许可缺口都会阻塞 TD-03 正式构建。
 
 ### TD-03 实现确定性平行数据构建管线
 
@@ -92,10 +97,12 @@ TD-09 至 TD-11 可在人类数据链构建期间先用 TD-01 的 schema fixture
 - [x] 对原生、人工平行、teacher synthetic 和脚本转换增强数据使用不同 provenance，不允许清洗过程丢失来源类型。
 - [x] 输出规范 UTF-8/LF JSONL、拒绝原因统计、来源/标签对计数和原子 manifest；manifest 最后发布且逐文件记录大小/SHA-256。
 - [x] 用小型 fixture 覆盖所有来源适配器、错误路径、缓存损坏、网络失败和半成品清理。
+- [ ] 在新身份下让每个 MASSIVE alignment group 生成第 10 个 `zho_Hans--zho_Hant` human relation，更新 pair/潜在 route 统计与 fixture；原 v1 corpus 保持不变。
+- [ ] 从已校验缓存完成新版本离线构建与 resume 复验，发布独立 addendum 或 10 组 canonical corpus/manifest，不覆盖 v1 路径身份。
 
 产物：模型数据构建 CLI/核心模块、fixture、manifest 和自动化测试。
 
-完成条件：从已锁定缓存可完全离线重建相同规范样本；失败不会发布可被误认为完成的 corpus。
+完成条件：从已锁定缓存可完全离线重建 10 组规范样本；失败不会发布可被误认为完成的 corpus，v1 仍可按原哈希审计。
 
 ### TD-04 实现分组切分、去重与泄漏防护
 
@@ -105,29 +112,33 @@ TD-09 至 TD-11 可在人类数据链构建期间先用 TD-01 的 schema fixture
 - [x] 在规范文本、source、target 和 pair 层执行 exact 去重；对 train/dev/test 执行跨集合 near-duplicate/污染检查并记录参数与命中原因。
 - [x] split 使用稳定 group hash 和版本化比例生成，禁止逐行随机拆分；test 身份在数据构建阶段冻结。
 - [x] 与 tokenizer corpus/holdout、正式 MT 评测集和同一数据源重复版本进行可追溯污染检查，不把 tokenizer holdout 当成模型质量 test。
-- [x] 在 split 完成后扩展正反方向，验证 18 个路由中任一方向都不会把对应反向关系泄漏到其他 split。
+- [x] v1 在 split 后扩展并验证 18 路反向隔离。
 - [x] 验证 worker 数、缓存命中、输入完成顺序和 fresh/resume 路径不会改变 corpus、split 或 manifest 字节。
 - [x] 增加反向泄漏、跨 split 近重复、派生样本、错误 group 和非确定性顺序的失败测试。
+- [ ] 将第 10 组绑定到既有 alignment group/component，在 split 后扩展为两条新增路线，验证 20 路反向、exact/near 和污染隔离。
+- [ ] 以新的固定路由顺序发布 20 路 addendum/composite manifest，并证明 worker/cache/fresh/resume 不改变字节身份；v1 finalized manifest 不变。
 
 产物：确定性 split/dedup/leakage 模块、污染报告和自动化测试。
 
-完成条件：train/dev/test 在 group 层相互隔离；两次独立构建的规范 corpus 与确定性 manifest 字节级一致。
+完成条件：20 路 train/dev/test 在 group 层相互隔离；两次独立构建的规范 corpus 与确定性 manifest 字节级一致。
 
 ### TD-05 构建并验收 M0 数据集
 
 依赖：TD-04。
 
-- [x] 建立 `tests/fixtures/model_data/` 微型数据，9 组无向标签对均有样本，扩展后完整覆盖 18 个有向路由及非法路由反例。
-- [x] 构建有界真实 MVP corpus，确认 5 个标签桶、9 组无向语料和 18 个有向路由均非空；简体、繁体分别具有独立 dev/test。
+- [x] 建立并验收 9 组/18 路 v1 fixture 与 M0 v1 corpus，保留 203,942 条 human train 和既有证据。
 - [x] 固定方向采样策略，报告原始样本数、过滤后样本数、正反扩展数、训练权重和有效曝光；禁止低资源方向无界重复。
 - [x] 报告每个标签对/split 的来源占比、原生/synthetic/增强占比、长度与长度比分布、脚本合规率和过滤原因。
 - [x] 对每组执行分层人工抽检：至少检查 20 条 accepted train、10 条 accepted dev/test 和 20 条 rejected（不足时检查全部），覆盖长度边界、繁体与混合脚本样本，并冻结精简审查记录。
 - [x] 使用不同 worker/cache 状态完成两次独立构建，逐文件比较 corpus、manifest 和确定性报告 SHA-256。
 - [x] 生成 M0 验收报告；任何标签对为空、繁体 dev/test 缺失、泄漏、来源不明或复现失败都阻塞训练数据发布。
+- [ ] 扩展 fixture 到 10 组/20 路，并为两条简繁互转路线增加合法/非法、共享汉字、词汇差异和 split 泄漏反例。
+- [ ] 正式构建并验收第 10 组，逐 split 报告数量、脚本、长度、语义错位和 provenance；按同一抽检预算审查 accepted/rejected。
+- [ ] 完成不同 cache/worker 的真实规模双构建并发布 human addendum + 20 路 composite manifest；只有 composite 可供 TD-09/TD-15/TD-16 使用。
 
-产物：有界 MVP 模型 corpus、18 路由 fixture、质量/覆盖/复现报告和完成 manifest。
+产物：不可变 M0 v1、中文内部 human addendum、20 路 fixture/composite、质量/覆盖/复现报告和完成 manifest。
 
-完成条件：plan 的 M0 数据与编码前置条件中“数据”部分全部满足，数据集被标记为可供训练链消费。
+完成条件：plan 的 10 组/20 路 M0 数据门槛全部满足；v1 与 addendum 身份可分别审计，只有 composite 被标记为可供完整训练链消费。
 
 ### TD-06 锁定并验证 Hy-MT2 7B teacher 运行时
 
@@ -155,44 +166,51 @@ TD-09 至 TD-11 可在人类数据链构建期间先用 TD-01 的 schema fixture
 
 依赖：TD-05、TD-06。
 
-- [x] 固定语言名称映射：`zho_Hans -> Chinese`、`zho_Hant -> Traditional Chinese`、`eng_Latn -> English`、`jpn_Jpan -> Japanese`、`kor_Hang -> Korean`；简体/繁体输出分别执行脚本合规检查。
+- [x] 为 18 路 v1 固定语言名称映射：`zho_Hans -> Chinese`、`zho_Hant -> Traditional Chinese`、`eng_Latn -> English`、`jpn_Jpan -> Japanese`、`kor_Hang -> Korean`；简体/繁体输出分别执行脚本合规检查。
 - [x] 以官方“只输出翻译结果、不要额外解释”模板为起点，固定 prompt version、chat template、是否使用 system prompt、source/target 名称语言和输入分隔方式。
 - [x] 在冻结的人类 dev/reference 小样本上比较 greedy/确定性解码与官方推荐采样参数，逐路由报告 chrF/SacreBLEU、脚本合规、额外解释、source copy、空输出和长度比。
 - [x] 在查看完整 train 输出前选择唯一规范 decode profile；若采样模式无法跨 batch/resume 稳定重放，则不得作为规范 profile。
-- [x] 为 18 个路由分别冻结最大输入/输出长度、stop 条件和异常阈值，防止某一路由用总体平均掩盖失败。
+- [x] 为 18 个 v1 路由分别冻结最大输入/输出长度、stop 条件和异常阈值，防止某一路由用总体平均掩盖失败。
 - [x] 对 prompt echo、额外解释、错语言/错脚本、繁体退化为简体、截断、重复、占位符损坏和 source copy 建立正反例测试。
 - [x] 保存逐样本 teacher raw output 与 reference 对照；不得将 dev teacher output 混入 student train。
+- [ ] 保持 `Chinese` / `Traditional Chinese` 名称和既有 prompt/decode，不增加 locale-specific prompt；在冻结 human dev 上校准 `zho_Hans -> zho_Hant` 与反方向。
+- [ ] 为新增两路冻结长度、stop、异常阈值和路线专用 source-copy/脚本规则；共享汉字、数字、缩写、专名和合法不变短句不得被通用 source-copy 规则误杀。
+- [ ] 每路完成固定样本质量指标、人工检查与精确 replay；新 profile/addendum 身份不得回写 18 路 v1 校准报告。
 
-产物：teacher 语言映射、prompt/decode 配置、18 路由校准报告和输出过滤测试。
+产物：不可变 18 路 v1 校准、两条新增路线的校准 addendum、路线专用过滤测试和 20 路组合校准身份。
 
-完成条件：18 个路由都有通过预设质量/格式门槛的唯一、可重放 teacher profile；失败路由阻塞 TD-08。
+完成条件：20 个路由都有通过预设质量/格式门槛的唯一、可重放 teacher profile；任一新增路线失败都阻塞 TD-08。
 
-完成记录：TD-07 于 2026-07-15 完成。216 条冻结 dev 样本覆盖 18 路由；greedy 宏观 chrF 28.615981、char-SacreBLEU 33.923799、接受率 0.995370、脚本合规率 1.0，且18路由无失败项。官方采样 chrF 仅高 0.014524，未达到 +2.0 切换门槛；两个 profile 的36条独立 replay 均逐字一致，最终冻结 `greedy-v1`，test 从未读取。
+v1 完成记录：TD-07 于 2026-07-15 完成 18 路校准。216 条冻结 dev 样本覆盖 18 路由；greedy 宏观 chrF 28.615981、char-SacreBLEU 33.923799、接受率 0.995370、脚本合规率 1.0，且 18 路无失败项。官方采样 chrF 仅高 0.014524，未达到 +2.0 切换门槛；两个 profile 的 36 条独立 replay 均逐字一致，最终冻结 `greedy-v1`，test 从未读取。该记录不包含新增两路。
 
 ### TD-08 生成 D0 smoke 并验收 D1 最小可用蒸馏数据
 
 依赖：TD-05、TD-07。
 
-- [x] 实现 `scripts/generate_teacher_data.py`，只读取冻结 train source/`sample_group_id`，显式拒绝 dev/test，并按 18 个路由生成离散 UTF-8 teacher targets。
+- [x] 实现 v1 `scripts/generate_teacher_data.py`，只读取冻结 train source/`sample_group_id`，显式拒绝 dev/test，并按 18 个跨语言路由生成离散 UTF-8 teacher targets。
 - [x] 支持 dry-run、确定性分片、原子 shard、逐样本 checkpoint/resume、缓存校验和中断恢复；worker/batch/resume 差异不得改变规范输出身份。
 - [x] 每条记录保存 teacher revision/hash、运行后端、prompt version、decode config/seed、输入 sample/group ID、raw response、normalized target、raw/normalized hash 和生成 run manifest。
 - [x] raw response 与 accepted target 分开保存；过滤空输出、额外解释/prompt echo、source copy、错语言/错脚本、异常长度、截断、重复和占位符损坏，并保留逐原因拒绝计数。
 - [x] 每个路由至少人工检查 20 条 accepted 和 20 条 rejected（不足时全部），繁体目标额外抽检简繁混淆、地区词和共享汉字误判。
-- [x] 输出 18 路由的输入数、成功数、拒绝率、重试率、长度/脚本/来源分布和 teacher 吞吐；任一路由低于冻结通过门槛时停止发布。
+- [x] 输出 v1 18 路的输入数、成功数、拒绝率、重试率、长度/脚本/来源分布和 teacher 吞吐；任一路由低于冻结通过门槛时停止发布。
 - [x] 使用相同 artifact/profile 对固定分片独立重放，验证 raw/normalized 输出和 manifest 身份符合 TD-07 的复现契约。
 - [x] 发布有界 distilled train corpus 和完成 manifest；dev/test 继续只保留冻结的人类参考，teacher 从未消费 test。
 - [x] 冻结独立 D1 配置/manifest 身份：沿用 D0 teacher/prompt/decode/filter，候选 source 为 D0 的确定性超集；每路由 2,224 个、总计 40,032，禁止覆盖 D0 目录或复用 D0 的 complete 身份冒充 D1。
 - [x] 生成并过滤 D1；每路由 accepted 至少 2,000、总 accepted 至少 36,000，且接受率、脚本合规、重试、长度、source-copy、截断和 provenance 继续通过冻结门槛。
 - [x] 对 D1 独立执行逐路由人工抽检、繁体/共享汉字专项检查和固定分片精确 replay；D0 的审查与 replay 只能作为管线先验证据，不能替代 D1 运行证据。
-- [x] 原子发布 D1 raw/accepted/filtered、质量报告、审查证明和 complete manifest；只有 D1 accepted 与 M0 human reference 的同 source/group 交集可供 TD-15 消费。
+- [x] 原子发布 D1 v1 raw/accepted/filtered、质量报告、审查证明和 complete manifest；该 v1 曾满足 18 路门槛，但范围修正后不再单独具备 TD-15 输入资格。
+- [ ] 从新的 human composite train-only source 为 `zho_Hans -> zho_Hant` 与反方向各确定性选择 2,224 个候选；保持既有 `Chinese` / `Traditional Chinese` prompt，不修改或重放无关 18 路。
+- [ ] 对两条新增路线分别生成、过滤并达到至少 2,000 accepted；使用路线专用 source-copy、脚本、词汇差异、语义/实体/数字/占位符保持门槛。
+- [ ] 每路独立完成 accepted/rejected 人工审查与固定分片精确 replay，发布 raw/accepted/filtered、质量报告和 manifest-last addendum。
+- [ ] 发布引用 D1 v1 与新增两路 addendum 的 20 路 composite manifest；验证 v1 的 manifest/evidence/accepted 哈希保持不变，只有 composite 可供 TD-15 使用。
 
-产物：D0 smoke 证据、D1 MVP 级 Hy-MT2 7B raw/accepted/filtered 数据、生成器、18 路由质量报告和完整 provenance manifest。
+产物：不可变 D0/D1 v1、两路简繁互转 distilled addendum、20 路 composite、路线质量/人工审查/replay 和完整 provenance manifest。
 
-完成条件：D0 smoke 与 D1 mvp 门槛均满足；D1 每路由 accepted 至少 2,000 且总计至少 36,000，只有通过质量、复现、许可/provenance 和 test 隔离验收的 D1 teacher targets 才能进入 TD-15。
+完成条件：D0/D1 v1 证据保持有效，两条新增路线各至少 2,000 accepted，20 路 composite 通过质量、复现、许可/provenance 和 test 隔离验收后才能进入 TD-15。
 
 阶段记录：D0 smoke 于 2026-07-15 完成。冻结 train 按 18 路由各生成 128 条，共 2,304 条；人工全检 381 条分层队列并剔除 39 条语义错误，受限恢复 4 条日中共享汉字 `source_copy` 误杀。最终接受 2,263 条、过滤 41 条，最低路由接受率 0.960938，全部路由脚本合规率 1.0、重试率 0、质量失败项为空。36 条独立 replay 的 raw/normalized 输出均精确一致；D0 complete manifest SHA-256 为 `2e0beb51e0b5020f7248da4d0f7bdd544bb0274c29c0efc22affa9d83ff1639e`，只作为 immutable smoke 证据。
 
-阶段记录：D1 mvp 于 2026-07-15 完成。独立配置从冻结 M0 train 选择 18 路由各 2,224 条，共 40,032 条，并逐字节验证后复用 D0 的每路由 128 条前缀（2,304 条）；其余 37,728 条由同一 GGUF Q8_0 teacher 新生成，生成墙钟 18,382.615340 秒。人工逐条检查 444 条队列，剔除 52 条自动接受的语义/实体/数字/意图错误，受限恢复 31 条有效共享汉字、数字、缩写和专名的 `source_copy` 误杀。最终接受 39,941 条、过滤 91 条；逐路由 accepted 为 2,211～2,223，最低接受率 0.994155、最低脚本合规率 0.999101、重试率全部为 0、质量失败项为空。独立重载 replay 的 36 条 raw/normalized 输出全部精确一致，dev/test 从未被 teacher 消费。D1 generation contract SHA-256 为 `2e54be92d270af3acac76251f25e31987a876f3e098dfb7bbbc73c696a470b1a`，complete manifest SHA-256 为 `9de9a4c251504c9ee157bec2dc4eefea8acd760d808672c15704f5c884b9ff2c`，tracked evidence 为 `artifacts/model-training/td08-d1-distilled-data.json`。重复 finalize 后 manifest/evidence/accepted/filtered/quality/review/replay 七类产物哈希全部不变；蒸馏专项 `26 passed`，全量离线回归 `143 passed`。TD-08 已重新关闭为 `completed`，TD-09 仍未启动。
+阶段记录：D1 v1 于 2026-07-15 完成。独立配置从冻结 M0 train 选择 18 路由各 2,224 条，共 40,032 条，并逐字节验证后复用 D0 的每路由 128 条前缀（2,304 条）；其余 37,728 条由同一 GGUF Q8_0 teacher 新生成，生成墙钟 18,382.615340 秒。人工逐条检查 444 条队列，剔除 52 条自动接受的语义/实体/数字/意图错误，受限恢复 31 条有效共享汉字、数字、缩写和专名的 `source_copy` 误杀。最终接受 39,941 条、过滤 91 条；逐路由 accepted 为 2,211～2,223，最低接受率 0.994155、最低脚本合规率 0.999101、重试率全部为 0、质量失败项为空。独立重载 replay 的 36 条 raw/normalized 输出全部精确一致，dev/test 从未被 teacher 消费。D1 generation contract SHA-256 为 `2e54be92d270af3acac76251f25e31987a876f3e098dfb7bbbc73c696a470b1a`，complete manifest SHA-256 为 `9de9a4c251504c9ee157bec2dc4eefea8acd760d808672c15704f5c884b9ff2c`，tracked evidence 为 `artifacts/model-training/td08-d1-distilled-data.json`。重复 finalize 后七类产物哈希全部不变；蒸馏专项 `26 passed`，全量离线回归 `143 passed`。2026-07-16 因新增两条简繁互转路线，TD-08 从 v1 `completed` 退回完整范围 `pending`；TD-09 仍未启动。
 
 ### TD-09 实现编码、collator 与 student 构造
 
@@ -201,14 +219,14 @@ TD-09 至 TD-11 可在人类数据链构建期间先用 TD-01 的 schema fixture
 - [ ] 只从 `artifacts/tokenizers/mvp-tokenizer-v0/` 离线加载 tokenizer，校验冻结 manifest SHA-256、49,152 稠密 ID、五个语言 token 和 fast backend。
 - [ ] 实现 source 编码与 target labels：source language token/`</s>`、target language token/`</s>`、padding mask 和 `-100` loss ignore index 均符合锁定 Transformers 语义。
 - [ ] 明确 source/target 最大长度、截断和丢弃策略，逐标签路由累计原始/截断 token 数；不得静默截断而不报告。
-- [ ] 实现方向感知 collator，拒绝空文本、同标签、简繁互转、allowlist 外标签、缺失目标 token 和词表越界。
+- [ ] 实现方向感知 collator，拒绝空文本、同标签、allowlist 外标签、缺失目标 token 和词表越界；两条简繁互转路线必须作为合法方向通过。
 - [ ] 从配置创建 `mvp_e8_d2_v48k`，断言 shared/encoder/decoder embedding、`lm_head`、特殊 token、decoder start/generation config 与 tokenizer 完整一致且权重绑定。
 - [ ] 固定初始化种子并记录 state dict 身份；不得加载微型部署 checkpoint 或任何第三方权重。
-- [ ] 使用 18 路由 fixture 完成 CPU tokenize/collate/forward/backward 冒烟，并增加保存/离线重载测试。
+- [ ] 使用 20 路由 fixture 完成 CPU tokenize/collate/forward/backward 冒烟，并增加保存/离线重载测试。
 
 产物：模型配置、数据集/编码/collator 模块、student builder 和自动化测试。
 
-完成条件：所有 18 个路由均能产生正确输入/labels 和有限 loss，模型身份与冻结 tokenizer 可追溯；与 TD-05 一起关闭 M0。
+完成条件：所有 20 个路由均能产生正确输入/labels 和有限 loss，模型身份与冻结 tokenizer 可追溯；与 TD-05 一起关闭 M0。
 
 ### TD-10 实现训练循环、采样与运行记录
 
@@ -248,9 +266,9 @@ TD-09 至 TD-11 可在人类数据链构建期间先用 TD-01 的 schema fixture
 
 依赖：TD-05、TD-11。
 
-- [ ] 使用正式 `mvp_e8_d2_v48k` 和固定 18 路由微型 fixture 建立随机初始化基线，在看训练结果前冻结最大 step/token 预算、解码配置和验收阈值。
+- [ ] 使用正式 `mvp_e8_d2_v48k` 和固定 20 路由微型 fixture 建立随机初始化基线，在看训练结果前冻结最大 step/token 预算、解码配置和验收阈值。
 - [ ] 在冻结预算内将 fixture mean loss 降至初始基线的 10% 以下；每个有向路由至少一条固定记忆样例在 greedy/固定解码下得到正确目标语言和规范化 exact-match 目标文本。
-- [ ] 确认 18 个路由均被采样，任何路由饿死、错误目标语言、空输出或 source copy 异常都视为失败。
+- [ ] 确认 20 个路由均被采样，任何路由饿死、错误目标语言或空输出都视为失败；source-copy 按跨语言/简繁互转各自合同判定。
 - [ ] 从中途 checkpoint 恢复并完成同样训练预算，与连续运行比较最终 step、采样、loss、权重和固定生成结果。
 - [ ] 完成最终 HF checkpoint 的离线保存/重载，验证 tokenizer 未被修改、模型词表仍为 49,152 且 generation config 完整。
 - [ ] 记录显存峰值、吞吐、耗时、loss 曲线和所有固定样例，不把过拟合结果描述为真实翻译质量。
@@ -266,14 +284,14 @@ TD-09 至 TD-11 可在人类数据链构建期间先用 TD-01 的 schema fixture
 - [ ] 实现 `scripts/evaluate_mvp_model.py`，离线加载数据、tokenizer 和 HF checkpoint；明确 dev/test 入口并默认拒绝在训练过程中读取 test。
 - [ ] 锁定 SacreBLEU/chrF 依赖、tokenization/signature、文本规范和生成参数；记录可复现版本与命令。
 - [ ] 报告 loss、SacreBLEU、chrF、目标脚本合规率、空输出率、source-copy 率、长度比、截断率和固定样例。
-- [ ] 先按 18 个标签路由输出明细，再按 12 个产品方向汇总；中文汇总必须同时保留 `zho_Hans` 与 `zho_Hant` 明细和样本权重。
+- [ ] 先按 20 个标签路由输出明细，再汇总 12 个跨语言产品方向并单列 2 个简繁互转结果；中文汇总必须保留 `zho_Hans` 与 `zho_Hant` 明细和样本权重。
 - [ ] 对随机初始化、M1 过拟合和后续 M2 候选使用相同评测协议；禁止用训练内样本冒充 dev/test 质量。
 - [ ] 将逐样本输出、汇总 JSON、Markdown 报告和配置/模型/数据哈希关联，避免只保留不可追溯的终端文本。
-- [ ] 增加指标计算、脚本合规、18->12 汇总、空 split、错标签和 test 访问边界测试。
+- [ ] 增加指标计算、脚本合规、20 路到 12+2 汇总、空 split、错标签和 test 访问边界测试。
 
 产物：独立评测 CLI、指标/汇总模块、固定协议和自动化测试。
 
-完成条件：任意合法 checkpoint 可在相同数据和生成配置下得到可复现的 18 路由明细与 12 方向汇总。
+完成条件：任意合法 checkpoint 可在相同数据和生成配置下得到可复现的 20 路明细、12 个跨语言方向汇总与 2 个简繁互转结果。
 
 ### TD-14 基准测试并冻结可配置训练资源 profile
 
@@ -295,11 +313,11 @@ TD-09 至 TD-11 可在人类数据链构建期间先用 TD-01 的 schema fixture
 
 依赖：TD-05、TD-08、TD-13。
 
-- [ ] 只以 TD-08 D1 accepted teacher targets 与 TD-05 human references 的交集建立固定 A/B cohort；D0 smoke 明确禁止进入正式 A/B。teacher 生成失败或被过滤的 source/group 必须从两组同时排除，不得只给 distilled 组补样或回退 human target。
+- [ ] 只以 TD-08 的 20 路 distilled composite 与 TD-05 human composite 的 accepted 交集建立固定 A/B cohort；D0 或 D1 v1 单独禁止进入正式 A/B。teacher 失败/filtered source 必须从两组同时排除。
 - [ ] `human-only` 组对固定 cohort 使用人类 target，`distilled` 组对完全相同的 source/group ID 使用 Hy-MT2 7B teacher target；dev/test 两组都只使用冻结的人类参考。
 - [ ] 冻结两组相同的 student 初始 state-dict hash、source 样本顺序、路由权重、micro batch、梯度累积、optimizer/scheduler、最大 optimizer step 和 checkpoint/eval 频率。
 - [ ] 明确定义“等预算”为相同 source 曝光序列与 optimizer step 数；teacher target 与 human target 的长度差异单独报告，不得在看到结果后通过追加 step、样本或方向曝光补偿某一组。
-- [ ] 在训练前统计两组逐路由的样本数、source/target token、截断率、脚本合规和 target 差异，验证 18 个路由的 source 身份与曝光计划逐项一致。
+- [ ] 在训练前统计两组逐路由的样本数、source/target token、截断率、脚本合规和 target 差异，验证 20 个路由的 source 身份与曝光计划逐项一致。
 - [ ] 在配置中预先冻结 dev 选择规则与 tie-break：聚合 chrF/SacreBLEU、dev loss、目标脚本合规、空输出/source-copy 和逐路由最大允许退化均需有明确优先级或阈值；`zho_Hans` 与 `zho_Hant` 分开判定。
 - [ ] 生成两份不可变训练 recipe/manifest 和差异报告；除 target 文本及其 provenance/hash 外，任何影响优化预算的字段不同都应使 A/B 校验失败。
 - [ ] 用两组 recipe 分别完成短 dry-run，验证采样序列、初始权重、step 边界和评测入口一致，且训练代码无法访问 test。
@@ -318,7 +336,7 @@ TD-09 至 TD-11 可在人类数据链构建期间先用 TD-01 的 schema fixture
 - [ ] 监控 NaN/Inf、OOM、方向曝光、截断率、吞吐和显存；异常恢复必须从已验证 checkpoint 继续并记录中断边界。
 - [ ] 训练结束后分别冻结两组最佳 dev checkpoint，离线重载并验证权重、配置、tokenizer ID 空间和固定 dev 生成，再生成逐路由和聚合 A/B 对照。
 - [ ] 严格按冻结规则选出唯一最终候选；若 distilled 未优于 human-only 或触发任一路由退化红线，则选择 human-only、记录蒸馏负结果并停止扩大 teacher 生成规模。
-- [ ] 唯一候选冻结后只对该候选运行一次正式 test，生成 18 路由明细、12 产品方向汇总及随机初始化基线对照；不得为了比较两组而提前或重复读取 test。
+- [ ] 唯一候选冻结后只对该候选运行一次正式 test，生成 20 路明细、12 个跨语言产品方向汇总、2 个简繁互转结果及随机初始化基线对照；不得为了比较两组而提前或重复读取 test。
 - [ ] 验证两组 train/dev loss 全程有限，最终 dev loss 均低于同协议的随机初始化基线；任一运行异常结束必须明确标为失败，不得用另一组的成功掩盖。
 - [ ] 明确记录空/弱方向、繁体差距和已知限制，不把“loss 下降”单独描述为可发布翻译质量。
 
@@ -333,7 +351,7 @@ TD-09 至 TD-11 可在人类数据链构建期间先用 TD-01 的 schema fixture
 - [ ] 将现有 CTranslate2 验证逻辑泛化到训练后 HF checkpoint，创建新的模型训练部署记录，不覆盖已归档的随机 checkpoint 验收 JSON。
 - [ ] 从本地候选生成 float32 诊断模型和 CPU INT8 验收模型，记录转换命令、版本、耗时、文件清单、大小和 SHA-256。
 - [ ] 逐 ID 校验 frozen tokenizer、HF embedding/`lm_head`、float32 CT2 和 INT8 CT2 的 49,152 项词表及特殊 token。
-- [ ] 对 18 个标签路由执行 source tokenize、`target_prefix`、去 prefix、decode 和固定样例推理；拒绝未知目标 token、错脚本、空输出和词表越界。
+- [ ] 对 20 个标签路由执行 source tokenize、`target_prefix`、去 prefix、decode 和固定样例推理；拒绝未知目标 token、错脚本、空输出和词表越界。
 - [ ] 在查看 INT8 结果前冻结允许的逐路由/汇总指标退化容差；使用 TD-13 固定协议比较 HF、CT2 float32 和 CT2 INT8 的 chrF/SacreBLEU、脚本合规与固定样例，量化差异必须分路由报告，超出容差则停止验收并诊断。
 - [ ] 记录 CPU 延迟、吞吐、compute type 和模型体积作为诊断值，不将单机短测宣称为生产性能。
 - [ ] 生成独立 `tokenizer/` + `model/` 离线包，在新进程、离线标志、socket guard 和 manifest 校验下完成端到端推理。
@@ -349,7 +367,7 @@ TD-09 至 TD-11 可在人类数据链构建期间先用 TD-01 的 schema fixture
 - [ ] 整理人类数据、teacher artifact/生成数据、A/B recipe、student 模型、训练、评测、checkpoint、CT2 和离线包的配置/manifest/hash 关系，生成单一可追溯索引。
 - [ ] 运行完整离线自动化测试和所有标记的慢速集成测试，记录命令、版本、测试数、耗时和结果；确认无运行产物或敏感/大体积数据被 Git 跟踪。
 - [ ] 从干净临时目录验证 fixture 数据构建、teacher 离线 fixture 生成/过滤、M1 短训练/恢复、A/B recipe 校验、评测和离线 CT2 冒烟可重复执行。
-- [ ] 更新 README、AGENTS、数据/训练/部署说明和已知限制；术语继续使用 4 产品语言、5 标签、9 组语料、18 路由、12 产品方向。
+- [ ] 更新 README、AGENTS、数据/训练/部署说明和已知限制；术语统一为 4 产品语言、5 标签、10 组关系、20 路、12 个跨语言方向 + 2 个简繁互转操作。
 - [ ] 为 TD-01 至 TD-17 补齐输入、输出、验证命令、产物位置和完成证据，不创建相互矛盾的独立报告。
 - [ ] 确认冻结 tokenizer 根哈希未变化，随机部署 checkpoint 未被描述为训练模型，M1 过拟合结果未被描述为真实质量。
 - [ ] 准备统一 review 检查表，覆盖 teacher remote-code/离线边界、蒸馏 provenance 与 A/B 公平性、数据许可/泄漏、恢复正确性、质量边界、量化差异和部署风险。
@@ -362,12 +380,12 @@ TD-09 至 TD-11 可在人类数据链构建期间先用 TD-01 的 schema fixture
 
 - [ ] TD-01 至 TD-18 全部完成，M0、D0 smoke、D1 distilled mvp、M1、M2、M3 阶段门槛依次通过。
 - [ ] `mvp-tokenizer-v0` 冻结根保持 `eb79ae22f523f1d9c9fcf75b80f2b322e3c2882a8fddb7545b5933dd4053fa7f`，模型全链词表为 49,152 且 ID 顺序一致。
-- [ ] MVP 数据覆盖 5 个标签桶、9 组无向平行语料和 18 个有向路由；简体、繁体分别有独立 dev/test，无 train/dev/test 泄漏。
-- [ ] 锁定的 Hy-MT2 7B teacher 可离线重载并按固定 prompt/decode 为 18 个 train 路由生成可审计的离散译文；D0 smoke 与达到每路由至少 2,000 accepted 的 D1 mvp 均有完整 raw/accepted/provenance，teacher 未消费 test。
+- [ ] MVP 数据覆盖 5 个标签桶、10 组无向模型关系和 20 个有向路由；简体、繁体分别有独立 dev/test，无 train/dev/test 泄漏。
+- [ ] 锁定的 Hy-MT2 7B teacher 可离线重载并按固定 `Chinese` / `Traditional Chinese` prompt/decode 为 20 个 train 路由生成可审计的离散译文；v1 与新增两路 addendum/composite 均有完整 raw/accepted/provenance，teacher 未消费 test。
 - [ ] M1 小样本过拟合、原子 checkpoint、故障拒绝和同环境恢复一致性通过。
 - [ ] `mvp_e8_d2_v48k` 完成人类 target 与 Hy-MT2 7B target 的等预算 M2 A/B；唯一候选只由冻结 dev 规则选择，若蒸馏无收益则记录负结果且不扩量，test 只执行一次正式评测。
-- [ ] 评测提供 18 路由明细和 12 产品方向汇总，简体/繁体不被合并均值掩盖。
-- [ ] 训练后 HF checkpoint 能离线重载并转换为 CT2 float32/CPU INT8，18 个路由全部完成离线推理回归。
+- [ ] 评测提供 20 路明细、12 个跨语言产品方向汇总与 2 个简繁互转结果，简体/繁体不被合并均值掩盖。
+- [ ] 训练后 HF checkpoint 能离线重载并转换为 CT2 float32/CPU INT8，20 个路由全部完成离线推理回归。
 - [ ] 完整测试、运行命令、版本、哈希、许可证、已知限制和失败恢复证据齐全。
 - [ ] 文档不宣称 MVP 已达到生产翻译质量，不把全量 teacher 生成/在线 logits 蒸馏、200M 训练或生产性能混入本 todo。
 

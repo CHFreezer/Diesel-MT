@@ -1,12 +1,12 @@
 # task TD-08: 生成 D0 smoke 并验收 D1 最小可用蒸馏数据
 
-状态：completed
+状态：pending（D0/D1 v1 已完成；等待两路 addendum 与 20 路 composite）
 
 依赖：TD-05、TD-07
 
 ## 目标
 
-使用锁定的 Hy-MT2 7B artifact 和唯一 prompt/decode profile，只对冻结 train source 生成覆盖 18 路由的离散 teacher targets：先以 D0 smoke 验证生成全链，再发布达到逐路由最低规模的 D1 distilled mvp corpus。
+保留覆盖 18 个跨语言路由的 D0/D1 v1，使用同一锁定 Hy-MT2 7B artifact 和既有 `Chinese` / `Traditional Chinese` prompt/decode，只对新增两条简繁互转 train source 生成 addendum，最终发布 20 路 distilled composite。
 
 ## 输入
 
@@ -17,35 +17,37 @@
 
 ## 原子边界
 
-本 task 只做离线 sequence-level 数据生成：不保存 logits/hidden states，不让 teacher 进入 student 训练图，不读取 test，也不启动 student 训练。D0 complete 只表示真实数据冒烟完成；只有 D1 达到每路由至少 2,000 accepted、总 accepted 至少 36,000，才允许关闭本 task 并供 TD-15 消费。
+本 task 只做离线 sequence-level 数据生成：不保存 logits/hidden states，不让 teacher 进入 student 训练图，不读取 test，也不启动 student 训练。D0 complete 只表示真实数据冒烟完成；D1 v1 的 18 路门槛已经通过，但只有新增两路各达到至少 2,000 accepted 并发布 20 路 composite，才允许重新关闭本 task 并供 TD-15 消费。
 
 ## 执行事项
 
-- 实现 `scripts/generate_teacher_data.py`，只接受冻结 train source/`sample_group_id`，显式拒绝 dev/test，并覆盖 18 路由。
+- 保留覆盖 18 路 v1 的 `scripts/generate_teacher_data.py` 行为，并版本化支持两条新增路线；始终只接受冻结 train source/`sample_group_id`，显式拒绝 dev/test。
 - 支持 dry-run、确定性分片、原子 shard、逐样本 checkpoint/resume、缓存校验和中断恢复；worker/batch/resume 不得改变规范输出身份。
 - 每条记录保存 teacher revision/hash、后端、prompt version、decode config/seed、输入 sample/group ID、raw response、normalized target 及哈希。
 - 分开保存 raw response 与 accepted target；按冻结规则过滤空输出、解释/echo、source copy、错语言/脚本、异常长度、截断、重复和占位符损坏。
 - 每路由至少人工检查 20 条 accepted 和 20 条 rejected，不足时全检；繁体额外检查简繁混淆、地区词和共享汉字误判。
-- 报告 18 路由输入/成功/拒绝/重试、长度、脚本、来源和吞吐；任一路由低于门槛即停止发布。
+- 保留 18 路 v1 报告；新增两路分别报告输入/成功/拒绝/重试、长度、脚本、来源和吞吐，任一路由低于门槛即停止发布。
 - 对固定分片独立重放，验证 raw/normalized 输出和 manifest 符合 TD-07 复现契约。
 - 原子发布有界 distilled train corpus 与 complete manifest；dev/test 继续只保留人类参考。
 - 冻结 D1 独立身份，沿用 D0 teacher/prompt/decode/filter，确定性选择 D0 source 的超集；每路由 2,224 个候选、总计 40,032，D1 不覆盖或改名复用 D0 artifact。
 - 生成、过滤并验收 D1：每路由 accepted 至少 2,000、总 accepted 至少 36,000，并独立完成逐路由人工抽检、繁体/共享汉字专项审查、精确 replay 和 manifest-last 发布。
+- 为 `zho_Hans -> zho_Hant` 与反方向各生成 2,224 个候选、至少接受 2,000 个；source-copy 采用路线专用规则，允许合法不变文本。
+- 独立完成人工审查、精确 replay 和 manifest-last addendum，再发布引用 D1 v1 与新增两路的 20 路 composite；不得覆盖 v1。
 
 ## 产物
 
 - `scripts/generate_teacher_data.py` 与生成/恢复测试。
 - Git-ignored raw/accepted/filtered teacher 数据。
-- 18 路由质量、人工抽检、重放和完整 provenance 报告。
+- 18 路 v1 与两路 addendum 的质量、人工抽检、重放和完整 provenance 报告。
 - D0 smoke 完成 manifest（已存在，保留不变）。
 - D1 mvp 独立 raw/accepted/filtered、质量报告、人工审查、replay 与完成 manifest（已完成）。
 
 ## 验收
 
-- plan 的 D0 smoke 与 D1 mvp 门槛全部满足，18 路由各有至少 2,000 条通过过滤的 D1 teacher targets。
+- D0/D1 v1 证据保持有效，两条新增路线各有至少 2,000 条 accepted，20 路 composite 通过完整门槛。
 - teacher、prompt、decode、输入和输出身份可逐样本追溯。
 - 固定分片重放通过，失败不会发布半成品。
-- test 从未被读取；只有 D1 accepted targets 可进入 TD-15，D0 accepted 只能用于 smoke/dry-run。
+- test 从未被读取；只有 20 路 composite accepted targets 可进入 TD-15，D0 与 D1 v1 单独均不得替代 composite。
 
 ## D0 smoke 实现与运行证据
 
@@ -65,11 +67,11 @@
 - 人工逐条检查独立 D1 队列 444 条：每路由 20 条自动 accepted、全部 69 条自动 rejected、3 个繁体目标路由各 5 条额外样本。人工剔除 52 条自动接受的语义、实体、数字、命令意图或脚本质量错误；只对 31 条有效共享汉字、数字、缩写和专名的 `source_copy` 单原因误杀执行受限恢复。审查证明为 `configs/hymt2_distillation_d1_manual_review.yaml`。
 - 最终接受 39,941 条、过滤 91 条；18 路由 accepted 为 2,211～2,223，最低接受率 0.994155、最低脚本合规率 0.999101、重试率全部为 0，质量门槛失败项为空。总 accepted 和每路由 accepted 均显著高于冻结 D1 门槛。
 - 独立重载同一 GGUF Q8_0 + llama.cpp CUDA runtime，每路由 replay 2 条，共 36 条；raw 与 normalized 输出逐字节一致，零 mismatch。generation、replay 和 evidence 均记录 `dev_accessed=false`、`test_accessed=false`。
-- D1 complete manifest SHA-256 为 `9de9a4c251504c9ee157bec2dc4eefea8acd760d808672c15704f5c884b9ff2c`，accepted SHA-256 为 `9602480b643954dbd030d4d1b768d140742d25d892d41da1393a99a2fd79dd57`，tracked evidence 为 `artifacts/model-training/td08-d1-distilled-data.json`。只有该 D1 identity 具备 TD-15 输入资格。
+- D1 v1 complete manifest SHA-256 为 `9de9a4c251504c9ee157bec2dc4eefea8acd760d808672c15704f5c884b9ff2c`，accepted SHA-256 为 `9602480b643954dbd030d4d1b768d140742d25d892d41da1393a99a2fd79dd57`，tracked evidence 为 `artifacts/model-training/td08-d1-distilled-data.json`。它曾满足 18 路输入门槛；范围修正后必须由 20 路 composite 引用才能进入 TD-15。
 - 重复 finalize 后 manifest、tracked evidence、accepted、filtered、质量报告、人工审查队列和 replay 报告七类产物哈希全部保持一致。蒸馏专项回归结果为 `26 passed`，全量离线回归结果为 `143 passed in 87.49s`。
 
 ## 成熟度回退决定与最终收口
 
 - 2026-07-15 复核发现 D0 仅占 M0 human train source 的约 1.11%，每路由只有 123～128 条 accepted；它足以证明 teacher 数据链正确，但不足以支撑 `mvp_e8_d2_v48k` 的正式训练或 human-only/distilled A/B 结论。
 - D0 artifact、哈希和审查证据继续作为 immutable smoke 记录保留，不回写为 D1，也不删除成功证据。
-- TD-08 曾从 `completed` 退回 `in_progress`；现已完成独立 D1 配置、40,032 条候选生成、39,941 条 accepted、独立审查/replay、manifest-last 发布和对应回归，因此重新标记为 `completed`。TD-09 未启动。
+- TD-08 曾因 D0 规模不足退回并完成 18 路 D1 v1。2026-07-16 又因完整能力增加两条简繁互转路线退回 `pending`；D1 v1 的 40,032 个候选、39,941 条 accepted 及全部哈希保持不可变，TD-09 仍未启动。

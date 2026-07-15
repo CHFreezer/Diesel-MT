@@ -1,12 +1,12 @@
 # task TD-05: 构建并验收 M0 数据集
 
-状态：completed
+状态：pending（M0 v1 已完成；等待第 10 组与 20 路 composite 验收）
 
 依赖：TD-04
 
 ## 目标
 
-运行正式有界数据构建，发布覆盖 5 标签、9 无向组和 18 有向路由的 M0 corpus/fixture，并以人工质量、泄漏和字节级复现证据关闭数据前置门槛。
+保留已发布的 5 标签、9 组/18 路 M0 v1，补充 `zho_Hans--zho_Hant` 第 10 组并发布 20 路 human composite，以人工质量、泄漏和字节级复现证据重新关闭数据前置门槛。
 
 ## 输入
 
@@ -20,8 +20,8 @@
 
 ## 执行事项
 
-- 建立 `tests/fixtures/model_data/`，覆盖 9 组无向标签对、18 有向路由及非法路由反例。
-- 构建有界真实 MVP corpus，确认 5 标签桶、9 无向组和 18 路由均非空，简体与繁体分别有独立 dev/test。
+- 保留 9 组/18 路 v1 fixture/corpus；扩展 fixture 到 10 组/20 路，增加简繁互转、共享汉字、词汇差异和泄漏反例。
+- 构建并验收第 10 组，确认两条新增路线及其独立 train/dev/test 非空，再发布引用 v1 与 addendum 的 human composite。
 - 冻结方向采样策略，报告原始/过滤/正反扩展数、训练权重和有效曝光，禁止低资源方向无界重复。
 - 逐标签对/split 报告来源占比、原生/synthetic/增强占比、长度分布、脚本合规和过滤原因。
 - 每组至少人工检查 20 条 accepted train、10 条 accepted dev/test 和 20 条 rejected；不足时全检，并覆盖繁体与混合脚本边界。
@@ -30,7 +30,7 @@
 
 ## 产物
 
-- 有界 MVP corpus 与 18 路由 fixture。
+- 不可变 M0 v1、第 10 组 human addendum、20 路 composite 与 fixture。
 - 覆盖、质量、泄漏、人工抽检和复现报告。
 - `status=complete` 的 M0 manifest。
 
@@ -39,7 +39,7 @@
 - plan 的 M0 数据门槛全部满足。
 - 两次独立构建的规范 corpus/manifest 字节级一致。
 - 简体、繁体数据身份和 dev/test 均独立可追溯。
-- 数据集明确标记为可供 TD-07、TD-09、TD-12～TD-16 消费。
+- 只有 20 路 composite 明确标记为可供 TD-07、TD-09、TD-12～TD-16 完整验收消费；M0 v1 单独不再满足门槛。
 
 ## 实现与运行证据
 
@@ -50,3 +50,5 @@
 - 首次冷构建与第二次热缓存/完全离线 fresh 构建逐字节比较 10 个规范产物全部一致；第二输出根的五 locale resume checkpoint 也全部命中且 manifest 不变。
 - runtime `m0-manifest.json` SHA-256 为 `3d517a8adad0871d04f688f8fd50e0e6432ea0738a043bb8977f1dcede3c37aa`，acceptance report SHA-256 为 `4b64f8f3562978332396c11f6708a2ba507442d230d1615a5a36a09f04a40b1a`；精简证据见 `artifacts/model-training/m0-dataset-acceptance.json` 与 `docs/m0-dataset-acceptance.md`。
 - 专项测试 `20 passed`；完整离线回归 `105 passed in 22.89s`。冻结 tokenizer artifact manifest 仍为 `eb79ae22f523f1d9c9fcf75b80f2b322e3c2882a8fddb7545b5933dd4053fa7f`。
+
+以上是 2026-07-15 的 M0 v1 完成记录。2026-07-16 因新增两条简繁互转路线，本 task 退回 `pending`；v1 artifact/哈希保持不变，新的双构建、人工审查和 20 路 composite 尚待执行。

@@ -1,6 +1,6 @@
 # task TD-04: 实现分组切分、去重与泄漏防护
 
-状态：completed
+状态：pending（18 路 v1 已完成；等待第 10 组输入）
 
 依赖：TD-03
 
@@ -24,7 +24,7 @@
 - 在规范文本、source、target 和 pair 层做 exact 去重，并对 train/dev/test 做 near-duplicate/污染检查，记录算法、参数和命中原因。
 - 使用稳定 group hash 和版本化比例生成 split，禁止逐行随机切分；在构建阶段冻结 test 身份。
 - 与 tokenizer corpus/holdout、正式 MT 评测集及同源重复版本做可追溯污染检查，不把 tokenizer holdout 当模型 test。
-- split 后再扩展正反方向，验证 18 路由不会因反向关系跨 split 泄漏。
+- v1 的 18 路结果保持不变；新版本 split 后扩展 20 路，验证新增简繁互转及同 alignment group 的所有关系不会跨 split 泄漏。
 - 验证 worker、缓存、输入完成顺序和 fresh/resume 不改变 corpus、split 或 manifest 字节。
 - 增加反向泄漏、近重复、派生样本、错误 group 和非确定顺序失败测试。
 
@@ -55,4 +55,4 @@
 - 全量离线验证：`.conda\python.exe -m pytest -q`，结果 `99 passed in 38.02s`。
 - 正式 MT evaluation 身份锁定、40,251,390-byte MASSIVE 构建、全量 tokenizer/评测污染扫描、不同 cache/worker 的真实规模双构建、人工抽检和 M0 发布决定仍属于 TD-05；TD-04 完成不表示正式 corpus 已发布。
 
-本 task 未单独创建 review；统一 review 仍由 TD-18 负责。
+以上是 v1 完成记录。20 路范围下本 task 已退回 `pending`；必须发布新的 20 路 addendum/composite、污染报告和字节级复现证据，且 v1 manifest 哈希不变。

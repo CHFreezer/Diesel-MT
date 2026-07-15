@@ -12,13 +12,13 @@
 
 - [MVP model training todo](../../todo/mvp-model-training.md)
 - TD-15 共同 cohort、两份 recipe、等预算校验和 dev 选择规则
-- TD-08 D1 mvp manifest；D0 smoke 不得作为正式训练 corpus
+- TD-08 的 20 路 distilled composite；D0/D1 v1 单体不得作为正式训练 corpus
 - TD-14 唯一冻结的训练资源 profile 与运行时容量校验
 - TD-10～TD-13 训练、恢复和评测链
 
 ## 原子边界
 
-本 task 只执行已冻结的两组 M2 实验；不修改 teacher 数据、不临时调参、不追加任一组预算，也不为比较两组而对 test 运行两次。启动前必须拒绝 D0 smoke 或未达到 TD-08 D1 数量门槛的 recipe。
+本 task 只执行已冻结的两组 M2 实验；不修改 teacher 数据、不临时调参、不追加任一组预算，也不为比较两组而对 test 运行两次。启动前必须拒绝 D0/D1 v1 单体或未达到 TD-08 20 路 composite 数量/身份门槛的 recipe。
 
 ## 执行事项
 
@@ -28,7 +28,7 @@
 - 监控 NaN/Inf、OOM、方向曝光、截断、吞吐和显存；中断只能从已验证 checkpoint 恢复并记录边界。
 - 分别冻结两组最佳 dev checkpoint，离线重载并验证权重、配置、49,152 ID 空间和固定 dev 生成，再输出逐路由/聚合 A/B。
 - 按冻结规则选唯一候选；distilled 未优于 baseline 或触发任一路由红线时选择 human-only、记录负结果并停止扩量。
-- 唯一候选冻结后只运行一次正式 test，输出 18 路由、12 产品方向及随机初始化基线对照。
+- 唯一候选冻结后只运行一次正式 test，输出 20 路、12 个跨语言产品方向、2 个简繁互转结果及随机初始化基线对照。
 - 验证两组 train/dev loss 全程有限且最终 dev loss 低于同协议随机基线；异常运行不得被另一组成功掩盖。
 - 明确记录空/弱方向、繁体差距和已知限制，不把 loss 下降单独描述为可发布翻译质量。
 

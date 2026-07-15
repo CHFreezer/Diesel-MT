@@ -1,6 +1,6 @@
 # task TD-03: 实现确定性平行数据构建管线
 
-状态：completed
+状态：pending（9 组/18 路 v1 已完成；等待 TD-01/TD-02 amendment）
 
 依赖：TD-01、TD-02
 
@@ -27,6 +27,7 @@
 - 对原生、人工平行、teacher synthetic 和脚本转换增强样本保留不同 provenance。
 - 输出 UTF-8/LF JSONL、拒绝原因统计、来源/标签对计数和原子 manifest；逐文件记录大小/SHA-256，manifest 最后发布。
 - 用小型 fixture 覆盖全部来源适配器、缓存损坏、网络失败、恢复和半成品清理。
+- 使用新的 10 组合同让每个 MASSIVE alignment group 增加 `zho_Hans--zho_Hant` human relation，更新 fixture、统计和 manifest；不得覆盖 v1 corpus。
 
 ## 产物
 
@@ -53,4 +54,4 @@
 - 全量离线验证：`.conda\python.exe -m pytest -q`，结果 `85 passed in 22.92s`。
 - 正式 40,251,390-byte MASSIVE 归档下载、不同 cache/worker 状态的真实规模双构建、人工抽检与 M0 发布决定仍按原子边界留给 TD-05；TD-03 的完成不代表真实语料已验收。
 
-本 task 未单独创建 review；统一 review 仍由 TD-18 负责。
+以上是 v1 完成记录。20 路范围下本 task 已退回 `pending`，等待新 config/lock 后发布第 10 组 addendum 或 10 组 composite，并完成离线重建与 resume 复验。

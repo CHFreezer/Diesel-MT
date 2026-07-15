@@ -1,6 +1,6 @@
 # MVP 模型数据切分、去重与泄漏防护
 
-TD-04 消费 TD-03 的 9 组规范无向样本，在反向扩展前完成 group/component 绑定、确定性 split、精确去重、近重复隔离和外部污染检查，再发布 18 个有向路由。TD-05 已完成真实规模双构建、人工抽检、正式评测引用锁定和 M0 发布。
+TD-04 的 v1 已消费 9 组规范无向样本并发布 18 个有向路由。2026-07-16 范围修正后本 task 退回 `pending`：新版本必须消费 10 组关系，在反向扩展前完成相同的 group/component 绑定、确定性 split、精确去重、近重复隔离和外部污染检查，再发布 20 个有向路由；原 v1 M0 继续保持不可变历史证据。
 
 ## 入口与正式门禁
 
@@ -41,7 +41,7 @@ Near 阶段只用于隔离和污染诊断，不改写输出文本。检测规范
 - 更大集合使用 24-permutation、6-band 的确定性 MinHash LSH 生成候选，再用真实 Jaccard 确认；
 - dedup profile SHA-256 为 `5a1798cf8592e27d6da529169cff3f1a2c3394da3bc375b2d5951f94eb09f68d`。
 
-split 后执行第二次审计：任一 group、forward/reverse relation、exact 文本或确认的 near-duplicate 跨 train/dev/test 都阻止发布。
+split 后执行第二次审计：任一 group、forward/reverse relation、exact 文本或确认的 near-duplicate 跨 train/dev/test 都阻止发布。`zho_Hans--zho_Hant` 必须与同一 MASSIVE alignment group 的其他关系保持同 split。
 
 ## 外部污染 registry
 
@@ -65,7 +65,7 @@ split 后执行第二次审计：任一 group、forward/reverse relation、exact
 - `data/model/reports/td04-dedup-leakage.json`
 - `data/model/corpus/mvp/finalized/manifest.json`
 
-split 完成后，每个保留的无向样本才扩展 forward/reverse；输出按 split、18 路由固定顺序、group 和 sample ID 排序。所有文件采用 UTF-8/LF、规范 JSONL、同目录临时文件和 `os.replace()`；manifest 最后发布，是唯一完成标记。
+split 完成后，每个保留的无向样本才扩展 forward/reverse；v1 输出按 18 路由排序并保持不变，新版本必须按 20 路由固定顺序、group 和 sample ID 排序。所有文件采用 UTF-8/LF、规范 JSONL、同目录临时文件和 `os.replace()`；manifest 最后发布，是唯一完成标记。
 
 专项验证：
 

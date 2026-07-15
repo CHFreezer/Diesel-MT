@@ -1,6 +1,6 @@
 # task TD-01: 冻结执行契约、目录与 Git 边界
 
-状态：completed
+状态：in_progress（9 组/18 路 v1 已完成；20 路 amendment 进行中）
 
 依赖：无
 
@@ -22,7 +22,8 @@
 ## 执行事项
 
 - 定义规范平行样本 schema，至少包含 `sample_id`、`sample_group_id`、`source_id`、`source_version`、`license`、`src_lang`、`tgt_lang`、`source_text`、`target_text`、`split`，并为 teacher/转换增强样本定义生成 provenance。
-- 固定 5 个允许标签、9 组无向标签对和 18 个有向路由；明确拒绝同标签、`zho_Hans <-> zho_Hant` 和 allowlist 外路由。
+- 保留 5 标签、9 组/18 路 v1 身份；版本化扩展为 10 组/20 路，使 `zho_Hans <-> zho_Hant` 合法，同标签和 allowlist 外路由继续拒绝。
+- teacher 语言名称继续使用 `Chinese` / `Traditional Chinese`，不增加 locale-specific prompt/token，不修改冻结 tokenizer。
 - 固定 `data/model/raw/`、`cache/`、`interim/`、`corpus/mvp/`、`reports/` 以及 SSD 热 checkpoint/staging 与最终发布边界。
 - 更新 Git ignore 边界：大体积数据和运行产物默认不跟踪，只提交 schema、配置、lock、fixture、精简报告与文档。
 - 定义 `configs/mvp_model_data.yaml`、`configs/mvp_e8_d2_v48k.yaml` 的字段、schema version、稳定序列化和配置哈希规则。
@@ -37,7 +38,7 @@
 ## 验收
 
 - 同一配置可唯一确定允许的数据形态、模型身份、路径与产物边界。
-- 5 标签、9 无向组、18 路由、12 产品方向的术语无歧义。
+- 4 产品语言、5 标签、10 组、20 路、12 个跨语言方向与 2 个简繁互转操作的术语无歧义。
 - 非法路由、未知字段、缺失字段和越界路径均明确失败。
 - 冻结 tokenizer 内容及根哈希未变化。
 
@@ -50,4 +51,4 @@
 - 专项测试 [`test_model_training_contract.py`](../../../tests/test_model_training_contract.py) 为 `23 passed`，覆盖未知/缺失字段、路径逃逸、非法路由、三类 provenance、source lock、student 身份和 tokenizer 冻结。
 - `artifact_manifest.json` SHA-256 复核仍为 `eb79ae22f523f1d9c9fcf75b80f2b322e3c2882a8fddb7545b5933dd4053fa7f`；未修改 tokenizer 内容。
 
-本 task 未单独创建 review；状态 `completed` 表示可供 TD-02/TD-06/TD-09 消费，最终随整个 todo 统一 review。
+以上是不可变 v1 完成记录。2026-07-16 因新增两条简繁互转路线，本 task 退回 `in_progress`；新校验器、配置哈希、20 路 fixture 和回归完成前，不得供 TD-03/TD-09 做完整范围验收。

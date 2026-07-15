@@ -6,9 +6,9 @@
 
 ## 结论
 
-M0 数据已发布为 `status=complete`，可供 TD-07、TD-09、TD-12～TD-16 消费。它覆盖 5 个模型标签、9 个无向组、18 个有向路由；`zho_Hans <-> zho_Hant` 为 0，teacher synthetic 与脚本转换样本均为 0。其 203,942 条 human train 属于本 plan 的 `mvp` 级最小可用人类语料，而不是 fixture 或 smoke；M0 里程碑仍需 TD-09 编码契约才能整体关闭。M0 不代表生产翻译质量。
+M0 v1 数据已发布为 `status=complete`，覆盖 5 个模型标签、9 个无向跨语言组和 18 个有向跨语言路由；`zho_Hans <-> zho_Hant` 为 0，teacher synthetic 与工具转换样本均为 0。其 203,942 条 human train 仍是有效、不可变的跨语言 MVP 语料，但 2026-07-16 完整能力已扩展为 10 组/20 路，因此 v1 不再能单独供 TD-09、TD-15/TD-16 完整验收使用。TD-05 已退回 `pending`，必须发布第 10 组 addendum 与新的 20 路 composite 身份。M0 v1 不代表生产翻译质量。
 
-语料成熟度不得混用：fixture 只用于测试，smoke 只证明真实流程正确，mvp corpus 才允许产生训练/A-B 结论。TD-08 的 D0 只有 2,263 条 accepted teacher targets，属于蒸馏 smoke，不能因为 manifest complete 就与 M0 等价或进入 TD-15/TD-16。独立 D1 已从 40,032 个 train-only 候选中接受 39,941 条，每路由 2,211～2,223 条，满足逐路由至少 2,000、总计至少 36,000 的 MVP 门槛；只有 D1 可进入 TD-15。
+语料成熟度不得混用：fixture 只用于测试，smoke 只证明真实流程正确，mvp corpus 才允许产生训练/A-B 结论。TD-08 的 D0 v1 只有 2,263 条 accepted teacher targets，属于蒸馏 smoke。D1 v1 已从 40,032 个 train-only 候选中接受 39,941 条并满足 18 路门槛，但它同样缺少两条中文内部路线；只有新的 human + distilled 20 路 composite 可以进入 TD-15。
 
 运行时完成标记为 `data/model/corpus/mvp/m0-manifest.json`，精简可提交证据为 [`m0-dataset-acceptance.json`](../artifacts/model-training/m0-dataset-acceptance.json)。完整质量分布、人工审查队列和复现逐文件明细保存在 Git-ignored `data/model/reports/`。
 

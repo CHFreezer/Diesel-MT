@@ -1,6 +1,6 @@
 # MVP 模型训练数据集调研与来源锁定
 
-状态：TD-02 source research / locked
+状态：TD-02 `in_progress`；9 组 v1 source 已锁定，第 10 组合同/lock 补充待完成
 
 调研日期：2026-07-15
 
@@ -8,9 +8,9 @@
 
 首轮有界人类平行数据只锁定官方 **MASSIVE 1.1**。它是由专业译者将 English SLURP seed 本地化到多种 locale 的多平行语料；官方论文将其描述为跨 51 种语言的平行、标注虚拟助手 utterance，并说明 50 个非英语版本由专业译者本地化。[ACL 论文与摘要](https://aclanthology.org/2023.acl-long.235/)
 
-官方 1.1 发布同时包含 `en-US`、`zh-CN`、`zh-TW`、`ja-JP`、`ko-KR`，因此一个 `(partition, id)` group 可以在不做脚本推断、简繁转换或跨来源拼接的情况下形成项目所需的 9 个无向组。官方仓库明确提供 1.1 S3 归档、JSONL 结构、`train/dev/test` 字段和 `utt` 原文含义。[MASSIVE 官方仓库的数据说明](https://github.com/alexa/massive#accessing-and-processing-the-data)
+官方 1.1 发布同时包含 `en-US`、`zh-CN`、`zh-TW`、`ja-JP`、`ko-KR`，因此一个 `(partition, id)` group 可以在不做脚本推断、自动简繁转换或跨来源拼接的情况下形成项目所需的 10 个无向模型关系：9 个跨语言关系和 `zh-CN--zh-TW` 中文内部本地化关系。官方仓库明确提供 1.1 S3 归档、JSONL 结构、`train/dev/test` 字段和 `utt` 原文含义。[MASSIVE 官方仓库的数据说明](https://github.com/alexa/massive#accessing-and-processing-the-data)
 
-数据归档内的 `LICENSE` 是 CC BY 4.0；`NOTICE.md` 说明 English 数据来自同为 CC BY 4.0 的 SLURP。归档、许可、notice 和五个 locale 文件的实际身份已写入 [`mvp_model_data.lock.json`](../configs/mvp_model_data.lock.json)。对外再分发数据或其改编版本时必须保留归属、许可链接和修改说明；模型许可不能替代数据许可审查。
+数据归档内的 `LICENSE` 是 CC BY 4.0；`NOTICE.md` 说明 English 数据来自同为 CC BY 4.0 的 SLURP。归档、许可、notice 和五个 locale 文件的实际字节身份已经锁定，因此第 10 组不需要重新下载；但当前 [`mvp_model_data.lock.json`](../configs/mvp_model_data.lock.json) 仍绑定 9 组 v1 配置哈希，TD-02 必须发布新的配置/lock 身份并增加该 pair coverage 后才能关闭。对外再分发数据或其改编版本时必须保留归属、许可链接和修改说明；模型许可不能替代数据许可审查。
 
 ## 为什么适合本轮 MVP
 
@@ -18,7 +18,7 @@
 - **人工来源明确**：非英语 locale 是对同一 English seed 的专业人工本地化，不是 teacher 生成数据。
 - **对齐键稳定**：五个选中 locale 的 `(partition, id)` 集合实测完全一致。
 - **许可统一**：选中归档的 data/SLURP notice 都指向 CC BY 4.0。
-- **范围有界**：单一 40,251,390-byte 归档即可覆盖全部 9 组，避免在 TD-02 引入大规模抓取。
+- **范围有界**：单一 40,251,390-byte 归档即可覆盖全部 10 组，避免在 TD-02 引入大规模抓取。
 
 局限也很明确：数据是单轮虚拟助手领域，句子较短；localization 允许按 locale 调整实体或 slot 值；日/韩/中文之间是通过同一 English seed 对齐，而不是每个非英语 pair 直接互译。因此它适合证明训练链路和语言控制，不足以支持生产翻译质量结论。
 
@@ -41,7 +41,7 @@
 
 五个 locale 文件均验证 locale 字段唯一正确、`(partition, id)` 唯一 16,521 个，且与 `en-US` 集合零差异。后续 TD-03 只读取 `utt`，不把带 slot 标注的 `annot_utt` 当普通翻译文本。
 
-## 9 组覆盖矩阵
+## 10 组覆盖矩阵
 
 | 无向 pair | MASSIVE locale | train 原始上限 | dev 原始上限 | test 原始上限 | 来源类型 |
 | --- | --- | ---: | ---: | ---: | --- |
@@ -54,12 +54,13 @@
 | `eng_Latn--zho_Hant` | `en-US` / `zh-TW` | 11,514 | 2,033 | 2,974 | human multiparallel localization |
 | `jpn_Jpan--zho_Hant` | `ja-JP` / `zh-TW` | 11,514 | 2,033 | 2,974 | human multiparallel localization |
 | `kor_Hang--zho_Hant` | `ko-KR` / `zh-TW` | 11,514 | 2,033 | 2,974 | human multiparallel localization |
+| `zho_Hans--zho_Hant` | `zh-CN` / `zh-TW` | 11,514 | 2,033 | 2,974 | human Chinese-internal localization |
 
 每组最低 accepted 门槛冻结为 train 10,000、dev 1,500、test 2,500；扫描上限为每 locale 16,521 行，下载上限为归档精确大小，选中解压上限为 52,000,000 bytes。若 TD-03/TD-05 清洗后任一组低于门槛，必须回到新的 source research 决策，不能静默用重复、简繁转换或 teacher output 补足 human dev/test。
 
 ## 繁体边界
 
-`zh-TW -> zho_Hant` 的依据是官方 locale 和人工本地化流程，不是字符级自动分类。即便简繁共享大量字符，TD-03/TD-05 仍须做脚本合规与人工抽检；locale 证据不能替代内容质量检查。
+`zh-TW -> zho_Hant` 的依据是官方 locale 和人工本地化流程，不是字符级自动分类。模型与 teacher 语言名称仍为 `Traditional Chinese`；`zh-TW` 只记录当前人类来源及其用词偏向。即便简繁共享大量字符，TD-03/TD-05 仍须做脚本、语义保持与人工抽检；locale 证据不能替代内容质量检查。
 
 - 禁止将 `zh-CN` 自动转换后标记为原生 `zho_Hant`。
 - 禁止将 FLORES 的 `yue_Hant` 或任何粤语繁体数据映射为普通话 `zho_Hant`。
@@ -76,7 +77,7 @@
 | HPLT 3.0 monolingual corpus | 不作为人类平行来源 | 当前冻结 HPLT 数据没有跨语言 alignment key，只能服务 tokenizer/未来单语增强。 |
 | 自动简繁转换或未锁定 LLM 生成 | 不作为 human source | 不能证明原生繁体，也不满足本 task 的人工平行与完整 provenance 要求。 |
 
-当前 9 组不存在必须用 synthetic 才能关闭的来源缺口，因此 TD-02 不启用 synthetic 补充。后续若清洗使 accepted 数低于门槛，应新立来源变更并更新 config hash/source lock；不得在现有 lock 下临时扩源。
+当前 10 组都可以由同一锁定 MASSIVE 归档提供，不需要 synthetic 才能关闭来源缺口。TD-02 的未完成项是把第 10 组写入新 config hash/source lock 与覆盖统计，而不是寻找或下载新数据。后续若清洗使 accepted 数低于门槛，应新立来源变更；不得在现有 v1 lock 下临时改义。
 
 ## TD-05 独立评测污染引用结论
 

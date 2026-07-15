@@ -71,7 +71,7 @@
 
 最终冻结官方 `tencent/Hy-MT2-7B-GGUF` Q8_0 为 sequence-level 蒸馏源：revision `ab8472660ac61fac25f1af43fac2599d52a8a775`、文件 `HY-MT2-7B-Q8_0.gguf`、SHA-256 `58b3ad55dd6f6fa08c695cddc34fb5f8f708a844f78ae10508071914b0ed67c0`、llama.cpp `b10012` CUDA 13.3。规范入口为 `configs/hymt2_teacher_selection.yaml`；原版 BF16 是后续量化输出比较基线，FP8 不再承担质量参考角色。
 
-TD-07 负责五标签语言名称、18 路由 prompt/decode、人类 reference 质量与相对原版 BF16 的量化差异校准。若发现不可接受退化则阻塞 D0 并形成新决策，不得静默回退后端。至此 TD-06 完成。
+TD-07 负责五标签语言名称、逐路由 prompt/decode、人类 reference 质量与相对原版 BF16 的量化差异校准。18 路 v1 校准已完成；新增简繁互转两路继续沿用 `Chinese` / `Traditional Chinese` 名称。若发现不可接受退化则阻塞 addendum，不得静默回退后端；TD-06 的 artifact/runtime 状态保持完成。
 
 ### 本地 runtime 归位与清理
 

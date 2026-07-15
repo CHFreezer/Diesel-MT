@@ -1,12 +1,12 @@
 # task TD-02: 调研并锁定有界平行数据来源
 
-状态：completed
+状态：in_progress（9 组 v1 已完成；第 10 组 lock amendment 进行中）
 
 依赖：TD-01
 
 ## 目标
 
-为 9 组无向标签对确定许可清晰、版本可锁定、规模有界且可审计的人类平行语料方案，并发布后续构建唯一消费的 source lock。
+为 10 组无向模型关系确定许可清晰、版本可锁定、规模有界且可审计的人类平行/本地化语料方案，并发布后续构建唯一消费的新 source lock。
 
 ## 输入
 
@@ -20,7 +20,7 @@
 
 ## 执行事项
 
-- 对 9 组无向标签对记录下载版本、语言/脚本标注、许可证、数据卡、对齐质量、规模和获取方式，优先选择许可清晰的人类平行语料。
+- 保留 9 组 v1 调研；把锁定 MASSIVE `zh-CN`/`zh-TW` 文件登记为 `zho_Hans--zho_Hant` 第 10 组，无需重新下载。
 - 对 3 组繁体相关语料确认繁体侧为原生 `zho_Hant`，不得把简转繁、`yue_Hant` 或脚本未知中文静默归类为普通话繁体。
 - 对确实缺少人类语料的标签对设计有界 synthetic 补充方案，保留原生文本侧与完整 teacher provenance，且不扩张为全量蒸馏。
 - 为每组冻结 train/dev/test 最小样本预算、扫描上限和下载上限；繁体预算可较低但 dev/test 不得为空。
@@ -31,11 +31,11 @@
 
 - `docs/model-training-dataset-research.md`。
 - 数据来源 registry 与 `configs/mvp_model_data.lock.json`。
-- 9 组覆盖、预算、许可和排除矩阵。
+- 10 组覆盖、预算、许可和排除矩阵。
 
 ## 验收
 
-- 9 组语料都有明确、可审计、规模有界的来源方案。
+- 10 组关系都有明确、可审计、规模有界的来源方案，并由新 config hash/source lock 覆盖。
 - 每个正式来源均有稳定版本、SHA-256、许可证和处理顺序。
 - 原生繁体身份与 synthetic 边界单独可查。
 - 任一未关闭的来源或许可缺口都会阻塞 TD-03。
@@ -51,4 +51,4 @@
 - FLORES-200 因评测污染风险、OPUS 浮动聚合因来源/许可异质、HPLT 因无平行 alignment、自动简繁/未锁定 LLM 生成因 provenance 不满足而排除或延期，详见调研文档。
 - `mvp_model_data.lock.json` 已通过严格 config-hash、来源顺序、文件身份、预算和对齐统计校验；完整离线测试为 `75 passed in 23.10s`。
 
-本 task 未单独创建 review；状态 `completed` 表示来源方案可供 TD-03 消费，许可归属义务和领域局限必须在后续 manifest/文档中继续保留。
+以上是不可变 v1 完成记录。2026-07-16 本 task 退回 `in_progress`；第 10 组 pair coverage、新 config hash/source lock 和验证完成前不得启动 TD-03 正式 amendment 构建。
