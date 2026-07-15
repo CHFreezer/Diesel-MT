@@ -1,0 +1,76 @@
+schema_version: 1
+
+identity:
+  name: hymt2-sequence-distillation-d0-v1
+  status: frozen
+  scope: bounded-train-only-eighteen-route-mvp
+
+prompt_decode:
+  path: configs/hymt2_teacher_prompt_decode.yaml
+  file_sha256: ab7004258c42e26cc955f6e89604616fc4c40005a92c6d880ad48f903fc9e124
+  calibration_report: artifacts/model-training/td07-teacher-calibration.json
+  calibration_report_sha256: a8245c185d2ff4100f9435413917ea783a5e5f0207efb75ed3e6c8fcaf526b78
+  selected_profile: greedy-v1
+
+input:
+  path: data/model/corpus/mvp/finalized/train.jsonl
+  file_sha256: 1fe762a4e219b3420b348a5e48806f7087ccd190295a947a966ea0e91ab22c5d
+  m0_manifest: data/model/corpus/mvp/m0-manifest.json
+  m0_manifest_sha256: 3d517a8adad0871d04f688f8fd50e0e6432ea0738a043bb8977f1dcede3c37aa
+  split: train
+  dev_access: prohibited
+  test_access: prohibited
+
+sampling:
+  unit: directed_sample
+  records_per_route: 128
+  total_records: 2304
+  selection_seed: diesel-mt-td08-d0-v1
+  order: frozen-route-order-then-selection-hash
+  replacement: false
+
+generation:
+  shard_unit: route
+  checkpoint_granularity: sample
+  resume_identity: generation-contract-sha256
+  raw_and_normalized_separate: true
+  request_failure: stop-without-publish
+  external_network: prohibited
+
+manual_review:
+  accepted_per_route: 20
+  rejected_per_route: 20
+  rejected_if_fewer: inspect-all
+  traditional_targets_extra_review: true
+  attestation: configs/hymt2_distillation_manual_review.yaml
+
+replay:
+  samples_per_route: 2
+  exact_raw_output_required: true
+  exact_normalized_output_required: true
+
+acceptance_gates:
+  minimum_accepted_per_route: 100
+  minimum_route_accepted_rate: 0.90
+  minimum_route_script_compliance_rate: 0.98
+  maximum_route_retry_rate: 0.05
+  require_all_eighteen_routes: true
+  require_manual_review: true
+  require_exact_replay: true
+  require_zero_test_records: true
+
+runtime:
+  work_root_override_env: DIESEL_MT_DISTILLATION_WORK_ROOT
+  default_work_root: data/model/interim/td08-v1
+
+outputs:
+  root: data/model/corpus/mvp/distilled/td08-v1
+  generation_contract: data/model/corpus/mvp/distilled/td08-v1/generation-contract.json
+  raw_subdir: raw
+  accepted: data/model/corpus/mvp/distilled/td08-v1/accepted.jsonl
+  filtered: data/model/corpus/mvp/distilled/td08-v1/filtered.jsonl
+  manual_review_queue: data/model/reports/td08-manual-review.jsonl
+  replay_report: data/model/reports/td08-replay.json
+  quality_report: data/model/reports/td08-distillation-quality.json
+  manifest: data/model/corpus/mvp/distilled/td08-v1/manifest.json
+  evidence: artifacts/model-training/td08-distilled-data.json

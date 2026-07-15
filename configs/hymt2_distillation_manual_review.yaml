@@ -1,0 +1,173 @@
+schema_version: 1
+status: complete
+
+queue:
+  path: data/model/reports/td08-manual-review.jsonl
+  records: 381
+  bytes: 292339
+  sha256: 5e92d75020915e0e3aa0058906c6dec7675e45c8b6b34044fc801612bbc49733
+
+reviewer: Codex manual semantic inspection
+method: >-
+  Read all 381 queued records route by route and compare source_text, human_reference,
+  teacher_output, automated decision, rejection reasons, and Chinese script evidence.
+  Source fidelity is decisive because MASSIVE references may substitute locale-specific
+  entities; the reference is supporting context rather than a literal identity target.
+
+decisions:
+  accepted_reviewed_by_route:
+    eng_Latn->jpn_Jpan: 20
+    jpn_Jpan->eng_Latn: 20
+    eng_Latn->kor_Hang: 20
+    kor_Hang->eng_Latn: 20
+    jpn_Jpan->kor_Hang: 20
+    kor_Hang->jpn_Jpan: 20
+    eng_Latn->zho_Hans: 20
+    zho_Hans->eng_Latn: 20
+    jpn_Jpan->zho_Hans: 20
+    zho_Hans->jpn_Jpan: 20
+    kor_Hang->zho_Hans: 20
+    zho_Hans->kor_Hang: 20
+    eng_Latn->zho_Hant: 20
+    zho_Hant->eng_Latn: 20
+    jpn_Jpan->zho_Hant: 20
+    zho_Hant->jpn_Jpan: 20
+    kor_Hang->zho_Hant: 20
+    zho_Hant->kor_Hang: 20
+  rejected_reviewed_by_route:
+    eng_Latn->jpn_Jpan: 0
+    jpn_Jpan->eng_Latn: 0
+    eng_Latn->kor_Hang: 0
+    kor_Hang->eng_Latn: 0
+    jpn_Jpan->kor_Hang: 0
+    kor_Hang->jpn_Jpan: 0
+    eng_Latn->zho_Hans: 0
+    zho_Hans->eng_Latn: 0
+    jpn_Jpan->zho_Hans: 1
+    zho_Hans->jpn_Jpan: 1
+    kor_Hang->zho_Hans: 0
+    zho_Hans->kor_Hang: 0
+    eng_Latn->zho_Hant: 0
+    zho_Hant->eng_Latn: 0
+    jpn_Jpan->zho_Hant: 3
+    zho_Hant->jpn_Jpan: 1
+    kor_Hang->zho_Hant: 0
+    zho_Hant->kor_Hang: 0
+  traditional_extra_reviewed_by_route:
+    eng_Latn->jpn_Jpan: 0
+    jpn_Jpan->eng_Latn: 0
+    eng_Latn->kor_Hang: 0
+    kor_Hang->eng_Latn: 0
+    jpn_Jpan->kor_Hang: 0
+    kor_Hang->jpn_Jpan: 0
+    eng_Latn->zho_Hans: 0
+    zho_Hans->eng_Latn: 0
+    jpn_Jpan->zho_Hans: 0
+    zho_Hans->jpn_Jpan: 0
+    kor_Hang->zho_Hans: 0
+    zho_Hans->kor_Hang: 0
+    eng_Latn->zho_Hant: 5
+    zho_Hant->eng_Latn: 0
+    jpn_Jpan->zho_Hant: 5
+    zho_Hant->jpn_Jpan: 0
+    kor_Hang->zho_Hant: 5
+    zho_Hant->kor_Hang: 0
+  manual_rejections:
+    - review_id: a7ccb683cdba94587c62c8d35710f4b82f5795e41a4afdad0bf51392cbf8f2fa
+      reason: Malformed wake-word query was rendered as a statement about Google rather than the dentist appointment.
+    - review_id: d393b5e1fd18211a96b7afed0578989cb8692b9f070de87f4e860ee0e8aafe39
+      reason: The artist name 米津玄師 was corrupted to Kimitsu Genji.
+    - review_id: 9f1240a174a9dbf90c153de6ca2635049b17eb99f6f97fe5ba803a369ce5369c
+      reason: A request to play a title was changed into an offer to bring skewers.
+    - review_id: 32249b809f44ee5c6f6621d199dcf0a2abc49d00f8a1fade622cc38bf451935b
+      reason: The sender relationship was changed into an email addressed to Ki-tae.
+    - review_id: 492a356b862c094396d9a7b143de50e042c7a247c1b3aec6cc1b44683b8abccd
+      reason: The Google wake word absorbed friends and the trip-with-friends meaning was lost.
+    - review_id: b840cee8ee7db60c17a6f66cde4a3f6a40bf0a20f1388ca1d9bbca4b5413f545
+      reason: Olly and recipient Mina were merged into one person name.
+    - review_id: 0bc3c14d525e6628a358263742968746d284884811aa3339d6aa1f1ea554e79c
+      reason: The Twenty One Pilots entity was mistranslated as Pilot Twenty-One.
+    - review_id: be5ed7719734ed9a4480b25955dfed319e00d09f989d97bccec58477e4b7f9ec
+      reason: The Google wake word was interpreted as modifying employees.
+    - review_id: 2c26e5e281c61a3fa947fe0f0ea42fd66f48564fc341b7acbf5e7752f3f3e772
+      reason: A question about calendar availability became a declarative statement.
+    - review_id: d3c9330e165b78844447e15b38c7237eeb85085237981b5d2ad5832d73df4fe5
+      reason: Weekly alarm settings became an instruction to change the alarm every week.
+    - review_id: 017b4f2fb1661573861dab0d4079f08d4d1475693082cde466bfbddb601200c2
+      reason: The intended later resumption of speech became restoring a conversation feature.
+    - review_id: 37abd7694e99612d8e4a099ef5b4fa50c7f5b6834d1ed1acf5d54d3ca7dddaa4
+      reason: A reminder request became the declarative sentence that time reminds the speaker.
+    - review_id: 55a9d19eca449b94bd7ec0710ada1286dbc0676b685b901b4e4e60c8dc91ecd8
+      reason: A tweet command became a report about somebody else's tweet and misattached the wake word.
+    - review_id: d7cdc7bf7703d8e4844dc712340827e6e4afaeea7978b2483e6e3641c03e772e
+      reason: A scheduled robot-vacuum command changed to completed past tense.
+    - review_id: 41f221eb021fb24b48db6b59cb4c72b7695eaa19130ed1fa936ae7c9addc7b68
+      reason: A calendar scheduling command became a personal plan and dropped the scheduling action.
+    - review_id: 74c3f79e0b93e318ead897f156b12e08aa1a30fafc158e1a4af42967a750a0fa
+      reason: Pizza Hut was corrupted to Pizza Hat.
+    - review_id: 690953f315c426ff063789347078f39571d08e960a9e30d5ed1434c1138471ef
+      reason: The command to open Weibo and publish a video title became an incomplete noun phrase.
+    - review_id: de3397d2bfd45333a0f800a8c6ef2787af73804f77727aac0ffa173ed04aa5af
+      reason: An imperative addressed to Olly became a past-tense statement about Olly.
+    - review_id: 9b1961ca3628db47f35eefe3890d1bbec641df9d6667c3c7901e799a9bd72132
+      reason: Korean Parents' Day was changed to Mother's Day.
+    - review_id: cb75995065732cbd5894f843e18e123d17e04f426237d38da36c28eb1e2e031a
+      reason: The Google-like wake name 小谷 was hallucinated as Mr. Ohtani.
+    - review_id: 15c7ddc466343378f136f695eb6464927d32235e1ea84e66a779dcf71c594947
+      reason: Vegetarian lasagna was changed to vegetarian risotto.
+    - review_id: 9cd419b9603615303c64f828da211caae6d44d35a0be97e2be042ce14215fb51
+      reason: The incomplete location/life query was resolved as the unrelated assertion that Bob is alive.
+    - review_id: dd8af8ecabeec402619402aa085f966b1e2f5e023b79b2ba7c6b319446826895
+      reason: Radio station was interpreted as a transit stop.
+    - review_id: db5e4f5aa168048ea680cc45ccc9b60ba05a5307ddb12d8e8894ce27fdbf038b
+      reason: A display-email command became a declarative statement about Olly.
+    - review_id: 6bf74fde7408bf27f35d4271e963703293371d42fbc0bce416a2d04efd3f637e
+      reason: China Airlines was changed to EVA Air and the post command became past tense.
+    - review_id: 6ffca7e1f3fade138910061b1a2b9c4d6ce3b0a1cb6ce6826bd47e35eaf8eb8d
+      reason: The command to play music was mistranslated as singing aloud.
+    - review_id: 85e233811e3e9ba2ccb3fd24245b64a90de89667205c33086b3b01250972a012
+      reason: Japanese silent mode was mistranslated literally as courtesy mode.
+    - review_id: a5a9d0d97588877e697ccd47bcc4bc6e53b43c0a6ec901d1da3270b93fb294d6
+      reason: Every-other-month second Friday became every two months first Friday.
+    - review_id: 1faa06d708c401d0c136eeb5260714c4f5f775517bd57e408c23ddd918f2ec7c
+      reason: The request to play the song Paprika became an instruction to pour out a bell pepper.
+    - review_id: add508fedd2967b1233d8260859e0d0e870e53abb689709bf3710f163a93dbe4
+      reason: Nearest McDonald's was mistranslated as recent McDonald's.
+    - review_id: 38cd5bc351375a271b3438d799cb399e21a8489b8f6ae0114eec5abee7062fdc
+      reason: A next-track playback request became a noun phrase about a playlist.
+    - review_id: 2867e5001002ace5b8adb5e4d14d3fd2af66655acfb7a353bf99d7baaeb69ae5
+      reason: The year expression 2015 was misread as the city Icheon and the sentence meaning changed.
+    - review_id: 6cd1f32ee72cabb7a7fb4e4f933ce7c9ea49b6107f7730512545a3d2bc0b6e14
+      reason: A command to order two pizzas became a completed past-tense order.
+    - review_id: 43d43b539db29eb6ef9b250c0c289a966181e231e6ffcb2f29f81bd1c34b665c
+      reason: The speaker's need for help was changed to the customer agent's need for help.
+    - review_id: 8cb6b75fb1894ad5ae56693e5648003996e352a459c9ee04639e31defd3acb06
+      reason: Korean stand meaning a desk lamp was mistranslated as a support bracket.
+    - review_id: 3850f25b0c6e2637ab6ca56a703ff670b1d70834eecdbabcf6f9a0ebfc85538f
+      reason: An imperative to play the news channel became a conditional statement.
+    - review_id: 6cb3887b95b38912b4358218621d0850acf4631c1840a056f1457cfb4ac5793b
+      reason: The list deletion request became a statement that deleting a second list is easy.
+    - review_id: 9025b5354770998fd9926f31198b81423a90dc414f14ef2584ed1a913349db4c
+      reason: Nearest Pizza Hut was mistranslated as recent Pizza Hut.
+    - review_id: 724aa8d085a79e4fbadacd9225c0b07f19af692b084abf40ae19b87bb9126670
+      reason: The game title 天堂 was interpreted literally as heaven.
+  rejected_rule_mismatches:
+    - review_id: 3b2a606439f9882f469d105eae598e5aa50d280bc589f459aa6c0b7e5d9e5e14
+      rule: source_copy
+      reason: 話題 is a valid shared Japanese and Traditional Chinese word with unchanged Han characters.
+    - review_id: 39ebc1e04c90d63a0c670f24b4d9432701dfbb83f7a535ad6480a278dd884b17
+      rule: source_copy
+      reason: 愛 is the correct shared Japanese and Traditional Chinese form.
+    - review_id: c56fe338328e4e2b4e24c3985f94ab48f0f9d030f28a6f74978f41268f7b90ba
+      rule: source_copy
+      reason: 岸田文雄 is a proper name whose Han-character form is valid unchanged in Traditional Chinese.
+    - review_id: fcf6b698691ae4892fe797446184bdd05f429654e334eab70f950dc2415e5c6c
+      rule: source_copy
+      reason: 主旨 is a valid shared Traditional Chinese and Japanese word with unchanged Han characters.
+  systemic_blocker: false
+
+notes:
+  - All 360 accepted samples, all 6 automated rejects, and all 15 Traditional Chinese extras were inspected.
+  - The two remaining source-copy rejects, 苦情 to Simplified Chinese and 票 to Japanese, are semantically unsuitable and remain filtered.
+  - Traditional Chinese targets were checked separately for Simplified-only degeneration, regional wording, and shared-Han false positives.
+  - No route-level or systemic teacher failure was observed in this bounded D0 run.

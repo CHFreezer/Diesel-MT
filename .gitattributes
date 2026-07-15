@@ -9,3 +9,11 @@ configs/hymt2_teacher_*.json -text
 requirements-teacher-hymt2*.txt -text
 scripts/*hymt2_teacher*.py -text
 artifacts/model-training/hymt2-teacher-runtime*.json -text
+
+# TD-07/TD-08 contracts and evidence are byte-hashed across files. Preserve
+# their LF bytes even when the workstation uses core.autocrlf=true.
+configs/hymt2_distillation*.yaml -text
+configs/hymt2_teacher_calibration_review.yaml -text
+configs/hymt2_teacher_prompt_decode.yaml -text
+artifacts/model-training/td07-teacher-calibration.json -text
+artifacts/model-training/td08*-distilled-data.json -text

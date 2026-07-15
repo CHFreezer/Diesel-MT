@@ -1,6 +1,6 @@
 # task TD-07: 校准 teacher 语言映射、prompt 与解码
 
-状态：pending
+状态：completed
 
 依赖：TD-05、TD-06
 
@@ -40,3 +40,17 @@
 - 同一 artifact、输入和 profile 可按冻结契约重放。
 - dev 校准输出与 train corpus 严格隔离，test 从未送入 teacher。
 - 任一路由失败都会阻塞 TD-08。
+
+## 实现与验收证据
+
+TD-07 于 2026-07-15 完成。新增 `configs/hymt2_teacher_prompt_decode.yaml`、`scripts/hymt2_distillation.py`、`scripts/calibrate_hymt2_teacher.py` 及对应自动化测试；规范 prompt 使用官方默认英文模板、无 system prompt，并显式区分 `Chinese` 与 `Traditional Chinese`。
+
+从冻结的 33,490 条 human dev 记录中按固定 seed 每路由选择 12 条，共 216 条；greedy 与官方推荐采样各生成一遍，并各自对每路由 2 条、共 36 条做独立重放。最终报告为 `artifacts/model-training/td07-teacher-calibration.json`：
+
+- greedy 宏观 chrF 28.615981、char-SacreBLEU 33.923799、自动接受率 0.995370、脚本合规率 1.0；18 路由无 gate failure。
+- 官方采样宏观 chrF 只比 greedy 高 0.014524，低于预先冻结的 +2.0 切换门槛，因此唯一规范 profile 为 `greedy-v1`。
+- 两个 profile 的 36 条 replay 均 raw/normalized 逐字一致；test 未读取，全部 calibration output 保持 dev-only。
+- 首轮低 chrF 路由的 60 条 source/reference/output 已逐条检查。MASSIVE reference 存在地区实体替换，chrF 只作为诊断下限；3 条非系统性语义风险记录在 `configs/hymt2_teacher_calibration_review.yaml`。
+- 繁体脚本检查修正了 OpenCC 将常用字 `吃` 映射为异体 `喫` 的误判：只有出现简体反证且没有任何繁体证据时，才判定繁体目标完全退化为简体。
+
+验证命令：`.conda\python.exe -m pytest tests/test_hymt2_distillation.py -q`，14 项通过；两轮实际校准均从同一锁定 GGUF/llama.cpp runtime 完成，第二轮最终状态为 `complete`。

@@ -1,0 +1,320 @@
+{
+  "corpus_maturity": "mvp",
+  "date": "2026-07-15",
+  "dev_accessed": false,
+  "downstream_consumer": "TD-15",
+  "identities": {
+    "accepted_sha256": "9602480b643954dbd030d4d1b768d140742d25d892d41da1393a99a2fd79dd57",
+    "distillation_config_sha256": "96cd6bad9d07f12d918f95cf37e690d9aa580d8d86d25d8c76ad2db32d5a2af5",
+    "generation_contract_sha256": "2e54be92d270af3acac76251f25e31987a876f3e098dfb7bbbc73c696a470b1a",
+    "manifest_sha256": "9de9a4c251504c9ee157bec2dc4eefea8acd760d808672c15704f5c884b9ff2c",
+    "manual_review_sha256": "8c898479240b2503029220347eb8751d491ddc6708e6bb8913118866cd7eef85",
+    "prompt_config_file_sha256": "ab7004258c42e26cc955f6e89604616fc4c40005a92c6d880ad48f903fc9e124",
+    "quality_report_sha256": "4c408b617615374a1502cfcf9f9905595ea6ebc0773152a85bf17308f83cf486",
+    "replay_report_sha256": "cd6d5c41bba9b11f9aceb263ba0311df48c8f8442dd47d23c90ce85e1cfc3766",
+    "td07_calibration_report_sha256": "a8245c185d2ff4100f9435413917ea783a5e5f0207efb75ed3e6c8fcaf526b78"
+  },
+  "manual_review": {
+    "manual_acceptances": 31,
+    "manual_rejections": 52,
+    "queue_records": 444,
+    "systemic_blocker": false
+  },
+  "pipeline_version": "td08-hymt2-distillation-v1",
+  "quality": {
+    "gate_failures": [],
+    "routes": {
+      "eng_Latn->jpn_Jpan": {
+        "accepted": 2219,
+        "accepted_rate": 0.997752,
+        "completion_tokens": 37458,
+        "filtered": 5,
+        "input": 2224,
+        "latency_seconds": 1316.146468,
+        "manual_acceptances": 0,
+        "manual_rejections": 3,
+        "rejection_reasons": {
+          "truncated": 1,
+          "wrong_script_dominance": 1
+        },
+        "retry_rate": 0.0,
+        "script_compliance_rate": 0.99955
+      },
+      "eng_Latn->kor_Hang": {
+        "accepted": 2223,
+        "accepted_rate": 0.99955,
+        "completion_tokens": 45796,
+        "filtered": 1,
+        "input": 2224,
+        "latency_seconds": 1625.986354,
+        "manual_acceptances": 0,
+        "manual_rejections": 0,
+        "rejection_reasons": {
+          "truncated": 1
+        },
+        "retry_rate": 0.0,
+        "script_compliance_rate": 1.0
+      },
+      "eng_Latn->zho_Hans": {
+        "accepted": 2218,
+        "accepted_rate": 0.997302,
+        "completion_tokens": 19150,
+        "filtered": 6,
+        "input": 2224,
+        "latency_seconds": 710.786985,
+        "manual_acceptances": 0,
+        "manual_rejections": 2,
+        "rejection_reasons": {
+          "output_too_short": 3,
+          "source_copy": 1,
+          "wrong_script_dominance": 1
+        },
+        "retry_rate": 0.0,
+        "script_compliance_rate": 0.99955
+      },
+      "eng_Latn->zho_Hant": {
+        "accepted": 2216,
+        "accepted_rate": 0.996403,
+        "completion_tokens": 25258,
+        "filtered": 8,
+        "input": 2224,
+        "latency_seconds": 920.28834,
+        "manual_acceptances": 0,
+        "manual_rejections": 5,
+        "rejection_reasons": {
+          "output_too_short": 1,
+          "simplified_output_for_traditional_target": 1,
+          "source_copy": 1,
+          "wrong_script_dominance": 1
+        },
+        "retry_rate": 0.0,
+        "script_compliance_rate": 0.999101
+      },
+      "jpn_Jpan->eng_Latn": {
+        "accepted": 2223,
+        "accepted_rate": 0.99955,
+        "completion_tokens": 20921,
+        "filtered": 1,
+        "input": 2224,
+        "latency_seconds": 779.488129,
+        "manual_acceptances": 0,
+        "manual_rejections": 1,
+        "rejection_reasons": {},
+        "retry_rate": 0.0,
+        "script_compliance_rate": 1.0
+      },
+      "jpn_Jpan->kor_Hang": {
+        "accepted": 2221,
+        "accepted_rate": 0.998651,
+        "completion_tokens": 43945,
+        "filtered": 3,
+        "input": 2224,
+        "latency_seconds": 1596.072055,
+        "manual_acceptances": 0,
+        "manual_rejections": 3,
+        "rejection_reasons": {},
+        "retry_rate": 0.0,
+        "script_compliance_rate": 1.0
+      },
+      "jpn_Jpan->zho_Hans": {
+        "accepted": 2219,
+        "accepted_rate": 0.997752,
+        "completion_tokens": 18504,
+        "filtered": 5,
+        "input": 2224,
+        "latency_seconds": 637.951348,
+        "manual_acceptances": 2,
+        "manual_rejections": 1,
+        "rejection_reasons": {
+          "source_copy": 6
+        },
+        "retry_rate": 0.0,
+        "script_compliance_rate": 1.0
+      },
+      "jpn_Jpan->zho_Hant": {
+        "accepted": 2215,
+        "accepted_rate": 0.995953,
+        "completion_tokens": 24395,
+        "filtered": 9,
+        "input": 2224,
+        "latency_seconds": 901.64858,
+        "manual_acceptances": 12,
+        "manual_rejections": 5,
+        "rejection_reasons": {
+          "simplified_output_for_traditional_target": 1,
+          "source_copy": 15
+        },
+        "retry_rate": 0.0,
+        "script_compliance_rate": 0.99955
+      },
+      "kor_Hang->eng_Latn": {
+        "accepted": 2218,
+        "accepted_rate": 0.997302,
+        "completion_tokens": 21405,
+        "filtered": 6,
+        "input": 2224,
+        "latency_seconds": 814.735391,
+        "manual_acceptances": 0,
+        "manual_rejections": 3,
+        "rejection_reasons": {
+          "abnormal_repetition": 1,
+          "output_too_long": 2
+        },
+        "retry_rate": 0.0,
+        "script_compliance_rate": 1.0
+      },
+      "kor_Hang->jpn_Jpan": {
+        "accepted": 2221,
+        "accepted_rate": 0.998651,
+        "completion_tokens": 35523,
+        "filtered": 3,
+        "input": 2224,
+        "latency_seconds": 1302.55098,
+        "manual_acceptances": 1,
+        "manual_rejections": 2,
+        "rejection_reasons": {
+          "source_copy": 1,
+          "wrong_script_dominance": 1
+        },
+        "retry_rate": 0.0,
+        "script_compliance_rate": 0.99955
+      },
+      "kor_Hang->zho_Hans": {
+        "accepted": 2221,
+        "accepted_rate": 0.998651,
+        "completion_tokens": 19257,
+        "filtered": 3,
+        "input": 2224,
+        "latency_seconds": 672.498056,
+        "manual_acceptances": 0,
+        "manual_rejections": 3,
+        "rejection_reasons": {},
+        "retry_rate": 0.0,
+        "script_compliance_rate": 1.0
+      },
+      "kor_Hang->zho_Hant": {
+        "accepted": 2217,
+        "accepted_rate": 0.996853,
+        "completion_tokens": 25738,
+        "filtered": 7,
+        "input": 2224,
+        "latency_seconds": 930.624645,
+        "manual_acceptances": 0,
+        "manual_rejections": 5,
+        "rejection_reasons": {
+          "simplified_output_for_traditional_target": 1,
+          "wrong_script_dominance": 1
+        },
+        "retry_rate": 0.0,
+        "script_compliance_rate": 0.999101
+      },
+      "zho_Hans->eng_Latn": {
+        "accepted": 2221,
+        "accepted_rate": 0.998651,
+        "completion_tokens": 20429,
+        "filtered": 3,
+        "input": 2224,
+        "latency_seconds": 750.93128,
+        "manual_acceptances": 0,
+        "manual_rejections": 2,
+        "rejection_reasons": {
+          "output_too_long": 1
+        },
+        "retry_rate": 0.0,
+        "script_compliance_rate": 1.0
+      },
+      "zho_Hans->jpn_Jpan": {
+        "accepted": 2219,
+        "accepted_rate": 0.997752,
+        "completion_tokens": 36096,
+        "filtered": 5,
+        "input": 2224,
+        "latency_seconds": 1247.601853,
+        "manual_acceptances": 4,
+        "manual_rejections": 1,
+        "rejection_reasons": {
+          "source_copy": 8
+        },
+        "retry_rate": 0.0,
+        "script_compliance_rate": 1.0
+      },
+      "zho_Hans->kor_Hang": {
+        "accepted": 2219,
+        "accepted_rate": 0.997752,
+        "completion_tokens": 43854,
+        "filtered": 5,
+        "input": 2224,
+        "latency_seconds": 1457.130778,
+        "manual_acceptances": 0,
+        "manual_rejections": 5,
+        "rejection_reasons": {},
+        "retry_rate": 0.0,
+        "script_compliance_rate": 1.0
+      },
+      "zho_Hant->eng_Latn": {
+        "accepted": 2219,
+        "accepted_rate": 0.997752,
+        "completion_tokens": 19647,
+        "filtered": 5,
+        "input": 2224,
+        "latency_seconds": 734.913668,
+        "manual_acceptances": 0,
+        "manual_rejections": 4,
+        "rejection_reasons": {
+          "output_too_long": 1
+        },
+        "retry_rate": 0.0,
+        "script_compliance_rate": 1.0
+      },
+      "zho_Hant->jpn_Jpan": {
+        "accepted": 2211,
+        "accepted_rate": 0.994155,
+        "completion_tokens": 33368,
+        "filtered": 13,
+        "input": 2224,
+        "latency_seconds": 1197.68731,
+        "manual_acceptances": 12,
+        "manual_rejections": 4,
+        "rejection_reasons": {
+          "source_copy": 21
+        },
+        "retry_rate": 0.0,
+        "script_compliance_rate": 1.0
+      },
+      "zho_Hant->kor_Hang": {
+        "accepted": 2221,
+        "accepted_rate": 0.998651,
+        "completion_tokens": 40936,
+        "filtered": 3,
+        "input": 2224,
+        "latency_seconds": 1399.847839,
+        "manual_acceptances": 0,
+        "manual_rejections": 3,
+        "rejection_reasons": {},
+        "retry_rate": 0.0,
+        "script_compliance_rate": 1.0
+      }
+    }
+  },
+  "release": "d1-hymt2-distillation-mvp",
+  "replay": {
+    "exact_normalized": true,
+    "exact_raw": true,
+    "records": 36
+  },
+  "schema_version": 1,
+  "scope": {
+    "accepted": 39941,
+    "dev_records": 0,
+    "filtered": 91,
+    "input": 40032,
+    "reused_d0_inputs": 2304,
+    "routes": 18,
+    "teacher_synthetic": 39941,
+    "test_records": 0
+  },
+  "status": "complete",
+  "td08_completed": true,
+  "td09_started": false,
+  "test_accessed": false
+}

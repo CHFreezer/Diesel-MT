@@ -12,12 +12,13 @@
 
 - [MVP model training todo](../../todo/mvp-model-training.md)
 - TD-15 共同 cohort、两份 recipe、等预算校验和 dev 选择规则
+- TD-08 D1 mvp manifest；D0 smoke 不得作为正式训练 corpus
 - TD-14 唯一冻结的训练资源 profile 与运行时容量校验
 - TD-10～TD-13 训练、恢复和评测链
 
 ## 原子边界
 
-本 task 只执行已冻结的两组 M2 实验；不修改 teacher 数据、不临时调参、不追加任一组预算，也不为比较两组而对 test 运行两次。
+本 task 只执行已冻结的两组 M2 实验；不修改 teacher 数据、不临时调参、不追加任一组预算，也不为比较两组而对 test 运行两次。启动前必须拒绝 D0 smoke 或未达到 TD-08 D1 数量门槛的 recipe。
 
 ## 执行事项
 

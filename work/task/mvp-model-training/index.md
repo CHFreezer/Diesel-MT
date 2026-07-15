@@ -22,7 +22,7 @@ flowchart LR
     TD01 --> TD06["TD-06 teacher 运行时"]
     TD05 --> TD07["TD-07 prompt/decode"]
     TD06 --> TD07
-    TD07 --> TD08["TD-08 D0 蒸馏数据"]
+    TD07 --> TD08["TD-08 D0 smoke / D1 MVP 蒸馏数据"]
 
     TD01 --> TD09["TD-09 编码与 student"]
     TD05 -. "全路由验收" .-> TD09
@@ -60,8 +60,8 @@ flowchart LR
 | 4 | TD-04 | [实现分组切分、去重与泄漏防护](td-04-split-dedup-leakage.md) | TD-03 completed | TD-03 | TD-06、TD-09～TD-11 | completed |
 | 5 | TD-05 | [构建并验收 M0 数据集](td-05-m0-dataset-acceptance.md) | TD-04 completed | TD-04 | TD-06、TD-09～TD-11 | completed |
 | 2–5 | TD-06 | [锁定并验证 Hy-MT2 7B teacher 运行时](td-06-hymt2-teacher-runtime.md) | TD-01 completed | TD-01 | TD-02～TD-05、TD-09～TD-11 | completed |
-| 6 | TD-07 | [校准 teacher 语言映射、prompt 与解码](td-07-teacher-prompt-decode.md) | TD-05、TD-06 completed | TD-05、TD-06 | TD-12～TD-14 | pending |
-| 7 | TD-08 | [生成并验收有界 sequence-level 蒸馏数据](td-08-distilled-data.md) | TD-07 completed | TD-05、TD-07 | TD-12～TD-14 | pending |
+| 6 | TD-07 | [校准 teacher 语言映射、prompt 与解码](td-07-teacher-prompt-decode.md) | TD-05、TD-06 completed | TD-05、TD-06 | TD-12～TD-14 | completed |
+| 7 | TD-08 | [生成 D0 smoke 并验收 D1 最小可用蒸馏数据](td-08-distilled-data.md) | TD-07 completed | TD-05、TD-07 | TD-12～TD-14 | completed |
 | 2–5 | TD-09 | [实现编码、collator 与 student 构造](td-09-student-encoding-builder.md) | TD-01 completed | TD-01；完整验收等待 TD-05 | TD-02～TD-06 | pending |
 | 3–5 | TD-10 | [实现训练循环、采样与运行记录](td-10-training-loop.md) | TD-09 completed | TD-09 | TD-03～TD-06 | pending |
 | 4–5 | TD-11 | [实现原子 checkpoint 与精确恢复](td-11-checkpoint-resume.md) | TD-10 completed | TD-10 | TD-04～TD-06 | pending |
@@ -77,14 +77,14 @@ flowchart LR
 
 1. TD-01 完成后，人类数据链 TD-02～TD-05、teacher 运行时 TD-06、student 基础链 TD-09～TD-11 可并行推进，前提是负责文件和运行目录不重叠。
 2. TD-09 只能先用 schema fixture 完成接口开发；涉及 18 路由和 M0 关闭的验收必须等待 TD-05。
-3. TD-05 和 TD-06 汇合后才能启动 TD-07；TD-07 完成后 TD-08 独占 teacher 生成目录。
+3. TD-05 和 TD-06 汇合后才能启动 TD-07；TD-07 完成后 TD-08 独占 teacher 生成目录。D0 smoke 与 D1 mvp 均已完成；D1 接受 39,941 条且每路由 2,211～2,223 条，TD-08 已 completed。
 4. TD-12、TD-13 可并行；TD-14 必须等待 TD-12。TD-15 可与 TD-14 并行准备，但 TD-16 必须等待两者都完成。
 5. 若运行时探测只有一个可用 accelerator，TD-06～TD-08 的 teacher 运行、TD-14 的 student 基准和 TD-16 的两组正式训练在执行层面互斥；资源互斥依据探测结果和 profile，不依据 GPU 型号。
 6. TD-16、TD-17、TD-18 为严格串行收口；正式 test 只允许 TD-16 在唯一候选冻结后读取一次。
 
 ## 关键路径
 
-收敛主路径为 `TD-01 -> TD-02 -> TD-03 -> TD-04 -> TD-05`，之后同时汇合 teacher 分支 `TD-06 -> TD-07 -> TD-08`、student 分支 `TD-09 -> TD-10 -> TD-11 -> TD-12 -> TD-14` 和评测分支 `TD-09 -> TD-13`，再进入 `TD-15 -> TD-16 -> TD-17 -> TD-18`。
+收敛主路径为 `TD-01 -> TD-02 -> TD-03 -> TD-04 -> TD-05`，之后同时汇合 teacher 分支 `TD-06 -> TD-07 -> TD-08(D0 smoke -> D1 mvp)`、student 分支 `TD-09 -> TD-10 -> TD-11 -> TD-12 -> TD-14` 和评测分支 `TD-09 -> TD-13`，再进入 `TD-15 -> TD-16 -> TD-17 -> TD-18`。D0 不得绕过 D1 直接进入 TD-15。
 
 任何来源/许可缺口、teacher 离线运行失败、M1 未过拟合、恢复不一致或 test 隔离失败都会阻塞后续汇合，不得以跳过 task 的方式继续。
 

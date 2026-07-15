@@ -12,16 +12,16 @@
 
 - [MVP model training todo](../../todo/mvp-model-training.md)
 - TD-05 human train references 与 route/group manifest
-- TD-08 accepted teacher targets 与 provenance manifest
+- TD-08 D1 accepted teacher targets 与 provenance manifest；D0 smoke 不具备正式 A/B 输入资格
 - TD-13 固定评测协议
 
 ## 原子边界
 
-本 task 只构建和验证 A/B cohort/recipe，不执行正式 M2 训练，不用 test 决定混合、阈值或候选，也不把 rejected teacher target 回退到单独一组。
+本 task 只构建和验证 A/B cohort/recipe，不执行正式 M2 训练，不用 test 决定混合、阈值或候选，也不把 rejected teacher target 回退到单独一组。若输入是 D0 smoke、任一路由 D1 accepted 少于 2,000 或 D1 总 accepted 少于 36,000，必须在 cohort 构建前拒绝。
 
 ## 执行事项
 
-- 以 accepted teacher targets 与 human references 的交集建立固定 cohort；teacher 失败/rejected source/group 必须从两组同时排除。
+- 只以 D1 accepted teacher targets 与 human references 的交集建立固定 cohort；D0 smoke 禁止进入正式 recipe，teacher 失败/rejected source/group 必须从两组同时排除。
 - human-only 使用人类 target，distilled 对完全相同 source/group ID 使用 Hy-MT2 target；两组 dev/test 都只用冻结人类参考。
 - 冻结相同的 student 初始 state-dict hash、source 顺序、路由权重、batch/累积、optimizer/scheduler、最大 step 和 eval/checkpoint 频率。
 - 定义等预算为相同 source 曝光序列与 optimizer step；target 长度差异独立报告，禁止看到结果后追加 step/样本/方向曝光。
@@ -42,3 +42,4 @@
 - 预期差异只限于训练 target 及其 provenance/hash。
 - dev 选择规则在 M2 结果出现前冻结，test 保持隔离。
 - 任一公平性校验失败都会阻塞 TD-16。
+- D1 数量/身份门槛失败或误用 D0 smoke 同样阻塞 TD-16。

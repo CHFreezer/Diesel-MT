@@ -1,0 +1,281 @@
+schema_version: 1
+status: complete
+
+queue:
+  path: data/model/reports/td08-d1-manual-review.jsonl
+  records: 444
+  bytes: 338050
+  sha256: 61721b961cbec16adab5096b7039ee0183ef2d874f4122c03e51009731bc4f4b
+
+reviewer: Codex manual semantic inspection
+method: >-
+  Read all 444 queued records route by route and compare source_text, human_reference,
+  teacher_output, automated decision, rejection reasons, and Chinese script evidence.
+  Source fidelity is decisive because MASSIVE references may substitute locale-specific
+  entities; the reference is supporting context rather than a literal identity target.
+
+decisions:
+  accepted_reviewed_by_route:
+    eng_Latn->jpn_Jpan: 20
+    jpn_Jpan->eng_Latn: 20
+    eng_Latn->kor_Hang: 20
+    kor_Hang->eng_Latn: 20
+    jpn_Jpan->kor_Hang: 20
+    kor_Hang->jpn_Jpan: 20
+    eng_Latn->zho_Hans: 20
+    zho_Hans->eng_Latn: 20
+    jpn_Jpan->zho_Hans: 20
+    zho_Hans->jpn_Jpan: 20
+    kor_Hang->zho_Hans: 20
+    zho_Hans->kor_Hang: 20
+    eng_Latn->zho_Hant: 20
+    zho_Hant->eng_Latn: 20
+    jpn_Jpan->zho_Hant: 20
+    zho_Hant->jpn_Jpan: 20
+    kor_Hang->zho_Hant: 20
+    zho_Hant->kor_Hang: 20
+  rejected_reviewed_by_route:
+    eng_Latn->jpn_Jpan: 2
+    jpn_Jpan->eng_Latn: 0
+    eng_Latn->kor_Hang: 1
+    kor_Hang->eng_Latn: 3
+    jpn_Jpan->kor_Hang: 0
+    kor_Hang->jpn_Jpan: 2
+    eng_Latn->zho_Hans: 4
+    zho_Hans->eng_Latn: 1
+    jpn_Jpan->zho_Hans: 6
+    zho_Hans->jpn_Jpan: 8
+    kor_Hang->zho_Hans: 0
+    zho_Hans->kor_Hang: 0
+    eng_Latn->zho_Hant: 3
+    zho_Hant->eng_Latn: 1
+    jpn_Jpan->zho_Hant: 16
+    zho_Hant->jpn_Jpan: 20
+    kor_Hang->zho_Hant: 2
+    zho_Hant->kor_Hang: 0
+  traditional_extra_reviewed_by_route:
+    eng_Latn->jpn_Jpan: 0
+    jpn_Jpan->eng_Latn: 0
+    eng_Latn->kor_Hang: 0
+    kor_Hang->eng_Latn: 0
+    jpn_Jpan->kor_Hang: 0
+    kor_Hang->jpn_Jpan: 0
+    eng_Latn->zho_Hans: 0
+    zho_Hans->eng_Latn: 0
+    jpn_Jpan->zho_Hans: 0
+    zho_Hans->jpn_Jpan: 0
+    kor_Hang->zho_Hans: 0
+    zho_Hans->kor_Hang: 0
+    eng_Latn->zho_Hant: 5
+    zho_Hant->eng_Latn: 0
+    jpn_Jpan->zho_Hant: 5
+    zho_Hant->jpn_Jpan: 0
+    kor_Hang->zho_Hant: 5
+    zho_Hant->kor_Hang: 0
+  manual_rejections:
+    - review_id: ece66d67525ab3b10d623e4cfbe08139d442939a6af3d38cd22df50ba9666ad1
+      reason: The animal cub was mistranslated as a geometric cube.
+    - review_id: 24d37d2d6137fc433d54c32f8d36d9544b06ff4c12581c15a772fc2755d0966f
+      reason: Bringing up a complaint form was changed into submitting it.
+    - review_id: 1130bef53b08e9aaa0ba65345b235ec4ffc7dea79c9700dfcf8f6ed56eadda60
+      reason: A question about the current week number became a weekday question.
+    - review_id: 698d9f1b495d46cf2901ec39eaebda1c58e30f53ec197d2818e028f244f02f91
+      reason: The Japanese personal name Masaru was translated literally as Win.
+    - review_id: 926a7c0deb2a8ad6d6d720e59fcd2dc0826dc66cdc955d43ff97b22ce624fe83
+      reason: The restaurant name Drunken Thai was changed to Drunken Tiger.
+    - review_id: 8616249ed8b1f9bca1d35602ba5b160586ed392cea20c7d122d52412a6073c94
+      reason: The ordinal one hundred thousand two hundred seventeenth was corrupted.
+    - review_id: fe2d86c02ddcce91183b7548462d59ef2f3d2b72bbc7345f6e082114e8813d20
+      reason: A named song requested as the next track became an unrelated phrase about a drop.
+    - review_id: 212e2151e6edae77398f273254b28d56915ed80d25eb695f663cabd075f30844
+      reason: The request to make a client list became a first-person statement of intent.
+    - review_id: dbc6fa10bcd1ef36bf44e2a338de1d1b8c2447d808a5422a2ce89e4ddfb256a0
+      reason: The artist name Minami Haruo was duplicated and corrupted.
+    - review_id: ecb8fc831872a282fe70edf6a269420a6feefff4988f47decea449cabf431d18
+      reason: The Olly wake name was mistransliterated as the Korean word for duck.
+    - review_id: 685de4ad915fb9a10c27b2d8931dcede7102f733deed33eaa35a6c4377ed5d95
+      reason: A volume-lowering command was rendered as a literal setting on Negative Alexa.
+    - review_id: e291cc6d3d65f7c910458782b726a2746ff50c44d66775c5fa11ecb7269345b8
+      reason: The Olly vocative was fused into the invalid Japanese name Oriya.
+    - review_id: e03a11c3d2b7b79dde2b1c244c877e4394190bdff2e48152f13da6ad3b39da8c
+      reason: A command to brighten the lights became a completed-state statement.
+    - review_id: 7d5e0c1c3efef5ec61717cd98ea5f29c6d274695edba0f4b005c1ab6d0bb9444
+      reason: A playback request for David Bowie was changed into performing his music.
+    - review_id: e0ec37de9da681802333c7de0564d968d5ff1db87b34404b9407f57690ddcae8
+      reason: A request for next Tuesday's date became a question about its weekday.
+    - review_id: 103554c19e6e2486ebdddec3681ff8e6bd5bc5e9da7761a2f70af32ce3f91b9c
+      reason: The instruction to make a client list was lost in an incomplete purpose clause.
+    - review_id: c1d07750e0e06ced58200228a36f0512f8c860078c2a1e2cb31a03050ea8f81c
+      reason: Sending an email address was mistranslated as sending an email.
+    - review_id: 54e16aa578947b00edeb191bdcdbaea904dd2d8d585e8866a0cc3d698bfd2f2b
+      reason: A task-list command became a first-person confirmation statement.
+    - review_id: 420f6f56b9d1ca36238bfac5d23a71c88d95486e3bb53ebea73a2f5321acf6bc
+      reason: A question asking whether an alarm exists became a declarative assertion.
+    - review_id: c2b4af573c3c79d5bc5be9f0a9000d34c801e8f1d8de598a37949a5f78565ff3
+      reason: A strongly gendered insult was materially softened into a generic person term.
+    - review_id: 33cbc923caf5b470eec42c03d85e041a4beb5febf095a73fa80e667b405b8af1
+      reason: The personal name Jisu was mistranslated as the mathematical term index.
+    - review_id: f0c96fe409c1c9838b721396df3ff38440dc30309dd8e397c503e5999d9acffc
+      reason: A grocery list was mistranslated as a food-accessories list.
+    - review_id: cb75995065732cbd5894f843e18e123d17e04f426237d38da36c28eb1e2e031a
+      reason: The Google-like wake name Xiaogu was hallucinated as Mr. Ohtani.
+    - review_id: 8f33390243f232ec1ceceaae3489f15c0254205711d55bd2dd22e03c51aececc
+      reason: The plus relation in the short algebra query was omitted.
+    - review_id: dd54af3c6ede74bc7ef56d93afdd38f1db1a3e625cf043ca73f391613bacb1f2
+      reason: The Olly wake name became the Korean word for duck and the command became a statement.
+    - review_id: cd2d61093ac8f214d9d1cae86d0ee075b962ab64778589893949d6f84fb36e72
+      reason: The Toutiao product name was reduced to the generic phrase news headline.
+    - review_id: ec2b6b7d319dc12af612726302afd662b462f565a2372eaa8e3d094e240e6a0c
+      reason: Light colours were mistranslated as pale colours rather than lighting colours.
+    - review_id: 6ffde2fdbd708504e503a1acbea65e0bb942f71df9ba6dad4cb92927be11cfa9
+      reason: A switchable water geyser was mistranslated as a natural intermittent spring.
+    - review_id: 9cd419b9603615303c64f828da211caae6d44d35a0be97e2be042ce14215fb51
+      reason: The malformed location/life query was resolved as the unrelated assertion that Bob is alive.
+    - review_id: 426521d5f8c1c0c1f877649f5f4436efae34597123730a0d06a8d6bb6b955dc2
+      reason: The address john at gmail dot com was parsed as John belonging to gmail.com.
+    - review_id: e3e31042d3059a74a899c2b145314c7ec4345a634f9aed9afd528d2cead00f36
+      reason: The malformed get-marks request was interpreted as an attribution phrase.
+    - review_id: 0ba08c55ad23b22c1a24f6f79b8feeb533185d3de73f18596f81d34ff67e3227
+      reason: Playing the song Love Confession Balloon became releasing a literal balloon.
+    - review_id: d90ebc794891d1d2690958b91ee779d89ca0c2e5b975742a2024f210b552f334
+      reason: The Olly vocative was attached to and changed the movie title.
+    - review_id: 07313317ed5ce7acd48f149b848bdbb8b0fe757f9875da87970b1864ffd1a8db
+      reason: A command to post photos became a past-tense report that Alexa had posted them.
+    - review_id: 7298adc7e577b14cb53e6ebe01ecf7098ba0d585d0f1a63a7b46595c81d1a5da
+      reason: Zhongzheng Road was mistransliterated as Zhengzheng Road.
+    - review_id: 96763efc63b3563a2da0f1c18455f1c53f7de13d2de242f5268cb3c8feceb148
+      reason: The Aeon company name was rendered as an unrecognized phonetic form.
+    - review_id: e8c53896dae11367bc09ac258e20f45eed5dea3d226e35efdb8196c731635b0e
+      reason: A request to find a cheap ticket became a statement that it had been found.
+    - review_id: ff5326e826e8483329df42b6e1f177ca0c66db8bd412b2384476488d0c8da1c9
+      reason: Setting a notification became the malformed phrase send a notification set.
+    - review_id: c850cfbf1f3aa021cf080af386917095741e6482823d34a26a7953fb43045c15
+      reason: The Hey Robot wake phrase was hallucinated as a personal name.
+    - review_id: 7f0e9f474ed58dcbf3c76f3fea1a6410cbfe2c4616c5c726088c6cd632118a92
+      reason: The required ten-minute reminder delay was omitted.
+    - review_id: f53b1e44d0d95213a0ee4bf6015d7f909c60018fd40a34bad817aadfe803c0a2
+      reason: The World of Warcraft title was corrupted to Maosu World.
+    - review_id: 3cd4da3808c16a8f00c7fdd46a967ff632e5cc626502fa3a5c8084b46b5ec5cb
+      reason: A recurring vacuum-start command became a declarative statement.
+    - review_id: e2ac98137eda631199eaf58c07a8e7a95a1b797343d06db8724f8b0f1ec5e040
+      reason: Turning on dashboard buttons was mistranslated as opening buttons.
+    - review_id: 06afa88986f77d626acdc5f2a11c09c0de4644aaa95ed667de1413a37e007610
+      reason: One person's history was changed into the history of humankind.
+    - review_id: 1d875d1df141cc685099b524300f04362495bdd5fec96be4906173eb46de9228
+      reason: KakaoTalk messages were reduced to generic chat messages.
+    - review_id: f4faba35b9367ef0c362297750c363b01d82b0ec5b31ee6a33407953d5507de3
+      reason: A question about email from Juhyun became a declarative assertion.
+    - review_id: 1341470c4ebf2e94f243d67d8b57a90ce91ba4d1b36fd61ff0c921b9bd412fd5
+      reason: A playback request was changed specifically into replaying.
+    - review_id: 7270e66328f985d658a285bf246c3d45bd73ca94fc0d39b6c512a2d873c70865
+      reason: The year 2017 was corrupted into this thousand seventeen.
+    - review_id: 4928ccfe097194a6bd6d185c4e2e245e1f0ffc5ff6b4df43e88cf16f1055dd4a
+      reason: The personal name Jieun was mistranslated as the common noun author.
+    - review_id: 80ebab88ac555eb612664d569895584e4e20da94768fe07e580acccafa1706c0
+      reason: Multiple love letters were reduced to one generic letter.
+    - review_id: b7117ccd79e2b46ad8a70d510b0ae4f87c93bd09af31afde3f3cd504e32a9db5
+      reason: A request about how the day is going changed speaker and became a statement about appearance.
+    - review_id: 5d2686c473614a4623b322309cf521673ee026ffe0ce2c3fbcd44db8ac5430bd
+      reason: The artist name Nine Chen was corrupted under an incorrect character reading.
+  rejected_rule_mismatches:
+    - review_id: 736fd53b9c934997f4a2c6939af83e63194827212b5b7d51ae9a0f598080f320
+      rule: source_copy
+      reason: SBS is a broadcaster acronym whose Latin-letter form remains valid in Japanese.
+    - review_id: e4ea8ce148e19e31d0865e697eece07bbb92ff9d717f2aac162f2c5de5314dbf
+      rule: source_copy
+      reason: Osaka is correctly written with the same Han characters in Simplified Chinese.
+    - review_id: 3bdabd51fe675a40dd70a6014af271d80f0cb5fa12fb15c18334682d50237308
+      rule: source_copy
+      reason: The number 150217 has the same valid Han-number representation in Simplified Chinese.
+    - review_id: beef854973fbe1980b42d0593748b39554ffb1928048dfef70b43b612aba2676
+      rule: source_copy
+      reason: West is correctly written with the shared Han character in Japanese.
+    - review_id: d037d90628e69d31a40bcc4dfe7825aad5dee41ce50c8cf2e70c8fe0c6b46a15
+      rule: source_copy
+      reason: Solution or answer is validly written as the shared word 解答 in Japanese.
+    - review_id: e5517ba752d9a9b025334745949125b7066215f7bd76e68156ae5d69fe4b8b2f
+      rule: source_copy
+      reason: Politics is the same valid shared word 政治 in Japanese.
+    - review_id: dc016221afa3ef864db7c78035e0ffbde763bd52f10d66a4aa17049ad31b3798
+      rule: source_copy
+      reason: The title Beijing Night can validly retain its Han-character proper-name form in Japanese.
+    - review_id: 122d01ad27a87ac4fca82b5ee77ad7b51ee45b9dc8d4de4b52b2d25925c56af9
+      rule: source_copy
+      reason: Volume adjustment is the valid shared Traditional Chinese phrase 音量調整.
+    - review_id: 3b2a606439f9882f469d105eae598e5aa50d280bc589f459aa6c0b7e5d9e5e14
+      rule: source_copy
+      reason: 話題 is a valid shared Japanese and Traditional Chinese word.
+    - review_id: 0c7920f19876c115f121fe0df191736f65c6cd26fec12bd3bdce53da58883bc6
+      rule: source_copy
+      reason: Time is the same valid Traditional Chinese word 時間.
+    - review_id: 707f40533ca6662d40ddb2d517b949206c5f39e069088efc2e1815c59c6d0f89
+      rule: source_copy
+      reason: Volume adjustment is the valid shared Traditional Chinese phrase 音量調節.
+    - review_id: cde737a24efeedad2e1bdc71af3e7c9c08ff25d9db877494027a09d5effe7f52
+      rule: source_copy
+      reason: Train accident is the valid shared Traditional Chinese phrase 列車事故.
+    - review_id: 79c5b17cf195c1a70df120432b3297f588b9ce6969e4553a46c620c0de1cbf66
+      rule: source_copy
+      reason: The second 音量調節 record is also a valid shared Traditional Chinese phrase.
+    - review_id: d9014d9e24ea82ff776430496462849dc132883f2ff24f3450316d5b954e5b6f
+      rule: source_copy
+      reason: The artist name Kenshi Yonezu validly retains the Han characters 米津玄師.
+    - review_id: 39ebc1e04c90d63a0c670f24b4d9432701dfbb83f7a535ad6480a278dd884b17
+      rule: source_copy
+      reason: Love is the same valid shared Traditional Chinese word 愛.
+    - review_id: c56fe338328e4e2b4e24c3985f94ab48f0f9d030f28a6f74978f41268f7b90ba
+      rule: source_copy
+      reason: The personal name Fumio Kishida validly retains the Han characters 岸田文雄.
+    - review_id: 120f4f4da421f47d5ea4ec9079336cc7fd0d0202fa281ffb21dcc4f88cd09d61
+      rule: source_copy
+      reason: Education is the same valid shared Traditional Chinese word 教育.
+    - review_id: 0c28d27f46ecc7621b6002b2c5ed1a874aece06b42fa47d592c9d76178eb071e
+      rule: source_copy
+      reason: Life is the same valid shared Traditional Chinese word 人生.
+    - review_id: 8eecca7c7261a94fe327bdb3ae7db92d75a0400dfb23914f179100838e4fb381
+      rule: source_copy
+      reason: Answer is the same valid shared Traditional Chinese word 回答.
+    - review_id: 50bfc78d7e732c4eb27f62e84a6f418ce2a9850da90e50383a1115cbbc632dcd
+      rule: source_copy
+      reason: Attitude is the same valid shared Japanese word 態度.
+    - review_id: 4f4945bf85b41f4dd9ae2b811227bc8fe94a75efb9dbca6f025b4d8af2b04c75
+      rule: source_copy
+      reason: The singer name Chen Sheng validly retains the Han characters 陳昇 in Japanese.
+    - review_id: b684b5136bebfa8027440cc3349b75955b60e455db21151dcaf7b8fe86a82483
+      rule: source_copy
+      reason: United Daily News validly retains its Han-character publication name 聯合報.
+    - review_id: f04f8c1a5031977d4503415981f5dca6d4d6863f53d624be220bc8fcba8ad4e8
+      rule: source_copy
+      reason: Kaohsiung fire is readable and semantically valid as the shared phrase 高雄火災.
+    - review_id: 91b4271be280560c7367eb95c6ffcd8a62b204b47a875593b91c600b0ce6ea74
+      rule: source_copy
+      reason: The radio brand 中廣流行網 validly retains its proper-name characters.
+    - review_id: 172367ecda83225c26a6395d0b8441d1c8526865274adcd071e88af8be683234
+      rule: source_copy
+      reason: The artist, band, and song title are proper names that validly retain their written forms.
+    - review_id: 14cf9b60e8c5418bf43922b7b3540e3ef64a4caea9b02b54b10f8fda0ee654b5
+      rule: source_copy
+      reason: Education is the same valid shared Japanese word 教育.
+    - review_id: 46f03f59d96a0e135e57c52cf65ee7b8726bb9aad70c618c93bccd03c6d93ae2
+      rule: source_copy
+      reason: All is the same valid shared Japanese word 全部 for this one-word source.
+    - review_id: 9a982a638c7eeaf15d358062e006d26c6f01a67832daa8a84b649aa370f1d83f
+      rule: source_copy
+      reason: Car is the same valid shared Japanese word 車.
+    - review_id: fcf6b698691ae4892fe797446184bdd05f429654e334eab70f950dc2415e5c6c
+      rule: source_copy
+      reason: Main point is the same valid shared Japanese word 主旨.
+    - review_id: a92d944979a2a88aba11c6bca5d1318bc05627366187068e5d62469fee38aa81
+      rule: source_copy
+      reason: New Year is the same valid shared Japanese word 新年 for this one-word source.
+    - review_id: e1f7f61e5ea00b406d4d3c6c2802a8392800c5bca122e220c35582f3f1f9af8c
+      rule: source_copy
+      reason: Today is the same valid shared Japanese word 今日 for this one-word source.
+  systemic_blocker: false
+
+notes:
+  - All 360 accepted samples, all 69 automated rejects, and all 15 Traditional Chinese extras were inspected.
+  - Fifty-two automated-accepted records were manually rejected for source-fidelity, entity, number, intent, or script-quality errors.
+  - Thirty-one source-copy-only false positives were restored only where the shared word, number, acronym, or proper name is valid unchanged.
+  - Automatic rejects for length, truncation, wrong-script dominance, or Simplified-only Traditional targets remain filtered even when surface meaning looked plausible.
+  - No route-level or systemic teacher failure was observed, and dev/test data were not used.

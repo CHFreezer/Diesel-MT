@@ -13,7 +13,7 @@
 
 ## 目标
 
-使用不可变的 `mvp-tokenizer-v0`、锁定的 Hy-MT2 7B teacher 和从零初始化的 `mvp_e8_d2_v48k`，建立“有界人类平行数据 -> 离线 sequence-level 蒸馏 -> human-only/distilled 等预算训练与恢复 -> 独立评测 -> CTranslate2 float32/INT8 离线推理”的第一个真实模型闭环。
+使用不可变的 `mvp-tokenizer-v0`、锁定的 Hy-MT2 7B teacher 和从零初始化的 `mvp_e8_d2_v48k`，建立“最小可用人类平行数据 -> D0 真实数据冒烟 -> D1 最小可用 sequence-level 蒸馏 -> human-only/distilled 等预算训练与恢复 -> 独立评测 -> CTranslate2 float32/INT8 离线推理”的第一个真实模型闭环。
 
 本 todo 包含有界 Hy-MT2 7B 蒸馏试点，但不包含全量 teacher 数据生成、在线 logits/hidden-state 蒸馏、`e12-d3`、约 200M 模型、生产质量门槛或移动端性能优化。
 
@@ -27,6 +27,8 @@
 - teacher 固定为 `configs/hymt2_teacher_selection.yaml` 中的官方 Hy-MT2 7B GGUF Q8_0 + llama.cpp CUDA，只生成离散 UTF-8 译文；teacher 不进入 student 训练图，student 不继承其 tokenizer、权重或架构。
 - 正式蒸馏 corpus 只从 train source 生成；仅允许在冻结的有界 human dev 子集上运行 teacher 以校准 prompt/decode，校准输出不得进入 student train，test 不得送入 teacher。
 - test 只在最终候选冻结后执行一次正式评测；训练配置和 checkpoint 选择只使用 train/dev。
+- 成熟度与版本号分开：fixture 只用于测试，smoke 只证明真实流程正确，mvp corpus 才允许产生训练/A-B 结论。M0 human train 属于 mvp；D0 属于 smoke；已完成的 D1 是 distilled mvp。
+- D1 固定每路由 2,224 个候选（40,032 总计），每路由至少 2,000 个 accepted、总 accepted 至少 36,000；D0 的 2,263 个 accepted 不能替代 D1 进入 TD-15/TD-16。
 
 ## 依赖关系
 
@@ -45,7 +47,7 @@ TD-08 + TD-12 + TD-13 + TD-14 + TD-15 -> TD-16
 TD-16 -> TD-17 -> TD-18
 ```
 
-TD-09 至 TD-11 可在人类数据链构建期间先用 TD-01 的 schema fixture 开发，但涉及全路由和阶段验收时必须消费 TD-05 冻结的 fixture/manifest。M0 在 TD-05 与 TD-09 都完成后关闭；D0 在 TD-08 完成后关闭；M1 在 TD-12 完成后关闭；M2 在 TD-16 完成后关闭；M3 在 TD-17 完成后关闭。TD-18 负责整个 todo 的统一回归与 review 准备。
+TD-09 至 TD-11 可在人类数据链构建期间先用 TD-01 的 schema fixture 开发，但涉及全路由和阶段验收时必须消费 TD-05 冻结的 fixture/manifest。M0 在 TD-05 与 TD-09 都完成后关闭；D0 smoke 已完成但不关闭 TD-08，TD-08 只有在 D1 distilled mvp 完成后才关闭；M1 在 TD-12 完成后关闭；M2 在 TD-16 完成后关闭；M3 在 TD-17 完成后关闭。TD-18 负责整个 todo 的统一回归与 review 准备。
 
 ## 待办
 
@@ -153,34 +155,44 @@ TD-09 至 TD-11 可在人类数据链构建期间先用 TD-01 的 schema fixture
 
 依赖：TD-05、TD-06。
 
-- [ ] 固定语言名称映射：`zho_Hans -> Chinese`、`zho_Hant -> Traditional Chinese`、`eng_Latn -> English`、`jpn_Jpan -> Japanese`、`kor_Hang -> Korean`；简体/繁体输出分别执行脚本合规检查。
-- [ ] 以官方“只输出翻译结果、不要额外解释”模板为起点，固定 prompt version、chat template、是否使用 system prompt、source/target 名称语言和输入分隔方式。
-- [ ] 在冻结的人类 dev/reference 小样本上比较 greedy/确定性解码与官方推荐采样参数，逐路由报告 chrF/SacreBLEU、脚本合规、额外解释、source copy、空输出和长度比。
-- [ ] 在查看完整 train 输出前选择唯一规范 decode profile；若采样模式无法跨 batch/resume 稳定重放，则不得作为规范 profile。
-- [ ] 为 18 个路由分别冻结最大输入/输出长度、stop 条件和异常阈值，防止某一路由用总体平均掩盖失败。
-- [ ] 对 prompt echo、额外解释、错语言/错脚本、繁体退化为简体、截断、重复、占位符损坏和 source copy 建立正反例测试。
-- [ ] 保存逐样本 teacher raw output 与 reference 对照；不得将 dev teacher output 混入 student train。
+- [x] 固定语言名称映射：`zho_Hans -> Chinese`、`zho_Hant -> Traditional Chinese`、`eng_Latn -> English`、`jpn_Jpan -> Japanese`、`kor_Hang -> Korean`；简体/繁体输出分别执行脚本合规检查。
+- [x] 以官方“只输出翻译结果、不要额外解释”模板为起点，固定 prompt version、chat template、是否使用 system prompt、source/target 名称语言和输入分隔方式。
+- [x] 在冻结的人类 dev/reference 小样本上比较 greedy/确定性解码与官方推荐采样参数，逐路由报告 chrF/SacreBLEU、脚本合规、额外解释、source copy、空输出和长度比。
+- [x] 在查看完整 train 输出前选择唯一规范 decode profile；若采样模式无法跨 batch/resume 稳定重放，则不得作为规范 profile。
+- [x] 为 18 个路由分别冻结最大输入/输出长度、stop 条件和异常阈值，防止某一路由用总体平均掩盖失败。
+- [x] 对 prompt echo、额外解释、错语言/错脚本、繁体退化为简体、截断、重复、占位符损坏和 source copy 建立正反例测试。
+- [x] 保存逐样本 teacher raw output 与 reference 对照；不得将 dev teacher output 混入 student train。
 
 产物：teacher 语言映射、prompt/decode 配置、18 路由校准报告和输出过滤测试。
 
 完成条件：18 个路由都有通过预设质量/格式门槛的唯一、可重放 teacher profile；失败路由阻塞 TD-08。
 
-### TD-08 生成并验收有界 sequence-level 蒸馏数据
+完成记录：TD-07 于 2026-07-15 完成。216 条冻结 dev 样本覆盖 18 路由；greedy 宏观 chrF 28.615981、char-SacreBLEU 33.923799、接受率 0.995370、脚本合规率 1.0，且18路由无失败项。官方采样 chrF 仅高 0.014524，未达到 +2.0 切换门槛；两个 profile 的36条独立 replay 均逐字一致，最终冻结 `greedy-v1`，test 从未读取。
+
+### TD-08 生成 D0 smoke 并验收 D1 最小可用蒸馏数据
 
 依赖：TD-05、TD-07。
 
-- [ ] 实现 `scripts/generate_teacher_data.py`，只读取冻结 train source/`sample_group_id`，显式拒绝 dev/test，并按 18 个路由生成离散 UTF-8 teacher targets。
-- [ ] 支持 dry-run、确定性分片、原子 shard、逐样本 checkpoint/resume、缓存校验和中断恢复；worker/batch/resume 差异不得改变规范输出身份。
-- [ ] 每条记录保存 teacher revision/hash、运行后端、prompt version、decode config/seed、输入 sample/group ID、raw response、normalized target、raw/normalized hash 和生成 run manifest。
-- [ ] raw response 与 accepted target 分开保存；过滤空输出、额外解释/prompt echo、source copy、错语言/错脚本、异常长度、截断、重复和占位符损坏，并保留逐原因拒绝计数。
-- [ ] 每个路由至少人工检查 20 条 accepted 和 20 条 rejected（不足时全部），繁体目标额外抽检简繁混淆、地区词和共享汉字误判。
-- [ ] 输出 18 路由的输入数、成功数、拒绝率、重试率、长度/脚本/来源分布和 teacher 吞吐；任一路由低于冻结通过门槛时停止发布。
-- [ ] 使用相同 artifact/profile 对固定分片独立重放，验证 raw/normalized 输出和 manifest 身份符合 TD-07 的复现契约。
-- [ ] 发布有界 distilled train corpus 和完成 manifest；dev/test 继续只保留冻结的人类参考，teacher 从未消费 test。
+- [x] 实现 `scripts/generate_teacher_data.py`，只读取冻结 train source/`sample_group_id`，显式拒绝 dev/test，并按 18 个路由生成离散 UTF-8 teacher targets。
+- [x] 支持 dry-run、确定性分片、原子 shard、逐样本 checkpoint/resume、缓存校验和中断恢复；worker/batch/resume 差异不得改变规范输出身份。
+- [x] 每条记录保存 teacher revision/hash、运行后端、prompt version、decode config/seed、输入 sample/group ID、raw response、normalized target、raw/normalized hash 和生成 run manifest。
+- [x] raw response 与 accepted target 分开保存；过滤空输出、额外解释/prompt echo、source copy、错语言/错脚本、异常长度、截断、重复和占位符损坏，并保留逐原因拒绝计数。
+- [x] 每个路由至少人工检查 20 条 accepted 和 20 条 rejected（不足时全部），繁体目标额外抽检简繁混淆、地区词和共享汉字误判。
+- [x] 输出 18 路由的输入数、成功数、拒绝率、重试率、长度/脚本/来源分布和 teacher 吞吐；任一路由低于冻结通过门槛时停止发布。
+- [x] 使用相同 artifact/profile 对固定分片独立重放，验证 raw/normalized 输出和 manifest 身份符合 TD-07 的复现契约。
+- [x] 发布有界 distilled train corpus 和完成 manifest；dev/test 继续只保留冻结的人类参考，teacher 从未消费 test。
+- [x] 冻结独立 D1 配置/manifest 身份：沿用 D0 teacher/prompt/decode/filter，候选 source 为 D0 的确定性超集；每路由 2,224 个、总计 40,032，禁止覆盖 D0 目录或复用 D0 的 complete 身份冒充 D1。
+- [x] 生成并过滤 D1；每路由 accepted 至少 2,000、总 accepted 至少 36,000，且接受率、脚本合规、重试、长度、source-copy、截断和 provenance 继续通过冻结门槛。
+- [x] 对 D1 独立执行逐路由人工抽检、繁体/共享汉字专项检查和固定分片精确 replay；D0 的审查与 replay 只能作为管线先验证据，不能替代 D1 运行证据。
+- [x] 原子发布 D1 raw/accepted/filtered、质量报告、审查证明和 complete manifest；只有 D1 accepted 与 M0 human reference 的同 source/group 交集可供 TD-15 消费。
 
-产物：有界 Hy-MT2 7B raw/accepted/filtered 数据、生成器、18 路由质量报告和完整 provenance manifest。
+产物：D0 smoke 证据、D1 MVP 级 Hy-MT2 7B raw/accepted/filtered 数据、生成器、18 路由质量报告和完整 provenance manifest。
 
-完成条件：plan 的 D0 门槛全部满足；只有通过质量、复现、许可/provenance 和 test 隔离验收的 teacher targets 才能进入 TD-15。
+完成条件：D0 smoke 与 D1 mvp 门槛均满足；D1 每路由 accepted 至少 2,000 且总计至少 36,000，只有通过质量、复现、许可/provenance 和 test 隔离验收的 D1 teacher targets 才能进入 TD-15。
+
+阶段记录：D0 smoke 于 2026-07-15 完成。冻结 train 按 18 路由各生成 128 条，共 2,304 条；人工全检 381 条分层队列并剔除 39 条语义错误，受限恢复 4 条日中共享汉字 `source_copy` 误杀。最终接受 2,263 条、过滤 41 条，最低路由接受率 0.960938，全部路由脚本合规率 1.0、重试率 0、质量失败项为空。36 条独立 replay 的 raw/normalized 输出均精确一致；D0 complete manifest SHA-256 为 `2e0beb51e0b5020f7248da4d0f7bdd544bb0274c29c0efc22affa9d83ff1639e`，只作为 immutable smoke 证据。
+
+阶段记录：D1 mvp 于 2026-07-15 完成。独立配置从冻结 M0 train 选择 18 路由各 2,224 条，共 40,032 条，并逐字节验证后复用 D0 的每路由 128 条前缀（2,304 条）；其余 37,728 条由同一 GGUF Q8_0 teacher 新生成，生成墙钟 18,382.615340 秒。人工逐条检查 444 条队列，剔除 52 条自动接受的语义/实体/数字/意图错误，受限恢复 31 条有效共享汉字、数字、缩写和专名的 `source_copy` 误杀。最终接受 39,941 条、过滤 91 条；逐路由 accepted 为 2,211～2,223，最低接受率 0.994155、最低脚本合规率 0.999101、重试率全部为 0、质量失败项为空。独立重载 replay 的 36 条 raw/normalized 输出全部精确一致，dev/test 从未被 teacher 消费。D1 generation contract SHA-256 为 `2e54be92d270af3acac76251f25e31987a876f3e098dfb7bbbc73c696a470b1a`，complete manifest SHA-256 为 `9de9a4c251504c9ee157bec2dc4eefea8acd760d808672c15704f5c884b9ff2c`，tracked evidence 为 `artifacts/model-training/td08-d1-distilled-data.json`。重复 finalize 后 manifest/evidence/accepted/filtered/quality/review/replay 七类产物哈希全部不变；蒸馏专项 `26 passed`，全量离线回归 `143 passed`。TD-08 已重新关闭为 `completed`，TD-09 仍未启动。
 
 ### TD-09 实现编码、collator 与 student 构造
 
@@ -283,7 +295,7 @@ TD-09 至 TD-11 可在人类数据链构建期间先用 TD-01 的 schema fixture
 
 依赖：TD-05、TD-08、TD-13。
 
-- [ ] 以 TD-08 accepted teacher targets 与 TD-05 human references 的交集建立固定 A/B cohort；teacher 生成失败或被过滤的 source/group 必须从两组同时排除，不得只给 distilled 组补样或回退 human target。
+- [ ] 只以 TD-08 D1 accepted teacher targets 与 TD-05 human references 的交集建立固定 A/B cohort；D0 smoke 明确禁止进入正式 A/B。teacher 生成失败或被过滤的 source/group 必须从两组同时排除，不得只给 distilled 组补样或回退 human target。
 - [ ] `human-only` 组对固定 cohort 使用人类 target，`distilled` 组对完全相同的 source/group ID 使用 Hy-MT2 7B teacher target；dev/test 两组都只使用冻结的人类参考。
 - [ ] 冻结两组相同的 student 初始 state-dict hash、source 样本顺序、路由权重、micro batch、梯度累积、optimizer/scheduler、最大 optimizer step 和 checkpoint/eval 频率。
 - [ ] 明确定义“等预算”为相同 source 曝光序列与 optimizer step 数；teacher target 与 human target 的长度差异单独报告，不得在看到结果后通过追加 step、样本或方向曝光补偿某一组。
@@ -348,10 +360,10 @@ TD-09 至 TD-11 可在人类数据链构建期间先用 TD-01 的 schema fixture
 
 ## 完成条件
 
-- [ ] TD-01 至 TD-18 全部完成，M0、D0、M1、M2、M3 阶段门槛依次通过。
+- [ ] TD-01 至 TD-18 全部完成，M0、D0 smoke、D1 distilled mvp、M1、M2、M3 阶段门槛依次通过。
 - [ ] `mvp-tokenizer-v0` 冻结根保持 `eb79ae22f523f1d9c9fcf75b80f2b322e3c2882a8fddb7545b5933dd4053fa7f`，模型全链词表为 49,152 且 ID 顺序一致。
 - [ ] MVP 数据覆盖 5 个标签桶、9 组无向平行语料和 18 个有向路由；简体、繁体分别有独立 dev/test，无 train/dev/test 泄漏。
-- [ ] 锁定的 Hy-MT2 7B teacher 可离线重载并按固定 prompt/decode 为 18 个 train 路由生成可审计的离散译文；teacher 未消费 test，raw/accepted 数据与 provenance 完整。
+- [ ] 锁定的 Hy-MT2 7B teacher 可离线重载并按固定 prompt/decode 为 18 个 train 路由生成可审计的离散译文；D0 smoke 与达到每路由至少 2,000 accepted 的 D1 mvp 均有完整 raw/accepted/provenance，teacher 未消费 test。
 - [ ] M1 小样本过拟合、原子 checkpoint、故障拒绝和同环境恢复一致性通过。
 - [ ] `mvp_e8_d2_v48k` 完成人类 target 与 Hy-MT2 7B target 的等预算 M2 A/B；唯一候选只由冻结 dev 规则选择，若蒸馏无收益则记录负结果且不扩量，test 只执行一次正式评测。
 - [ ] 评测提供 18 路由明细和 12 产品方向汇总，简体/繁体不被合并均值掩盖。

@@ -1,0 +1,289 @@
+{
+  "date": "2026-07-15",
+  "dev_accessed": false,
+  "downstream_consumer": "TD-15",
+  "identities": {
+    "accepted_sha256": "282be328032877cb9a380e76bb2b006e64822b0863825978e9cd8a5ee8bd2b81",
+    "distillation_config_sha256": "f9cfe0f0923c7b77bd17f9532184919910ff18899022bb4254c966a08d7ffaf5",
+    "generation_contract_sha256": "42bb80d67d428c40031ee880a86a74420f842388bdba8aa3ed25837c5c7a5fd0",
+    "manifest_sha256": "2e0beb51e0b5020f7248da4d0f7bdd544bb0274c29c0efc22affa9d83ff1639e",
+    "manual_review_sha256": "749e33070383510faee7463450dde3c6979cd063222fe3f9745e61798a42f18d",
+    "prompt_config_file_sha256": "ab7004258c42e26cc955f6e89604616fc4c40005a92c6d880ad48f903fc9e124",
+    "quality_report_sha256": "f7f115eafa92d11306ce8f3a1e580a954b565d7f8e3353cf15bd2e8df0597bb4",
+    "replay_report_sha256": "8cc4512ebf5d7f8a11567863104ad03648c82e78626727db76df9db82ae1c8a2",
+    "td07_calibration_report_sha256": "a8245c185d2ff4100f9435413917ea783a5e5f0207efb75ed3e6c8fcaf526b78"
+  },
+  "manual_review": {
+    "manual_acceptances": 4,
+    "manual_rejections": 39,
+    "queue_records": 381,
+    "systemic_blocker": false
+  },
+  "pipeline_version": "td08-hymt2-distillation-v1",
+  "quality": {
+    "gate_failures": [],
+    "routes": {
+      "eng_Latn->jpn_Jpan": {
+        "accepted": 127,
+        "accepted_rate": 0.992188,
+        "completion_tokens": 2143,
+        "filtered": 1,
+        "input": 128,
+        "latency_seconds": 76.607365,
+        "manual_acceptances": 0,
+        "manual_rejections": 1,
+        "rejection_reasons": {},
+        "retry_rate": 0.0,
+        "script_compliance_rate": 1.0
+      },
+      "eng_Latn->kor_Hang": {
+        "accepted": 128,
+        "accepted_rate": 1.0,
+        "completion_tokens": 2707,
+        "filtered": 0,
+        "input": 128,
+        "latency_seconds": 93.463147,
+        "manual_acceptances": 0,
+        "manual_rejections": 0,
+        "rejection_reasons": {},
+        "retry_rate": 0.0,
+        "script_compliance_rate": 1.0
+      },
+      "eng_Latn->zho_Hans": {
+        "accepted": 126,
+        "accepted_rate": 0.984375,
+        "completion_tokens": 1093,
+        "filtered": 2,
+        "input": 128,
+        "latency_seconds": 39.279649,
+        "manual_acceptances": 0,
+        "manual_rejections": 2,
+        "rejection_reasons": {},
+        "retry_rate": 0.0,
+        "script_compliance_rate": 1.0
+      },
+      "eng_Latn->zho_Hant": {
+        "accepted": 126,
+        "accepted_rate": 0.984375,
+        "completion_tokens": 1498,
+        "filtered": 2,
+        "input": 128,
+        "latency_seconds": 51.844611,
+        "manual_acceptances": 0,
+        "manual_rejections": 2,
+        "rejection_reasons": {},
+        "retry_rate": 0.0,
+        "script_compliance_rate": 1.0
+      },
+      "jpn_Jpan->eng_Latn": {
+        "accepted": 127,
+        "accepted_rate": 0.992188,
+        "completion_tokens": 1154,
+        "filtered": 1,
+        "input": 128,
+        "latency_seconds": 42.031662,
+        "manual_acceptances": 0,
+        "manual_rejections": 1,
+        "rejection_reasons": {},
+        "retry_rate": 0.0,
+        "script_compliance_rate": 1.0
+      },
+      "jpn_Jpan->kor_Hang": {
+        "accepted": 128,
+        "accepted_rate": 1.0,
+        "completion_tokens": 2405,
+        "filtered": 0,
+        "input": 128,
+        "latency_seconds": 84.163053,
+        "manual_acceptances": 0,
+        "manual_rejections": 0,
+        "rejection_reasons": {},
+        "retry_rate": 0.0,
+        "script_compliance_rate": 1.0
+      },
+      "jpn_Jpan->zho_Hans": {
+        "accepted": 123,
+        "accepted_rate": 0.960938,
+        "completion_tokens": 1081,
+        "filtered": 5,
+        "input": 128,
+        "latency_seconds": 39.229572,
+        "manual_acceptances": 0,
+        "manual_rejections": 4,
+        "rejection_reasons": {
+          "source_copy": 1
+        },
+        "retry_rate": 0.0,
+        "script_compliance_rate": 1.0
+      },
+      "jpn_Jpan->zho_Hant": {
+        "accepted": 125,
+        "accepted_rate": 0.976562,
+        "completion_tokens": 1344,
+        "filtered": 3,
+        "input": 128,
+        "latency_seconds": 44.572425,
+        "manual_acceptances": 3,
+        "manual_rejections": 3,
+        "rejection_reasons": {
+          "source_copy": 3
+        },
+        "retry_rate": 0.0,
+        "script_compliance_rate": 1.0
+      },
+      "kor_Hang->eng_Latn": {
+        "accepted": 123,
+        "accepted_rate": 0.960938,
+        "completion_tokens": 1276,
+        "filtered": 5,
+        "input": 128,
+        "latency_seconds": 45.611978,
+        "manual_acceptances": 0,
+        "manual_rejections": 5,
+        "rejection_reasons": {},
+        "retry_rate": 0.0,
+        "script_compliance_rate": 1.0
+      },
+      "kor_Hang->jpn_Jpan": {
+        "accepted": 126,
+        "accepted_rate": 0.984375,
+        "completion_tokens": 2121,
+        "filtered": 2,
+        "input": 128,
+        "latency_seconds": 74.41704,
+        "manual_acceptances": 0,
+        "manual_rejections": 2,
+        "rejection_reasons": {},
+        "retry_rate": 0.0,
+        "script_compliance_rate": 1.0
+      },
+      "kor_Hang->zho_Hans": {
+        "accepted": 127,
+        "accepted_rate": 0.992188,
+        "completion_tokens": 1084,
+        "filtered": 1,
+        "input": 128,
+        "latency_seconds": 39.37108,
+        "manual_acceptances": 0,
+        "manual_rejections": 1,
+        "rejection_reasons": {},
+        "retry_rate": 0.0,
+        "script_compliance_rate": 1.0
+      },
+      "kor_Hang->zho_Hant": {
+        "accepted": 124,
+        "accepted_rate": 0.96875,
+        "completion_tokens": 1463,
+        "filtered": 4,
+        "input": 128,
+        "latency_seconds": 47.961128,
+        "manual_acceptances": 0,
+        "manual_rejections": 4,
+        "rejection_reasons": {},
+        "retry_rate": 0.0,
+        "script_compliance_rate": 1.0
+      },
+      "zho_Hans->eng_Latn": {
+        "accepted": 127,
+        "accepted_rate": 0.992188,
+        "completion_tokens": 1203,
+        "filtered": 1,
+        "input": 128,
+        "latency_seconds": 42.934149,
+        "manual_acceptances": 0,
+        "manual_rejections": 1,
+        "rejection_reasons": {},
+        "retry_rate": 0.0,
+        "script_compliance_rate": 1.0
+      },
+      "zho_Hans->jpn_Jpan": {
+        "accepted": 125,
+        "accepted_rate": 0.976562,
+        "completion_tokens": 2077,
+        "filtered": 3,
+        "input": 128,
+        "latency_seconds": 72.129918,
+        "manual_acceptances": 0,
+        "manual_rejections": 2,
+        "rejection_reasons": {
+          "source_copy": 1
+        },
+        "retry_rate": 0.0,
+        "script_compliance_rate": 1.0
+      },
+      "zho_Hans->kor_Hang": {
+        "accepted": 126,
+        "accepted_rate": 0.984375,
+        "completion_tokens": 2463,
+        "filtered": 2,
+        "input": 128,
+        "latency_seconds": 85.6134,
+        "manual_acceptances": 0,
+        "manual_rejections": 2,
+        "rejection_reasons": {},
+        "retry_rate": 0.0,
+        "script_compliance_rate": 1.0
+      },
+      "zho_Hant->eng_Latn": {
+        "accepted": 125,
+        "accepted_rate": 0.976562,
+        "completion_tokens": 1162,
+        "filtered": 3,
+        "input": 128,
+        "latency_seconds": 38.682204,
+        "manual_acceptances": 0,
+        "manual_rejections": 3,
+        "rejection_reasons": {},
+        "retry_rate": 0.0,
+        "script_compliance_rate": 1.0
+      },
+      "zho_Hant->jpn_Jpan": {
+        "accepted": 126,
+        "accepted_rate": 0.984375,
+        "completion_tokens": 1896,
+        "filtered": 2,
+        "input": 128,
+        "latency_seconds": 61.20034,
+        "manual_acceptances": 1,
+        "manual_rejections": 2,
+        "rejection_reasons": {
+          "source_copy": 1
+        },
+        "retry_rate": 0.0,
+        "script_compliance_rate": 1.0
+      },
+      "zho_Hant->kor_Hang": {
+        "accepted": 124,
+        "accepted_rate": 0.96875,
+        "completion_tokens": 2443,
+        "filtered": 4,
+        "input": 128,
+        "latency_seconds": 77.796935,
+        "manual_acceptances": 0,
+        "manual_rejections": 4,
+        "rejection_reasons": {},
+        "retry_rate": 0.0,
+        "script_compliance_rate": 1.0
+      }
+    }
+  },
+  "release": "d0-hymt2-bounded-distillation",
+  "replay": {
+    "exact_normalized": true,
+    "exact_raw": true,
+    "records": 36
+  },
+  "schema_version": 1,
+  "scope": {
+    "accepted": 2263,
+    "dev_records": 0,
+    "filtered": 41,
+    "input": 2304,
+    "routes": 18,
+    "teacher_synthetic": 2263,
+    "test_records": 0
+  },
+  "status": "complete",
+  "td09_started": false,
+  "test_accessed": false
+}

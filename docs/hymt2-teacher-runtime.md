@@ -92,4 +92,4 @@ $env:BNB_CUDA_VERSION = '130'
 - teacher 运行期间不得同时执行 student GPU 训练、TD-14 benchmark 或其他 teacher 进程。
 - 选定 GGUF 不执行 Hugging Face remote code，也不得静默回退到 FP8、bitsandbytes、社区量化或其他 teacher。
 - TD-06 的确定性探针不能直接升级为 TD-07 的正式 prompt/decode profile。
-- 若 TD-07 的冻结 dev 校准发现 GGUF 相对原版 BF16 或人类 reference 的不可接受退化，D0 必须阻塞并形成新的显式选型决策；不得绕过质量门槛进入 TD-08。
+- 若 TD-07 的冻结 dev 校准发现 GGUF 相对原版 BF16 或人类 reference 的不可接受退化，D0 smoke 与 D1 mvp 均必须阻塞并形成新的显式选型决策；不得绕过质量门槛进入 TD-08。当前 D0 只保留为真实数据 smoke；已完成的独立 D1 接受 39,941/40,032 条并通过审查、replay 与逐路由门禁，只有 D1 可进入 TD-15/TD-16。
