@@ -2,7 +2,7 @@
 
 状态：pending
 
-依赖：TD-16
+依赖：TD-16E
 
 ## 目标
 
@@ -11,7 +11,7 @@
 ## 输入
 
 - [MVP model training todo](../../todo/mvp-model-training.md)
-- TD-16 唯一 HF 候选、test 报告和身份 manifest
+- TD-16E 最终 HF MVP、一次性 test 报告和身份 manifest
 - TD-13 固定评测协议
 - 已完成的 [CTranslate2 deployment review](../../done/review/ctranslate2-deployment.md) 与现有部署工具
 

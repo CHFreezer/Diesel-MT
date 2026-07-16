@@ -11,7 +11,7 @@
 ## 输入
 
 - [MVP model training todo](../../todo/mvp-model-training.md)
-- TD-01～TD-17 的实现、artifact、manifest、报告和验证命令
+- TD-01～TD-15、TD-16A～TD-16E、TD-17 的实现、artifact、manifest、报告和验证命令
 - 当前 README、AGENTS、数据/训练/部署文档
 
 ## 原子边界
@@ -24,7 +24,7 @@
 - 运行完整离线测试和全部慢速集成测试，记录命令、版本、数量、耗时和结果；确认无敏感或大体积运行数据被 Git 跟踪。
 - 从干净临时目录验证 fixture 数据构建、teacher 离线 fixture 生成/过滤、M1 短训练/恢复、A/B 校验、评测和 CT2 冒烟。
 - 更新 README、AGENTS、数据/训练/部署说明和限制，保持 4 产品语言、5 标签、10 组、20 路、12 个跨语言方向 + 2 个简繁互转操作口径。
-- 为 TD-01～TD-17 补齐输入、输出、验证命令、产物位置和完成证据，避免相互矛盾的独立报告。
+- 为 TD-01～TD-15、TD-16A～TD-16E、TD-17 补齐输入、输出、验证命令、产物位置和完成证据，避免相互矛盾的独立报告。
 - 确认 tokenizer 根哈希未变化，随机部署 checkpoint 和 M1 过拟合均未被描述为真实翻译质量。
 - 准备统一 review 检查表，覆盖 remote code/离线边界、蒸馏 provenance/A-B 公平性、许可/泄漏、恢复、质量、量化和部署风险。
 

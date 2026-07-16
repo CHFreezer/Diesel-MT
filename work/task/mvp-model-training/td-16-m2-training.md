@@ -1,50 +1,53 @@
-# task TD-16: 执行 M2 human-only/distilled 等预算训练
+# task group TD-16: 训练并冻结基于现有语料能力的 MVP 模型
 
-状态：pending
+状态：in_progress（A/B 诊断已完成；完整 MVP 能力训练未完成）
 
 依赖：TD-05、TD-08、TD-12、TD-13、TD-14、TD-15
 
-## 目标
+## 目标澄清
 
-从同一初始 student 在冻结的等预算契约下完成 human-only 与 Hy-MT2 distilled 两组 M2 训练，只用 dev 选出唯一候选，并仅对该候选执行一次正式 test。
+TD-16 的最终含义必须是：使用已经收集并验收的 226,218 条 20 路 human train 语料作为能力基础，训练出经过独立 dev 选择、重复训练能力等价验收和一次性正式 test 的 `mvp_e8_d2_v48k` MVP 模型。
 
-## 输入
+原 TD-16 把“44,313 条共同 source 上的 human-only/distilled 等预算 A/B”与“完成 MVP 模型训练”放在同一个原子任务中，导致 A/B 候选被误解为已经吸收完整语料能力的模型。这个边界不成立，现拆分为 TD-16A～TD-16E；只有五个原子任务全部完成，TD-16 才能标记 `completed`。
 
-- [MVP model training todo](../../todo/mvp-model-training.md)
-- TD-15 共同 cohort、两份 recipe、等预算校验和 dev 选择规则
-- TD-08 的 20 路 distilled composite；D0/D1 v1 单体不得作为正式训练 corpus
-- TD-14 唯一冻结的训练资源 profile 与运行时容量校验
-- TD-10～TD-13 训练、恢复和评测链
+## 已完成事实：M2 A/B 诊断，不是完整 MVP 训练
 
-## 原子边界
+2026-07-17 已完成原冻结合同中的两臂训练与 dev-only 选择：
 
-本 task 只执行已冻结的两组 M2 实验；不修改 teacher 数据、不临时调参、不追加任一组预算，也不为比较两组而对 test 运行两次。启动前必须拒绝 D0/D1 v1 单体或未达到 TD-08 20 路 composite 数量/身份门槛的 recipe。
+- 两臂只消费 TD-15 的 44,313 条共同 source，约占完整 human train 记录数的 19.6%；每条 source 在 human-only 臂使用人类 target，在 distilled 臂使用 Hy-MT2 target。
+- 两臂各有 1,000 optimizer-step 上限、有效 batch 128，属于 source-matched target A/B；它们不是 human 与 distilled 联合训练，也没有先训练完整 human 底模。
+- human-only 最佳候选为 step 1,000；distilled 最佳候选为 step 900。冻结规则最终选择 human-only step 1,000。
+- distilled 候选未通过总体 chrF 增益、SacreBLEU 退化和任一路由最大 chrF 退化门槛；这是“纯 teacher target 不能替代 human target”的负结果，不等于 teacher target 永远不能作为低比例辅助监督。
+- 正式 test 未运行，额度仍为 `0/1`；TD-16 不能据此宣称已发布最终 MVP。
 
-## 执行事项
+选择证据位于 `D:\Diesel-MT-Runtime\td16-m2-v1\selection.json`。该运行必须保留为不可变 A/B 证据，不得改写成完整语料训练结果。
 
-- 启动前验证 cohort、两份 recipe、corpus/teacher manifest、tokenizer、模型/训练配置、代码、依赖、Git 状态和运行命令。
-- 从同一初始 state-dict hash 分别训练 human-only/distilled，使用相同 source 曝光、路由权重和 optimizer-step 预算。
-- 按相同频率执行 dev loss/生成评测与原子 checkpoint；组内和组间选择只依据 TD-15 冻结规则。
-- 监控 NaN/Inf、OOM、方向曝光、截断、吞吐和显存；中断只能从已验证 checkpoint 恢复并记录边界。
-- 分别冻结两组最佳 dev checkpoint，离线重载并验证权重、配置、49,152 ID 空间和固定 dev 生成，再输出逐路由/聚合 A/B。
-- 按冻结规则选唯一候选；distilled 未优于 baseline 或触发任一路由红线时选择 human-only、记录负结果并停止扩量。
-- 唯一候选冻结后只运行一次正式 test，输出 20 路、12 个跨语言产品方向、2 个简繁互转结果及随机初始化基线对照。
-- 验证两组 train/dev loss 全程有限且最终 dev loss 低于同协议随机基线；异常运行不得被另一组成功掩盖。
-- 明确记录空/弱方向、繁体差距和已知限制，不把 loss 下降单独描述为可发布翻译质量。
+## 不再成立的完成判定
 
-## 产物
+以下任一事实都不足以完成 TD-16：
 
-- 两组 M2 HF checkpoint、run manifest、训练/恢复日志。
-- 等预算 A/B 与 dev 选择报告。
-- 唯一最终候选及一次性正式 test 报告。
+- random/M1 checkpoint 能保存、恢复或部署；
+- 44,313 条共同 cohort 上任一 1,000-step A/B 候选被 dev 选中；
+- 完整 M0 上完成 100-step 吞吐或资源 soak；
+- loss 下降但未验证 20 路生成能力；
+- 单次训练成功但没有重复训练能力等价证据；
+- 模型权重或逐步 trace hash 一致。
 
-## 验收
+## 原子拆分
 
-- plan 的 M2 门槛全部满足，两组严格遵守等预算契约。
-- 最终候选完全由预先冻结的 dev 规则选出。
-- test 未参与训练、调参、checkpoint 或组间选择，且只执行一次。
-- 蒸馏负结果会如实保留并阻止 teacher 数据扩量。
+1. [TD-16A：定版性能优先训练器与能力等价合同](td-16a-performance-equivalence-contract.md)
+2. [TD-16B：训练完整 human M0 底模](td-16b-full-human-foundation.md)
+3. [TD-16C：执行 human 主导的蒸馏辅助训练](td-16c-human-led-distillation.md)
+4. [TD-16D：验证重复训练能力等价并冻结唯一候选](td-16d-capability-equivalence-selection.md)
+5. [TD-16E：执行一次性正式 test 并发布 MVP](td-16e-formal-test-release.md)
 
-## 启动准备记录
+TD-16A～TD-16E 严格串行。TD-17 CTranslate2 回接必须等待 TD-16E 完成。
 
-2026-07-16 已实测当前运行时支持 CUDA BF16 autocast 混合精度前向、反向与 optimizer step：autocast 算子输出为 BF16，loss、主权重和梯度保持 FP32 且数值有限。新增 `scripts/mvp_m2.py` 与 `scripts/run_mvp_m2.py`，用于逐个发布定期 exact-resume checkpoint 的离线 HF 候选、执行 dev-only 生成评测、在全部候选成功发布后应用 keep-last-3 恢复 checkpoint 策略、按 TD-15 规则冻结唯一候选，并以不可重放 receipt 约束一次正式 test。M1 原始配置哈希证据已与语义不变的当前文件重新对齐；全套离线回归为 `196 passed`。本 task 仍为 `pending`，以上记录不代表两组正式 M2 训练已经启动或完成。
+## 总验收
+
+- 完整 human M0 的 226,218 条记录全部进入训练抽样范围，20 路均有可审计曝光；不得用44,313条 A/B cohort 冒充完整语料。
+- 最终配方以最短 time-to-quality 为目标；允许 BF16、fused optimizer、异步 allocator、SDPA、缓存、预取、长度分桶和非 bitwise CUDA 路径。
+- 重复训练不要求模型 hash、逐步 loss 或权重逐 bit 相同；能力等价由冻结 human dev 的总体与20路 BLEU/chrF、loss、脚本合规、空输出、source copy和目标控制容差判定。
+- teacher target 只能按预先冻结的低比例/课程配方作为辅助候选；不得把相同 source 的 human/teacher target 无条件双倍拼接，也不得在看到 dev 结果后追加预算。
+- 唯一最终候选冻结前不访问 test；正式 test 只执行一次。
+- TD-16E 发布的 checkpoint 能离线重载，且文档明确其数据规模、训练预算、能力指标和已知弱项。

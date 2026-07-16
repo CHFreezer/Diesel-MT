@@ -1,6 +1,6 @@
 # task index: MVP model training
 
-状态：active（TD-01～TD-15 completed；TD-16 pending）
+状态：active（TD-01～TD-15 completed；TD-16 A/B 诊断已完成，TD-16A～TD-16E pending）
 
 ## 来源
 
@@ -40,12 +40,17 @@ flowchart LR
     TD05 --> TD15["TD-15 蒸馏 A/B 契约"]
     TD08 --> TD15
     TD13 --> TD15
-    TD08 --> TD16["TD-16 M2 等预算训练"]
+    TD08 --> TD16["TD-16 共同 source A/B 诊断"]
     TD12 --> TD16
     TD13 --> TD16
     TD14 --> TD16
     TD15 --> TD16
-    TD16 --> TD17["TD-17 M3 CT2 回接"]
+    TD16 --> TD16A["TD-16A 性能/能力等价合同"]
+    TD16A --> TD16B["TD-16B 完整 human 底模"]
+    TD16B --> TD16C["TD-16C human 主导蒸馏辅助"]
+    TD16C --> TD16D["TD-16D 重复能力等价/选择"]
+    TD16D --> TD16E["TD-16E 一次性 test/MVP 发布"]
+    TD16E --> TD17["TD-17 M3 CT2 回接"]
     TD17 --> TD18["TD-18 回归与 review 准备"]
 ```
 
@@ -70,8 +75,13 @@ flowchart LR
 | 6 | TD-13 | [实现独立评测与方向汇总](td-13-evaluation.md) | TD-05、TD-09 completed | TD-05、TD-09 | TD-07、TD-12 | completed |
 | 7 | TD-14 | [基准测试并冻结可配置训练资源 profile](td-14-training-resource-profile.md) | TD-05、TD-12 completed | TD-05、TD-12 | TD-08、TD-13 | completed |
 | 8 | TD-15 | [冻结蒸馏配方与等预算 A/B 契约](td-15-distillation-ab-contract.md) | TD-05、TD-08、TD-13 completed | TD-05、TD-08、TD-13 | TD-14 | completed |
-| 9 | TD-16 | [执行 M2 human-only/distilled 等预算训练](td-16-m2-training.md) | TD-05、TD-08、TD-12～TD-15 completed | TD-05、TD-08、TD-12～TD-15 | 无 | pending |
-| 10 | TD-17 | [完成 M3 CTranslate2 回接与量化诊断](td-17-ctranslate2-deployment.md) | TD-16 completed | TD-16 | 无 | pending |
+| 9.0 | TD-16 | [训练并冻结基于现有语料能力的 MVP 模型（任务组）](td-16-m2-training.md) | TD-05、TD-08、TD-12～TD-15 completed | TD-05、TD-08、TD-12～TD-15 | 无 | in_progress |
+| 9.1 | TD-16A | [定版性能优先训练器与能力等价合同](td-16a-performance-equivalence-contract.md) | TD-16 A/B 诊断完成 | TD-16 | 无 | pending |
+| 9.2 | TD-16B | [训练完整 human M0 底模](td-16b-full-human-foundation.md) | TD-16A completed | TD-16A | 无 | pending |
+| 9.3 | TD-16C | [执行 human 主导的蒸馏辅助训练](td-16c-human-led-distillation.md) | TD-16B completed | TD-16B | 无 | pending |
+| 9.4 | TD-16D | [验证重复训练能力等价并冻结唯一候选](td-16d-capability-equivalence-selection.md) | TD-16C completed | TD-16C | 无 | pending |
+| 9.5 | TD-16E | [执行一次性正式 test 并发布 MVP](td-16e-formal-test-release.md) | TD-16D completed | TD-16D | 无 | pending |
+| 10 | TD-17 | [完成 M3 CTranslate2 回接与量化诊断](td-17-ctranslate2-deployment.md) | TD-16E completed | TD-16E | 无 | pending |
 | 11 | TD-18 | [完成统一回归、文档与 review 准备](td-18-regression-and-review.md) | TD-01～TD-17 completed | TD-01～TD-17 | 无 | pending |
 
 ## 并行窗口与资源互斥
@@ -79,23 +89,23 @@ flowchart LR
 1. TD-01 完成后，人类数据链 TD-02～TD-05、teacher 运行时 TD-06、student 基础链 TD-09～TD-11 可并行推进，前提是负责文件和运行目录不重叠。
 2. TD-09 已使用正式 20 路 fixture 完成编码、student 构造、CPU forward/backward 和离线重载；TD-10 从该冻结接口继续。
 3. TD-05 与 TD-06 已汇合；TD-07 的新增两路校准和 TD-08 的两路 addendum/20 路 composite 均已完成。D0/D1 v1 保持不可变。
-4. TD-12、TD-13 可并行；TD-14 必须等待 TD-12。TD-15 可与 TD-14 并行准备，但 TD-16 必须等待两者都完成。
-5. 若运行时探测只有一个可用 accelerator，TD-06～TD-08 的 teacher 运行、TD-14 的 student 基准和 TD-16 的两组正式训练在执行层面互斥；资源互斥依据探测结果和 profile，不依据 GPU 型号。
-6. TD-16、TD-17、TD-18 为严格串行收口；正式 test 只允许 TD-16 在唯一候选冻结后读取一次。
+4. TD-12、TD-13 可并行；TD-14 必须等待 TD-12。TD-15 可与 TD-14 并行准备；已完成的 TD-16 共同 source A/B 诊断依赖两者。
+5. 若运行时探测只有一个可用 accelerator，TD-06～TD-08 的 teacher 运行、TD-14 的 student 基准和 TD-16A～TD-16E 的训练/评测在执行层面互斥；资源互斥依据探测结果和 profile，不依据 GPU 型号。
+6. TD-16A、TD-16B、TD-16C、TD-16D、TD-16E、TD-17、TD-18 为严格串行收口；正式 test 只允许 TD-16E 对 TD-16D 唯一候选读取一次。
 
 ## 关键路径
 
-当前已完成 `TD-01 -> ... -> TD-15`：20 路 human/teacher 数据、student 编码与训练/恢复、M1、独立 evaluator、唯一 M2 资源 profile 和 source-matched A/B recipe 均已冻结。后续从 TD-16 等预算 M2 双臂训练继续；D0 或 D1 v1 单体仍不得替代 TD-15 已冻结的 20 路共同 cohort。
+当前已完成 `TD-01 -> ... -> TD-15` 以及原 TD-16 的 44,313 条共同 source、1,000-step human-only/distilled A/B 诊断。该诊断选择 human-only step 1,000，但没有训练完整 226,218 条 human M0，也没有执行 human-led mixed 训练、重复能力等价验收或正式 test，因此不是最终 MVP。关键路径现从 TD-16A 继续，直至 TD-16E 才完成 TD-16 任务组。
 
 任何来源/许可缺口、teacher 离线运行失败、M1 未过拟合、恢复不一致或 test 隔离失败都会阻塞后续汇合，不得以跳过 task 的方式继续。
 
 ## 原子 task 约定
 
-- 每个文件是一个不可拆分的验收单元；只有其全部产物和验收项完成后才能从 `in_progress` 标为 `completed`。
+- 除 `td-16-m2-training.md` 明确作为任务组索引外，每个 task 文件是一个不可拆分的验收单元；TD-16 只有在 TD-16A～TD-16E 全部完成后才能从 `in_progress` 标为 `completed`。
 - `completed` 只表示可供后续 task 消费，尚未进入统一 review；不得为单个 task 创建独立 review。
 - task 开始时在对应文件记录负责文件、运行目录和验证命令；并行 task 不得同时修改同一文件或写入同一 artifact/staging 目录。
 - task 完成时同步更新本索引状态、来源 todo 的对应复选框，并在 task 文件追加实现/运行证据；不能只改状态。
-- TD-01～TD-18 全部 completed 后才进入 todo 级统一 review；通过后 plan/todo/task/review 一并归档并标记 `done`。
+- TD-01～TD-15、TD-16A～TD-16E、TD-17～TD-18 全部 completed 后才进入 todo 级统一 review；通过后 plan/todo/task/review 一并归档并标记 `done`。
 
 ## 状态约定
 
