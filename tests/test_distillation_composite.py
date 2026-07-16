@@ -59,7 +59,10 @@ def test_composite_evidence_binds_both_immutable_components() -> None:
             ROOT
             / "artifacts"
             / "model-training"
-            / "td08-d1-20route-composite.json"
+            / "reports"
+            / "teacher"
+            / "distillation"
+            / "d1-20route.json"
         ).read_text(encoding="utf-8")
     )
     assert evidence["status"] == "complete"

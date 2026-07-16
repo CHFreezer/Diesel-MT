@@ -1,0 +1,85 @@
+schema_version: 1
+
+identity:
+  name: mvp-m2-human-distilled-ab-v1
+  status: frozen_before_m2_results
+  scope: twenty_route_accepted_intersection_train_only
+
+human:
+  m0_manifest: data/model/corpus/mvp/m0-manifest.json
+  m0_manifest_sha256: 8626a11db593d0843427a5da187ba1e4bf27299d0bd06d8d5430d19918f7e427
+  train: data/model/corpus/mvp/finalized/train.jsonl
+  train_sha256: ba0a5361fc97ca3ecad76b25ac3cfccfe163be785fb68847d11ae909bddba1d8
+  train_records: 226218
+  required_provenance_kind: human_parallel
+
+distilled:
+  composite_config: configs/hymt2_distillation_d1_20route_composite.yaml
+  composite_config_sha256: 2f47974619f370081371f97b1bc780b0f11e57df03a913f69b1554dd9d3c4434
+  composite_manifest: data/model/corpus/mvp/distilled/d1-20route/manifest.json
+  composite_manifest_sha256: ef77b786f653e8f41cd1c894e8094853dfb76195d7775d98ecc29da73df4f98f
+  accepted: data/model/corpus/mvp/distilled/d1-20route/accepted.jsonl
+  accepted_sha256: cc5fc60c4c305cf480d2c81f48a5d4ae4b951533c7ae98cb0f63f88ebe2e2060
+  accepted_records: 44361
+  required_identity_name: hymt2-sequence-distillation-d1-20route-composite-v2
+  required_scope: mvp-train-only-twenty-route-distilled-composite
+  required_provenance_kind: teacher_synthetic
+  required_routes: 20
+  minimum_accepted_per_route: 2000
+  forbidden_standalone_inputs: [d0-v1, d1-v1, d1-zh-conversion-v2]
+
+student:
+  config: configs/mvp_e8_d2_v48k.yaml
+  config_file_sha256: 6fbc6579a924e38506db11df77f0c81cef645f231c492bef3cc24e4e17d4c67a
+  config_canonical_sha256: ce2b50c258ffe2accee58697300e680f7871b51a6241eff2a986ea0bc2146252
+  tokenizer_manifest_sha256: eb79ae22f523f1d9c9fcf75b80f2b322e3c2882a8fddb7545b5933dd4053fa7f
+  initial_state_dict_sha256: 66897f9c358802b9d39d66e61a8b39fad21236d11744b79df194c26db4da66a3
+
+training:
+  profile: configs/mvp_training_m2_profile.yaml
+  profile_sha256: 78fc67632d1323ea33f006abd972532140792c17cb8f6e047f3628af1d82f012
+  seed: 20260715
+  route_weight: 1.0
+  source_order: accepted_composite_canonical_order_then_deterministic_route_sampler
+  equal_budget_definition: identical_source_sample_id_sequence_and_optimizer_steps
+  target_length_compensation: forbidden
+  train_max_records_per_route: 44361
+  dev_max_records_per_route: 64
+  dry_run_source_exposures: 512
+
+evaluation:
+  protocol: configs/mvp_evaluation.yaml
+  protocol_sha256: 85e015090eae437b46d0d62ab4473ac90fbc6735f13e226379cc120b316f701c
+  dev: data/model/corpus/mvp/finalized/dev.jsonl
+  dev_sha256: 28befa6f01cada3965b7fe3a9a24c6718ff47e08008b780c8575f563a98fd8f6
+  references: human_only
+  test_access: forbidden_until_unique_td16_candidate_is_frozen
+  test_runs_allowed_after_selection: 1
+
+dev_selection:
+  checkpoint_eligibility:
+    require_finite_loss: true
+    require_all_20_routes: true
+    minimum_overall_script_compliance: 0.95
+    minimum_per_route_script_compliance: 0.90
+    maximum_empty_output_rate: 0.01
+    maximum_cross_language_source_copy_rate: 0.01
+    require_target_control_rate: 1.0
+  within_arm_priority: [macro_route_chrf_desc, macro_route_sacrebleu_desc, dev_loss_asc, optimizer_step_asc]
+  distilled_vs_human:
+    minimum_overall_chrf_gain: 0.5
+    maximum_overall_sacrebleu_degradation: 0.5
+    maximum_any_route_chrf_degradation: 3.0
+    maximum_script_compliance_degradation: 0.01
+    maximum_empty_output_rate_increase: 0.01
+    maximum_source_copy_rate_increase: 0.01
+    evaluate_zho_Hans_and_zho_Hant_separately: true
+    fallback_if_any_gate_fails: human-only
+    exact_tie_break: human-only
+
+outputs:
+  root: data/model/corpus/mvp/ab/m2-v1
+  cohort: data/model/corpus/mvp/ab/m2-v1/cohort.jsonl
+  human: data/model/corpus/mvp/ab/m2-v1/human.jsonl
+  distilled: data/model/corpus/mvp/ab/m2-v1/distilled.jsonl
+  manifest: data/model/corpus/mvp/ab/m2-v1/manifest.json

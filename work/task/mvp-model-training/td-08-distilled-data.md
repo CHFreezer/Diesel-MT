@@ -51,23 +51,23 @@
 
 ## D0 smoke 实现与运行证据
 
-- 2026-07-15 完成 `configs/hymt2_distillation.yaml`、`scripts/hymt2_distillation_data.py` 和 `scripts/generate_teacher_data.py`；正式生成契约 SHA-256 为 `42bb80d67d428c40031ee880a86a74420f842388bdba8aa3ed25837c5c7a5fd0`。
+- 2026-07-15 完成 `configs/hymt2_distillation.yaml`、`scripts/hymt2_distillation_data.py` 和 `scripts/generate_teacher_data.py`；目录规范化并显式绑定 `data/model/history/m0-v1/` 后，正式生成契约 SHA-256 为 `6d039a21629ac15c40f6b5371d3d3d7d7223d47b4731cee65bf6a378406feeb0`。
 - 只从冻结 train 输入按 18 路由各确定性抽取 128 条，共生成 2,304 条；墙钟时间 1,100.460623 秒、completion token 30,613、请求内 completion 吞吐 28.965 tokens/s。逐样本 checkpoint 写入 `DIESEL_MT_DISTILLATION_WORK_ROOT` 指定的热工作目录，raw/accepted/filtered 与 manifest 位于 Git-ignored 数据目录。
 - 人工逐条检查 381 条队列：每路由 20 条 accepted，全部 6 条自动 rejected，以及 3 个繁体目标路由各 5 条额外样本。人工剔除 39 条语义错误；对 `話題`、`愛`、`岸田文雄`、`主旨` 4 条日中共享汉字的 `source_copy` 误杀执行受限人工恢复，其余硬过滤不可覆盖。审查证明冻结在 `configs/hymt2_distillation_manual_review.yaml`。
 - 最终接受 2,263 条、过滤 41 条；18 路由最低接受率 0.960938，脚本合规率全部 1.0，重试率全部 0，质量门槛失败项为空。
 - 使用同一 artifact/profile 独立重放每路由 2 条，共 36 条；raw 与 normalized 输出均精确一致，零 mismatch。生成和重放均记录 `dev_accessed=false`、`test_accessed=false`。
-- complete manifest SHA-256 为 `2e0beb51e0b5020f7248da4d0f7bdd544bb0274c29c0efc22affa9d83ff1639e`，accepted SHA-256 为 `282be328032877cb9a380e76bb2b006e64822b0863825978e9cd8a5ee8bd2b81`；重复真实 replay 保持报告 SHA-256 `8cc4512ebf5d7f8a11567863104ad03648c82e78626727db76df9db82ae1c8a2`，连续两次 finalize 的 manifest/evidence/accepted/quality 哈希逐项一致。Git 跟踪的闭环证据为 `artifacts/model-training/td08-distilled-data.json`。
+- complete manifest SHA-256 为 `d12eba3ddc7e61b8aae288195efcc3fcc9e74729961338285757d09e4ec9dc8c`，accepted SHA-256 为 `da66fbb762371e3cf0cc32ef3c508641c817f710e34b61895be4e3a079ecfacd`；replay 报告 SHA-256 为 `5b58e5845ee47781538949fa2677bb2eb48429e05f507b4f688dadf3d3d53a86`。教师输出文本、人工决定和质量统计未改变；sample identity 只因生成契约改为历史 M0 的明确路径而重新绑定。Git 跟踪的闭环证据为 `artifacts/model-training/reports/teacher/distillation/d0.json`。
 - 定向验证命令：`.conda\python.exe -m pytest tests\test_hymt2_distillation.py tests\test_hymt2_distillation_data.py -q`，结果 `22 passed`。TD-09 未启动。
 - 最终全量离线回归：`.conda\python.exe -m pytest -q`，结果 `139 passed in 22.90s`。
 
 ## D1 mvp 实现与运行证据
 
-- 2026-07-15 冻结 `configs/hymt2_distillation_d1.yaml`，D1 generation contract SHA-256 为 `2e54be92d270af3acac76251f25e31987a876f3e098dfb7bbbc73c696a470b1a`。选样沿用 D0 seed，使 D0 每路由 128 条成为 D1 每路由 2,224 条的精确前缀；运行前逐字节校验 D0 config、generation contract、complete manifest 和 18 个 raw shard，再把 2,304 条输出值重新绑定 D1 contract，未改动 D0 artifact。
+- 2026-07-15 冻结 `configs/hymt2_distillation_d1.yaml`；目录规范化后的 D1 generation contract SHA-256 为 `510ab76e818dec30c2c7748015c4c254492a877ffe14665bc10454e459c98f60`。选样沿用 D0 seed，使 D0 每路由 128 条成为 D1 每路由 2,224 条的精确前缀；运行前逐字节校验 D0 config、generation contract、complete manifest 和 18 个 raw shard，再把 2,304 条输出值重新绑定 D1 contract，未改动教师输出值。
 - 18 路由共生成 40,032 条候选，其中新 teacher 推理 37,728 条；墙钟时间 18,382.615340 秒。逐样本 checkpoint 位于 `DIESEL_MT_DISTILLATION_D1_WORK_ROOT` 配置的热工作目录，18 个完整 raw shard 逐路由原子发布。
 - 人工逐条检查独立 D1 队列 444 条：每路由 20 条自动 accepted、全部 69 条自动 rejected、3 个繁体目标路由各 5 条额外样本。人工剔除 52 条自动接受的语义、实体、数字、命令意图或脚本质量错误；只对 31 条有效共享汉字、数字、缩写和专名的 `source_copy` 单原因误杀执行受限恢复。审查证明为 `configs/hymt2_distillation_d1_manual_review.yaml`。
 - 最终接受 39,941 条、过滤 91 条；18 路由 accepted 为 2,211～2,223，最低接受率 0.994155、最低脚本合规率 0.999101、重试率全部为 0，质量门槛失败项为空。总 accepted 和每路由 accepted 均显著高于冻结 D1 门槛。
 - 独立重载同一 GGUF Q8_0 + llama.cpp CUDA runtime，每路由 replay 2 条，共 36 条；raw 与 normalized 输出逐字节一致，零 mismatch。generation、replay 和 evidence 均记录 `dev_accessed=false`、`test_accessed=false`。
-- D1 v1 complete manifest SHA-256 为 `9de9a4c251504c9ee157bec2dc4eefea8acd760d808672c15704f5c884b9ff2c`，accepted SHA-256 为 `9602480b643954dbd030d4d1b768d140742d25d892d41da1393a99a2fd79dd57`，tracked evidence 为 `artifacts/model-training/td08-d1-distilled-data.json`。它曾满足 18 路输入门槛；范围修正后必须由 20 路 composite 引用才能进入 TD-15。
+- D1 v1 complete manifest SHA-256 为 `a8846c9cac2b519aea3bf905a1782369acaa93b59b2da7d6704429acea4ba623`，accepted SHA-256 为 `88df72d4536496b5618728156bd26b55303f202c2ff3d114848ab20b30d59a08`，tracked evidence 为 `artifacts/model-training/reports/teacher/distillation/d1.json`。它满足 18 路输入门槛；必须由 20 路 composite 引用才能进入 TD-15。
 - 重复 finalize 后 manifest、tracked evidence、accepted、filtered、质量报告、人工审查队列和 replay 报告七类产物哈希全部保持一致。蒸馏专项回归结果为 `26 passed`，全量离线回归结果为 `143 passed in 87.49s`。
 
 ## 成熟度回退决定与最终收口
@@ -82,5 +82,5 @@
 - `zho_Hans->zho_Hant` 接受 2,213、过滤 11；`zho_Hant->zho_Hans` 接受 2,207、过滤 17。两路接受率与脚本合规率均通过冻结 gate，失败项为空。
 - 人工逐条审查 72 条队列，剔除 3 条大陆词汇残留，恢复 2 条与 human reference 精确一致的合法不变繁体句。4 条独立 replay 的 raw/normalized 输出完全一致；dev/test 均未读取。
 - addendum accepted/manifest SHA-256 分别为 `b9ca2fd5a05d9c9874548b7ea5a3db5dc75b5512438b46dac9ae65ca9e88fcb1` / `8700222adb328a4f7aac3dc92c46b53183dba7d1c46c97fd12e4d6eaab7a942f`。
-- 最终 composite 只引用不可变 D1 v1 与两路 addendum，包含 44,361 条 accepted、20 路，每路至少 2,207 条；accepted/manifest SHA-256 为 `30178717aa24cf9a14a80db6cf9ed236469c7032b25fe82811999d2e09317604` / `fe72be6a588fda2a328e8c300d799061cab62ecfaabf13a702e637eb4dd8cd1e`。重复构建三类哈希全部一致，TD-09 未启动。
+- 最终 composite 只引用不可变 D1 v1 与两路 addendum，包含 44,361 条 accepted、20 路，每路至少 2,207 条；目录规范化后的 accepted/manifest SHA-256 为 `cc5fc60c4c305cf480d2c81f48a5d4ae4b951533c7ae98cb0f63f88ebe2e2060` / `ef77b786f653e8f41cd1c894e8094853dfb76195d7775d98ecc29da73df4f98f`。重复构建与校验均通过，TD-09 未启动。
 - 收口专项测试为 `33 passed`，全量离线回归为 `148 passed in 28.76s`。

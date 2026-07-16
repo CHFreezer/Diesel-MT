@@ -1,6 +1,6 @@
 # task index: MVP model training
 
-状态：active（TD-01～TD-08 completed；停在 TD-09 前）
+状态：active（TD-01～TD-15 completed；TD-16 pending）
 
 ## 来源
 
@@ -63,13 +63,13 @@ flowchart LR
 | 2–5 | TD-06 | [锁定并验证 Hy-MT2 7B teacher 运行时](td-06-hymt2-teacher-runtime.md) | TD-01 completed | TD-01 | TD-02～TD-05、TD-09～TD-11 | completed |
 | 6 | TD-07 | [校准 teacher 语言映射、prompt 与解码](td-07-teacher-prompt-decode.md) | TD-05、TD-06 completed | TD-05、TD-06 | 无 | completed |
 | 7 | TD-08 | [生成 D0 smoke 并验收 D1 最小可用蒸馏数据](td-08-distilled-data.md) | TD-07 completed | TD-05、TD-07 | 无 | completed |
-| 2–5 | TD-09 | [实现编码、collator 与 student 构造](td-09-student-encoding-builder.md) | TD-01 completed | TD-01；完整验收等待 TD-05 | TD-02～TD-06 | pending |
-| 3–5 | TD-10 | [实现训练循环、采样与运行记录](td-10-training-loop.md) | TD-09 completed | TD-09 | TD-03～TD-06 | pending |
-| 4–5 | TD-11 | [实现原子 checkpoint 与精确恢复](td-11-checkpoint-resume.md) | TD-10 completed | TD-10 | TD-04～TD-06 | pending |
-| 6 | TD-12 | [完成 M1 小样本过拟合与恢复验收](td-12-m1-overfit-resume.md) | TD-05、TD-11 completed | TD-05、TD-11 | TD-07、TD-13 | pending |
-| 6 | TD-13 | [实现独立评测与方向汇总](td-13-evaluation.md) | TD-05、TD-09 completed | TD-05、TD-09 | TD-07、TD-12 | pending |
-| 7 | TD-14 | [基准测试并冻结可配置训练资源 profile](td-14-training-resource-profile.md) | TD-05、TD-12 completed | TD-05、TD-12 | TD-08、TD-13 | pending |
-| 8 | TD-15 | [冻结蒸馏配方与等预算 A/B 契约](td-15-distillation-ab-contract.md) | TD-05、TD-08、TD-13 completed | TD-05、TD-08、TD-13 | TD-14 | pending |
+| 2–5 | TD-09 | [实现编码、collator 与 student 构造](td-09-student-encoding-builder.md) | TD-01 completed | TD-01；完整验收等待 TD-05 | TD-02～TD-06 | completed |
+| 3–5 | TD-10 | [实现训练循环、采样与运行记录](td-10-training-loop.md) | TD-09 completed | TD-09 | TD-03～TD-06 | completed |
+| 4–5 | TD-11 | [实现原子 checkpoint 与精确恢复](td-11-checkpoint-resume.md) | TD-10 completed | TD-10 | TD-04～TD-06 | completed |
+| 6 | TD-12 | [完成 M1 小样本过拟合与恢复验收](td-12-m1-overfit-resume.md) | TD-05、TD-11 completed | TD-05、TD-11 | TD-07、TD-13 | completed |
+| 6 | TD-13 | [实现独立评测与方向汇总](td-13-evaluation.md) | TD-05、TD-09 completed | TD-05、TD-09 | TD-07、TD-12 | completed |
+| 7 | TD-14 | [基准测试并冻结可配置训练资源 profile](td-14-training-resource-profile.md) | TD-05、TD-12 completed | TD-05、TD-12 | TD-08、TD-13 | completed |
+| 8 | TD-15 | [冻结蒸馏配方与等预算 A/B 契约](td-15-distillation-ab-contract.md) | TD-05、TD-08、TD-13 completed | TD-05、TD-08、TD-13 | TD-14 | completed |
 | 9 | TD-16 | [执行 M2 human-only/distilled 等预算训练](td-16-m2-training.md) | TD-05、TD-08、TD-12～TD-15 completed | TD-05、TD-08、TD-12～TD-15 | 无 | pending |
 | 10 | TD-17 | [完成 M3 CTranslate2 回接与量化诊断](td-17-ctranslate2-deployment.md) | TD-16 completed | TD-16 | 无 | pending |
 | 11 | TD-18 | [完成统一回归、文档与 review 准备](td-18-regression-and-review.md) | TD-01～TD-17 completed | TD-01～TD-17 | 无 | pending |
@@ -77,7 +77,7 @@ flowchart LR
 ## 并行窗口与资源互斥
 
 1. TD-01 完成后，人类数据链 TD-02～TD-05、teacher 运行时 TD-06、student 基础链 TD-09～TD-11 可并行推进，前提是负责文件和运行目录不重叠。
-2. TD-09 的 20 路和 M0 前置条件已经满足，但本轮目标明确停在 TD-09 之前，尚未创建 student 训练运行。
+2. TD-09 已使用正式 20 路 fixture 完成编码、student 构造、CPU forward/backward 和离线重载；TD-10 从该冻结接口继续。
 3. TD-05 与 TD-06 已汇合；TD-07 的新增两路校准和 TD-08 的两路 addendum/20 路 composite 均已完成。D0/D1 v1 保持不可变。
 4. TD-12、TD-13 可并行；TD-14 必须等待 TD-12。TD-15 可与 TD-14 并行准备，但 TD-16 必须等待两者都完成。
 5. 若运行时探测只有一个可用 accelerator，TD-06～TD-08 的 teacher 运行、TD-14 的 student 基准和 TD-16 的两组正式训练在执行层面互斥；资源互斥依据探测结果和 profile，不依据 GPU 型号。
@@ -85,7 +85,7 @@ flowchart LR
 
 ## 关键路径
 
-当前已完成 `TD-01 -> TD-02 -> TD-03 -> TD-04 -> TD-05` 与 teacher 分支 `TD-06 -> TD-07 -> TD-08(两路 addendum -> 20 路 composite)`，执行停在 TD-09 前。后续从 TD-09 的 student 编码与构造继续；D0 或 D1 v1 单独不得绕过 composite 进入 TD-15。
+当前已完成 `TD-01 -> ... -> TD-15`：20 路 human/teacher 数据、student 编码与训练/恢复、M1、独立 evaluator、唯一 M2 资源 profile 和 source-matched A/B recipe 均已冻结。后续从 TD-16 等预算 M2 双臂训练继续；D0 或 D1 v1 单体仍不得替代 TD-15 已冻结的 20 路共同 cohort。
 
 任何来源/许可缺口、teacher 离线运行失败、M1 未过拟合、恢复不一致或 test 隔离失败都会阻塞后续汇合，不得以跳过 task 的方式继续。
 

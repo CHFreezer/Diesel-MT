@@ -1,0 +1,64 @@
+schema_version: 1
+
+identity:
+  name: mvp-m2-resource-profile-v1
+  status: frozen_by_td14
+  student_config: configs/mvp_e8_d2_v48k.yaml
+  student_config_file_sha256: 6fbc6579a924e38506db11df77f0c81cef645f231c492bef3cc24e4e17d4c67a
+  student_config_canonical_sha256: ce2b50c258ffe2accee58697300e680f7871b51a6241eff2a986ea0bc2146252
+  tokenizer_manifest_sha256: eb79ae22f523f1d9c9fcf75b80f2b322e3c2882a8fddb7545b5933dd4053fa7f
+  candidate_config_sha256: c9e6ede21d910833cae74fa72355dad886ff522d675f455940417a2abf71d2ea
+  candidate_benchmark_sha256: a3a8155fdf2a6e71a8ee75cfe3730962a3b5830dcc789dd82541b42c0d810fa5
+  selected_candidate_id: mb64-ga2-l64-w2-no-gc
+  seed: 20260715
+
+resource_profile:
+  device: cuda
+  precision: bf16
+  device_memory_budget_mib: 12000
+  device_memory_reserve_mib: 2048
+  max_device_memory_utilization: 0.85
+  host_memory_budget_mib: 32768
+  dataloader_memory_budget_mib: 2048
+  oom_retry_limit: 0
+  micro_batch_size: 64
+  gradient_accumulation_steps: 2
+  gradient_checkpointing: false
+  max_source_length: 64
+  max_target_length: 64
+  dataloader_workers: 2
+
+optimization:
+  optimizer: adamw
+  learning_rate: 0.0003
+  betas: [0.9, 0.98]
+  epsilon: 0.00000001
+  weight_decay: 0.01
+  scheduler: linear
+  warmup_steps: 100
+  max_optimizer_steps: 1000
+  max_train_tokens: 5000000
+  max_grad_norm: 1.0
+  label_smoothing: 0.1
+  validation_frequency: 50
+  validation_batches: 2
+  checkpoint_frequency: 50
+  checkpoint_retention: 3
+
+storage:
+  hot_root_source: required_runtime_argument_or_DIESEL_MT_MODEL_RUNTIME
+  checkpoint_staging_same_directory: true
+  manifest_published_last: true
+  final_publish_root: artifacts/models/mvp_e8_d2_v48k
+  prohibit_semantic_drive_letter: true
+
+soak_acceptance:
+  optimizer_steps: 100
+  validation_steps: [50, 100]
+  checkpoint_steps: [50, 100]
+  resume_probe_step: 101
+  max_source_token_truncation_rate: 0.0
+  max_target_token_truncation_rate: 0.0
+  require_finite_loss: true
+  require_zero_exception_skips: true
+  require_no_peak_memory_growth_after_warmup: true

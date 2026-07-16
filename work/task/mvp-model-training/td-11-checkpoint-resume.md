@@ -1,6 +1,6 @@
 # task TD-11: 实现原子 checkpoint 与精确恢复
 
-状态：pending
+状态：completed
 
 依赖：TD-10
 
@@ -40,3 +40,18 @@
 - 损坏、错配或不完整 checkpoint 均在恢复前失败。
 - 故障不会覆盖最后一个可用 checkpoint 或发布半成品。
 - 恢复一致性满足冻结的精确值或有证据的容差。
+
+## 实现与运行证据
+
+2026-07-16 完成 TD-11：
+
+- 新增 `scripts/mvp_checkpoint.py`，checkpoint 固定保存 model、parameter gradients、optimizer、scheduler、scaler、trainer/sampler 状态以及 Python/NumPy/PyTorch CPU/CUDA RNG；trainer state 包含 global/micro step、epoch、已消费 sample/token、梯度累积相位、loss history、逐路由曝光和 token audit。
+- manifest 绑定 training/student/tokenizer/data、四个训练代码文件、依赖、Git commit/dirty、设备/精度/Torch/CUDA 身份；每个 payload 记录 byte count 与 SHA-256，`status=complete` 且 identity hash 验证成功后才允许恢复。
+- checkpoint 在目标根的同目录 staging 写入，每个 payload 与 manifest 均 flush + `fsync`，逐文件哈希复验后使用目录 `os.replace` 原子发布；目标已存在时拒绝覆盖。恢复前拒绝 staging/incomplete、文件缺失/额外、byte/hash 损坏、路径穿越、symlink/reparse 和 identity mismatch。
+- `train_mvp_model.py` 新增显式 `--checkpoint-root`、`--resume-from` 和受控 `--stop-after-optimizer-step`。checkpoint callback 只在 optimizer 边界发布；恢复不会重置 sampler、scheduler、累积相位或 RNG，也不会重复/跳过样本。
+- 四个故障注入点 `after_model`、`after_optimizer`、`before_manifest`、`after_manifest_before_publish` 均证明半成品不会发布且旧 complete checkpoint 字节不变。保留策略默认 keep-last 3、禁止自动清理；只有最新 checkpoint 再验证通过后才可显式清理旧 complete 目录。
+- `scripts/validate_mvp_checkpoint_resume.py` 对正式 student 比较连续 2 step 与 step 1 中断/恢复到 step 2。loss、optimizer/micro step、sampler state、完整语义 trace 和最终七个 payload 哈希全部精确一致；模型/optimizer/trainer payload SHA-256 分别为 `6a129d3fff098cdddb0c86f9f7dd5cfa2144f79ff1da3681ddb6b0ab9dc50390`、`27c3726a5e8afefd76768754e86eedac8c291c7c4dbe02759c57d72f658ee32f`、`40eb52f9d5d80183f5056895814068233e9c8c65c9a2e000fe9ecdd2b4ddad3f`。
+- 最终 checkpoint identity SHA-256 为 `7b27cc5e567bf3b245e97a18925d518fcbbbff44a26fa2d37aeb26795af75aac`；连续/恢复 semantic trace SHA-256 均为 `b937866624470c1764aacaab155690826eebb0f841d11159d1d83b0ef1236b74`。manifest 因创建时间不同而不同，所有训练 payload 完全相同。
+- 机器可读证据 `artifacts/model-training/reports/student/checkpoint-resume.json` SHA-256 为 `8c32d2a700e13bcc08e468e4312a3d3a48ae5e1c134d1add82af41b28338efb8`；定向测试 `.conda\python.exe -m pytest tests/test_mvp_training.py tests/test_mvp_checkpoint.py -q` 为 `15 passed, 1 skipped`。跳过项仅是当前 Windows 权限不允许测试创建 symlink；实现仍以 symlink 与 reparse attribute 双重拒绝，普通路径穿越/额外文件/损坏测试均已执行。
+
+TD-11 只关闭 checkpoint/resume 机制；正式 M1 过拟合、生成记忆和最终 HF checkpoint 由 TD-12 验收。

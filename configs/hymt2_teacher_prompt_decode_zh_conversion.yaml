@@ -11,11 +11,11 @@ routes:
 
 teacher_selection:
   path: configs/hymt2_teacher_selection.yaml
-  file_sha256: b63a29999009af16137459fc38752cdda9aff385533c0baade0050fae4578a57
+  file_sha256: cdf41f45c51de0f491d1f4b7ce1f71eb5cd383c9d1f07dd0483256b3795c4038
   selection_id: hymt2-7b-distillation-teacher-v1
 
 calibration_input:
-  path: data/model/route20-v2/corpus/mvp/finalized/dev.jsonl
+  path: data/model/corpus/mvp/finalized/dev.jsonl
   file_sha256: 28befa6f01cada3965b7fe3a9a24c6718ff47e08008b780c8575f563a98fd8f6
   split: dev
   samples_per_route: 12
@@ -99,5 +99,5 @@ runtime:
   external_network: prohibited
 
 outputs:
-  records: data/model/route20-v2/interim/td07/zh-conversion-calibration-records.jsonl
-  report: artifacts/model-training/td07-zh-conversion-calibration.json
+  records: data/model/interim/teacher-calibration/zh-conversion-calibration-records.jsonl
+  report: artifacts/model-training/reports/teacher/zh-conversion-calibration.json

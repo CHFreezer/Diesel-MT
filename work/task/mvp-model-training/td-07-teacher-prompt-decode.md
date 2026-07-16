@@ -45,7 +45,7 @@
 
 TD-07 于 2026-07-15 完成。新增 `configs/hymt2_teacher_prompt_decode.yaml`、`scripts/hymt2_distillation.py`、`scripts/calibrate_hymt2_teacher.py` 及对应自动化测试；规范 prompt 使用官方默认英文模板、无 system prompt，并显式区分 `Chinese` 与 `Traditional Chinese`。
 
-从冻结的 33,490 条 human dev 记录中按固定 seed 每路由选择 12 条，共 216 条；greedy 与官方推荐采样各生成一遍，并各自对每路由 2 条、共 36 条做独立重放。最终报告为 `artifacts/model-training/td07-teacher-calibration.json`：
+从冻结的 33,490 条 human dev 记录中按固定 seed 每路由选择 12 条，共 216 条；greedy 与官方推荐采样各生成一遍，并各自对每路由 2 条、共 36 条做独立重放。最终报告为 `artifacts/model-training/reports/teacher/calibration.json`：
 
 - greedy 宏观 chrF 28.615981、char-SacreBLEU 33.923799、自动接受率 0.995370、脚本合规率 1.0；18 路由无 gate failure。
 - 官方采样宏观 chrF 只比 greedy 高 0.014524，低于预先冻结的 +2.0 切换门槛，因此唯一规范 profile 为 `greedy-v1`。

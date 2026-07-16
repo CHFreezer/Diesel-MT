@@ -16,7 +16,7 @@
   "elapsed_seconds": 259.090707,
   "input": {
     "available_records": 33490,
-    "path": "data/model/corpus/mvp/finalized/dev.jsonl",
+    "path": "data/model/history/m0-v1/corpus/mvp/finalized/dev.jsonl",
     "selected_per_route": 12,
     "selected_records": 216,
     "selection_sha256": "0349cbe5a604409c10252cafc4723d14044b32c6fb856183efa555df5fd5e8fc",
@@ -588,11 +588,11 @@
       }
     }
   },
-  "prompt_config_file_sha256": "ab7004258c42e26cc955f6e89604616fc4c40005a92c6d880ad48f903fc9e124",
-  "prompt_config_sha256": "ee0aff90b523c70eaec528482f93b2484b53fc2d4587fa2c7ea048f512fc46f7",
+  "prompt_config_file_sha256": "9c6dfc6048070fd8846343a49040211fff36ddf74d38992c745ed212ca9dbd8b",
+  "prompt_config_sha256": "66b5c7375f87037ec52ce5d97e778ce147d7f50eeab1b8804af2765b899c0f17",
   "records": {
     "bytes": 522956,
-    "path": "data/model/interim/td07/calibration-records.jsonl",
+    "path": "data/model/interim/teacher-calibration/calibration-records.jsonl",
     "records": 432,
     "sha256": "c9adac2cdcce885522c4358a1338231acc007e9bcbb8c1b313edbb46ab6bf108"
   },

@@ -23,7 +23,7 @@ def parser() -> argparse.ArgumentParser:
     result.add_argument(
         "--rebuild-root",
         type=Path,
-        default=Path("data/model/interim/td05-rebuild"),
+        default=Path("data/model/interim/m0-rebuild"),
     )
     result.add_argument("--config", type=Path, default=Path("configs/mvp_model_data.yaml"))
     result.add_argument(

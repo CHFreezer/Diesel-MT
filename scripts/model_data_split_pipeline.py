@@ -1130,7 +1130,7 @@ def publish_finalized_data(
     report = dict(prepared["report"])
     report["reference_scan"] = dict(reference_scan)
     report["status"] = "blocked" if int(reference_scan["blocking_hits"]) else "complete"
-    blocked_path = out_root / "reports" / "td04-contamination-blocked.json"
+    blocked_path = out_root / "reports" / "contamination-blocked.json"
     manifest_path = out_root / "corpus" / "mvp" / "finalized" / "manifest.json"
     if require_complete_references and not reference_scan.get("registry_complete_for_m0", False):
         report["status"] = "blocked"
@@ -1161,7 +1161,7 @@ def publish_finalized_data(
     files.extend(
         [
             ("corpus/mvp/finalized/test-groups.jsonl", test_groups_bytes, len(prepared["test_groups"])),
-            ("reports/td04-dedup-leakage.json", report_bytes, None),
+            ("reports/dedup-leakage.json", report_bytes, None),
         ]
     )
     file_records = [_output_record(path, data, records) for path, data, records in files]
@@ -1234,7 +1234,7 @@ def dry_run_plan(
             "corpus/mvp/finalized/dev.jsonl",
             "corpus/mvp/finalized/test.jsonl",
             "corpus/mvp/finalized/test-groups.jsonl",
-            "reports/td04-dedup-leakage.json",
+            "reports/dedup-leakage.json",
             "corpus/mvp/finalized/manifest.json (published last)",
         ],
         "runtime_roots": {"input": str(input_root), "out": str(out_root)},

@@ -1,6 +1,6 @@
 # task TD-10: 实现训练循环、采样与运行记录
 
-状态：pending
+状态：completed
 
 依赖：TD-09
 
@@ -43,3 +43,17 @@
 - 异常状态明确失败且不发布候选。
 - 自动化测试证明训练代码无法访问 test。
 - 自动化测试证明设备容量由配置和运行时探测约束，不包含特定 GPU 型号或固定显存容量常量。
+
+## 实现与运行证据
+
+2026-07-16 完成 TD-10：
+
+- 新增 `scripts/mvp_training.py` 与 `scripts/train_mvp_model.py`，配置 `configs/mvp_training_td10_smoke.yaml` 严格绑定 student/tokenizer/train/dev/manifest 身份、20 路权重、资源预算、batch/累积/长度/worker、AdamW/linear scheduler、step/token 上限以及 validation/checkpoint 频率；训练配置 canonical SHA-256 为 `96392a3019bfbea942c9341724075041716a77765156c4922a62732798fe68e2`。
+- dry-run 完成配置、输入哈希、Git 状态、设备/后端/精度和内存容量探测，不构建模型或创建输出。资源验证将绝对设备预算、总容量乘最大利用率、总容量减预留三者取最小值，并独立约束 host/dataloader 内存；CPU/CUDA 选择不含设备型号分支。
+- `DeterministicRouteSampler` 使用可恢复的平滑加权轮询和逐路由确定性 shuffle，日志逐 micro/optimizer step 保存 route、epoch、位置、sample/group ID、token、loss、LR、梯度范数、吞吐、内存与截断统计。tokenizer worker 为有界线程池且不预取 sampler，0/2 worker 产生相同有序 batch。
+- 训练入口只接受 train/dev 字段，schema 明确拒绝 `test_path`；train/dev 在运行前后校验 SHA-256。空路由、空 batch、数据哈希变化、预算不足、NaN/Inf loss/gradient、token 上限不足和正式训练 OOM 均明确失败；只有 `td14_benchmark` 配置可以声明有限 OOM retry 预算。
+- 正式 `mvp_e8_d2_v48k` CPU 冒烟完成 2 optimizer step / 4 micro step / 20 samples / 401 tokens，20 路各曝光一次，无异常跳过；mean/final train loss 为 `10.6890940666199` / `10.5333671569824`，两次 dev loss 为 `10.42934513092041` / `10.289074897766113`，峰值进程常驻内存为 2,179,981,312 B。
+- 两次独立正式运行的 loss、step、sampler state 和排除 wall-time/吞吐噪声后的事件语义逐项精确一致；semantic trace SHA-256 为 `b937866624470c1764aacaab155690826eebb0f841d11159d1d83b0ef1236b74`。原始 event 文件哈希可不同，因为其保留真实 wall time/吞吐。
+- 机器可读证据为 `artifacts/model-training/reports/student/training-smoke.json`（SHA-256 `3b905c48c9fb66a7155e9e53dff1871f5cd4d72065912d67b6014f2f3bf90d66`）；热日志位于运行 manifest 记录的本机运行根。定向测试 `.conda\python.exe -m pytest tests/test_mvp_training.py tests/test_mvp_student.py tests/test_model_training_contract.py -q` 结果 `37 passed`。
+
+TD-10 不发布候选权重；它只关闭多步训练、采样、资源校验和运行日志语义。TD-11 从该 optimizer/scheduler/sampler 状态接口实现持久化恢复。

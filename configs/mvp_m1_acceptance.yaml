@@ -1,0 +1,36 @@
+schema_version: 1
+
+identity:
+  name: mvp-m1-overfit-acceptance-v1
+  training_config: configs/mvp_training_m1.yaml
+  training_config_file_sha256: d58f832a91cf27b731d2ce0bd7cbaf8251def4c36808528b14d9b0d8379a9a47
+  training_config_canonical_sha256: 53080be3764bd881bfc61511ddf9a3ab900adbf146a0fea330721a2c574fbc7e
+  initial_state_dict_sha256: 66897f9c358802b9d39d66e61a8b39fad21236d11744b79df194c26db4da66a3
+  tokenizer_manifest_sha256: eb79ae22f523f1d9c9fcf75b80f2b322e3c2882a8fddb7545b5933dd4053fa7f
+
+fixture:
+  split: train
+  records_per_route: 1
+  required_routes: 20
+  required_exposures_per_route: 300
+
+thresholds:
+  final_eval_loss_to_initial_ratio_max: 0.10
+  normalized_exact_match_routes: 20
+  target_language_control_routes: 20
+  empty_output_max: 0
+  cross_language_source_copy_max: 0
+
+generation:
+  decoding: greedy
+  do_sample: false
+  num_beams: 1
+  max_new_tokens: 64
+  length_penalty: 1.0
+  early_stopping: false
+  normalization: unicode_nfc_strip_collapse_whitespace
+
+resume:
+  interruption_optimizer_step: 150
+  final_optimizer_step: 300
+  comparison: exact

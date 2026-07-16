@@ -1,0 +1,82 @@
+{
+  "automated_gates": {
+    "corrupt_incomplete_extra_identity_path_link_rejection": true,
+    "fault_injection_points": [
+      "after_model",
+      "after_optimizer",
+      "before_manifest",
+      "after_manifest_before_publish"
+    ],
+    "retention_requires_newest_validation": true
+  },
+  "comparison": {
+    "checks": {
+      "checkpoint_payloads": true,
+      "final_train_loss": true,
+      "mean_train_loss": true,
+      "micro_steps": true,
+      "optimizer_steps": true,
+      "sampler_state": true,
+      "semantic_trace": true
+    },
+    "semantic_trace_sha256": "b937866624470c1764aacaab155690826eebb0f841d11159d1d83b0ef1236b74",
+    "status": "exact"
+  },
+  "final_checkpoints": {
+    "resumed": {
+      "identity_sha256": "7b27cc5e567bf3b245e97a18925d518fcbbbff44a26fa2d37aeb26795af75aac",
+      "manifest_sha256": "12e2174f71a38f52ad9cf37376279ce77208f3c94342129dda170dcf854c50f8",
+      "path": "D:\\Diesel-MT-Runtime\\td11-acceptance-v1\\resumed-checkpoints\\step-00000002",
+      "payloads": {
+        "gradients.pt": "426c02cc55e578bf407727bacc97197032db861a4500cdeecb9fae8f6d919d05",
+        "model.pt": "6a129d3fff098cdddb0c86f9f7dd5cfa2144f79ff1da3681ddb6b0ab9dc50390",
+        "optimizer.pt": "27c3726a5e8afefd76768754e86eedac8c291c7c4dbe02759c57d72f658ee32f",
+        "rng.pt": "190cb3a2b47cc32717d36524b28cafe9ebbc9a27a452a50662742534f14eacb9",
+        "scaler.pt": "98b4d78ebb79a7f668431910a5959abdce137f13e82a02bcc28e585416046b97",
+        "scheduler.pt": "dc387d9856629a0a4ca756782f3e6b9e757174f5e7d776610202f76a96542922",
+        "trainer-state.pt": "40eb52f9d5d80183f5056895814068233e9c8c65c9a2e000fe9ecdd2b4ddad3f"
+      }
+    },
+    "uninterrupted": {
+      "identity_sha256": "7b27cc5e567bf3b245e97a18925d518fcbbbff44a26fa2d37aeb26795af75aac",
+      "manifest_sha256": "37dfc0067c4c89d25af1eabb1dc064b1ca2e7b727a11795808391f808d7c8f24",
+      "path": "D:\\Diesel-MT-Runtime\\td11-acceptance-v1\\uninterrupted-checkpoints\\step-00000002",
+      "payloads": {
+        "gradients.pt": "426c02cc55e578bf407727bacc97197032db861a4500cdeecb9fae8f6d919d05",
+        "model.pt": "6a129d3fff098cdddb0c86f9f7dd5cfa2144f79ff1da3681ddb6b0ab9dc50390",
+        "optimizer.pt": "27c3726a5e8afefd76768754e86eedac8c291c7c4dbe02759c57d72f658ee32f",
+        "rng.pt": "190cb3a2b47cc32717d36524b28cafe9ebbc9a27a452a50662742534f14eacb9",
+        "scaler.pt": "98b4d78ebb79a7f668431910a5959abdce137f13e82a02bcc28e585416046b97",
+        "scheduler.pt": "dc387d9856629a0a4ca756782f3e6b9e757174f5e7d776610202f76a96542922",
+        "trainer-state.pt": "40eb52f9d5d80183f5056895814068233e9c8c65c9a2e000fe9ecdd2b4ddad3f"
+      }
+    }
+  },
+  "final_step": 2,
+  "interruption_step": 1,
+  "runs": {
+    "interrupted": {
+      "events_sha256": "ce01ed486e47f027d0f63fc98be824a9f8727e17f4f445d29f5538c9f7ebe341",
+      "output_root": "D:\\Diesel-MT-Runtime\\td11-acceptance-v1\\interrupted-run",
+      "status": "interrupted"
+    },
+    "resumed": {
+      "events_sha256": "268660ff196ac49d6b158a5a53a2cb972886e269c043ba9a6a23444daf78c052",
+      "final_loss": 10.533367156982422,
+      "output_root": "D:\\Diesel-MT-Runtime\\td11-acceptance-v1\\resumed-run"
+    },
+    "uninterrupted": {
+      "events_sha256": "d0a2f06793262ca15657ff46515517adfdeb51563e8e57ec80155ca2b1d23a0b",
+      "final_loss": 10.533367156982422,
+      "output_root": "D:\\Diesel-MT-Runtime\\td11-acceptance-v1\\uninterrupted-run"
+    }
+  },
+  "schema_version": 1,
+  "status": "complete",
+  "task": "TD-11",
+  "training_config": {
+    "canonical_sha256": "714ba8d2561808991b9b84fe759f49e8d8c11d94b14567588be340a8bb1ecf04",
+    "file_sha256": "1c50ae9addd4fe269704673133427fc9d509b7aacf61a06014107c2c01c41a70",
+    "path": "configs/mvp_training_td10_smoke.yaml"
+  }
+}

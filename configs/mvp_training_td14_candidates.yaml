@@ -1,0 +1,79 @@
+schema_version: 1
+
+identity:
+  name: mvp-td14-resource-candidates-v1
+  student_config: configs/mvp_e8_d2_v48k.yaml
+  student_config_file_sha256: 6fbc6579a924e38506db11df77f0c81cef645f231c492bef3cc24e4e17d4c67a
+  student_config_canonical_sha256: ce2b50c258ffe2accee58697300e680f7871b51a6241eff2a986ea0bc2146252
+  tokenizer_manifest_sha256: eb79ae22f523f1d9c9fcf75b80f2b322e3c2882a8fddb7545b5933dd4053fa7f
+  seed: 20260715
+
+data:
+  train_path: data/model/corpus/mvp/finalized/train.jsonl
+  train_sha256: ba0a5361fc97ca3ecad76b25ac3cfccfe163be785fb68847d11ae909bddba1d8
+  dev_path: data/model/corpus/mvp/finalized/dev.jsonl
+  dev_sha256: 28befa6f01cada3965b7fe3a9a24c6718ff47e08008b780c8575f563a98fd8f6
+  manifest_path: data/model/corpus/mvp/finalized/manifest.json
+  manifest_sha256: f998d9b91a0aedf9900e683a01015d594187a6e15b66388260bf1ad30477f4c0
+  train_records_per_route: 512
+  dev_records_per_route: 64
+
+budget:
+  device: cuda
+  precision: bf16
+  device_memory_budget_mib: 12000
+  device_memory_reserve_mib: 2048
+  max_device_memory_utilization: 0.85
+  host_memory_budget_mib: 32768
+  dataloader_memory_budget_mib: 2048
+  oom_retry_limit: 0
+
+benchmark:
+  optimizer_steps: 5
+  validation_batches: 2
+  learning_rate: 0.0003
+  betas: [0.9, 0.98]
+  epsilon: 0.00000001
+  weight_decay: 0.01
+  scheduler: linear
+  warmup_steps: 2
+  max_train_tokens: 250000
+  max_grad_norm: 1.0
+  label_smoothing: 0.1
+
+selection:
+  rule: highest_tokens_per_second_then_lowest_peak_memory_then_candidate_id
+  max_source_sample_truncation_rate: 0.0
+  max_target_sample_truncation_rate: 0.0
+  require_finite_loss: true
+  require_zero_oom_retries: true
+
+candidates:
+  - id: mb64-ga2-l32-w0-no-gc
+    micro_batch_size: 64
+    gradient_accumulation_steps: 2
+    gradient_checkpointing: false
+    max_source_length: 32
+    max_target_length: 32
+    dataloader_workers: 0
+  - id: mb64-ga2-l64-w2-no-gc
+    micro_batch_size: 64
+    gradient_accumulation_steps: 2
+    gradient_checkpointing: false
+    max_source_length: 64
+    max_target_length: 64
+    dataloader_workers: 2
+  - id: mb64-ga2-l64-w2-gc
+    micro_batch_size: 64
+    gradient_accumulation_steps: 2
+    gradient_checkpointing: true
+    max_source_length: 64
+    max_target_length: 64
+    dataloader_workers: 2
+  - id: mb128-ga1-l64-w2-no-gc
+    micro_batch_size: 128
+    gradient_accumulation_steps: 1
+    gradient_checkpointing: false
+    max_source_length: 64
+    max_target_length: 64
+    dataloader_workers: 2

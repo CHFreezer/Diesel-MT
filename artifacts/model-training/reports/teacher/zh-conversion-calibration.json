@@ -16,7 +16,7 @@
   "elapsed_seconds": 28.865124,
   "input": {
     "available_records": 37508,
-    "path": "data/model/route20-v2/corpus/mvp/finalized/dev.jsonl",
+    "path": "data/model/corpus/mvp/finalized/dev.jsonl",
     "selected_per_route": 12,
     "selected_records": 24,
     "selection_sha256": "c156f23862cbca9769e05e109d11a93fea4b978287cb7b6b7d2ea1d540b8da70",
@@ -106,11 +106,11 @@
       }
     }
   },
-  "prompt_config_file_sha256": "02cd096a24d1e9326dd21ce85b6a0bfd5f59aac6f8898e07243056b8858eac42",
-  "prompt_config_sha256": "185a2286dad77e6e4857cf123e32354151100ba55469c427d1802263237a9169",
+  "prompt_config_file_sha256": "a8edab20edaa3f07d45b940c516066e50d3ec014e3e60b13e80865acfe6f2a86",
+  "prompt_config_sha256": "e553f13e4bb1a9379f3202ce87f1f242ba592c2e5f1c91df039a58762d18679f",
   "records": {
     "bytes": 55769,
-    "path": "data/model/route20-v2/interim/td07/zh-conversion-calibration-records.jsonl",
+    "path": "data/model/interim/teacher-calibration/zh-conversion-calibration-records.jsonl",
     "records": 48,
     "sha256": "59cc2407d0fc2ea5f4dd6fa21c37f33f024a9ac5f16c78fc552ef0ebe9567a54"
   },

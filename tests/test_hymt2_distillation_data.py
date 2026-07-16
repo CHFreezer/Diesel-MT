@@ -345,7 +345,7 @@ def test_manual_review_can_only_restore_source_copy_false_positives(
 
 def test_td08_frozen_evidence_closes_d0_without_starting_td09() -> None:
     evidence = json.loads(
-        (ROOT / "artifacts" / "model-training" / "td08-distilled-data.json").read_text(
+        (ROOT / "artifacts" / "model-training" / "reports" / "teacher" / "distillation" / "d0.json").read_text(
             encoding="utf-8"
         )
     )
@@ -386,7 +386,7 @@ def test_td08_frozen_evidence_closes_d0_without_starting_td09() -> None:
 
 def test_td08_d1_evidence_is_mvp_sized_and_closes_td08() -> None:
     evidence = json.loads(
-        (ROOT / "artifacts" / "model-training" / "td08-d1-distilled-data.json").read_text(
+        (ROOT / "artifacts" / "model-training" / "reports" / "teacher" / "distillation" / "d1.json").read_text(
             encoding="utf-8"
         )
     )
@@ -436,7 +436,10 @@ def test_td08_zh_addendum_and_twenty_route_composite_close_the_reopened_scope() 
             ROOT
             / "artifacts"
             / "model-training"
-            / "td08-d1-zh-conversion-addendum.json"
+            / "reports"
+            / "teacher"
+            / "distillation"
+            / "d1-zh-conversion.json"
         ).read_text(encoding="utf-8")
     )
     assert addendum["status"] == "complete"
@@ -463,7 +466,10 @@ def test_td08_zh_addendum_and_twenty_route_composite_close_the_reopened_scope() 
             ROOT
             / "artifacts"
             / "model-training"
-            / "td08-d1-20route-composite.json"
+            / "reports"
+            / "teacher"
+            / "distillation"
+            / "d1-20route.json"
         ).read_text(encoding="utf-8")
     )
     assert composite["status"] == "complete"

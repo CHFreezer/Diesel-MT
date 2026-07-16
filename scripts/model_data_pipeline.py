@@ -439,7 +439,7 @@ def _checkpoint_identity(
 def _checkpoint_paths(
     out_root: Path, identity_sha256: str, source_id: str, language: str
 ) -> tuple[Path, Path]:
-    root = out_root / "interim" / "td03" / identity_sha256 / source_id
+    root = out_root / "interim" / "model-data" / identity_sha256 / source_id
     return root / f"{language}.jsonl", root / f"{language}.meta.json"
 
 
@@ -854,7 +854,7 @@ def build_model_data(
         "corpus/mvp/human_parallel.jsonl", corpus_bytes, len(all_samples)
     )
     rejection_record = _output_record(
-        "reports/td03-rejections.json", rejection_bytes
+        "reports/data-rejections.json", rejection_bytes
     )
     build_payload = {
         "schema_version": 1,
@@ -875,8 +875,8 @@ def build_model_data(
     files: list[tuple[str, bytes, int | None]] = [
         ("corpus/mvp/human_parallel.jsonl", corpus_bytes, len(all_samples)),
         *license_outputs,
-        ("reports/td03-rejections.json", rejection_bytes, None),
-        ("reports/td03-build.json", build_bytes, None),
+        ("reports/data-rejections.json", rejection_bytes, None),
+        ("reports/data-build.json", build_bytes, None),
     ]
     file_records = [
         _output_record(relative, data, records) for relative, data, records in files
@@ -960,8 +960,8 @@ def dry_run_plan(
         "outputs": [
             "corpus/mvp/human_parallel.jsonl",
             "corpus/mvp/sources/<source_id>/LICENSE|NOTICE",
-            "reports/td03-rejections.json",
-            "reports/td03-build.json",
+            "reports/data-rejections.json",
+            "reports/data-build.json",
             "corpus/mvp/manifest.json (published last)",
         ],
         "operations": [

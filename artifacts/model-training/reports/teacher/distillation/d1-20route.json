@@ -1,12 +1,12 @@
 {
   "components": [
     {
-      "accepted": "data/model/corpus/mvp/distilled/td08-d1-v1/accepted.jsonl",
+      "accepted": "data/model/corpus/mvp/distilled/d1-v1/accepted.jsonl",
       "accepted_records": 39941,
-      "accepted_sha256": "9602480b643954dbd030d4d1b768d140742d25d892d41da1393a99a2fd79dd57",
+      "accepted_sha256": "88df72d4536496b5618728156bd26b55303f202c2ff3d114848ab20b30d59a08",
       "component_id": "d1-eighteen-route-v1",
-      "manifest": "data/model/corpus/mvp/distilled/td08-d1-v1/manifest.json",
-      "manifest_sha256": "9de9a4c251504c9ee157bec2dc4eefea8acd760d808672c15704f5c884b9ff2c",
+      "manifest": "data/model/corpus/mvp/distilled/d1-v1/manifest.json",
+      "manifest_sha256": "a8846c9cac2b519aea3bf905a1782369acaa93b59b2da7d6704429acea4ba623",
       "route_counts": {
         "eng_Latn->jpn_Jpan": 2219,
         "eng_Latn->kor_Hang": 2223,
@@ -29,12 +29,12 @@
       }
     },
     {
-      "accepted": "data/model/route20-v2/corpus/mvp/distilled/td08-d1-zh-conversion-v2/accepted.jsonl",
+      "accepted": "data/model/corpus/mvp/distilled/d1-zh-conversion/accepted.jsonl",
       "accepted_records": 4420,
       "accepted_sha256": "b9ca2fd5a05d9c9874548b7ea5a3db5dc75b5512438b46dac9ae65ca9e88fcb1",
       "component_id": "d1-zh-conversion-v2",
-      "manifest": "data/model/route20-v2/corpus/mvp/distilled/td08-d1-zh-conversion-v2/manifest.json",
-      "manifest_sha256": "8700222adb328a4f7aac3dc92c46b53183dba7d1c46c97fd12e4d6eaab7a942f",
+      "manifest": "data/model/corpus/mvp/distilled/d1-zh-conversion/manifest.json",
+      "manifest_sha256": "05f20fad5037650edaedaa4cc442756ccc76d63705215234a3c6e8c90740b054",
       "route_counts": {
         "zho_Hans->zho_Hant": 2213,
         "zho_Hant->zho_Hans": 2207
@@ -45,10 +45,10 @@
   "dev_accessed": false,
   "downstream_consumer": "TD-15",
   "identities": {
-    "accepted_sha256": "30178717aa24cf9a14a80db6cf9ed236469c7032b25fe82811999d2e09317604",
-    "composite_config_sha256": "51f45fd79a5b1ef3f3d35c8eaec6fae3d617ed4714f04bec81187abebe65993c",
-    "human_m0_manifest_sha256": "5cc369421a705e2eea0076eec06c2bc12de7f278888df2f1ca9add6250ee1d67",
-    "manifest_sha256": "fe72be6a588fda2a328e8c300d799061cab62ecfaabf13a702e637eb4dd8cd1e"
+    "accepted_sha256": "cc5fc60c4c305cf480d2c81f48a5d4ae4b951533c7ae98cb0f63f88ebe2e2060",
+    "composite_config_sha256": "4279cce01c26bddac5ed6e505d977380e48e50b1649aa194b275029575cc4fb4",
+    "human_m0_manifest_sha256": "8626a11db593d0843427a5da187ba1e4bf27299d0bd06d8d5430d19918f7e427",
+    "manifest_sha256": "ef77b786f653e8f41cd1c894e8094853dfb76195d7775d98ecc29da73df4f98f"
   },
   "release": "d1-hymt2-distillation-20route-mvp-v2",
   "route_counts": {

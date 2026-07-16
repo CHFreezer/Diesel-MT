@@ -27,7 +27,14 @@ from model_training_contract import (  # noqa: E402
 
 SAMPLING_PATH = ROOT / "configs" / "mvp_direction_sampling.yaml"
 ROUTE_FIXTURE_PATH = ROOT / "tests" / "fixtures" / "model_data" / "m0-routes.json"
-EVIDENCE_PATH = ROOT / "artifacts" / "model-training" / "m0-dataset-acceptance.json"
+EVIDENCE_PATH = (
+    ROOT
+    / "artifacts"
+    / "model-training"
+    / "reports"
+    / "m0"
+    / "m0-v1-acceptance.json"
+)
 LEGACY_SAMPLING_PATH = ROOT / "configs" / "mvp_direction_sampling_v1.yaml"
 
 

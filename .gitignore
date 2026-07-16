@@ -32,6 +32,7 @@ data/model/raw/*
 data/model/cache/*
 data/model/interim/*
 data/model/corpus/mvp/*
+data/model/history/*
 data/model/reports/*
 # Alternate versioned/reproducibility build roots use the same generated-data
 # boundary as the canonical raw/cache/interim/corpus/report layout.
@@ -40,6 +41,7 @@ data/model/route*/
 !data/model/cache/.gitkeep
 !data/model/interim/.gitkeep
 !data/model/corpus/mvp/.gitkeep
+!data/model/history/.gitkeep
 !data/model/reports/.gitkeep
 artifacts/model-training/runtime/
 artifacts/models/

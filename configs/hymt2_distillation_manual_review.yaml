@@ -2,7 +2,7 @@ schema_version: 1
 status: complete
 
 queue:
-  path: data/model/reports/td08-manual-review.jsonl
+  path: data/model/reports/d0-manual-review.jsonl
   records: 381
   bytes: 292339
   sha256: 5e92d75020915e0e3aa0058906c6dec7675e45c8b6b34044fc801612bbc49733

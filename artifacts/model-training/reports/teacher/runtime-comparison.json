@@ -32,7 +32,7 @@
     "current_benchmark_config_sha256": "a2f4ee4584c41fcba78f3daee0da2bd223af35292baea7641ff3ac6f2473b8bf",
     "benchmark_lock_sha256": "c448f19bb26bae45b1d7ab7766d51232b42471c7e5062b3d8784d89f2b1596bf",
     "benchmark_script_sha256": "8b6ab16b48c0f579bbaf83838397241f1e28bfae92a110467ad83a37d4b87ee3",
-    "teacher_selection_sha256": "b63a29999009af16137459fc38752cdda9aff385533c0baade0050fae4578a57",
+    "teacher_selection_sha256": "cdf41f45c51de0f491d1f4b7ce1f71eb5cd383c9d1f07dd0483256b3795c4038",
     "transformers_requirements_sha256": "d5c413ac18f2e2057be24babd6b24bb8da98a6fcacd1abcbb59d1dd384f831c6",
     "gguf_requirements_sha256": "7b6f1cd96087644778e40f727cd994af35cdd15c404accce0e981b65ce60474b",
     "original_bf16_raw_report_sha256": "d77a5bef8e33de140686fabf5e21267033adeeb6ab05294c77cb796d37bbc344",

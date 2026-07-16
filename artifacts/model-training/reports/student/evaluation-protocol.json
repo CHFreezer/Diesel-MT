@@ -1,0 +1,1009 @@
+{
+  "aggregates": {
+    "chinese_conversions2": {
+      "zho_Hans->zho_Hant": {
+        "chrf": 0.975609756097561,
+        "chrf_signature": "nrefs:1|case:mixed|eff:yes|nc:6|nw:0|space:no|version:2.6.0",
+        "empty_output_rate": 0.0,
+        "loss": 13.6875,
+        "mean_length_ratio": 0.6838168775668776,
+        "sacrebleu": 0.0,
+        "sacrebleu_signature": "nrefs:1|case:mixed|eff:yes|tok:13a|smooth:exp|version:2.6.0",
+        "samples": 10,
+        "script_compliance_rate": 1.0,
+        "source_copy_rate": 0.0,
+        "source_truncation_rate": 0.0,
+        "tag_route_weights": {
+          "zho_Hans->zho_Hant": 1.0
+        },
+        "tag_routes": [
+          "zho_Hans->zho_Hant"
+        ],
+        "target_control_rate": 1.0,
+        "target_loss_tokens": 85,
+        "target_truncation_rate": 0.0
+      },
+      "zho_Hant->zho_Hans": {
+        "chrf": 2.1213396275957113,
+        "chrf_signature": "nrefs:1|case:mixed|eff:yes|nc:6|nw:0|space:no|version:2.6.0",
+        "empty_output_rate": 0.0,
+        "loss": 13.625,
+        "mean_length_ratio": 1.201111111111111,
+        "sacrebleu": 0.0,
+        "sacrebleu_signature": "nrefs:1|case:mixed|eff:yes|tok:13a|smooth:exp|version:2.6.0",
+        "samples": 10,
+        "script_compliance_rate": 1.0,
+        "source_copy_rate": 0.0,
+        "source_truncation_rate": 0.0,
+        "tag_route_weights": {
+          "zho_Hant->zho_Hans": 1.0
+        },
+        "tag_routes": [
+          "zho_Hant->zho_Hans"
+        ],
+        "target_control_rate": 1.0,
+        "target_loss_tokens": 81,
+        "target_truncation_rate": 0.0
+      }
+    },
+    "overall": {
+      "chrf": 5.602098526034192,
+      "chrf_signature": "nrefs:1|case:mixed|eff:yes|nc:6|nw:0|space:no|version:2.6.0",
+      "empty_output_rate": 0.0,
+      "loss": 13.34375,
+      "mean_length_ratio": 1.0469027009259664,
+      "sacrebleu": 0.8948124106142928,
+      "sacrebleu_signature": "nrefs:1|case:mixed|eff:yes|tok:13a|smooth:exp|version:2.6.0",
+      "samples": 200,
+      "script_compliance_rate": 1.0,
+      "source_copy_rate": 0.0,
+      "source_truncation_rate": 0.0,
+      "target_control_rate": 1.0,
+      "target_loss_tokens": 1744,
+      "target_truncation_rate": 0.0
+    },
+    "product_directions12": {
+      "Chinese->English": {
+        "chrf": 10.857242575606957,
+        "chrf_signature": "nrefs:1|case:mixed|eff:yes|nc:6|nw:0|space:no|version:2.6.0",
+        "empty_output_rate": 0.0,
+        "loss": 14.09375,
+        "mean_length_ratio": 0.7603350003855385,
+        "sacrebleu": 1.7418093945466269,
+        "sacrebleu_signature": "nrefs:1|case:mixed|eff:yes|tok:13a|smooth:exp|version:2.6.0",
+        "samples": 20,
+        "script_compliance_rate": 1.0,
+        "source_copy_rate": 0.0,
+        "source_truncation_rate": 0.0,
+        "tag_route_weights": {
+          "zho_Hans->eng_Latn": 0.5,
+          "zho_Hant->eng_Latn": 0.5
+        },
+        "tag_routes": [
+          "zho_Hans->eng_Latn",
+          "zho_Hant->eng_Latn"
+        ],
+        "target_control_rate": 1.0,
+        "target_loss_tokens": 198,
+        "target_truncation_rate": 0.0
+      },
+      "Chinese->Japanese": {
+        "chrf": 3.8714300503125285,
+        "chrf_signature": "nrefs:1|case:mixed|eff:yes|nc:6|nw:0|space:no|version:2.6.0",
+        "empty_output_rate": 0.0,
+        "loss": 13.3125,
+        "mean_length_ratio": 1.2640248640248637,
+        "sacrebleu": 0.0,
+        "sacrebleu_signature": "nrefs:1|case:mixed|eff:yes|tok:13a|smooth:exp|version:2.6.0",
+        "samples": 20,
+        "script_compliance_rate": 1.0,
+        "source_copy_rate": 0.0,
+        "source_truncation_rate": 0.0,
+        "tag_route_weights": {
+          "zho_Hans->jpn_Jpan": 0.5,
+          "zho_Hant->jpn_Jpan": 0.5
+        },
+        "tag_routes": [
+          "zho_Hans->jpn_Jpan",
+          "zho_Hant->jpn_Jpan"
+        ],
+        "target_control_rate": 1.0,
+        "target_loss_tokens": 174,
+        "target_truncation_rate": 0.0
+      },
+      "Chinese->Korean": {
+        "chrf": 0.7575757575757575,
+        "chrf_signature": "nrefs:1|case:mixed|eff:yes|nc:6|nw:0|space:no|version:2.6.0",
+        "empty_output_rate": 0.0,
+        "loss": 14.125,
+        "mean_length_ratio": 1.3252256515414413,
+        "sacrebleu": 0.0,
+        "sacrebleu_signature": "nrefs:1|case:mixed|eff:yes|tok:13a|smooth:exp|version:2.6.0",
+        "samples": 20,
+        "script_compliance_rate": 1.0,
+        "source_copy_rate": 0.0,
+        "source_truncation_rate": 0.0,
+        "tag_route_weights": {
+          "zho_Hans->kor_Hang": 0.5,
+          "zho_Hant->kor_Hang": 0.5
+        },
+        "tag_routes": [
+          "zho_Hans->kor_Hang",
+          "zho_Hant->kor_Hang"
+        ],
+        "target_control_rate": 1.0,
+        "target_loss_tokens": 168,
+        "target_truncation_rate": 0.0
+      },
+      "English->Chinese": {
+        "chrf": 1.4726601326458488,
+        "chrf_signature": "nrefs:1|case:mixed|eff:yes|nc:6|nw:0|space:no|version:2.6.0",
+        "empty_output_rate": 0.0,
+        "loss": 12.66152108433735,
+        "mean_length_ratio": 0.9424639943389945,
+        "sacrebleu": 0.0,
+        "sacrebleu_signature": "nrefs:1|case:mixed|eff:yes|tok:13a|smooth:exp|version:2.6.0",
+        "samples": 20,
+        "script_compliance_rate": 1.0,
+        "source_copy_rate": 0.0,
+        "source_truncation_rate": 0.0,
+        "tag_route_weights": {
+          "eng_Latn->zho_Hans": 0.5,
+          "eng_Latn->zho_Hant": 0.5
+        },
+        "tag_routes": [
+          "eng_Latn->zho_Hans",
+          "eng_Latn->zho_Hant"
+        ],
+        "target_control_rate": 1.0,
+        "target_loss_tokens": 166,
+        "target_truncation_rate": 0.0
+      },
+      "English->Japanese": {
+        "chrf": 3.8714300503125285,
+        "chrf_signature": "nrefs:1|case:mixed|eff:yes|nc:6|nw:0|space:no|version:2.6.0",
+        "empty_output_rate": 0.0,
+        "loss": 12.375,
+        "mean_length_ratio": 1.264024864024864,
+        "sacrebleu": 0.0,
+        "sacrebleu_signature": "nrefs:1|case:mixed|eff:yes|tok:13a|smooth:exp|version:2.6.0",
+        "samples": 10,
+        "script_compliance_rate": 1.0,
+        "source_copy_rate": 0.0,
+        "source_truncation_rate": 0.0,
+        "tag_route_weights": {
+          "eng_Latn->jpn_Jpan": 1.0
+        },
+        "tag_routes": [
+          "eng_Latn->jpn_Jpan"
+        ],
+        "target_control_rate": 1.0,
+        "target_loss_tokens": 87,
+        "target_truncation_rate": 0.0
+      },
+      "English->Korean": {
+        "chrf": 0.7575757575757575,
+        "chrf_signature": "nrefs:1|case:mixed|eff:yes|nc:6|nw:0|space:no|version:2.6.0",
+        "empty_output_rate": 0.0,
+        "loss": 13.125,
+        "mean_length_ratio": 1.3252256515414411,
+        "sacrebleu": 0.0,
+        "sacrebleu_signature": "nrefs:1|case:mixed|eff:yes|tok:13a|smooth:exp|version:2.6.0",
+        "samples": 10,
+        "script_compliance_rate": 1.0,
+        "source_copy_rate": 0.0,
+        "source_truncation_rate": 0.0,
+        "tag_route_weights": {
+          "eng_Latn->kor_Hang": 1.0
+        },
+        "tag_routes": [
+          "eng_Latn->kor_Hang"
+        ],
+        "target_control_rate": 1.0,
+        "target_loss_tokens": 84,
+        "target_truncation_rate": 0.0
+      },
+      "Japanese->Chinese": {
+        "chrf": 1.4726601326458488,
+        "chrf_signature": "nrefs:1|case:mixed|eff:yes|nc:6|nw:0|space:no|version:2.6.0",
+        "empty_output_rate": 0.0,
+        "loss": 13.100527108433734,
+        "mean_length_ratio": 0.9424639943389945,
+        "sacrebleu": 0.0,
+        "sacrebleu_signature": "nrefs:1|case:mixed|eff:yes|tok:13a|smooth:exp|version:2.6.0",
+        "samples": 20,
+        "script_compliance_rate": 1.0,
+        "source_copy_rate": 0.0,
+        "source_truncation_rate": 0.0,
+        "tag_route_weights": {
+          "jpn_Jpan->zho_Hans": 0.5,
+          "jpn_Jpan->zho_Hant": 0.5
+        },
+        "tag_routes": [
+          "jpn_Jpan->zho_Hans",
+          "jpn_Jpan->zho_Hant"
+        ],
+        "target_control_rate": 1.0,
+        "target_loss_tokens": 166,
+        "target_truncation_rate": 0.0
+      },
+      "Japanese->English": {
+        "chrf": 10.857242575606957,
+        "chrf_signature": "nrefs:1|case:mixed|eff:yes|nc:6|nw:0|space:no|version:2.6.0",
+        "empty_output_rate": 0.0,
+        "loss": 13.4375,
+        "mean_length_ratio": 0.7603350003855385,
+        "sacrebleu": 2.4632904688367088,
+        "sacrebleu_signature": "nrefs:1|case:mixed|eff:yes|tok:13a|smooth:exp|version:2.6.0",
+        "samples": 10,
+        "script_compliance_rate": 1.0,
+        "source_copy_rate": 0.0,
+        "source_truncation_rate": 0.0,
+        "tag_route_weights": {
+          "jpn_Jpan->eng_Latn": 1.0
+        },
+        "tag_routes": [
+          "jpn_Jpan->eng_Latn"
+        ],
+        "target_control_rate": 1.0,
+        "target_loss_tokens": 99,
+        "target_truncation_rate": 0.0
+      },
+      "Japanese->Korean": {
+        "chrf": 0.7575757575757575,
+        "chrf_signature": "nrefs:1|case:mixed|eff:yes|nc:6|nw:0|space:no|version:2.6.0",
+        "empty_output_rate": 0.0,
+        "loss": 13.4375,
+        "mean_length_ratio": 1.3252256515414411,
+        "sacrebleu": 0.0,
+        "sacrebleu_signature": "nrefs:1|case:mixed|eff:yes|tok:13a|smooth:exp|version:2.6.0",
+        "samples": 10,
+        "script_compliance_rate": 1.0,
+        "source_copy_rate": 0.0,
+        "source_truncation_rate": 0.0,
+        "tag_route_weights": {
+          "jpn_Jpan->kor_Hang": 1.0
+        },
+        "tag_routes": [
+          "jpn_Jpan->kor_Hang"
+        ],
+        "target_control_rate": 1.0,
+        "target_loss_tokens": 84,
+        "target_truncation_rate": 0.0
+      },
+      "Korean->Chinese": {
+        "chrf": 1.4726601326458488,
+        "chrf_signature": "nrefs:1|case:mixed|eff:yes|nc:6|nw:0|space:no|version:2.6.0",
+        "empty_output_rate": 0.0,
+        "loss": 13.03652108433735,
+        "mean_length_ratio": 0.9424639943389945,
+        "sacrebleu": 0.0,
+        "sacrebleu_signature": "nrefs:1|case:mixed|eff:yes|tok:13a|smooth:exp|version:2.6.0",
+        "samples": 20,
+        "script_compliance_rate": 1.0,
+        "source_copy_rate": 0.0,
+        "source_truncation_rate": 0.0,
+        "tag_route_weights": {
+          "kor_Hang->zho_Hans": 0.5,
+          "kor_Hang->zho_Hant": 0.5
+        },
+        "tag_routes": [
+          "kor_Hang->zho_Hans",
+          "kor_Hang->zho_Hant"
+        ],
+        "target_control_rate": 1.0,
+        "target_loss_tokens": 166,
+        "target_truncation_rate": 0.0
+      },
+      "Korean->English": {
+        "chrf": 10.857242575606957,
+        "chrf_signature": "nrefs:1|case:mixed|eff:yes|nc:6|nw:0|space:no|version:2.6.0",
+        "empty_output_rate": 0.0,
+        "loss": 13.5,
+        "mean_length_ratio": 0.7603350003855385,
+        "sacrebleu": 2.4632904688367088,
+        "sacrebleu_signature": "nrefs:1|case:mixed|eff:yes|tok:13a|smooth:exp|version:2.6.0",
+        "samples": 10,
+        "script_compliance_rate": 1.0,
+        "source_copy_rate": 0.0,
+        "source_truncation_rate": 0.0,
+        "tag_route_weights": {
+          "kor_Hang->eng_Latn": 1.0
+        },
+        "tag_routes": [
+          "kor_Hang->eng_Latn"
+        ],
+        "target_control_rate": 1.0,
+        "target_loss_tokens": 99,
+        "target_truncation_rate": 0.0
+      },
+      "Korean->Japanese": {
+        "chrf": 3.8714300503125285,
+        "chrf_signature": "nrefs:1|case:mixed|eff:yes|nc:6|nw:0|space:no|version:2.6.0",
+        "empty_output_rate": 0.0,
+        "loss": 12.75,
+        "mean_length_ratio": 1.264024864024864,
+        "sacrebleu": 0.0,
+        "sacrebleu_signature": "nrefs:1|case:mixed|eff:yes|tok:13a|smooth:exp|version:2.6.0",
+        "samples": 10,
+        "script_compliance_rate": 1.0,
+        "source_copy_rate": 0.0,
+        "source_truncation_rate": 0.0,
+        "tag_route_weights": {
+          "kor_Hang->jpn_Jpan": 1.0
+        },
+        "tag_routes": [
+          "kor_Hang->jpn_Jpan"
+        ],
+        "target_control_rate": 1.0,
+        "target_loss_tokens": 87,
+        "target_truncation_rate": 0.0
+      }
+    },
+    "route20": {
+      "eng_Latn->jpn_Jpan": {
+        "chrf": 3.8714300503125285,
+        "chrf_signature": "nrefs:1|case:mixed|eff:yes|nc:6|nw:0|space:no|version:2.6.0",
+        "empty_output_rate": 0.0,
+        "loss": 12.375,
+        "mean_length_ratio": 1.264024864024864,
+        "sacrebleu": 0.0,
+        "sacrebleu_signature": "nrefs:1|case:mixed|eff:yes|tok:13a|smooth:exp|version:2.6.0",
+        "samples": 10,
+        "script_compliance_rate": 1.0,
+        "source_copy_rate": 0.0,
+        "source_truncation_rate": 0.0,
+        "target_control_rate": 1.0,
+        "target_loss_tokens": 87,
+        "target_truncation_rate": 0.0
+      },
+      "eng_Latn->kor_Hang": {
+        "chrf": 0.7575757575757575,
+        "chrf_signature": "nrefs:1|case:mixed|eff:yes|nc:6|nw:0|space:no|version:2.6.0",
+        "empty_output_rate": 0.0,
+        "loss": 13.125,
+        "mean_length_ratio": 1.3252256515414411,
+        "sacrebleu": 0.0,
+        "sacrebleu_signature": "nrefs:1|case:mixed|eff:yes|tok:13a|smooth:exp|version:2.6.0",
+        "samples": 10,
+        "script_compliance_rate": 1.0,
+        "source_copy_rate": 0.0,
+        "source_truncation_rate": 0.0,
+        "target_control_rate": 1.0,
+        "target_loss_tokens": 84,
+        "target_truncation_rate": 0.0
+      },
+      "eng_Latn->zho_Hans": {
+        "chrf": 2.1213396275957113,
+        "chrf_signature": "nrefs:1|case:mixed|eff:yes|nc:6|nw:0|space:no|version:2.6.0",
+        "empty_output_rate": 0.0,
+        "loss": 12.4375,
+        "mean_length_ratio": 1.201111111111111,
+        "sacrebleu": 0.0,
+        "sacrebleu_signature": "nrefs:1|case:mixed|eff:yes|tok:13a|smooth:exp|version:2.6.0",
+        "samples": 10,
+        "script_compliance_rate": 1.0,
+        "source_copy_rate": 0.0,
+        "source_truncation_rate": 0.0,
+        "target_control_rate": 1.0,
+        "target_loss_tokens": 81,
+        "target_truncation_rate": 0.0
+      },
+      "eng_Latn->zho_Hant": {
+        "chrf": 0.975609756097561,
+        "chrf_signature": "nrefs:1|case:mixed|eff:yes|nc:6|nw:0|space:no|version:2.6.0",
+        "empty_output_rate": 0.0,
+        "loss": 12.875,
+        "mean_length_ratio": 0.6838168775668776,
+        "sacrebleu": 0.0,
+        "sacrebleu_signature": "nrefs:1|case:mixed|eff:yes|tok:13a|smooth:exp|version:2.6.0",
+        "samples": 10,
+        "script_compliance_rate": 1.0,
+        "source_copy_rate": 0.0,
+        "source_truncation_rate": 0.0,
+        "target_control_rate": 1.0,
+        "target_loss_tokens": 85,
+        "target_truncation_rate": 0.0
+      },
+      "jpn_Jpan->eng_Latn": {
+        "chrf": 10.857242575606957,
+        "chrf_signature": "nrefs:1|case:mixed|eff:yes|nc:6|nw:0|space:no|version:2.6.0",
+        "empty_output_rate": 0.0,
+        "loss": 13.4375,
+        "mean_length_ratio": 0.7603350003855385,
+        "sacrebleu": 2.4632904688367088,
+        "sacrebleu_signature": "nrefs:1|case:mixed|eff:yes|tok:13a|smooth:exp|version:2.6.0",
+        "samples": 10,
+        "script_compliance_rate": 1.0,
+        "source_copy_rate": 0.0,
+        "source_truncation_rate": 0.0,
+        "target_control_rate": 1.0,
+        "target_loss_tokens": 99,
+        "target_truncation_rate": 0.0
+      },
+      "jpn_Jpan->kor_Hang": {
+        "chrf": 0.7575757575757575,
+        "chrf_signature": "nrefs:1|case:mixed|eff:yes|nc:6|nw:0|space:no|version:2.6.0",
+        "empty_output_rate": 0.0,
+        "loss": 13.4375,
+        "mean_length_ratio": 1.3252256515414411,
+        "sacrebleu": 0.0,
+        "sacrebleu_signature": "nrefs:1|case:mixed|eff:yes|tok:13a|smooth:exp|version:2.6.0",
+        "samples": 10,
+        "script_compliance_rate": 1.0,
+        "source_copy_rate": 0.0,
+        "source_truncation_rate": 0.0,
+        "target_control_rate": 1.0,
+        "target_loss_tokens": 84,
+        "target_truncation_rate": 0.0
+      },
+      "jpn_Jpan->zho_Hans": {
+        "chrf": 2.1213396275957113,
+        "chrf_signature": "nrefs:1|case:mixed|eff:yes|nc:6|nw:0|space:no|version:2.6.0",
+        "empty_output_rate": 0.0,
+        "loss": 12.8125,
+        "mean_length_ratio": 1.201111111111111,
+        "sacrebleu": 0.0,
+        "sacrebleu_signature": "nrefs:1|case:mixed|eff:yes|tok:13a|smooth:exp|version:2.6.0",
+        "samples": 10,
+        "script_compliance_rate": 1.0,
+        "source_copy_rate": 0.0,
+        "source_truncation_rate": 0.0,
+        "target_control_rate": 1.0,
+        "target_loss_tokens": 81,
+        "target_truncation_rate": 0.0
+      },
+      "jpn_Jpan->zho_Hant": {
+        "chrf": 0.975609756097561,
+        "chrf_signature": "nrefs:1|case:mixed|eff:yes|nc:6|nw:0|space:no|version:2.6.0",
+        "empty_output_rate": 0.0,
+        "loss": 13.375,
+        "mean_length_ratio": 0.6838168775668776,
+        "sacrebleu": 0.0,
+        "sacrebleu_signature": "nrefs:1|case:mixed|eff:yes|tok:13a|smooth:exp|version:2.6.0",
+        "samples": 10,
+        "script_compliance_rate": 1.0,
+        "source_copy_rate": 0.0,
+        "source_truncation_rate": 0.0,
+        "target_control_rate": 1.0,
+        "target_loss_tokens": 85,
+        "target_truncation_rate": 0.0
+      },
+      "kor_Hang->eng_Latn": {
+        "chrf": 10.857242575606957,
+        "chrf_signature": "nrefs:1|case:mixed|eff:yes|nc:6|nw:0|space:no|version:2.6.0",
+        "empty_output_rate": 0.0,
+        "loss": 13.5,
+        "mean_length_ratio": 0.7603350003855385,
+        "sacrebleu": 2.4632904688367088,
+        "sacrebleu_signature": "nrefs:1|case:mixed|eff:yes|tok:13a|smooth:exp|version:2.6.0",
+        "samples": 10,
+        "script_compliance_rate": 1.0,
+        "source_copy_rate": 0.0,
+        "source_truncation_rate": 0.0,
+        "target_control_rate": 1.0,
+        "target_loss_tokens": 99,
+        "target_truncation_rate": 0.0
+      },
+      "kor_Hang->jpn_Jpan": {
+        "chrf": 3.8714300503125285,
+        "chrf_signature": "nrefs:1|case:mixed|eff:yes|nc:6|nw:0|space:no|version:2.6.0",
+        "empty_output_rate": 0.0,
+        "loss": 12.75,
+        "mean_length_ratio": 1.264024864024864,
+        "sacrebleu": 0.0,
+        "sacrebleu_signature": "nrefs:1|case:mixed|eff:yes|tok:13a|smooth:exp|version:2.6.0",
+        "samples": 10,
+        "script_compliance_rate": 1.0,
+        "source_copy_rate": 0.0,
+        "source_truncation_rate": 0.0,
+        "target_control_rate": 1.0,
+        "target_loss_tokens": 87,
+        "target_truncation_rate": 0.0
+      },
+      "kor_Hang->zho_Hans": {
+        "chrf": 2.1213396275957113,
+        "chrf_signature": "nrefs:1|case:mixed|eff:yes|nc:6|nw:0|space:no|version:2.6.0",
+        "empty_output_rate": 0.0,
+        "loss": 12.8125,
+        "mean_length_ratio": 1.201111111111111,
+        "sacrebleu": 0.0,
+        "sacrebleu_signature": "nrefs:1|case:mixed|eff:yes|tok:13a|smooth:exp|version:2.6.0",
+        "samples": 10,
+        "script_compliance_rate": 1.0,
+        "source_copy_rate": 0.0,
+        "source_truncation_rate": 0.0,
+        "target_control_rate": 1.0,
+        "target_loss_tokens": 81,
+        "target_truncation_rate": 0.0
+      },
+      "kor_Hang->zho_Hant": {
+        "chrf": 0.975609756097561,
+        "chrf_signature": "nrefs:1|case:mixed|eff:yes|nc:6|nw:0|space:no|version:2.6.0",
+        "empty_output_rate": 0.0,
+        "loss": 13.25,
+        "mean_length_ratio": 0.6838168775668776,
+        "sacrebleu": 0.0,
+        "sacrebleu_signature": "nrefs:1|case:mixed|eff:yes|tok:13a|smooth:exp|version:2.6.0",
+        "samples": 10,
+        "script_compliance_rate": 1.0,
+        "source_copy_rate": 0.0,
+        "source_truncation_rate": 0.0,
+        "target_control_rate": 1.0,
+        "target_loss_tokens": 85,
+        "target_truncation_rate": 0.0
+      },
+      "zho_Hans->eng_Latn": {
+        "chrf": 10.857242575606957,
+        "chrf_signature": "nrefs:1|case:mixed|eff:yes|nc:6|nw:0|space:no|version:2.6.0",
+        "empty_output_rate": 0.0,
+        "loss": 13.9375,
+        "mean_length_ratio": 0.7603350003855385,
+        "sacrebleu": 2.4632904688367088,
+        "sacrebleu_signature": "nrefs:1|case:mixed|eff:yes|tok:13a|smooth:exp|version:2.6.0",
+        "samples": 10,
+        "script_compliance_rate": 1.0,
+        "source_copy_rate": 0.0,
+        "source_truncation_rate": 0.0,
+        "target_control_rate": 1.0,
+        "target_loss_tokens": 99,
+        "target_truncation_rate": 0.0
+      },
+      "zho_Hans->jpn_Jpan": {
+        "chrf": 3.8714300503125285,
+        "chrf_signature": "nrefs:1|case:mixed|eff:yes|nc:6|nw:0|space:no|version:2.6.0",
+        "empty_output_rate": 0.0,
+        "loss": 13.125,
+        "mean_length_ratio": 1.264024864024864,
+        "sacrebleu": 0.0,
+        "sacrebleu_signature": "nrefs:1|case:mixed|eff:yes|tok:13a|smooth:exp|version:2.6.0",
+        "samples": 10,
+        "script_compliance_rate": 1.0,
+        "source_copy_rate": 0.0,
+        "source_truncation_rate": 0.0,
+        "target_control_rate": 1.0,
+        "target_loss_tokens": 87,
+        "target_truncation_rate": 0.0
+      },
+      "zho_Hans->kor_Hang": {
+        "chrf": 0.7575757575757575,
+        "chrf_signature": "nrefs:1|case:mixed|eff:yes|nc:6|nw:0|space:no|version:2.6.0",
+        "empty_output_rate": 0.0,
+        "loss": 13.9375,
+        "mean_length_ratio": 1.3252256515414411,
+        "sacrebleu": 0.0,
+        "sacrebleu_signature": "nrefs:1|case:mixed|eff:yes|tok:13a|smooth:exp|version:2.6.0",
+        "samples": 10,
+        "script_compliance_rate": 1.0,
+        "source_copy_rate": 0.0,
+        "source_truncation_rate": 0.0,
+        "target_control_rate": 1.0,
+        "target_loss_tokens": 84,
+        "target_truncation_rate": 0.0
+      },
+      "zho_Hans->zho_Hant": {
+        "chrf": 0.975609756097561,
+        "chrf_signature": "nrefs:1|case:mixed|eff:yes|nc:6|nw:0|space:no|version:2.6.0",
+        "empty_output_rate": 0.0,
+        "loss": 13.6875,
+        "mean_length_ratio": 0.6838168775668776,
+        "sacrebleu": 0.0,
+        "sacrebleu_signature": "nrefs:1|case:mixed|eff:yes|tok:13a|smooth:exp|version:2.6.0",
+        "samples": 10,
+        "script_compliance_rate": 1.0,
+        "source_copy_rate": 0.0,
+        "source_truncation_rate": 0.0,
+        "target_control_rate": 1.0,
+        "target_loss_tokens": 85,
+        "target_truncation_rate": 0.0
+      },
+      "zho_Hant->eng_Latn": {
+        "chrf": 10.857242575606957,
+        "chrf_signature": "nrefs:1|case:mixed|eff:yes|nc:6|nw:0|space:no|version:2.6.0",
+        "empty_output_rate": 0.0,
+        "loss": 14.25,
+        "mean_length_ratio": 0.7603350003855385,
+        "sacrebleu": 2.4632904688367088,
+        "sacrebleu_signature": "nrefs:1|case:mixed|eff:yes|tok:13a|smooth:exp|version:2.6.0",
+        "samples": 10,
+        "script_compliance_rate": 1.0,
+        "source_copy_rate": 0.0,
+        "source_truncation_rate": 0.0,
+        "target_control_rate": 1.0,
+        "target_loss_tokens": 99,
+        "target_truncation_rate": 0.0
+      },
+      "zho_Hant->jpn_Jpan": {
+        "chrf": 3.8714300503125285,
+        "chrf_signature": "nrefs:1|case:mixed|eff:yes|nc:6|nw:0|space:no|version:2.6.0",
+        "empty_output_rate": 0.0,
+        "loss": 13.5,
+        "mean_length_ratio": 1.264024864024864,
+        "sacrebleu": 0.0,
+        "sacrebleu_signature": "nrefs:1|case:mixed|eff:yes|tok:13a|smooth:exp|version:2.6.0",
+        "samples": 10,
+        "script_compliance_rate": 1.0,
+        "source_copy_rate": 0.0,
+        "source_truncation_rate": 0.0,
+        "target_control_rate": 1.0,
+        "target_loss_tokens": 87,
+        "target_truncation_rate": 0.0
+      },
+      "zho_Hant->kor_Hang": {
+        "chrf": 0.7575757575757575,
+        "chrf_signature": "nrefs:1|case:mixed|eff:yes|nc:6|nw:0|space:no|version:2.6.0",
+        "empty_output_rate": 0.0,
+        "loss": 14.3125,
+        "mean_length_ratio": 1.3252256515414411,
+        "sacrebleu": 0.0,
+        "sacrebleu_signature": "nrefs:1|case:mixed|eff:yes|tok:13a|smooth:exp|version:2.6.0",
+        "samples": 10,
+        "script_compliance_rate": 1.0,
+        "source_copy_rate": 0.0,
+        "source_truncation_rate": 0.0,
+        "target_control_rate": 1.0,
+        "target_loss_tokens": 84,
+        "target_truncation_rate": 0.0
+      },
+      "zho_Hant->zho_Hans": {
+        "chrf": 2.1213396275957113,
+        "chrf_signature": "nrefs:1|case:mixed|eff:yes|nc:6|nw:0|space:no|version:2.6.0",
+        "empty_output_rate": 0.0,
+        "loss": 13.625,
+        "mean_length_ratio": 1.201111111111111,
+        "sacrebleu": 0.0,
+        "sacrebleu_signature": "nrefs:1|case:mixed|eff:yes|tok:13a|smooth:exp|version:2.6.0",
+        "samples": 10,
+        "script_compliance_rate": 1.0,
+        "source_copy_rate": 0.0,
+        "source_truncation_rate": 0.0,
+        "target_control_rate": 1.0,
+        "target_loss_tokens": 81,
+        "target_truncation_rate": 0.0
+      }
+    }
+  },
+  "fixed_examples": {
+    "eng_Latn->jpn_Jpan": [
+      {
+        "prediction": "スノーブーツは必要ですか",
+        "reference": "キッチンを消して",
+        "sample_id": "sample-sha256:a3a29d3ac2ee9249f10888bd26943a3408f476b8335efa726d67e20419a8a4c6",
+        "source": "please turn off the kitchen"
+      },
+      {
+        "prediction": "スノーブーツは必要ですか",
+        "reference": "東京の人口は何人ですか",
+        "sample_id": "sample-sha256:751ba1cc8b7f87337824cbd53e77615d0aba4cd4112c6aabab16720724418277",
+        "source": "what is the population of new york"
+      }
+    ],
+    "eng_Latn->kor_Hang": [
+      {
+        "prediction": "스노우 부츠 신을까",
+        "reference": "부엌 꺼",
+        "sample_id": "sample-sha256:c8753587f95ef622678347a90d73d8f3c723b92d90d58f55768bead895e25d14",
+        "source": "please turn off the kitchen"
+      },
+      {
+        "prediction": "스노우 부츠 신을까",
+        "reference": "서울 인구는 얼마나 돼",
+        "sample_id": "sample-sha256:e6f428a145dd2d6dff88483f66b90633ea5b10522f2216f5d1b52dbf48da2829",
+        "source": "what is the population of new york"
+      }
+    ],
+    "eng_Latn->zho_Hans": [
+      {
+        "prediction": "我需要穿雪地靴吗",
+        "reference": "请关掉厨房",
+        "sample_id": "sample-sha256:4c2465d3942534e39c74cbd3cb1e03d00aca902cf2a9659613c5c4708cb519a8",
+        "source": "please turn off the kitchen"
+      },
+      {
+        "prediction": "我需要穿雪地靴吗",
+        "reference": "纽约的人口有多少",
+        "sample_id": "sample-sha256:19d8dd6047c65ffd6454497db664b486dc25b33199d5b5bb02cd4d2d8bd0c02c",
+        "source": "what is the population of new york"
+      }
+    ],
+    "eng_Latn->zho_Hant": [
+      {
+        "prediction": "雪靴要穿嗎",
+        "reference": "請關閉廚房",
+        "sample_id": "sample-sha256:ecdc5d54486f233dbc9b132941d59e1ccf7ec8dd6f894a87df9b6450e8c5ae7f",
+        "source": "please turn off the kitchen"
+      },
+      {
+        "prediction": "雪靴要穿嗎",
+        "reference": "台北的人口是多少",
+        "sample_id": "sample-sha256:fb3b6e2020f35ff5f95124d07eb79061df4cbf78b87e04610e3d859674b37747",
+        "source": "what is the population of new york"
+      }
+    ],
+    "jpn_Jpan->eng_Latn": [
+      {
+        "prediction": "do i need snow boots",
+        "reference": "please turn off the kitchen",
+        "sample_id": "sample-sha256:454b0f16ede165a7b33d4c934c56abbf8e9a11b0ed9b5ae67b907ec7d0d1c755",
+        "source": "キッチンを消して"
+      },
+      {
+        "prediction": "do i need snow boots",
+        "reference": "what is the population of new york",
+        "sample_id": "sample-sha256:c08aa46c37c1dc002b57d2fd1d5a8861228eecec5462e2c9d8aa1dfaa183ac54",
+        "source": "東京の人口は何人ですか"
+      }
+    ],
+    "jpn_Jpan->kor_Hang": [
+      {
+        "prediction": "스노우 부츠 신을까",
+        "reference": "부엌 꺼",
+        "sample_id": "sample-sha256:3fc60432b0ca8ea038d1b8a6da9e1610bcfaf4aad63fcdf2de0a1674495c8625",
+        "source": "キッチンを消して"
+      },
+      {
+        "prediction": "스노우 부츠 신을까",
+        "reference": "서울 인구는 얼마나 돼",
+        "sample_id": "sample-sha256:be1999806a7215250736313ed4282abf783c9fce831542cf66cd907fd2a8fa30",
+        "source": "東京の人口は何人ですか"
+      }
+    ],
+    "jpn_Jpan->zho_Hans": [
+      {
+        "prediction": "我需要穿雪地靴吗",
+        "reference": "请关掉厨房",
+        "sample_id": "sample-sha256:2114f7a44724c08277b17f1a2a95535fe8a4256ca9367788409a1b546330e8bf",
+        "source": "キッチンを消して"
+      },
+      {
+        "prediction": "我需要穿雪地靴吗",
+        "reference": "纽约的人口有多少",
+        "sample_id": "sample-sha256:413886df5b3e57e29019949981e3bc1cf1ba6c486cf49689e5cad51365b52fee",
+        "source": "東京の人口は何人ですか"
+      }
+    ],
+    "jpn_Jpan->zho_Hant": [
+      {
+        "prediction": "雪靴要穿嗎",
+        "reference": "請關閉廚房",
+        "sample_id": "sample-sha256:5a1269eeccc510f7fe1b72edc710dc862b588129f02393da6c67f2c80b7d7233",
+        "source": "キッチンを消して"
+      },
+      {
+        "prediction": "雪靴要穿嗎",
+        "reference": "台北的人口是多少",
+        "sample_id": "sample-sha256:0b2b765df1d51f31b3d53b52c08d584f4d5549b06ddd80ef1f6b03709944680f",
+        "source": "東京の人口は何人ですか"
+      }
+    ],
+    "kor_Hang->eng_Latn": [
+      {
+        "prediction": "do i need snow boots",
+        "reference": "please turn off the kitchen",
+        "sample_id": "sample-sha256:68aa6575d382211ace95ea183f71faa5c1fbc0346fddf4338040579f5d19319f",
+        "source": "부엌 꺼"
+      },
+      {
+        "prediction": "do i need snow boots",
+        "reference": "what is the population of new york",
+        "sample_id": "sample-sha256:946dd2cf56e744daf646e28e53500286f32cd0a361a0b034069715ec33d59eab",
+        "source": "서울 인구는 얼마나 돼"
+      }
+    ],
+    "kor_Hang->jpn_Jpan": [
+      {
+        "prediction": "スノーブーツは必要ですか",
+        "reference": "キッチンを消して",
+        "sample_id": "sample-sha256:ccc795e55c338c7c5341f888a31b8f15d971dc33954ad4c9d4a71adc5173ca3f",
+        "source": "부엌 꺼"
+      },
+      {
+        "prediction": "スノーブーツは必要ですか",
+        "reference": "東京の人口は何人ですか",
+        "sample_id": "sample-sha256:9ea15d480d98fa4d5e33baa14e6e7b0b6aa74fb26995fa3bbbd2f216cfb31a6e",
+        "source": "서울 인구는 얼마나 돼"
+      }
+    ],
+    "kor_Hang->zho_Hans": [
+      {
+        "prediction": "我需要穿雪地靴吗",
+        "reference": "请关掉厨房",
+        "sample_id": "sample-sha256:a2c9b6150e06b574de360a6ecf2da89c55588143eecbfd610965a1be60cd0de8",
+        "source": "부엌 꺼"
+      },
+      {
+        "prediction": "我需要穿雪地靴吗",
+        "reference": "纽约的人口有多少",
+        "sample_id": "sample-sha256:47c3b12de27a619beefb92b20d9c710b0420ea7219a66790eb407987ac1b0f2f",
+        "source": "서울 인구는 얼마나 돼"
+      }
+    ],
+    "kor_Hang->zho_Hant": [
+      {
+        "prediction": "雪靴要穿嗎",
+        "reference": "請關閉廚房",
+        "sample_id": "sample-sha256:104d425cd2c1bafc3e3f0f554b7d3cd9fb87436c3b68aa2786efae12c13cf73f",
+        "source": "부엌 꺼"
+      },
+      {
+        "prediction": "雪靴要穿嗎",
+        "reference": "台北的人口是多少",
+        "sample_id": "sample-sha256:ff0e4502e264ee54c7316313afcb193d16aa3a5fb3f9191c77fd36a73fe9ccd3",
+        "source": "서울 인구는 얼마나 돼"
+      }
+    ],
+    "zho_Hans->eng_Latn": [
+      {
+        "prediction": "do i need snow boots",
+        "reference": "please turn off the kitchen",
+        "sample_id": "sample-sha256:13d5de0ddad2136b8d9ff6c8d3e4e5c7d3f473330335eb1822add49e09efade5",
+        "source": "请关掉厨房"
+      },
+      {
+        "prediction": "do i need snow boots",
+        "reference": "what is the population of new york",
+        "sample_id": "sample-sha256:b0524ad000a37b1bcadb1a46d6dc1fc639caab97c13e5fd38be9d5ac5044e379",
+        "source": "纽约的人口有多少"
+      }
+    ],
+    "zho_Hans->jpn_Jpan": [
+      {
+        "prediction": "スノーブーツは必要ですか",
+        "reference": "キッチンを消して",
+        "sample_id": "sample-sha256:1a44ea8a76efcf9b70e8d6039b48f497ee72f6975e9d7c870dd8ba94c6a675c8",
+        "source": "请关掉厨房"
+      },
+      {
+        "prediction": "スノーブーツは必要ですか",
+        "reference": "東京の人口は何人ですか",
+        "sample_id": "sample-sha256:2d75032cdc371844aa80ffecc588196827ac576df1c5b83af5682ad8ab786e64",
+        "source": "纽约的人口有多少"
+      }
+    ],
+    "zho_Hans->kor_Hang": [
+      {
+        "prediction": "스노우 부츠 신을까",
+        "reference": "부엌 꺼",
+        "sample_id": "sample-sha256:a04c36e84b76dd691b19c47820d75a96f78c8408bd53c7bf82e2a5d88307a331",
+        "source": "请关掉厨房"
+      },
+      {
+        "prediction": "스노우 부츠 신을까",
+        "reference": "서울 인구는 얼마나 돼",
+        "sample_id": "sample-sha256:22a8b900d87f34ca2e1a97384c72073ad0421716582b1e6333bd13fbfa728d63",
+        "source": "纽约的人口有多少"
+      }
+    ],
+    "zho_Hans->zho_Hant": [
+      {
+        "prediction": "雪靴要穿嗎",
+        "reference": "請關閉廚房",
+        "sample_id": "sample-sha256:c84a1bc8e77a15f599b4df528a721ad6740d797d1fe8772f1eda90e1dac36c0f",
+        "source": "请关掉厨房"
+      },
+      {
+        "prediction": "雪靴要穿嗎",
+        "reference": "台北的人口是多少",
+        "sample_id": "sample-sha256:e44c2f13225d34bb4b7eb350e08d85de159a7bc711ec615e259b0d4a7125b7e9",
+        "source": "纽约的人口有多少"
+      }
+    ],
+    "zho_Hant->eng_Latn": [
+      {
+        "prediction": "do i need snow boots",
+        "reference": "please turn off the kitchen",
+        "sample_id": "sample-sha256:0239727f35c41310184becd11212e51ea1bd59b8db354122773c4f039dbfbf52",
+        "source": "請關閉廚房"
+      },
+      {
+        "prediction": "do i need snow boots",
+        "reference": "what is the population of new york",
+        "sample_id": "sample-sha256:ba31e5108d11024279e0cf57a4ccf5dd36fae1da02b7fbbb3f77e75531f0f75e",
+        "source": "台北的人口是多少"
+      }
+    ],
+    "zho_Hant->jpn_Jpan": [
+      {
+        "prediction": "スノーブーツは必要ですか",
+        "reference": "キッチンを消して",
+        "sample_id": "sample-sha256:344309d42e8df3de2523e5624135a56125390a8660cb3f73ec032f4662b50890",
+        "source": "請關閉廚房"
+      },
+      {
+        "prediction": "スノーブーツは必要ですか",
+        "reference": "東京の人口は何人ですか",
+        "sample_id": "sample-sha256:6251ea3d665c4d640e2d6e049acadcb95273dddb35a99b41e16511ad889f400c",
+        "source": "台北的人口是多少"
+      }
+    ],
+    "zho_Hant->kor_Hang": [
+      {
+        "prediction": "스노우 부츠 신을까",
+        "reference": "부엌 꺼",
+        "sample_id": "sample-sha256:0ce55aad46e760f94f96748a86c2919c44b8c294976d6b7efd1364f61121b98f",
+        "source": "請關閉廚房"
+      },
+      {
+        "prediction": "스노우 부츠 신을까",
+        "reference": "서울 인구는 얼마나 돼",
+        "sample_id": "sample-sha256:bac8bff3b3451a5d163b862fb23bd499540f2bb2a1b4d6800a0e071dfd15a539",
+        "source": "台北的人口是多少"
+      }
+    ],
+    "zho_Hant->zho_Hans": [
+      {
+        "prediction": "我需要穿雪地靴吗",
+        "reference": "请关掉厨房",
+        "sample_id": "sample-sha256:778b5c40467dd62f352d4b510da46e42a6cec10d18afa59113ce4ded49654b70",
+        "source": "請關閉廚房"
+      },
+      {
+        "prediction": "我需要穿雪地靴吗",
+        "reference": "纽约的人口有多少",
+        "sample_id": "sample-sha256:8068e52b5465b1ca3d5fec009d7d4580a20201a42434c4df6ed6d25ed1898c58",
+        "source": "台北的人口是多少"
+      }
+    ]
+  },
+  "identities": {
+    "checkpoint_path": "D:\\Diesel-MT-Runtime\\td12-m1-v2\\m1-hf",
+    "checkpoint_state_sha256": "3cfc2ba0d33afb05f5ec26b4a132f9b491548d58ab55ec13910da36ffabc8273",
+    "data_path": "data/model/corpus/mvp/finalized/dev.jsonl",
+    "data_sha256": "28befa6f01cada3965b7fe3a9a24c6718ff47e08008b780c8575f563a98fd8f6",
+    "encoding_policy_sha256": "28252d12ef6652653f21b85ab37ff0b76cb6deb896068a50c0ac3c729ac22073",
+    "evaluation_config_canonical_sha256": "7bd30245227e05fe695465156605efb83f2498119033b8a489c8d0c5cff3c76b",
+    "evaluation_config_file_sha256": "85e015090eae437b46d0d62ab4473ac90fbc6735f13e226379cc120b316f701c",
+    "evaluation_config_path": "configs/mvp_evaluation.yaml",
+    "selection_sha256": "fc9590188295f39b24dc5079231a16894f1d3c871609172d3f2c0dc01a2f0850",
+    "split_manifest_sha256": "f998d9b91a0aedf9900e683a01015d594187a6e15b66388260bf1ad30477f4c0",
+    "tokenizer_manifest_sha256": "eb79ae22f523f1d9c9fcf75b80f2b322e3c2882a8fddb7545b5933dd4053fa7f"
+  },
+  "model_alignment": {
+    "bos_token_id": 0,
+    "decoder_start_token_id": 2,
+    "eos_token_id": 2,
+    "input_embeddings": 49152,
+    "output_embeddings": 49152,
+    "pad_token_id": 1,
+    "tied_embeddings": true,
+    "vocab_size": 49152
+  },
+  "publication": {
+    "manifest": {
+      "checkpoint_state_sha256": "3cfc2ba0d33afb05f5ec26b4a132f9b491548d58ab55ec13910da36ffabc8273",
+      "data_sha256": "28befa6f01cada3965b7fe3a9a24c6718ff47e08008b780c8575f563a98fd8f6",
+      "evaluation_config_file_sha256": "85e015090eae437b46d0d62ab4473ac90fbc6735f13e226379cc120b316f701c",
+      "files": [
+        {
+          "bytes": 2924,
+          "path": "report.md",
+          "sha256": "de15bc2f547bbad6c6fbf91488635c7eaa7de6fc5cbe3e40ca58eba4ecaa5ab3"
+        },
+        {
+          "bytes": 148789,
+          "path": "samples.jsonl",
+          "sha256": "2d28c044ab3accae3a31cc14dc611abf114769554e1e7007616a1a3ddaf4e337"
+        },
+        {
+          "bytes": 37540,
+          "path": "summary.json",
+          "sha256": "f2a2ec7f96ec325cdaad767f0a607b3afe9bd838c44557c511ce772b143e7761"
+        }
+      ],
+      "schema_version": 1,
+      "status": "complete"
+    },
+    "path": "D:\\Diesel-MT-Runtime\\td13-m1-dev-v1"
+  },
+  "records": 200,
+  "runtime": {
+    "batch_size": 10,
+    "device": "cuda",
+    "precision": "bf16",
+    "sacrebleu_version": "2.6.0"
+  },
+  "schema_version": 1,
+  "split": "dev",
+  "status": "passed",
+  "test_access_explicitly_authorized": false
+}

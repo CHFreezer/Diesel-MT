@@ -1,0 +1,601 @@
+{
+  "candidate_config": {
+    "canonical_sha256": "b93b0f1a484c9c8240a523cccc7e17610859e6233bcff43134c247ebf9b96143",
+    "file_sha256": "c9e6ede21d910833cae74fa72355dad886ff522d675f455940417a2abf71d2ea",
+    "path": "configs/mvp_training_td14_candidates.yaml"
+  },
+  "candidates": [
+    {
+      "accepted": false,
+      "gates": {
+        "complete": true,
+        "device_memory_within_effective_limit": true,
+        "finite_loss": true,
+        "source_sample_truncation": false,
+        "target_sample_truncation": false,
+        "validation_executed": true,
+        "zero_oom_retries": true
+      },
+      "id": "mb64-ga2-l32-w0-no-gc",
+      "metrics": {
+        "effective_batch_samples": 128,
+        "final_train_loss": 9.84110975265503,
+        "mean_step_seconds": 2.84459671999939,
+        "mean_train_loss": 10.387208080291748,
+        "oom_retries": 0,
+        "optimizer_steps": 5,
+        "peak_device_memory_bytes": 2973082624,
+        "peak_host_resident_bytes": 1985781760,
+        "samples_per_second": 44.99759108209456,
+        "source_sample_truncation_rate": 0.00029296875,
+        "source_token_truncation_rate": 0.0,
+        "target_sample_truncation_rate": 0.00029296875,
+        "target_token_truncation_rate": 0.0,
+        "tokens_per_second": 936.1608207157642,
+        "validation_wall_time_seconds": 2.0313781999939238,
+        "wall_time_seconds": 14.222983599996951
+      },
+      "output_root": "D:\\Diesel-MT-Runtime\\td14-candidates-v1\\candidate-mb64-ga2-l32-w0-no-gc",
+      "profile": {
+        "dataloader_workers": 0,
+        "gradient_accumulation_steps": 2,
+        "gradient_checkpointing": false,
+        "id": "mb64-ga2-l32-w0-no-gc",
+        "max_source_length": 32,
+        "max_target_length": 32,
+        "micro_batch_size": 64
+      },
+      "runtime": {
+        "cuda_available": true,
+        "cuda_device_count": 1,
+        "cuda_devices": [
+          {
+            "capability": [
+              8,
+              9
+            ],
+            "index": 0,
+            "name": "NVIDIA GeForce RTX 4060 Ti",
+            "total_memory_bytes": 17175150592
+          }
+        ],
+        "cuda_driver": "610.74",
+        "cuda_runtime": "13.2",
+        "cudnn": 92000,
+        "device_available_bytes": 15972958208,
+        "device_total_bytes": 17175150592,
+        "host_available_bytes": 106267283456,
+        "host_total_bytes": 137142136832,
+        "packages": {
+          "python": "3.11.15",
+          "safetensors": "0.8.0",
+          "tokenizers": "0.22.2",
+          "torch": "2.13.0+cu132",
+          "transformers": "5.13.1"
+        },
+        "platform": "Windows-10-10.0.26200-SP0",
+        "python": "3.11.15",
+        "resource_validation": {
+          "absolute_budget_bytes": 12582912000,
+          "dataloader_budget_bytes": 2147483648,
+          "effective_device_limit_bytes": 12582912000,
+          "estimated_dataloader_bytes": 131072,
+          "host_budget_bytes": 34359738368,
+          "reserve_limit_bytes": 15027666944,
+          "utilization_limit_bytes": 14598878003
+        },
+        "selected_device": "cuda",
+        "selected_precision": "bf16",
+        "torch": "2.13.0+cu132"
+      },
+      "training_config": {
+        "canonical_sha256": "ffe2c0e2229106bc88b098feef9131406423fa1a756cc3e02b8f885ba1afba08",
+        "file_sha256": "ce3e2095d68a55063f463c9cf10100a4afc2d7f1b789364342db50240c47ab32",
+        "path": "artifacts/model-training/runtime/m2-resource-candidates/mb64-ga2-l32-w0-no-gc.yaml"
+      }
+    },
+    {
+      "accepted": true,
+      "gates": {
+        "complete": true,
+        "device_memory_within_effective_limit": true,
+        "finite_loss": true,
+        "source_sample_truncation": true,
+        "target_sample_truncation": true,
+        "validation_executed": true,
+        "zero_oom_retries": true
+      },
+      "id": "mb64-ga2-l64-w2-no-gc",
+      "metrics": {
+        "effective_batch_samples": 128,
+        "final_train_loss": 9.84110975265503,
+        "mean_step_seconds": 2.7230187199995273,
+        "mean_train_loss": 10.387208080291748,
+        "oom_retries": 0,
+        "optimizer_steps": 5,
+        "peak_device_memory_bytes": 2978063360,
+        "peak_host_resident_bytes": 2318753792,
+        "samples_per_second": 47.0066544382854,
+        "source_sample_truncation_rate": 0.0,
+        "source_token_truncation_rate": 0.0,
+        "target_sample_truncation_rate": 0.0,
+        "target_token_truncation_rate": 0.0,
+        "tokens_per_second": 977.9587560090158,
+        "validation_wall_time_seconds": 2.0724865999945905,
+        "wall_time_seconds": 13.615093599997635
+      },
+      "output_root": "D:\\Diesel-MT-Runtime\\td14-candidates-v1\\candidate-mb64-ga2-l64-w2-no-gc",
+      "profile": {
+        "dataloader_workers": 2,
+        "gradient_accumulation_steps": 2,
+        "gradient_checkpointing": false,
+        "id": "mb64-ga2-l64-w2-no-gc",
+        "max_source_length": 64,
+        "max_target_length": 64,
+        "micro_batch_size": 64
+      },
+      "runtime": {
+        "cuda_available": true,
+        "cuda_device_count": 1,
+        "cuda_devices": [
+          {
+            "capability": [
+              8,
+              9
+            ],
+            "index": 0,
+            "name": "NVIDIA GeForce RTX 4060 Ti",
+            "total_memory_bytes": 17175150592
+          }
+        ],
+        "cuda_driver": "610.74",
+        "cuda_runtime": "13.2",
+        "cudnn": 92000,
+        "device_available_bytes": 12147752960,
+        "device_total_bytes": 17175150592,
+        "host_available_bytes": 105062989824,
+        "host_total_bytes": 137142136832,
+        "packages": {
+          "python": "3.11.15",
+          "safetensors": "0.8.0",
+          "tokenizers": "0.22.2",
+          "torch": "2.13.0+cu132",
+          "transformers": "5.13.1"
+        },
+        "platform": "Windows-10-10.0.26200-SP0",
+        "python": "3.11.15",
+        "resource_validation": {
+          "absolute_budget_bytes": 12582912000,
+          "dataloader_budget_bytes": 2147483648,
+          "effective_device_limit_bytes": 12582912000,
+          "estimated_dataloader_bytes": 524288,
+          "host_budget_bytes": 34359738368,
+          "reserve_limit_bytes": 15027666944,
+          "utilization_limit_bytes": 14598878003
+        },
+        "selected_device": "cuda",
+        "selected_precision": "bf16",
+        "torch": "2.13.0+cu132"
+      },
+      "training_config": {
+        "canonical_sha256": "3fa81cdb038d7dcbaad890e8c8e2138d60b1bb7bfc1ce4cae18f169130515db3",
+        "file_sha256": "694e3850d5ac2f415fde3ab8099fc66ec3932a062f0dc717c9eb8a015c99637a",
+        "path": "artifacts/model-training/runtime/m2-resource-candidates/mb64-ga2-l64-w2-no-gc.yaml"
+      }
+    },
+    {
+      "accepted": true,
+      "gates": {
+        "complete": true,
+        "device_memory_within_effective_limit": true,
+        "finite_loss": true,
+        "source_sample_truncation": true,
+        "target_sample_truncation": true,
+        "validation_executed": true,
+        "zero_oom_retries": true
+      },
+      "id": "mb64-ga2-l64-w2-gc",
+      "metrics": {
+        "effective_batch_samples": 128,
+        "final_train_loss": 9.84110975265503,
+        "mean_step_seconds": 2.9501634600004762,
+        "mean_train_loss": 10.387208080291748,
+        "oom_retries": 0,
+        "optimizer_steps": 5,
+        "peak_device_memory_bytes": 2634455552,
+        "peak_host_resident_bytes": 2318753792,
+        "samples_per_second": 43.38742640381673,
+        "source_sample_truncation_rate": 0.0,
+        "source_token_truncation_rate": 0.0,
+        "target_sample_truncation_rate": 0.0,
+        "target_token_truncation_rate": 0.0,
+        "tokens_per_second": 902.661847760656,
+        "validation_wall_time_seconds": 2.0621232999983476,
+        "wall_time_seconds": 14.750817300002382
+      },
+      "output_root": "D:\\Diesel-MT-Runtime\\td14-candidates-v1\\candidate-mb64-ga2-l64-w2-gc",
+      "profile": {
+        "dataloader_workers": 2,
+        "gradient_accumulation_steps": 2,
+        "gradient_checkpointing": true,
+        "id": "mb64-ga2-l64-w2-gc",
+        "max_source_length": 64,
+        "max_target_length": 64,
+        "micro_batch_size": 64
+      },
+      "runtime": {
+        "cuda_available": true,
+        "cuda_device_count": 1,
+        "cuda_devices": [
+          {
+            "capability": [
+              8,
+              9
+            ],
+            "index": 0,
+            "name": "NVIDIA GeForce RTX 4060 Ti",
+            "total_memory_bytes": 17175150592
+          }
+        ],
+        "cuda_driver": "610.74",
+        "cuda_runtime": "13.2",
+        "cudnn": 92000,
+        "device_available_bytes": 12147752960,
+        "device_total_bytes": 17175150592,
+        "host_available_bytes": 105088380928,
+        "host_total_bytes": 137142136832,
+        "packages": {
+          "python": "3.11.15",
+          "safetensors": "0.8.0",
+          "tokenizers": "0.22.2",
+          "torch": "2.13.0+cu132",
+          "transformers": "5.13.1"
+        },
+        "platform": "Windows-10-10.0.26200-SP0",
+        "python": "3.11.15",
+        "resource_validation": {
+          "absolute_budget_bytes": 12582912000,
+          "dataloader_budget_bytes": 2147483648,
+          "effective_device_limit_bytes": 12582912000,
+          "estimated_dataloader_bytes": 524288,
+          "host_budget_bytes": 34359738368,
+          "reserve_limit_bytes": 15027666944,
+          "utilization_limit_bytes": 14598878003
+        },
+        "selected_device": "cuda",
+        "selected_precision": "bf16",
+        "torch": "2.13.0+cu132"
+      },
+      "training_config": {
+        "canonical_sha256": "9226d5abedf491f299b952dbd4c3a916f837e1a779e65fefb880acc57889b7e2",
+        "file_sha256": "8a4148802cf547b2ef417036dabe8f774e19f996ff5f53d2ba8c6d07640e8821",
+        "path": "artifacts/model-training/runtime/m2-resource-candidates/mb64-ga2-l64-w2-gc.yaml"
+      }
+    },
+    {
+      "accepted": true,
+      "gates": {
+        "complete": true,
+        "device_memory_within_effective_limit": true,
+        "finite_loss": true,
+        "source_sample_truncation": true,
+        "target_sample_truncation": true,
+        "validation_executed": true,
+        "zero_oom_retries": true
+      },
+      "id": "mb128-ga1-l64-w2-no-gc",
+      "metrics": {
+        "effective_batch_samples": 128,
+        "final_train_loss": 9.848445892333984,
+        "mean_step_seconds": 4.049656120000873,
+        "mean_train_loss": 10.385688209533692,
+        "oom_retries": 0,
+        "optimizer_steps": 5,
+        "peak_device_memory_bytes": 4615243776,
+        "peak_host_resident_bytes": 2318753792,
+        "samples_per_second": 31.60762203186092,
+        "source_sample_truncation_rate": 0.0,
+        "source_token_truncation_rate": 0.0,
+        "target_sample_truncation_rate": 0.0,
+        "target_token_truncation_rate": 0.0,
+        "tokens_per_second": 657.5866989909815,
+        "validation_wall_time_seconds": 4.305514200001198,
+        "wall_time_seconds": 20.248280600004364
+      },
+      "output_root": "D:\\Diesel-MT-Runtime\\td14-candidates-v1\\candidate-mb128-ga1-l64-w2-no-gc",
+      "profile": {
+        "dataloader_workers": 2,
+        "gradient_accumulation_steps": 1,
+        "gradient_checkpointing": false,
+        "id": "mb128-ga1-l64-w2-no-gc",
+        "max_source_length": 64,
+        "max_target_length": 64,
+        "micro_batch_size": 128
+      },
+      "runtime": {
+        "cuda_available": true,
+        "cuda_device_count": 1,
+        "cuda_devices": [
+          {
+            "capability": [
+              8,
+              9
+            ],
+            "index": 0,
+            "name": "NVIDIA GeForce RTX 4060 Ti",
+            "total_memory_bytes": 17175150592
+          }
+        ],
+        "cuda_driver": "610.74",
+        "cuda_runtime": "13.2",
+        "cudnn": 92000,
+        "device_available_bytes": 12147752960,
+        "device_total_bytes": 17175150592,
+        "host_available_bytes": 105082396672,
+        "host_total_bytes": 137142136832,
+        "packages": {
+          "python": "3.11.15",
+          "safetensors": "0.8.0",
+          "tokenizers": "0.22.2",
+          "torch": "2.13.0+cu132",
+          "transformers": "5.13.1"
+        },
+        "platform": "Windows-10-10.0.26200-SP0",
+        "python": "3.11.15",
+        "resource_validation": {
+          "absolute_budget_bytes": 12582912000,
+          "dataloader_budget_bytes": 2147483648,
+          "effective_device_limit_bytes": 12582912000,
+          "estimated_dataloader_bytes": 1048576,
+          "host_budget_bytes": 34359738368,
+          "reserve_limit_bytes": 15027666944,
+          "utilization_limit_bytes": 14598878003
+        },
+        "selected_device": "cuda",
+        "selected_precision": "bf16",
+        "torch": "2.13.0+cu132"
+      },
+      "training_config": {
+        "canonical_sha256": "218df675b448eaa1fc81cddfc28b55aaad1a076f46b35748e68b417e07b9e2bc",
+        "file_sha256": "e9ea43f2aeb95a387f394513aedbdbb137749bb42af60e77b415f84b92609d61",
+        "path": "artifacts/model-training/runtime/m2-resource-candidates/mb128-ga1-l64-w2-no-gc.yaml"
+      }
+    }
+  ],
+  "real_length_distribution": {
+    "records": 10240,
+    "route20": {
+      "eng_Latn->jpn_Jpan": {
+        "samples": 512,
+        "source_max": 28,
+        "source_p99": 25,
+        "target_max": 29,
+        "target_p99": 22
+      },
+      "eng_Latn->kor_Hang": {
+        "samples": 512,
+        "source_max": 38,
+        "source_p99": 26,
+        "target_max": 28,
+        "target_p99": 23
+      },
+      "eng_Latn->zho_Hans": {
+        "samples": 512,
+        "source_max": 38,
+        "source_p99": 25,
+        "target_max": 21,
+        "target_p99": 19
+      },
+      "eng_Latn->zho_Hant": {
+        "samples": 512,
+        "source_max": 38,
+        "source_p99": 26,
+        "target_max": 20,
+        "target_p99": 18
+      },
+      "jpn_Jpan->eng_Latn": {
+        "samples": 512,
+        "source_max": 29,
+        "source_p99": 22,
+        "target_max": 28,
+        "target_p99": 25
+      },
+      "jpn_Jpan->kor_Hang": {
+        "samples": 512,
+        "source_max": 29,
+        "source_p99": 22,
+        "target_max": 28,
+        "target_p99": 23
+      },
+      "jpn_Jpan->zho_Hans": {
+        "samples": 512,
+        "source_max": 29,
+        "source_p99": 22,
+        "target_max": 21,
+        "target_p99": 19
+      },
+      "jpn_Jpan->zho_Hant": {
+        "samples": 512,
+        "source_max": 29,
+        "source_p99": 22,
+        "target_max": 20,
+        "target_p99": 18
+      },
+      "kor_Hang->eng_Latn": {
+        "samples": 512,
+        "source_max": 28,
+        "source_p99": 23,
+        "target_max": 38,
+        "target_p99": 26
+      },
+      "kor_Hang->jpn_Jpan": {
+        "samples": 512,
+        "source_max": 28,
+        "source_p99": 23,
+        "target_max": 29,
+        "target_p99": 22
+      },
+      "kor_Hang->zho_Hans": {
+        "samples": 512,
+        "source_max": 28,
+        "source_p99": 23,
+        "target_max": 21,
+        "target_p99": 19
+      },
+      "kor_Hang->zho_Hant": {
+        "samples": 512,
+        "source_max": 28,
+        "source_p99": 23,
+        "target_max": 20,
+        "target_p99": 18
+      },
+      "zho_Hans->eng_Latn": {
+        "samples": 512,
+        "source_max": 21,
+        "source_p99": 19,
+        "target_max": 38,
+        "target_p99": 25
+      },
+      "zho_Hans->jpn_Jpan": {
+        "samples": 512,
+        "source_max": 21,
+        "source_p99": 19,
+        "target_max": 29,
+        "target_p99": 22
+      },
+      "zho_Hans->kor_Hang": {
+        "samples": 512,
+        "source_max": 21,
+        "source_p99": 19,
+        "target_max": 28,
+        "target_p99": 23
+      },
+      "zho_Hans->zho_Hant": {
+        "samples": 512,
+        "source_max": 21,
+        "source_p99": 19,
+        "target_max": 20,
+        "target_p99": 18
+      },
+      "zho_Hant->eng_Latn": {
+        "samples": 512,
+        "source_max": 20,
+        "source_p99": 18,
+        "target_max": 38,
+        "target_p99": 26
+      },
+      "zho_Hant->jpn_Jpan": {
+        "samples": 512,
+        "source_max": 20,
+        "source_p99": 18,
+        "target_max": 29,
+        "target_p99": 22
+      },
+      "zho_Hant->kor_Hang": {
+        "samples": 512,
+        "source_max": 20,
+        "source_p99": 18,
+        "target_max": 28,
+        "target_p99": 23
+      },
+      "zho_Hant->zho_Hans": {
+        "samples": 512,
+        "source_max": 20,
+        "source_p99": 18,
+        "target_max": 21,
+        "target_p99": 19
+      }
+    },
+    "selection_sha256": "e59484d781bc464d06c024fd2a00069059d4dfbea1b562219777b9a9d03f7a0a",
+    "source": {
+      "max": 38,
+      "min": 3,
+      "p50": 10,
+      "p95": 18,
+      "p99": 22
+    },
+    "target": {
+      "max": 38,
+      "min": 3,
+      "p50": 10,
+      "p95": 18,
+      "p99": 22
+    }
+  },
+  "schema_version": 1,
+  "selected_candidate_id": "mb64-ga2-l64-w2-no-gc",
+  "selected_profile": {
+    "dataloader_workers": 2,
+    "gradient_accumulation_steps": 2,
+    "gradient_checkpointing": false,
+    "id": "mb64-ga2-l64-w2-no-gc",
+    "max_source_length": 64,
+    "max_target_length": 64,
+    "micro_batch_size": 64
+  },
+  "selected_runtime": {
+    "cuda_available": true,
+    "cuda_device_count": 1,
+    "cuda_devices": [
+      {
+        "capability": [
+          8,
+          9
+        ],
+        "index": 0,
+        "name": "NVIDIA GeForce RTX 4060 Ti",
+        "total_memory_bytes": 17175150592
+      }
+    ],
+    "cuda_driver": "610.74",
+    "cuda_runtime": "13.2",
+    "cudnn": 92000,
+    "device_available_bytes": 12147752960,
+    "device_total_bytes": 17175150592,
+    "host_available_bytes": 105062989824,
+    "host_total_bytes": 137142136832,
+    "packages": {
+      "python": "3.11.15",
+      "safetensors": "0.8.0",
+      "tokenizers": "0.22.2",
+      "torch": "2.13.0+cu132",
+      "transformers": "5.13.1"
+    },
+    "platform": "Windows-10-10.0.26200-SP0",
+    "python": "3.11.15",
+    "resource_validation": {
+      "absolute_budget_bytes": 12582912000,
+      "dataloader_budget_bytes": 2147483648,
+      "effective_device_limit_bytes": 12582912000,
+      "estimated_dataloader_bytes": 524288,
+      "host_budget_bytes": 34359738368,
+      "reserve_limit_bytes": 15027666944,
+      "utilization_limit_bytes": 14598878003
+    },
+    "selected_device": "cuda",
+    "selected_precision": "bf16",
+    "torch": "2.13.0+cu132"
+  },
+  "selection_rule": {
+    "max_source_sample_truncation_rate": 0.0,
+    "max_target_sample_truncation_rate": 0.0,
+    "require_finite_loss": true,
+    "require_zero_oom_retries": true,
+    "rule": "highest_tokens_per_second_then_lowest_peak_memory_then_candidate_id"
+  },
+  "status": "complete",
+  "task": "TD-14-candidates",
+  "tokenizer": {
+    "artifact_manifest_sha256": "eb79ae22f523f1d9c9fcf75b80f2b322e3c2882a8fddb7545b5933dd4053fa7f",
+    "is_fast": true,
+    "language_token_ids": {
+      "eng_Latn": 5,
+      "jpn_Jpan": 8,
+      "kor_Hang": 9,
+      "zho_Hans": 6,
+      "zho_Hant": 7
+    },
+    "path": "artifacts/tokenizers/mvp-tokenizer-v0",
+    "vocab_size": 49152
+  }
+}

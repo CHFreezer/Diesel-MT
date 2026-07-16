@@ -1,0 +1,64 @@
+{
+  "consumers": [
+    "TD-07",
+    "TD-09",
+    "TD-12",
+    "TD-13",
+    "TD-14",
+    "TD-15",
+    "TD-16"
+  ],
+  "corpus_maturity": "mvp-20route-human",
+  "date": "2026-07-15",
+  "identities": {
+    "acceptance_report_sha256": "dab17805f96038a072e08049cbd4c9fe55dbd2224f3f6d97c5acbc0f1c35b8f2",
+    "direction_sampling_file_sha256": "9fd8cc5b0624c7c5de3280f4dde1a7208bca33b530a607dba76a7209be1e89ee",
+    "m0_manifest_sha256": "8626a11db593d0843427a5da187ba1e4bf27299d0bd06d8d5430d19918f7e427",
+    "manual_attestation_sha256": "252f4d5bcde84529278cbcfe61ba59588e2216e40d0fd58f0de8623ebfd55e1b",
+    "manual_review_queue_sha256": "38c75e55f006c921546a3430442382c958fe1adc65036d95adb420c6403ba7bd",
+    "model_data_config_canonical_sha256": "1c3fda336a5fae183ea48e813c442daabee5b754bfbd792bad15fabaeb2c52b7",
+    "model_data_config_file_sha256": "47e1bf5c7a4378ffe8e31e94845b2de1cd24c977cabb982874810aa0170a71ea",
+    "source_lock_file_sha256": "de24d2989ef21063a3c437b6c9bcf12362115c25d36a86cafa663e86b0ab8f88",
+    "td03_manifest_sha256": "f90b861311f90791ca651f914340dac7c073f221ec39c0759d02b2d6aefaa636",
+    "td03_report_sha256": "69e0c6f648b8cf5d819cbf373f48113c5925661d2597181b5c60673ce662f89f",
+    "td04_manifest_sha256": "f998d9b91a0aedf9900e683a01015d594187a6e15b66388260bf1ad30477f4c0",
+    "td04_report_sha256": "7098190514d12b935f9234d14d9082d83a8ad31309742417017464542b2183d5"
+  },
+  "manual_review": {
+    "accepted_quality_flags": 38,
+    "accepted_reviewed": 400,
+    "queue_records": 549,
+    "rejected_reviewed": 149,
+    "result": "pass-with-known-source-quality-warnings",
+    "systemic_blocker": false
+  },
+  "quality": {
+    "all_release_gates_pass": true,
+    "formal_evaluation_contamination_hits": 0,
+    "known_limitation": "MASSIVE is suitable for route and training-system validation, not production translation-quality claims."
+  },
+  "release": "m0-model-training-data-20route-v2",
+  "reproducibility": {
+    "byte_identical": true,
+    "independent_builds": 2,
+    "offline_rebuild": true,
+    "resume_verified": true
+  },
+  "schema_version": 1,
+  "scope": {
+    "dev_records": 37508,
+    "directed_records": 327508,
+    "directed_routes": 20,
+    "model_tags": 5,
+    "product_languages": 4,
+    "script_conversion": 0,
+    "teacher_synthetic": 0,
+    "test_records": 63782,
+    "train_records": 226218,
+    "undirected_pairs": 10,
+    "undirected_records": 163754
+  },
+  "status": "complete",
+  "td05_completed": true,
+  "td09_started": false
+}

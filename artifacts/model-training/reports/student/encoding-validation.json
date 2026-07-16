@@ -1,0 +1,296 @@
+{
+  "checkpoint": {
+    "files": [
+      {
+        "bytes": 810,
+        "path": "config.json",
+        "sha256": "f1ef9bdb51e4b0be1f7b746aceca71278ffa794c4827b0edabecbbf4861adbc6"
+      },
+      {
+        "bytes": 258,
+        "path": "generation_config.json",
+        "sha256": "8ec3b93222dc8b02a0c243c0e001258c035161906233bd6f00d486c2a45a753a"
+      },
+      {
+        "bytes": 235200928,
+        "path": "model.safetensors",
+        "sha256": "e59e96076de24167bba03228a6d86bf151cb1adb0c8998f1a88c38356dcbac4d"
+      },
+      {
+        "bytes": 2349192,
+        "path": "tokenizer.json",
+        "sha256": "22bceccab939afe1003d1fbdd95d9d4e78eb954b2e9003d70131155666b1201c"
+      },
+      {
+        "bytes": 546,
+        "path": "tokenizer_config.json",
+        "sha256": "8ada58fb9150058d72ab44023f34d7a57ef89b578f5f8e7c6e115c1cb7bb91be"
+      }
+    ],
+    "manifest_sha256": "6b033910de30ee8669081770dfa5453f129c59e2cb674646572189a62f86198b",
+    "offline_model_reload": true,
+    "offline_tokenizer_reload": true,
+    "path": "E:/CHWork/Python Projects/Diesel-MT/artifacts/model-training/runtime/student-checkpoint",
+    "state_dict_sha256": "66897f9c358802b9d39d66e61a8b39fad21236d11744b79df194c26db4da66a3"
+  },
+  "encoding_policy": {
+    "empty_text_policy": "reject",
+    "label_pad_id": -100,
+    "max_source_length": 128,
+    "max_target_length": 128,
+    "model_position_ceiling": 1024,
+    "overflow_policy": "truncate_preserve_language_and_eos",
+    "sha256": "28252d12ef6652653f21b85ab37ff0b76cb6deb896068a50c0ac3c729ac22073"
+  },
+  "fixture": {
+    "path": "data/model/corpus/mvp/finalized/train.jsonl",
+    "records": 20,
+    "routes": [
+      "eng_Latn->jpn_Jpan",
+      "eng_Latn->kor_Hang",
+      "eng_Latn->zho_Hans",
+      "eng_Latn->zho_Hant",
+      "jpn_Jpan->eng_Latn",
+      "jpn_Jpan->kor_Hang",
+      "jpn_Jpan->zho_Hans",
+      "jpn_Jpan->zho_Hant",
+      "kor_Hang->eng_Latn",
+      "kor_Hang->jpn_Jpan",
+      "kor_Hang->zho_Hans",
+      "kor_Hang->zho_Hant",
+      "zho_Hans->eng_Latn",
+      "zho_Hans->jpn_Jpan",
+      "zho_Hans->kor_Hang",
+      "zho_Hans->zho_Hant",
+      "zho_Hant->eng_Latn",
+      "zho_Hant->jpn_Jpan",
+      "zho_Hant->kor_Hang",
+      "zho_Hant->zho_Hans"
+    ],
+    "sha256": "ba0a5361fc97ca3ecad76b25ac3cfccfe163be785fb68847d11ae909bddba1d8"
+  },
+  "model": {
+    "alignment": {
+      "bos_token_id": 0,
+      "decoder_start_token_id": 2,
+      "eos_token_id": 2,
+      "input_embeddings": 49152,
+      "output_embeddings": 49152,
+      "pad_token_id": 1,
+      "tied_embeddings": true,
+      "vocab_size": 49152
+    },
+    "deterministic_rebuild": true,
+    "initial_state_dict_sha256": "66897f9c358802b9d39d66e61a8b39fad21236d11744b79df194c26db4da66a3"
+  },
+  "schema_version": 1,
+  "smoke": {
+    "backward_gradients_finite": true,
+    "device": "cpu",
+    "forward_loss": 10.815247535705566,
+    "route_statistics": {
+      "eng_Latn->jpn_Jpan": {
+        "samples": 1,
+        "source_original_tokens": 10,
+        "source_truncated_tokens": 0,
+        "source_used_tokens": 10,
+        "target_original_tokens": 9,
+        "target_truncated_tokens": 0,
+        "target_used_tokens": 9
+      },
+      "eng_Latn->kor_Hang": {
+        "samples": 1,
+        "source_original_tokens": 10,
+        "source_truncated_tokens": 0,
+        "source_used_tokens": 10,
+        "target_original_tokens": 10,
+        "target_truncated_tokens": 0,
+        "target_used_tokens": 10
+      },
+      "eng_Latn->zho_Hans": {
+        "samples": 1,
+        "source_original_tokens": 10,
+        "source_truncated_tokens": 0,
+        "source_used_tokens": 10,
+        "target_original_tokens": 9,
+        "target_truncated_tokens": 0,
+        "target_used_tokens": 9
+      },
+      "eng_Latn->zho_Hant": {
+        "samples": 1,
+        "source_original_tokens": 10,
+        "source_truncated_tokens": 0,
+        "source_used_tokens": 10,
+        "target_original_tokens": 8,
+        "target_truncated_tokens": 0,
+        "target_used_tokens": 8
+      },
+      "jpn_Jpan->eng_Latn": {
+        "samples": 1,
+        "source_original_tokens": 9,
+        "source_truncated_tokens": 0,
+        "source_used_tokens": 9,
+        "target_original_tokens": 10,
+        "target_truncated_tokens": 0,
+        "target_used_tokens": 10
+      },
+      "jpn_Jpan->kor_Hang": {
+        "samples": 1,
+        "source_original_tokens": 9,
+        "source_truncated_tokens": 0,
+        "source_used_tokens": 9,
+        "target_original_tokens": 10,
+        "target_truncated_tokens": 0,
+        "target_used_tokens": 10
+      },
+      "jpn_Jpan->zho_Hans": {
+        "samples": 1,
+        "source_original_tokens": 9,
+        "source_truncated_tokens": 0,
+        "source_used_tokens": 9,
+        "target_original_tokens": 9,
+        "target_truncated_tokens": 0,
+        "target_used_tokens": 9
+      },
+      "jpn_Jpan->zho_Hant": {
+        "samples": 1,
+        "source_original_tokens": 9,
+        "source_truncated_tokens": 0,
+        "source_used_tokens": 9,
+        "target_original_tokens": 8,
+        "target_truncated_tokens": 0,
+        "target_used_tokens": 8
+      },
+      "kor_Hang->eng_Latn": {
+        "samples": 1,
+        "source_original_tokens": 10,
+        "source_truncated_tokens": 0,
+        "source_used_tokens": 10,
+        "target_original_tokens": 10,
+        "target_truncated_tokens": 0,
+        "target_used_tokens": 10
+      },
+      "kor_Hang->jpn_Jpan": {
+        "samples": 1,
+        "source_original_tokens": 10,
+        "source_truncated_tokens": 0,
+        "source_used_tokens": 10,
+        "target_original_tokens": 9,
+        "target_truncated_tokens": 0,
+        "target_used_tokens": 9
+      },
+      "kor_Hang->zho_Hans": {
+        "samples": 1,
+        "source_original_tokens": 10,
+        "source_truncated_tokens": 0,
+        "source_used_tokens": 10,
+        "target_original_tokens": 9,
+        "target_truncated_tokens": 0,
+        "target_used_tokens": 9
+      },
+      "kor_Hang->zho_Hant": {
+        "samples": 1,
+        "source_original_tokens": 10,
+        "source_truncated_tokens": 0,
+        "source_used_tokens": 10,
+        "target_original_tokens": 8,
+        "target_truncated_tokens": 0,
+        "target_used_tokens": 8
+      },
+      "zho_Hans->eng_Latn": {
+        "samples": 1,
+        "source_original_tokens": 9,
+        "source_truncated_tokens": 0,
+        "source_used_tokens": 9,
+        "target_original_tokens": 10,
+        "target_truncated_tokens": 0,
+        "target_used_tokens": 10
+      },
+      "zho_Hans->jpn_Jpan": {
+        "samples": 1,
+        "source_original_tokens": 9,
+        "source_truncated_tokens": 0,
+        "source_used_tokens": 9,
+        "target_original_tokens": 9,
+        "target_truncated_tokens": 0,
+        "target_used_tokens": 9
+      },
+      "zho_Hans->kor_Hang": {
+        "samples": 1,
+        "source_original_tokens": 9,
+        "source_truncated_tokens": 0,
+        "source_used_tokens": 9,
+        "target_original_tokens": 10,
+        "target_truncated_tokens": 0,
+        "target_used_tokens": 10
+      },
+      "zho_Hans->zho_Hant": {
+        "samples": 1,
+        "source_original_tokens": 9,
+        "source_truncated_tokens": 0,
+        "source_used_tokens": 9,
+        "target_original_tokens": 8,
+        "target_truncated_tokens": 0,
+        "target_used_tokens": 8
+      },
+      "zho_Hant->eng_Latn": {
+        "samples": 1,
+        "source_original_tokens": 8,
+        "source_truncated_tokens": 0,
+        "source_used_tokens": 8,
+        "target_original_tokens": 10,
+        "target_truncated_tokens": 0,
+        "target_used_tokens": 10
+      },
+      "zho_Hant->jpn_Jpan": {
+        "samples": 1,
+        "source_original_tokens": 8,
+        "source_truncated_tokens": 0,
+        "source_used_tokens": 8,
+        "target_original_tokens": 9,
+        "target_truncated_tokens": 0,
+        "target_used_tokens": 9
+      },
+      "zho_Hant->kor_Hang": {
+        "samples": 1,
+        "source_original_tokens": 8,
+        "source_truncated_tokens": 0,
+        "source_used_tokens": 8,
+        "target_original_tokens": 10,
+        "target_truncated_tokens": 0,
+        "target_used_tokens": 10
+      },
+      "zho_Hant->zho_Hans": {
+        "samples": 1,
+        "source_original_tokens": 8,
+        "source_truncated_tokens": 0,
+        "source_used_tokens": 8,
+        "target_original_tokens": 9,
+        "target_truncated_tokens": 0,
+        "target_used_tokens": 9
+      }
+    },
+    "routes": 20
+  },
+  "status": "complete",
+  "student_config": {
+    "canonical_sha256": "ce2b50c258ffe2accee58697300e680f7871b51a6241eff2a986ea0bc2146252",
+    "path": "configs/mvp_e8_d2_v48k.yaml",
+    "sha256": "6fbc6579a924e38506db11df77f0c81cef645f231c492bef3cc24e4e17d4c67a"
+  },
+  "task": "TD-09",
+  "tokenizer": {
+    "artifact_manifest_sha256": "eb79ae22f523f1d9c9fcf75b80f2b322e3c2882a8fddb7545b5933dd4053fa7f",
+    "is_fast": true,
+    "language_token_ids": {
+      "eng_Latn": 5,
+      "jpn_Jpan": 8,
+      "kor_Hang": 9,
+      "zho_Hans": 6,
+      "zho_Hant": 7
+    },
+    "path": "artifacts/tokenizers/mvp-tokenizer-v0",
+    "vocab_size": 49152
+  },
+  "warning": "Random initialization and fixture memorization plumbing only; no translation quality."
+}

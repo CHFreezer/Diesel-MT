@@ -1,0 +1,69 @@
+schema_version: 1
+identity:
+  name: mvp-training-m2-human-only-v1
+  mode: m2
+  student_config: configs/mvp_e8_d2_v48k.yaml
+  student_config_file_sha256: 6fbc6579a924e38506db11df77f0c81cef645f231c492bef3cc24e4e17d4c67a
+  student_config_canonical_sha256: ce2b50c258ffe2accee58697300e680f7871b51a6241eff2a986ea0bc2146252
+  tokenizer_manifest_sha256: eb79ae22f523f1d9c9fcf75b80f2b322e3c2882a8fddb7545b5933dd4053fa7f
+  seed: 20260715
+data:
+  train_path: data/model/corpus/mvp/ab/m2-v1/human.jsonl
+  train_sha256: b848fc057f6e76ddc021bfc8687bc68283f255bfebb4441fbdab45d0b8b70a05
+  dev_path: data/model/corpus/mvp/finalized/dev.jsonl
+  dev_sha256: 28befa6f01cada3965b7fe3a9a24c6718ff47e08008b780c8575f563a98fd8f6
+  manifest_path: data/model/corpus/mvp/ab/m2-v1/manifest.json
+  manifest_sha256: 576369e021ccd9fb45437e7b4671c046acb8945e9b4fbdd63379841d499865c5
+  train_max_records_per_route: 44361
+  dev_max_records_per_route: 64
+  route_weights:
+    eng_Latn->jpn_Jpan: 1.0
+    jpn_Jpan->eng_Latn: 1.0
+    eng_Latn->kor_Hang: 1.0
+    kor_Hang->eng_Latn: 1.0
+    jpn_Jpan->kor_Hang: 1.0
+    kor_Hang->jpn_Jpan: 1.0
+    eng_Latn->zho_Hans: 1.0
+    zho_Hans->eng_Latn: 1.0
+    jpn_Jpan->zho_Hans: 1.0
+    zho_Hans->jpn_Jpan: 1.0
+    kor_Hang->zho_Hans: 1.0
+    zho_Hans->kor_Hang: 1.0
+    eng_Latn->zho_Hant: 1.0
+    zho_Hant->eng_Latn: 1.0
+    jpn_Jpan->zho_Hant: 1.0
+    zho_Hant->jpn_Jpan: 1.0
+    kor_Hang->zho_Hant: 1.0
+    zho_Hant->kor_Hang: 1.0
+    zho_Hans->zho_Hant: 1.0
+    zho_Hant->zho_Hans: 1.0
+resource_profile:
+  device: cuda
+  precision: bf16
+  device_memory_budget_mib: 12000
+  device_memory_reserve_mib: 2048
+  max_device_memory_utilization: 0.85
+  host_memory_budget_mib: 32768
+  dataloader_memory_budget_mib: 2048
+  oom_retry_limit: 0
+  micro_batch_size: 64
+  gradient_accumulation_steps: 2
+  gradient_checkpointing: false
+  max_source_length: 64
+  max_target_length: 64
+  dataloader_workers: 2
+optimization:
+  optimizer: adamw
+  learning_rate: 0.0003
+  betas: [0.9, 0.98]
+  epsilon: 0.00000001
+  weight_decay: 0.01
+  scheduler: linear
+  warmup_steps: 100
+  max_optimizer_steps: 1000
+  max_train_tokens: 5000000
+  max_grad_norm: 1.0
+  label_smoothing: 0.1
+  validation_frequency: 50
+  validation_batches: 2
+  checkpoint_frequency: 50

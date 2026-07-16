@@ -70,7 +70,7 @@ def test_frozen_teacher_selection_uses_original_bf16_quality_baseline() -> None:
         "teacher/hymt2-7b-bf16/snapshot"
     )
     comparison = json.loads(
-        (ROOT / "artifacts/model-training/hymt2-teacher-runtime-comparison.json").read_text(
+        (ROOT / "artifacts/model-training/reports/teacher/runtime-comparison.json").read_text(
             encoding="utf-8"
         )
     )

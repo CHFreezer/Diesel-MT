@@ -7,16 +7,16 @@ identity:
 
 prompt_decode:
   path: configs/hymt2_teacher_prompt_decode.yaml
-  file_sha256: ab7004258c42e26cc955f6e89604616fc4c40005a92c6d880ad48f903fc9e124
-  calibration_report: artifacts/model-training/td07-teacher-calibration.json
-  calibration_report_sha256: a8245c185d2ff4100f9435413917ea783a5e5f0207efb75ed3e6c8fcaf526b78
+  file_sha256: 9c6dfc6048070fd8846343a49040211fff36ddf74d38992c745ed212ca9dbd8b
+  calibration_report: artifacts/model-training/reports/teacher/calibration.json
+  calibration_report_sha256: 7b36c77ebd423bfe8d94f47ba938130309189585f988394b30957d1d8b0bcfaf
   selected_profile: greedy-v1
 
 input:
-  path: data/model/corpus/mvp/finalized/train.jsonl
+  path: data/model/history/m0-v1/corpus/mvp/finalized/train.jsonl
   file_sha256: 1fe762a4e219b3420b348a5e48806f7087ccd190295a947a966ea0e91ab22c5d
-  m0_manifest: data/model/corpus/mvp/m0-manifest.json
-  m0_manifest_sha256: 3d517a8adad0871d04f688f8fd50e0e6432ea0738a043bb8977f1dcede3c37aa
+  m0_manifest: data/model/history/m0-v1/corpus/mvp/m0-manifest.json
+  m0_manifest_sha256: 0d5a5d5039b110a92ce036db5dbaee5cd9fb9a491b24e9e467508bd5cfa3f482
   split: train
   dev_access: prohibited
   test_access: prohibited
@@ -61,16 +61,16 @@ acceptance_gates:
 
 runtime:
   work_root_override_env: DIESEL_MT_DISTILLATION_WORK_ROOT
-  default_work_root: data/model/interim/td08-v1
+  default_work_root: data/model/interim/distillation-d0-v1
 
 outputs:
-  root: data/model/corpus/mvp/distilled/td08-v1
-  generation_contract: data/model/corpus/mvp/distilled/td08-v1/generation-contract.json
+  root: data/model/corpus/mvp/distilled/d0-v1
+  generation_contract: data/model/corpus/mvp/distilled/d0-v1/generation-contract.json
   raw_subdir: raw
-  accepted: data/model/corpus/mvp/distilled/td08-v1/accepted.jsonl
-  filtered: data/model/corpus/mvp/distilled/td08-v1/filtered.jsonl
-  manual_review_queue: data/model/reports/td08-manual-review.jsonl
-  replay_report: data/model/reports/td08-replay.json
-  quality_report: data/model/reports/td08-distillation-quality.json
-  manifest: data/model/corpus/mvp/distilled/td08-v1/manifest.json
-  evidence: artifacts/model-training/td08-distilled-data.json
+  accepted: data/model/corpus/mvp/distilled/d0-v1/accepted.jsonl
+  filtered: data/model/corpus/mvp/distilled/d0-v1/filtered.jsonl
+  manual_review_queue: data/model/reports/d0-manual-review.jsonl
+  replay_report: data/model/reports/d0-replay.json
+  quality_report: data/model/reports/d0-quality.json
+  manifest: data/model/corpus/mvp/distilled/d0-v1/manifest.json
+  evidence: artifacts/model-training/reports/teacher/distillation/d0.json

@@ -29,7 +29,14 @@ from model_training_contract import directed_routes  # noqa: E402
 
 CONFIG_PATH = ROOT / "configs" / "hymt2_teacher_prompt_decode.yaml"
 ZH_CONVERSION_CONFIG_PATH = ROOT / "configs" / "hymt2_teacher_prompt_decode_zh_conversion.yaml"
-CALIBRATION_EVIDENCE_PATH = ROOT / "artifacts" / "model-training" / "td07-teacher-calibration.json"
+CALIBRATION_EVIDENCE_PATH = (
+    ROOT
+    / "artifacts"
+    / "model-training"
+    / "reports"
+    / "teacher"
+    / "calibration.json"
+)
 
 
 @pytest.fixture

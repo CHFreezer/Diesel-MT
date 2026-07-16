@@ -53,7 +53,7 @@
 - M0 最大 189 字符 train source 容量探针通过。最终一次运行峰值 CUDA allocated/reserved 为 15,185,548,800 / 16,743,661,568 bytes，短探针平均 3.79 tokens/s。
 - 已明确记录：当前 Transformers/`compressed-tensors` 在首次 forward 把 FP8 解压为 BF16，因此只验收 batch=1、M0 短文本、独占 GPU 的受控路径；不宣称硬件 FP8。真正 W8A8 FP8 需要非原生 Windows 的 vLLM/WSL 路径，留待单独系统决策。
 
-产物为 `configs/hymt2_teacher_artifact.lock.json`、`configs/hymt2_teacher_runtime.yaml`、`requirements-teacher-hymt2.txt`、三个 teacher runtime 脚本、`docs/hymt2-teacher-runtime.md` 和 `artifacts/model-training/hymt2-teacher-runtime.json`。
+产物为 `configs/hymt2_teacher_artifact.lock.json`、`configs/hymt2_teacher_runtime.yaml`、`requirements-teacher-hymt2.txt`、三个 teacher runtime 脚本、`docs/hymt2-teacher-runtime.md` 和 `artifacts/model-training/reports/teacher/runtime-validation.json`。
 
 ### 原版 BF16、INT8 与 GGUF 三方对比及最终选型
 
@@ -67,7 +67,7 @@
 - GGUF 生成速度为原版 BF16 的 6.65 倍、INT8 的 3.15 倍，峰值显存分别少 6,634 / 1,778 MiB。
 - 质量基线改为原版 BF16：INT8 与 GGUF 的五标签短探针均 10/10 逐字匹配 BF16。189 字符容量探针中 INT8 与 BF16 逐字一致，GGUF 有一处 `加熱`/`調理` 措辞差异；三者均触及 64-token 诊断上限，该差异交由 TD-07 在冻结人类 reference 上判断。
 
-锁与机器证据见 `configs/hymt2_teacher_benchmark.lock.json` 和 `artifacts/model-training/hymt2-teacher-runtime-comparison.json`。
+锁与机器证据见 `configs/hymt2_teacher_benchmark.lock.json` 和 `artifacts/model-training/reports/teacher/runtime-comparison.json`。
 
 最终冻结官方 `tencent/Hy-MT2-7B-GGUF` Q8_0 为 sequence-level 蒸馏源：revision `ab8472660ac61fac25f1af43fac2599d52a8a775`、文件 `HY-MT2-7B-Q8_0.gguf`、SHA-256 `58b3ad55dd6f6fa08c695cddc34fb5f8f708a844f78ae10508071914b0ed67c0`、llama.cpp `b10012` CUDA 13.3。规范入口为 `configs/hymt2_teacher_selection.yaml`；原版 BF16 是后续量化输出比较基线，FP8 不再承担质量参考角色。
 

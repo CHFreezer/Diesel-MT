@@ -206,7 +206,7 @@ def test_offline_build_is_byte_stable_and_preserves_group_and_provenance(
     assert manifest["status"] == "complete"
     assert manifest["records"] == 30
     assert len(manifest["files"]) == 5
-    report = json.loads((first / "reports" / "td03-build.json").read_text(encoding="utf-8"))
+    report = json.loads((first / "reports" / "data-build.json").read_text(encoding="utf-8"))
     assert len(report["directed_route_potential_counts"]) == 20
     assert set(first_result["resume_checkpoints_used"]["massive-1.1"].values()) == {False}
 
@@ -331,7 +331,7 @@ def test_interrupted_publication_never_leaves_completion_manifest(
     real_atomic_write = pipeline.atomic_write_bytes
 
     def fail_build_report(path: Path, data: bytes) -> None:
-        if path.name == "td03-build.json":
+        if path.name == "data-build.json":
             raise OSError("injected publication failure")
         real_atomic_write(path, data)
 

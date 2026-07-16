@@ -408,7 +408,7 @@ def test_blocking_contamination_or_incomplete_registry_never_publishes_manifest(
             require_complete_references=True,
         )
     assert not (tmp_path / "blocked" / "corpus" / "mvp" / "finalized" / "manifest.json").exists()
-    assert (tmp_path / "blocked" / "reports" / "td04-contamination-blocked.json").is_file()
+    assert (tmp_path / "blocked" / "reports" / "contamination-blocked.json").is_file()
 
     with pytest.raises(ContaminationError, match="incomplete"):
         publish_finalized_data(
@@ -459,7 +459,7 @@ def test_publication_is_byte_stable_and_manifest_is_last(
         "corpus/mvp/finalized/test.jsonl",
         "corpus/mvp/finalized/test-groups.jsonl",
         "corpus/mvp/finalized/manifest.json",
-        "reports/td04-dedup-leakage.json",
+        "reports/dedup-leakage.json",
     ]
     assert all((first / path).read_bytes() == (second / path).read_bytes() for path in paths)
     assert first_result["manifest_sha256"] == second_result["manifest_sha256"]

@@ -2,7 +2,7 @@ schema_version: 1
 status: complete
 
 records:
-  path: data/model/interim/td07/calibration-records.jsonl
+  path: data/model/interim/teacher-calibration/calibration-records.jsonl
   records: 432
   bytes: 522956
   sha256: c9adac2cdcce885522c4358a1338231acc007e9bcbb8c1b313edbb46ab6bf108

@@ -11,16 +11,16 @@ routes:
 
 prompt_decode:
   path: configs/hymt2_teacher_prompt_decode_zh_conversion.yaml
-  file_sha256: 02cd096a24d1e9326dd21ce85b6a0bfd5f59aac6f8898e07243056b8858eac42
-  calibration_report: artifacts/model-training/td07-zh-conversion-calibration.json
-  calibration_report_sha256: 1b9c3fd5b71b56f79ce8233116c58f80479b05f61f8e32d8a139d3c0510dcde8
+  file_sha256: a8edab20edaa3f07d45b940c516066e50d3ec014e3e60b13e80865acfe6f2a86
+  calibration_report: artifacts/model-training/reports/teacher/zh-conversion-calibration.json
+  calibration_report_sha256: 31f1488e96150937a31dec8c1ec3ebf188495b31c329a242b60fa346af57a556
   selected_profile: greedy-v1
 
 input:
-  path: data/model/route20-v2/corpus/mvp/finalized/train.jsonl
+  path: data/model/corpus/mvp/finalized/train.jsonl
   file_sha256: ba0a5361fc97ca3ecad76b25ac3cfccfe163be785fb68847d11ae909bddba1d8
-  m0_manifest: data/model/route20-v2/corpus/mvp/m0-manifest.json
-  m0_manifest_sha256: 5cc369421a705e2eea0076eec06c2bc12de7f278888df2f1ca9add6250ee1d67
+  m0_manifest: data/model/corpus/mvp/m0-manifest.json
+  m0_manifest_sha256: 8626a11db593d0843427a5da187ba1e4bf27299d0bd06d8d5430d19918f7e427
   split: train
   dev_access: prohibited
   test_access: prohibited
@@ -65,16 +65,16 @@ acceptance_gates:
 
 runtime:
   work_root_override_env: DIESEL_MT_DISTILLATION_ZH_CONVERSION_WORK_ROOT
-  default_work_root: data/model/route20-v2/interim/td08-d1-zh-conversion-v2
+  default_work_root: data/model/interim/distillation-d1-zh-conversion
 
 outputs:
-  root: data/model/route20-v2/corpus/mvp/distilled/td08-d1-zh-conversion-v2
-  generation_contract: data/model/route20-v2/corpus/mvp/distilled/td08-d1-zh-conversion-v2/generation-contract.json
+  root: data/model/corpus/mvp/distilled/d1-zh-conversion
+  generation_contract: data/model/corpus/mvp/distilled/d1-zh-conversion/generation-contract.json
   raw_subdir: raw
-  accepted: data/model/route20-v2/corpus/mvp/distilled/td08-d1-zh-conversion-v2/accepted.jsonl
-  filtered: data/model/route20-v2/corpus/mvp/distilled/td08-d1-zh-conversion-v2/filtered.jsonl
-  manual_review_queue: data/model/route20-v2/reports/td08-d1-zh-conversion-manual-review.jsonl
-  replay_report: data/model/route20-v2/reports/td08-d1-zh-conversion-replay.json
-  quality_report: data/model/route20-v2/reports/td08-d1-zh-conversion-quality.json
-  manifest: data/model/route20-v2/corpus/mvp/distilled/td08-d1-zh-conversion-v2/manifest.json
-  evidence: artifacts/model-training/td08-d1-zh-conversion-addendum.json
+  accepted: data/model/corpus/mvp/distilled/d1-zh-conversion/accepted.jsonl
+  filtered: data/model/corpus/mvp/distilled/d1-zh-conversion/filtered.jsonl
+  manual_review_queue: data/model/reports/d1-zh-conversion-manual-review.jsonl
+  replay_report: data/model/reports/d1-zh-conversion-replay.json
+  quality_report: data/model/reports/d1-zh-conversion-quality.json
+  manifest: data/model/corpus/mvp/distilled/d1-zh-conversion/manifest.json
+  evidence: artifacts/model-training/reports/teacher/distillation/d1-zh-conversion.json

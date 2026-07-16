@@ -2,7 +2,7 @@ schema_version: 1
 status: complete
 
 queue:
-  path: data/model/route20-v2/reports/td08-d1-zh-conversion-manual-review.jsonl
+  path: data/model/reports/d1-zh-conversion-manual-review.jsonl
   records: 72
   bytes: 54448
   sha256: 5a4c101e5bd34b5d16eb14bd172abf2ea6b3608a731acabe190555647221558b

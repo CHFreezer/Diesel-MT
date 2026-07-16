@@ -48,7 +48,7 @@
 - `configs/mvp_direction_sampling.yaml` 固定 18 路由统一权重 1.0、每 epoch 最多一次曝光，禁止低资源无界重复；完整 pair/split 来源、provenance、长度、长度比、脚本与过滤统计写入运行时 TD-05 报告。
 - 固定人工队列逐条审查 489 条：accepted 360、rejected 129、繁体混合脚本 9；accepted 标记 29 个已知截断/错位质量问题，rejected 规则不匹配为 0。该警告保留在提交内 attestation，不宣称生产翻译质量。
 - 首次冷构建与第二次热缓存/完全离线 fresh 构建逐字节比较 10 个规范产物全部一致；第二输出根的五 locale resume checkpoint 也全部命中且 manifest 不变。
-- runtime `m0-manifest.json` SHA-256 为 `3d517a8adad0871d04f688f8fd50e0e6432ea0738a043bb8977f1dcede3c37aa`，acceptance report SHA-256 为 `4b64f8f3562978332396c11f6708a2ba507442d230d1615a5a36a09f04a40b1a`；精简证据见 `artifacts/model-training/m0-dataset-acceptance.json` 与 `docs/m0-dataset-acceptance.md`。
+- 目录规范化后，18 路 M0 v1 明确归档在 `data/model/history/m0-v1/`；当前 `m0-manifest.json` SHA-256 为 `0d5a5d5039b110a92ce036db5dbaee5cd9fb9a491b24e9e467508bd5cfa3f482`，精简 acceptance report SHA-256 为 `a99f35e2a5ac8d652d0f79f9414e375af5df44cab3cf28dd2b71c9e47129f269`。语料字节与审核结论未改变，变化来自发布路径和报告文件名进入哈希身份；证据见 `artifacts/model-training/reports/m0/m0-v1-acceptance.json` 与 `docs/m0-dataset-acceptance.md`。
 - 专项测试 `20 passed`；完整离线回归 `105 passed in 22.89s`。冻结 tokenizer artifact manifest 仍为 `eb79ae22f523f1d9c9fcf75b80f2b322e3c2882a8fddb7545b5933dd4053fa7f`。
 
 以上是 2026-07-15 的 M0 v1 完成记录。
@@ -57,5 +57,5 @@
 
 - M0 v2 覆盖 10 组/20 路、327,508 条有向记录；train/dev/test 为 226,218/37,508/63,782。第 10 组最终无向 train/dev/test 为 11,279/1,868/3,164。
 - 固定人工队列逐条检查 549 条：accepted 400、rejected 149；第 10 组 accepted train/dev/test 和 rejected 均达到冻结抽检预算。保留 38 个已知 MASSIVE 边界质量警告，无 systemic blocker。
-- 双构建、污染、脚本、来源/许可、20 路非空与方向采样 gate 全部通过。M0 manifest SHA-256 为 `5cc369421a705e2eea0076eec06c2bc12de7f278888df2f1ca9add6250ee1d67`；提交内证据为 `artifacts/model-training/td05-m0-20route.json`。
+- 双构建、污染、脚本、来源/许可、20 路非空与方向采样 gate 全部通过。M0 manifest SHA-256 为 `5cc369421a705e2eea0076eec06c2bc12de7f278888df2f1ca9add6250ee1d67`；提交内证据为 `artifacts/model-training/reports/m0/m0-20route-acceptance.json`。
 - v1 artifact 与哈希保持不变；TD-09 未启动。

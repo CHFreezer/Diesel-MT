@@ -1,0 +1,60 @@
+{
+  "consumers": [
+    "TD-07",
+    "TD-09",
+    "TD-12",
+    "TD-13",
+    "TD-14",
+    "TD-15",
+    "TD-16"
+  ],
+  "contamination": {
+    "flores200_exact_or_near_hits": 0,
+    "flores200_records": 10045,
+    "tokenizer_reference_hits_report_only": 2
+  },
+  "date": "2026-07-15",
+  "identities": {
+    "contamination_registry_sha256": "94604f10d39fb6c1083befd8f2752018d139cfae3a1da3390be35ae17469b50a",
+    "direction_sampling_config_sha256": "8c0ec1c2f4686a1b26a2c05487ae6319202e6b6b2d195f61be91bc52be21259b",
+    "finalized_manifest_sha256": "f1151f0a44cfe844e19e772c73abd51a8a088f09d58e75014bcdfe01a5f8906c",
+    "flores200_reference_manifest_sha256": "ee08fa777b376ff8119f15a3fae5955f1960efb7e42e133aaf862790abf5e98e",
+    "m0_acceptance_report_sha256": "b842cc59671edf3e9ba0d8f9fc2f40a7d155c2d11723a3dbd6319188941f8de8",
+    "m0_manifest_sha256": "0d5a5d5039b110a92ce036db5dbaee5cd9fb9a491b24e9e467508bd5cfa3f482",
+    "manual_review_queue_sha256": "cbb1a3c47cf963026a92b0562076ec650fad321167d4eb03c8e94851201bb74d",
+    "td03_manifest_sha256": "545beab5e43ab2211368676f827fccd6c8bf9e1e7670be36308d640fb153afb2"
+  },
+  "manual_review": {
+    "accepted": 360,
+    "accepted_quality_flags": 29,
+    "records": 489,
+    "rejected": 129,
+    "rejected_rule_mismatches": 0,
+    "status": "pass-with-known-source-quality-warnings",
+    "traditional_mixed_script": 9
+  },
+  "quality_boundary": "M0 validates the bounded training system and language routes; it does not establish production translation quality.",
+  "release": "m0-model-training-data",
+  "reproducibility": {
+    "byte_identical": true,
+    "compared_files": 10,
+    "first": "cold network source acquisition and fresh output",
+    "second": "validated hot cache, network prohibited, fresh output plus resume verification"
+  },
+  "schema_version": 1,
+  "scope": {
+    "directed_records": 294886,
+    "directed_routes": 18,
+    "model_tags": 5,
+    "records_by_split": {
+      "dev": 33490,
+      "test": 57454,
+      "train": 203942
+    },
+    "script_conversion": 0,
+    "teacher_synthetic": 0,
+    "undirected_pairs": 9,
+    "undirected_records": 147443
+  },
+  "status": "complete"
+}

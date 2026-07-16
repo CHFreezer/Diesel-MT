@@ -58,6 +58,6 @@
 
 ## 10 组 schema v2 完成记录（2026-07-16）
 
-- 在独立 `data/model/route20-v2/` 根从锁定 MASSIVE 缓存生成 164,778 条清洗后无向记录，拒绝 432 条；每个完整 alignment group 生成第 10 个 `zho_Hans--zho_Hant` relation。
+- 最初在隔离构建根生成 164,778 条清洗后无向记录，拒绝 432 条；每个完整 alignment group 生成第 10 个 `zho_Hans--zho_Hant` relation。验收完成后，最终 20 路数据已发布到标准 `data/model/corpus/mvp/`，隔离构建根已清理。
 - TD-03 manifest SHA-256 为 `113a33afa2ca6f73e8e10fbd5a3dab876dd470fbf0e570320edb0961901fe0c7`，构建报告 SHA-256 为 `8718f7e494580c79377f1b614b12d5a7e7ff34ae7b11a570006963341dd843c1`。
 - 使用相同锁定缓存在第二个独立根完成完全离线 fresh build 和五 locale resume；所有规范产物逐字节一致，v1 corpus 未覆盖。

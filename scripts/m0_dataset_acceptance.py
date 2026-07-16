@@ -38,14 +38,14 @@ SPLIT_ORDER = ("train", "dev", "test")
 REPRO_PATHS = (
     "corpus/mvp/human_parallel.jsonl",
     "corpus/mvp/manifest.json",
-    "reports/td03-build.json",
-    "reports/td03-rejections.json",
+    "reports/data-build.json",
+    "reports/data-rejections.json",
     "corpus/mvp/finalized/train.jsonl",
     "corpus/mvp/finalized/dev.jsonl",
     "corpus/mvp/finalized/test.jsonl",
     "corpus/mvp/finalized/test-groups.jsonl",
     "corpus/mvp/finalized/manifest.json",
-    "reports/td04-dedup-leakage.json",
+    "reports/dedup-leakage.json",
 )
 
 
@@ -258,7 +258,7 @@ def analyze_dataset(
     if provenance_kinds != {"human_parallel"} or teacher_fields:
         raise M0AcceptanceError("M0 must contain only human_parallel provenance and no teacher fields")
     pair_report: dict[str, Any] = {}
-    td03_build = _read_json(root / "reports" / "td03-build.json")
+    td03_build = _read_json(root / "reports" / "data-build.json")
     td03_pairs = td03_build["source_reports"][0]["pairs"]
     minimums = validated["budgets"]["minimum_accepted_per_undirected_pair"]
     for pair in UNDIRECTED_PAIRS:
@@ -314,7 +314,7 @@ def analyze_dataset(
             "maximum_repeats_per_epoch": sampling_by_route[route]["maximum_repeats_per_epoch"],
             "effective_train_exposure_per_epoch": by_split["train"],
         }
-    contamination = _read_json(root / "reports" / "td04-dedup-leakage.json")["reference_scan"]
+    contamination = _read_json(root / "reports" / "dedup-leakage.json")["reference_scan"]
     formal = [record for record in contamination["reference_sets"] if record["kind"] == "mt_evaluation"]
     if len(formal) != 1 or formal[0]["hits"] != 0 or contamination["blocking_hits"] != 0:
         raise M0AcceptanceError("formal MT evaluation contamination gate failed")
@@ -415,7 +415,7 @@ def _select_accepted(records: Sequence[dict[str, Any]], pair_name: str, quota: i
 
 
 def _load_locale_checkpoints(root: Path) -> dict[str, dict[str, LocaleRecord]]:
-    candidates = list((root / "interim" / "td03").glob("*/massive-1.1"))
+    candidates = list((root / "interim" / "model-data").glob("*/massive-1.1"))
     valid = [path for path in candidates if all((path / f"{language}.jsonl").is_file() for language in LANGUAGE_TAGS)]
     if len(valid) != 1:
         raise M0AcceptanceError("expected one complete TD-03 checkpoint identity for manual rejection review")
@@ -635,7 +635,7 @@ def prepare_review(
 ) -> dict[str, Any]:
     _analysis, canonical = analyze_dataset(root, config, sampling)
     queue_bytes, queue = build_review_queue(root, config, canonical)
-    path = root / "reports" / "td05-manual-review.jsonl"
+    path = root / "reports" / "m0-manual-review.jsonl"
     atomic_write_bytes(path, queue_bytes)
     return {**queue, "path": path.as_posix(), "status": "review-required"}
 
@@ -651,7 +651,7 @@ def accept_m0(
     manifest_path.unlink(missing_ok=True)
     analysis, canonical = analyze_dataset(root, config, sampling)
     queue_bytes, queue = build_review_queue(root, config, canonical)
-    queue_path = root / "reports" / "td05-manual-review.jsonl"
+    queue_path = root / "reports" / "m0-manual-review.jsonl"
     atomic_write_bytes(queue_path, queue_bytes)
     review_records = [json.loads(line) for line in queue_bytes.decode("utf-8").splitlines()]
     attestation = load_review_attestation(attestation_path, queue, review_records)
@@ -667,7 +667,7 @@ def accept_m0(
         },
         "manual_review": {
             **queue,
-            "path": "reports/td05-manual-review.jsonl",
+            "path": "reports/m0-manual-review.jsonl",
             "attestation_sha256": sha256_file(attestation_path),
             "reviewer": attestation["reviewer"],
             "method": attestation["method"],
@@ -698,7 +698,7 @@ def accept_m0(
         "consumers": ["TD-07", "TD-09", "TD-12", "TD-13", "TD-14", "TD-15", "TD-16"],
     }
     report_bytes = canonical_json_bytes(report)
-    report_path = root / "reports" / "td05-m0-acceptance.json"
+    report_path = root / "reports" / "m0-acceptance.json"
     atomic_write_bytes(report_path, report_bytes)
     final_manifest_path = root / "corpus" / "mvp" / "finalized" / "manifest.json"
     m0_manifest = {
@@ -712,12 +712,12 @@ def accept_m0(
             "sha256": sha256_file(final_manifest_path),
         },
         "acceptance_report": {
-            "path": "reports/td05-m0-acceptance.json",
+            "path": "reports/m0-acceptance.json",
             "bytes": len(report_bytes),
             "sha256": hashlib.sha256(report_bytes).hexdigest(),
         },
         "manual_review": {
-            "path": "reports/td05-manual-review.jsonl",
+            "path": "reports/m0-manual-review.jsonl",
             "bytes": len(queue_bytes),
             "records": queue["records"],
             "sha256": queue["sha256"],

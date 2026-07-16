@@ -1,17 +1,18 @@
 {
+  "corpus_maturity": "smoke",
   "date": "2026-07-15",
   "dev_accessed": false,
-  "downstream_consumer": "TD-15",
+  "downstream_consumer": null,
   "identities": {
-    "accepted_sha256": "282be328032877cb9a380e76bb2b006e64822b0863825978e9cd8a5ee8bd2b81",
-    "distillation_config_sha256": "f9cfe0f0923c7b77bd17f9532184919910ff18899022bb4254c966a08d7ffaf5",
-    "generation_contract_sha256": "42bb80d67d428c40031ee880a86a74420f842388bdba8aa3ed25837c5c7a5fd0",
-    "manifest_sha256": "2e0beb51e0b5020f7248da4d0f7bdd544bb0274c29c0efc22affa9d83ff1639e",
-    "manual_review_sha256": "749e33070383510faee7463450dde3c6979cd063222fe3f9745e61798a42f18d",
-    "prompt_config_file_sha256": "ab7004258c42e26cc955f6e89604616fc4c40005a92c6d880ad48f903fc9e124",
-    "quality_report_sha256": "f7f115eafa92d11306ce8f3a1e580a954b565d7f8e3353cf15bd2e8df0597bb4",
-    "replay_report_sha256": "8cc4512ebf5d7f8a11567863104ad03648c82e78626727db76df9db82ae1c8a2",
-    "td07_calibration_report_sha256": "a8245c185d2ff4100f9435413917ea783a5e5f0207efb75ed3e6c8fcaf526b78"
+    "accepted_sha256": "da66fbb762371e3cf0cc32ef3c508641c817f710e34b61895be4e3a079ecfacd",
+    "distillation_config_sha256": "9cb5c59c2baf9ff53bb6426e769b1a45e2bbcc3379a2befb66d827e505f2f76f",
+    "generation_contract_sha256": "6d039a21629ac15c40f6b5371d3d3d7d7223d47b4731cee65bf6a378406feeb0",
+    "manifest_sha256": "d12eba3ddc7e61b8aae288195efcc3fcc9e74729961338285757d09e4ec9dc8c",
+    "manual_review_sha256": "522dabb43038f2c5ae24090ae125cc827655d4959e0a20f8a8ccb48b58a8921d",
+    "prompt_config_file_sha256": "9c6dfc6048070fd8846343a49040211fff36ddf74d38992c745ed212ca9dbd8b",
+    "quality_report_sha256": "8b70bee437be5858b9a68b4eb8785a1bd695defdd4616dd3985924cf44ab2526",
+    "replay_report_sha256": "5b58e5845ee47781538949fa2677bb2eb48429e05f507b4f688dadf3d3d53a86",
+    "td07_calibration_report_sha256": "7b36c77ebd423bfe8d94f47ba938130309189585f988394b30957d1d8b0bcfaf"
   },
   "manual_review": {
     "manual_acceptances": 4,
@@ -284,6 +285,7 @@
     "test_records": 0
   },
   "status": "complete",
+  "td08_completed": false,
   "td09_started": false,
   "test_accessed": false
 }

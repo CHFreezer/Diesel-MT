@@ -40,7 +40,7 @@ evidence:
   benchmark_id: td06-teacher-runtime-comparison-v2
   benchmark_lock: configs/hymt2_teacher_benchmark.lock.json
   benchmark_lock_sha256: c448f19bb26bae45b1d7ab7766d51232b42471c7e5062b3d8784d89f2b1596bf
-  benchmark_report: artifacts/model-training/hymt2-teacher-runtime-comparison.json
+  benchmark_report: artifacts/model-training/reports/teacher/runtime-comparison.json
   raw_original_bf16_report_sha256: d77a5bef8e33de140686fabf5e21267033adeeb6ab05294c77cb796d37bbc344
   raw_bnb_int8_report_sha256: 5e467d445392a3e2c084b7c1e48a93704c38d843e5b29b14f754f5ced6907e64
   raw_gguf_report_sha256: 744f1ad01568d77111fc26390c3f490f04d9dd2463168de1e8ebd8745b4dabbd
