@@ -89,6 +89,7 @@ The project has no `src/` layout, `__init__.py` files, or installable package. P
 - **`scripts/mvp_evaluation.py`** / **`scripts/evaluate_mvp_model.py`** — TD-13 standalone dev/test-gated evaluator with fixed SacreBLEU/chrF semantics, 20 tag routes, 12 product-direction aggregates, and two Chinese conversion routes.
 - **`scripts/mvp_resource_benchmark.py`** / **`scripts/mvp_resource_profile.py`** — TD-14 real-length resource candidates, runtime hardware evidence, unique M2 profile selection, 100-step soak, and resume acceptance.
 - **`scripts/mvp_distillation_ab.py`** — TD-15 strict accepted-intersection builder and fairness validator for source-identical human-only/distilled recipes, pretraining differences, paired dry runs, and frozen dev selection rules.
+- **`scripts/mvp_m2.py`** / **`scripts/run_mvp_m2.py`** — TD-16 formal two-arm runner: exact-checkpoint to offline Hugging Face publication, scheduled dev generation/evaluation, post-publication retention, frozen dev-only selection, and one-shot formal-test authorization.
 - **`scripts/build_micro_m2m100_checkpoint.py`** — Deterministically builds and validates the Git-ignored random HF checkpoint consumed by the CTranslate2 deployment workflow.
 - **`scripts/validate_ctranslate2_deployment.py`** — Runs the serial CT2 conversion, ordered-vocabulary validation, five-tag CPU inference, and offline-package phases while merging machine-readable results into one workflow JSON.
 - **`scripts/run_offline_ctranslate2_smoke.py`** — Self-contained deployment-root runner copied into the offline package; verifies its manifest and blocks Python socket connections before local inference.
@@ -135,7 +136,7 @@ Current state:
 
 ## Testing
 
-The offline suite currently collects 192 tests, all passing on the current Windows host. Link rejection is covered without administrator privileges by a real NTFS directory junction/reparse point plus a directed payload-link validator test. The suite spans the tokenizer/model-data pipelines, teacher runtime/calibration/distillation and runtime benchmarks, tokenizer training/checkpointing, standalone model evaluation, M1, resource-profile soak, A/B fairness, artifact-freeze, micro-checkpoint, and CTranslate2 deployment modules. Small fixtures simulate HPLT, MASSIVE 1.1, group split/dedup/leakage, M0/D0/D1 route and acceptance evidence, teacher artifact/offline boundaries, and model-training contracts without network access. Key patterns:
+The offline suite currently collects 196 tests, all passing on the current Windows host. Link rejection is covered without administrator privileges by a real NTFS directory junction/reparse point plus a directed payload-link validator test. The suite spans the tokenizer/model-data pipelines, teacher runtime/calibration/distillation and runtime benchmarks, tokenizer training/checkpointing, standalone model evaluation, M1, resource-profile soak, A/B fairness, M2 dev selection and one-shot test gating, artifact-freeze, micro-checkpoint, and CTranslate2 deployment modules. Small fixtures simulate HPLT, MASSIVE 1.1, group split/dedup/leakage, M0/D0/D1 route and acceptance evidence, teacher artifact/offline boundaries, and model-training contracts without network access. Key patterns:
 
 - Config validation (explicit registry, missing fields, error paths)
 - Text cleaning correctness (zh/ja/ko-specific patterns)

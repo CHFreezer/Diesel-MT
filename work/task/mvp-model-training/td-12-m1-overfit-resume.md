@@ -51,6 +51,8 @@
 - 首轮冻结运行曾暴露 CUDA optimizer state 虽逐 tensor 精确相同但 `torch.save` 受 storage 分配影响导致容器哈希不同；未改变训练预算。checkpoint 保存现先按键排序并克隆为连续 CPU tensor，既保留精确 optimizer 语义又使连续/恢复容器逐字节一致；原预算 v2 完整重跑通过。
 - M1 HF checkpoint 保存于 run manifest 记录的本机运行根并完全离线重载；state-dict SHA-256 `3cfc2ba0d33afb05f5ec26b4a132f9b491548d58ab55ec13910da36ffabc8273`，M1 manifest SHA-256 `c36da7930ad146de4b0462dd832cdd1d6db97f52082af2edec01990401af42c8`。冻结 tokenizer manifest 未变化，词表仍为 49,152，generation config 与 student 对齐。
 - resumed 半程实测 150 step 用时 `71.0140706999955` s，峰值设备内存 `1,218,953,216` B，吞吐 `1,554.62148433081` tokens/s；这些是 M1 小样本事实，不作为 TD-14 profile 常量。
-- 机器可读证据 `artifacts/model-training/reports/student/m1-overfit.json` SHA-256 为 `01ba909ad713fbb62c6df90f6d59756bb25da4227215cfc2d7c7a467c15ad6e5`。定向回归 `.conda\python.exe -m pytest tests/test_mvp_m1.py tests/test_mvp_checkpoint.py tests/test_mvp_training.py -q` 为 `18 passed, 1 skipped`；跳过项仍仅为当前 Windows symlink 创建权限条件。
+- 机器可读证据 `artifacts/model-training/reports/student/m1-overfit.json` 当前 SHA-256 为 `c822a9ce7fa6a791863805f91282fd39c3370a8a40f3da64d340b067e3d51646`。定向回归 `.conda\python.exe -m pytest tests/test_mvp_m1.py tests/test_mvp_checkpoint.py tests/test_mvp_training.py -q` 为 `18 passed, 1 skipped`；跳过项仍仅为当前 Windows symlink 创建权限条件。
+
+2026-07-16 TD-16 启动预检发现 `mvp_training_m1.yaml` 的语义 canonical SHA-256 仍为冻结值，但 acceptance/report 中保留了提交前格式版本的原始文件 SHA-256，导致两个 M1 回归失败。本次只将原始文件身份更新为当前提交字节的 `1a09be5d46d59a210cf453f64ac4584af8854406e07d4f002ed82320fb2d6651`；训练配置 canonical SHA-256、M1 权重、训练曲线、恢复结果和所有验收阈值均未改变。修正后全套离线回归为 `196 passed`。
 
 该 checkpoint 只证明 20 条 fixture 可记忆、语言控制和恢复链正确，不代表真实 dev/test 翻译质量。M1 已关闭，TD-14 可以开始资源 profile 基准。

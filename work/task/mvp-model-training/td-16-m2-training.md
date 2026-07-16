@@ -44,3 +44,7 @@
 - 最终候选完全由预先冻结的 dev 规则选出。
 - test 未参与训练、调参、checkpoint 或组间选择，且只执行一次。
 - 蒸馏负结果会如实保留并阻止 teacher 数据扩量。
+
+## 启动准备记录
+
+2026-07-16 已实测当前运行时支持 CUDA BF16 autocast 混合精度前向、反向与 optimizer step：autocast 算子输出为 BF16，loss、主权重和梯度保持 FP32 且数值有限。新增 `scripts/mvp_m2.py` 与 `scripts/run_mvp_m2.py`，用于逐个发布定期 exact-resume checkpoint 的离线 HF 候选、执行 dev-only 生成评测、在全部候选成功发布后应用 keep-last-3 恢复 checkpoint 策略、按 TD-15 规则冻结唯一候选，并以不可重放 receipt 约束一次正式 test。M1 原始配置哈希证据已与语义不变的当前文件重新对齐；全套离线回归为 `196 passed`。本 task 仍为 `pending`，以上记录不代表两组正式 M2 训练已经启动或完成。

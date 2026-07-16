@@ -3,7 +3,7 @@ schema_version: 1
 identity:
   name: mvp-m1-overfit-acceptance-v1
   training_config: configs/mvp_training_m1.yaml
-  training_config_file_sha256: d58f832a91cf27b731d2ce0bd7cbaf8251def4c36808528b14d9b0d8379a9a47
+  training_config_file_sha256: 1a09be5d46d59a210cf453f64ac4584af8854406e07d4f002ed82320fb2d6651
   training_config_canonical_sha256: 53080be3764bd881bfc61511ddf9a3ab900adbf146a0fea330721a2c574fbc7e
   initial_state_dict_sha256: 66897f9c358802b9d39d66e61a8b39fad21236d11744b79df194c26db4da66a3
   tokenizer_manifest_sha256: eb79ae22f523f1d9c9fcf75b80f2b322e3c2882a8fddb7545b5933dd4053fa7f

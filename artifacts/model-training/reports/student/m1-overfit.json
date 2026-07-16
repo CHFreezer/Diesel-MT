@@ -2309,7 +2309,7 @@
   },
   "training_config": {
     "canonical_sha256": "53080be3764bd881bfc61511ddf9a3ab900adbf146a0fea330721a2c574fbc7e",
-    "file_sha256": "d58f832a91cf27b731d2ce0bd7cbaf8251def4c36808528b14d9b0d8379a9a47",
+    "file_sha256": "1a09be5d46d59a210cf453f64ac4584af8854406e07d4f002ed82320fb2d6651",
     "path": "configs/mvp_training_m1.yaml"
   },
   "warning": "M1 fixture memorization and resume acceptance only; not translation quality."
