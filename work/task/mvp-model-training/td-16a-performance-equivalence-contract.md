@@ -1,28 +1,28 @@
-# task TD-16A: 定版性能优先训练器与能力等价合同
+# task TD-16A: 合并性能优先且硬件可配置的训练器
 
-状态：pending（已有隔离候选与基准，不等于主分支验收完成）
+状态：completed（2026-07-17）
 
 依赖：TD-14、TD-15、TD-16 A/B 诊断
 
 ## 目标
 
-将完整 M0 上验证过的训练管线优化整理为可配置、可测试、可恢复的正式训练入口，并冻结“重复训练能力等价、权重 hash 不必相同”的验收合同。
+把隔离 worktree 中验证过的高吞吐训练管线合并到主分支；训练结果以能力和 time-to-quality 负责，不再要求权重、逐步 loss 或 CUDA 热路径逐 bit 一致。
 
 ## 原子边界
 
-本 task 只定版训练实现、资源 profile、time-to-quality 指标和能力等价门槛；不启动完整 human 质量训练，不消费正式 test，不决定蒸馏混合比例。
+本 task 只定版通用训练实现、资源配置接口、恢复语义和测试，不提交本机专用 batch、worker、显存、盘符或运行根，也不启动新的完整质量训练或消费正式 test。
 
-## 执行事项
+## 已完成实现
 
-- 审查并集成离线 token cache、长度分桶、pinned/non-blocking 传输、`cudaMallocAsync`、fused AdamW、performance 日志和有限值同步优化。
-- 在完整 226,218 条 human train 选择范围上完成有界吞吐/显存/功耗基准，保留长训显存安全余量；不以 GPU 100% 或满 TDP 代替端到端吞吐。
-- 将 hash 限制在数据/tokenizer/config/checkpoint 完整性边界；训练热路径不计算逐 batch 精确语义 hash。
-- 保留 NaN/Inf、OOM、零截断、路由曝光、checkpoint 可加载和恢复后训练语义连续性检查。
-- 冻结能力等价指标、重复次数、总体及逐路由容差、最大墙钟/训练 token 预算和 early-stop 规则；判定依据只来自 human dev。
-- 用短程重复运行验证配置可重放、loss 有限和性能稳定；不要求模型权重逐 bit 相同。
+- 离线文本/token 编码缓存、可选持久缓存和确定性长度分桶；恢复时保存并校验 sampler pending state。
+- 可配置的预编码 worker、pinned memory、non-blocking 传输、micro batch、梯度累积、显存/主存预算和 checkpoint 保留数。
+- 可配置的 fused AdamW、CUDA allocator、梯度有限性检查策略和日志模式/刷新频率。
+- 运行时探测 CPU、RAM、GPU、VRAM 和后端能力；配置超过实际逻辑 CPU 或内存预算时 fail-fast。
+- 数据、tokenizer、配置和 complete checkpoint 继续做完整性校验；训练热路径不以逐 batch hash 阻塞吞吐。
 
-## 产物与验收
+## 验收证据
 
-- 正式性能优先训练配置、实现、测试和完整 M0 候选报告。
-- time-to-quality 与能力等价合同在任何完整训练结果产生前冻结。
-- 全套离线测试通过，TD-16/正式 test 旧证据未被覆盖。
+- 主分支提交：`f842b4a`（`训练：合并可配置的高吞吐训练管线`）。
+- 本机吞吐候选 YAML 与正式运行根保持 Git-ignored，没有进入提交。
+- 完整离线测试：`204 passed`。
+- 重复训练验收保留“能力等价而非权重 hash 相等”的原则；具体质量阈值必须在 TD-16C 修复语料并冻结新 dev 后注册，不能沿用已证明不适合作为通用 MT 验收集的旧阈值。
