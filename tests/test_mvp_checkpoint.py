@@ -409,11 +409,39 @@ def _training_model(tokenizer: object) -> object:
     return construct_m2m100(tokenizer, values, 8822)
 
 
-def test_uninterrupted_and_resumed_training_are_exact(tmp_path: Path) -> None:
+@pytest.mark.parametrize(
+    "pipeline_mode", ["baseline", "memory", "persistent_bucket"]
+)
+def test_uninterrupted_and_resumed_training_are_exact(
+    tmp_path: Path, pipeline_mode: str
+) -> None:
     student = load_student_config(ROOT / "configs" / "mvp_e8_d2_v48k.yaml")
     tokenizer, _ = load_frozen_tokenizer(student, ROOT)
     tokenizer_path = ROOT / student["tokenizer"]["path"]
     config = _training_config()
+    if pipeline_mode != "baseline":
+        config = copy.deepcopy(config)
+        config["input_pipeline"] = {
+            "mode": "preencode_memory",
+            "preencode_workers": 0,
+            "memory_budget_mib": 1,
+            "pin_memory": False,
+            "non_blocking_transfer": False,
+        }
+        if pipeline_mode == "persistent_bucket":
+            config["input_pipeline"].update(
+                {
+                    "cache_mode": "persistent",
+                    "length_bucket_pool_batches": 4,
+                }
+            )
+            config["logging"] = {"mode": "compact", "flush_frequency": 4}
+            config["optimization"]["checkpoint_frequency"] = 1
+        config["gpu_optimization"] = {
+            "gradient_validation": "clip_error",
+            "fused_adamw": False,
+        }
+        config = validate_training_config(config)
     train = _training_dataset("train")
     dev = _training_dataset("dev")
 
@@ -427,6 +455,7 @@ def test_uninterrupted_and_resumed_training_are_exact(tmp_path: Path) -> None:
         dev_dataset=dev,
         config=config,
         logger=baseline_logger,
+        input_cache_root=tmp_path / "input-cache",
     )
 
     interrupted_model = _training_model(tokenizer)
@@ -456,10 +485,17 @@ def test_uninterrupted_and_resumed_training_are_exact(tmp_path: Path) -> None:
         config=config,
         logger=interrupted_logger,
         checkpoint_callback=publish,
-        stop_after_optimizer_steps=2,
+        stop_after_optimizer_steps=(
+            1 if pipeline_mode == "persistent_bucket" else 2
+        ),
+        input_cache_root=tmp_path / "input-cache",
     )
     assert interrupted["status"] == "interrupted"
-    assert published[-1].name == "step-00000002"
+    assert published[-1].name == (
+        "step-00000001"
+        if pipeline_mode == "persistent_bucket"
+        else "step-00000002"
+    )
 
     resumed_model = _training_model(tokenizer)
     resumed_logger = JsonlRunLogger()
@@ -484,6 +520,7 @@ def test_uninterrupted_and_resumed_training_are_exact(tmp_path: Path) -> None:
         config=config,
         logger=resumed_logger,
         resume_loader=resume,
+        input_cache_root=tmp_path / "input-cache",
     )
 
     assert resumed["status"] == "complete"

@@ -158,12 +158,44 @@ def _truncate_preserving_contract(ids: Sequence[int], maximum: int, eos_id: int)
     return tuple([*ids[: maximum - 1], eos_id])
 
 
-def encode_parallel_sample(
+def encode_language_text(
+    tokenizer: object,
+    text: str,
+    language: str,
+    *,
+    language_mapping: Mapping[str, int] | None = None,
+    vocab_size: int | None = None,
+) -> tuple[int, ...]:
+    """Encode one unique language/text value for safe cross-route reuse."""
+
+    value = _require_nonempty_text(text, "text")
+    mapping = language_mapping or build_language_mapping(tokenizer)
+    if set(mapping) != set(LANGUAGE_TAGS) or language not in mapping:
+        raise StudentContractError(
+            "tokenizer language-token set differs from the five-tag contract"
+        )
+    ids = tuple(_encoded_ids(tokenizer, value, language))
+    _validate_sequence(
+        ids,
+        language_id=mapping[language],
+        eos_id=tokenizer.eos_token_id,
+        vocab_size=len(tokenizer) if vocab_size is None else vocab_size,
+        context="language/text encoding",
+    )
+    return ids
+
+
+def encoded_sample_from_sequences(
     tokenizer: object,
     sample: Mapping[str, Any],
     policy: EncodingPolicy,
+    *,
+    source_ids: Sequence[int],
+    target_ids: Sequence[int],
+    language_mapping: Mapping[str, int] | None = None,
+    vocab_size: int | None = None,
 ) -> EncodedSample:
-    """Encode one route while preserving NLLB/M2M100 language control."""
+    """Build a validated sample from identity-bound reusable token sequences."""
 
     source_language = str(sample.get("src_lang", ""))
     target_language = str(sample.get("tgt_lang", ""))
@@ -171,36 +203,33 @@ def encode_parallel_sample(
         validate_route(source_language, target_language)
     except ValueError as exc:
         raise StudentContractError(str(exc)) from exc
-
     sample_id = _require_identifier(sample.get("sample_id"), "sample_id")
     sample_group_id = _require_identifier(
         sample.get("sample_group_id"), "sample_group_id"
     )
-    source_text = _require_nonempty_text(sample.get("source_text"), "source_text")
-    target_text = _require_nonempty_text(sample.get("target_text"), "target_text")
-
-    mapping = build_language_mapping(tokenizer)
+    _require_nonempty_text(sample.get("source_text"), "source_text")
+    _require_nonempty_text(sample.get("target_text"), "target_text")
+    mapping = language_mapping or build_language_mapping(tokenizer)
     if set(mapping) != set(LANGUAGE_TAGS):
-        raise StudentContractError("tokenizer language-token set differs from the five-tag contract")
-    source_ids = _encoded_ids(tokenizer, source_text, source_language)
-    target_ids = _encoded_ids(tokenizer, target_text, target_language)
-    vocab_size = len(tokenizer)
+        raise StudentContractError(
+            "tokenizer language-token set differs from the five-tag contract"
+        )
     eos_id = tokenizer.eos_token_id
+    resolved_vocab_size = len(tokenizer) if vocab_size is None else vocab_size
     _validate_sequence(
         source_ids,
         language_id=mapping[source_language],
         eos_id=eos_id,
-        vocab_size=vocab_size,
+        vocab_size=resolved_vocab_size,
         context="source encoding",
     )
     _validate_sequence(
         target_ids,
         language_id=mapping[target_language],
         eos_id=eos_id,
-        vocab_size=vocab_size,
+        vocab_size=resolved_vocab_size,
         context="target labels",
     )
-
     truncated_source = _truncate_preserving_contract(
         source_ids, policy.max_source_length, eos_id
     )
@@ -211,14 +240,14 @@ def encode_parallel_sample(
         truncated_source,
         language_id=mapping[source_language],
         eos_id=eos_id,
-        vocab_size=vocab_size,
+        vocab_size=resolved_vocab_size,
         context="truncated source encoding",
     )
     _validate_sequence(
         truncated_target,
         language_id=mapping[target_language],
         eos_id=eos_id,
-        vocab_size=vocab_size,
+        vocab_size=resolved_vocab_size,
         context="truncated target labels",
     )
     return EncodedSample(
@@ -230,6 +259,51 @@ def encode_parallel_sample(
         labels=truncated_target,
         source_original_tokens=len(source_ids),
         target_original_tokens=len(target_ids),
+    )
+
+
+def encode_parallel_sample(
+    tokenizer: object,
+    sample: Mapping[str, Any],
+    policy: EncodingPolicy,
+    *,
+    language_mapping: Mapping[str, int] | None = None,
+    vocab_size: int | None = None,
+) -> EncodedSample:
+    """Encode one route while preserving NLLB/M2M100 language control."""
+
+    source_language = str(sample.get("src_lang", ""))
+    target_language = str(sample.get("tgt_lang", ""))
+    try:
+        validate_route(source_language, target_language)
+    except ValueError as exc:
+        raise StudentContractError(str(exc)) from exc
+    source_text = _require_nonempty_text(sample.get("source_text"), "source_text")
+    target_text = _require_nonempty_text(sample.get("target_text"), "target_text")
+    mapping = language_mapping or build_language_mapping(tokenizer)
+    resolved_vocab_size = len(tokenizer) if vocab_size is None else vocab_size
+    source_ids = encode_language_text(
+        tokenizer,
+        source_text,
+        source_language,
+        language_mapping=mapping,
+        vocab_size=resolved_vocab_size,
+    )
+    target_ids = encode_language_text(
+        tokenizer,
+        target_text,
+        target_language,
+        language_mapping=mapping,
+        vocab_size=resolved_vocab_size,
+    )
+    return encoded_sample_from_sequences(
+        tokenizer,
+        sample,
+        policy,
+        source_ids=source_ids,
+        target_ids=target_ids,
+        language_mapping=mapping,
+        vocab_size=resolved_vocab_size,
     )
 
 
@@ -263,6 +337,12 @@ class DirectionAwareCollator:
     def __init__(self, tokenizer: object, policy: EncodingPolicy) -> None:
         self.tokenizer = tokenizer
         self.policy = policy
+        self.language_mapping = build_language_mapping(tokenizer)
+        self.vocab_size = len(tokenizer)
+        if set(self.language_mapping) != set(LANGUAGE_TAGS):
+            raise StudentContractError(
+                "tokenizer language-token set differs from the five-tag contract"
+            )
         if tokenizer.pad_token_id != 1:
             raise StudentContractError("tokenizer pad token ID must be 1")
 
@@ -270,7 +350,13 @@ class DirectionAwareCollator:
         if not records:
             raise StudentContractError("cannot collate an empty batch")
         samples = [
-            encode_parallel_sample(self.tokenizer, record, self.policy)
+            encode_parallel_sample(
+                self.tokenizer,
+                record,
+                self.policy,
+                language_mapping=self.language_mapping,
+                vocab_size=self.vocab_size,
+            )
             for record in records
         ]
         return self.collate_encoded(samples)

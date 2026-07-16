@@ -11,6 +11,8 @@ import math
 import os
 import platform
 import random
+import shutil
+import struct
 import subprocess
 import sys
 import tempfile
@@ -18,7 +20,7 @@ import threading
 import time
 from collections import Counter
 from collections.abc import Callable, Mapping, Sequence
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
 from dataclasses import asdict, dataclass
 from pathlib import Path, PurePosixPath
 from typing import Any
@@ -37,17 +39,22 @@ from mvp_student import (
     EncodingPolicy,
     StudentContractError,
     build_student,
+    encode_language_text,
     encode_parallel_sample,
+    encoded_sample_from_sequences,
     load_frozen_tokenizer,
     model_inputs,
 )
-from tokenizer_utils import reload_tokenizer
+from tokenizer_utils import build_language_mapping, reload_tokenizer
 
 
 TRAINING_SCHEMA_VERSION = 1
 MIB = 1024 * 1024
 ROUTE_ORDER = tuple(f"{source}->{target}" for source, target in directed_routes())
 SHA256_LENGTH = 64
+TEXT_CACHE_SCHEMA_VERSION = 1
+TEXT_CACHE_MANIFEST = "text-cache-manifest.json"
+TEXT_CACHE_PAYLOAD = "text-cache.npz"
 
 
 class TrainingContractError(RuntimeError):
@@ -117,9 +124,19 @@ def _repo_path(value: Any, context: str) -> str:
 
 
 def validate_training_config(config: Mapping[str, Any]) -> dict[str, Any]:
+    expected_top_level = {
+        "schema_version",
+        "identity",
+        "data",
+        "resource_profile",
+        "optimization",
+    }
+    for optional in ("input_pipeline", "gpu_optimization", "logging"):
+        if optional in config:
+            expected_top_level.add(optional)
     _expect_keys(
         config,
-        {"schema_version", "identity", "data", "resource_profile", "optimization"},
+        expected_top_level,
         "training config",
     )
     if config["schema_version"] != TRAINING_SCHEMA_VERSION:
@@ -246,25 +263,129 @@ def validate_training_config(config: Mapping[str, Any]) -> dict[str, Any]:
     if identity["mode"] != "td14_benchmark" and resource["oom_retry_limit"] != 0:
         raise TrainingContractError("OOM retries are allowed only in TD-14 benchmark mode")
 
+    if "input_pipeline" in config:
+        pipeline = _mapping(config["input_pipeline"], "training.input_pipeline")
+        pipeline_fields = {
+            "mode",
+            "preencode_workers",
+            "memory_budget_mib",
+            "pin_memory",
+            "non_blocking_transfer",
+        }
+        if "cache_mode" in pipeline:
+            pipeline_fields.add("cache_mode")
+        if "length_bucket_pool_batches" in pipeline:
+            pipeline_fields.add("length_bucket_pool_batches")
+        _expect_keys(
+            pipeline,
+            pipeline_fields,
+            "training.input_pipeline",
+        )
+        if pipeline["mode"] not in {"on_demand", "preencode_memory"}:
+            raise TrainingContractError("input pipeline mode is unsupported")
+        if pipeline.get("cache_mode", "memory") not in {"memory", "persistent"}:
+            raise TrainingContractError("input cache mode is unsupported")
+        if (
+            pipeline.get("cache_mode") == "persistent"
+            and pipeline["mode"] != "preencode_memory"
+        ):
+            raise TrainingContractError(
+                "persistent input cache requires preencode_memory mode"
+            )
+        if "length_bucket_pool_batches" in pipeline:
+            _positive_int(
+                pipeline["length_bucket_pool_batches"],
+                "training.input_pipeline.length_bucket_pool_batches",
+            )
+            if pipeline["length_bucket_pool_batches"] < 2:
+                raise TrainingContractError(
+                    "length bucket pool must contain at least two batches"
+                )
+            if pipeline.get("cache_mode") != "persistent":
+                raise TrainingContractError(
+                    "length bucketing requires the persistent text cache"
+                )
+        _positive_int(
+            pipeline["preencode_workers"],
+            "training.input_pipeline.preencode_workers",
+            allow_zero=True,
+        )
+        _positive_int(
+            pipeline["memory_budget_mib"],
+            "training.input_pipeline.memory_budget_mib",
+        )
+        for field in ("pin_memory", "non_blocking_transfer"):
+            if not isinstance(pipeline[field], bool):
+                raise TrainingContractError(f"input pipeline {field} must be boolean")
+        if pipeline["memory_budget_mib"] > resource["dataloader_memory_budget_mib"]:
+            raise TrainingContractError(
+                "input pipeline memory budget exceeds dataloader memory budget"
+            )
+        if pipeline["pin_memory"] and resource["device"] != "cuda":
+            raise TrainingContractError("pinned input memory requires CUDA")
+        if pipeline["non_blocking_transfer"] and not pipeline["pin_memory"]:
+            raise TrainingContractError(
+                "non-blocking input transfer requires pinned input memory"
+            )
+
+    if "gpu_optimization" in config:
+        gpu_optimization = _mapping(
+            config["gpu_optimization"], "training.gpu_optimization"
+        )
+        gpu_fields = {"gradient_validation", "fused_adamw"}
+        if "allocator_backend" in gpu_optimization:
+            gpu_fields.add("allocator_backend")
+        _expect_keys(
+            gpu_optimization,
+            gpu_fields,
+            "training.gpu_optimization",
+        )
+        if gpu_optimization["gradient_validation"] not in {
+            "per_parameter",
+            "clip_error",
+        }:
+            raise TrainingContractError("gradient validation mode is unsupported")
+        if not isinstance(gpu_optimization["fused_adamw"], bool):
+            raise TrainingContractError("fused_adamw must be boolean")
+        if gpu_optimization["fused_adamw"] and resource["device"] != "cuda":
+            raise TrainingContractError("fused AdamW requires CUDA")
+        allocator_backend = gpu_optimization.get("allocator_backend", "native")
+        if allocator_backend not in {"native", "cudaMallocAsync"}:
+            raise TrainingContractError("CUDA allocator backend is unsupported")
+        if allocator_backend != "native" and resource["device"] != "cuda":
+            raise TrainingContractError("asynchronous CUDA allocation requires CUDA")
+
+    if "logging" in config:
+        logging = _mapping(config["logging"], "training.logging")
+        _expect_keys(logging, {"mode", "flush_frequency"}, "training.logging")
+        if logging["mode"] not in {"full", "compact", "performance"}:
+            raise TrainingContractError("training logging mode is unsupported")
+        _positive_int(
+            logging["flush_frequency"], "training.logging.flush_frequency"
+        )
+
     optimization = _mapping(config["optimization"], "training.optimization")
+    optimization_fields = {
+        "optimizer",
+        "learning_rate",
+        "betas",
+        "epsilon",
+        "weight_decay",
+        "scheduler",
+        "warmup_steps",
+        "max_optimizer_steps",
+        "max_train_tokens",
+        "max_grad_norm",
+        "label_smoothing",
+        "validation_frequency",
+        "validation_batches",
+        "checkpoint_frequency",
+    }
+    if "checkpoint_retention" in optimization:
+        optimization_fields.add("checkpoint_retention")
     _expect_keys(
         optimization,
-        {
-            "optimizer",
-            "learning_rate",
-            "betas",
-            "epsilon",
-            "weight_decay",
-            "scheduler",
-            "warmup_steps",
-            "max_optimizer_steps",
-            "max_train_tokens",
-            "max_grad_norm",
-            "label_smoothing",
-            "validation_frequency",
-            "validation_batches",
-            "checkpoint_frequency",
-        },
+        optimization_fields,
         "training.optimization",
     )
     if optimization["optimizer"] != "adamw":
@@ -301,6 +422,22 @@ def validate_training_config(config: Mapping[str, Any]) -> dict[str, Any]:
         )
     if optimization["warmup_steps"] >= optimization["max_optimizer_steps"]:
         raise TrainingContractError("warmup_steps must be less than max_optimizer_steps")
+    pool_batches = int(
+        config.get("input_pipeline", {}).get("length_bucket_pool_batches", 1)
+    )
+    total_micro_steps = (
+        int(optimization["max_optimizer_steps"])
+        * int(resource["gradient_accumulation_steps"])
+    )
+    if total_micro_steps % pool_batches:
+        raise TrainingContractError(
+            "total micro steps must end on a length-bucket pool boundary"
+        )
+    if "checkpoint_retention" in optimization:
+        _positive_int(
+            optimization["checkpoint_retention"],
+            "training.optimization.checkpoint_retention",
+        )
     return dict(config)
 
 
@@ -412,6 +549,37 @@ def package_versions() -> dict[str, str]:
     return versions
 
 
+def configure_cuda_allocator(config: Mapping[str, Any]) -> str | None:
+    """Configure an explicit allocator before the first torch/CUDA import."""
+    gpu_optimization = config.get("gpu_optimization", {})
+    if "allocator_backend" not in gpu_optimization:
+        return None
+    backend = str(gpu_optimization["allocator_backend"])
+    setting = f"backend:{backend}"
+    current = os.environ.get("PYTORCH_ALLOC_CONF")
+    if current:
+        configured = next(
+            (
+                item.split(":", 1)[1]
+                for item in current.split(",")
+                if item.strip().startswith("backend:")
+            ),
+            None,
+        )
+        if configured is not None and configured != backend:
+            raise TrainingContractError(
+                "PYTORCH_ALLOC_CONF allocator conflicts with training config"
+            )
+        if configured is None:
+            raise TrainingContractError(
+                "explicit allocator config cannot inherit unrelated "
+                "PYTORCH_ALLOC_CONF options"
+            )
+    else:
+        os.environ["PYTORCH_ALLOC_CONF"] = setting
+    return backend
+
+
 def probe_runtime(resource_profile: Mapping[str, Any]) -> dict[str, Any]:
     import torch
 
@@ -458,6 +626,7 @@ def probe_runtime(resource_profile: Mapping[str, Any]) -> dict[str, Any]:
     runtime = {
         "platform": platform.platform(),
         "python": platform.python_version(),
+        "host_logical_processors": os.cpu_count(),
         "torch": torch.__version__,
         "cuda_runtime": torch.version.cuda,
         "cuda_driver": driver_version,
@@ -473,6 +642,8 @@ def probe_runtime(resource_profile: Mapping[str, Any]) -> dict[str, Any]:
         "host_available_bytes": available_host,
         "packages": package_versions(),
     }
+    if requested_device == "cuda":
+        runtime["cuda_allocator_backend"] = torch.cuda.memory.get_allocator_backend()
     runtime["resource_validation"] = validate_resource_budget(resource_profile, runtime)
     return runtime
 
@@ -530,6 +701,497 @@ class RouteDataset:
     @property
     def records(self) -> int:
         return sum(len(records) for records in self.records_by_route.values())
+
+
+@dataclass(frozen=True)
+class EncodedSampleCache:
+    """Identity-bound in-memory encodings for deterministic GPU feeding."""
+
+    samples_by_id: dict[str, EncodedSample]
+    identities: tuple[str, ...]
+    estimated_bytes: int
+    identity_sha256: str
+
+    def samples(self, records: Sequence[Mapping[str, Any]]) -> list[EncodedSample]:
+        selected: list[EncodedSample] = []
+        for record in records:
+            sample_id = record.get("sample_id")
+            if not isinstance(sample_id, str) or sample_id not in self.samples_by_id:
+                raise TrainingContractError(
+                    "encoded input cache is missing a selected sample identity"
+                )
+            selected.append(self.samples_by_id[sample_id])
+        return selected
+
+    @classmethod
+    def merge(cls, *caches: "EncodedSampleCache") -> "EncodedSampleCache":
+        samples: dict[str, EncodedSample] = {}
+        for cache in caches:
+            overlap = set(samples).intersection(cache.samples_by_id)
+            if overlap:
+                raise TrainingContractError("encoded input caches contain duplicate samples")
+            samples.update(cache.samples_by_id)
+        identities = tuple(cache.identity_sha256 for cache in caches)
+        return cls(
+            samples_by_id=samples,
+            identities=identities,
+            estimated_bytes=sum(cache.estimated_bytes for cache in caches),
+            identity_sha256=config_sha256({"component_caches": identities}),
+        )
+
+
+@dataclass(frozen=True)
+class TextEncodingCache:
+    """Reusable full token sequences backed by one validated persistent payload."""
+
+    encodings: dict[tuple[str, str], tuple[int, ...]]
+    identity_sha256: str
+    directory: Path | None
+    source: str
+    payload_bytes: int
+    token_ids: int
+    estimated_bytes: int
+
+
+def _text_encoding_cache_bytes(
+    encodings: Mapping[tuple[str, str], Sequence[int]],
+) -> int:
+    return sum(
+        256
+        + len(language.encode("utf-8"))
+        + len(text_value.encode("utf-8"))
+        + 36 * len(token_ids)
+        for (language, text_value), token_ids in encodings.items()
+    )
+
+
+def _canonical_records(datasets: Sequence[RouteDataset]) -> list[dict[str, Any]]:
+    return [
+        record
+        for dataset in datasets
+        for route in ROUTE_ORDER
+        for record in dataset.records_by_route[route]
+    ]
+
+
+def _canonical_text_keys(
+    datasets: Sequence[RouteDataset],
+) -> tuple[tuple[str, str], ...]:
+    keys: set[tuple[str, str]] = set()
+    for dataset in datasets:
+        for route in ROUTE_ORDER:
+            for record in dataset.records_by_route[route]:
+                keys.add((str(record["src_lang"]), str(record["source_text"])))
+                keys.add((str(record["tgt_lang"]), str(record["target_text"])))
+    return tuple(sorted(keys))
+
+
+def _text_key_digest(key: tuple[str, str]) -> bytes:
+    language = key[0].encode("utf-8")
+    text_value = key[1].encode("utf-8")
+    digest = hashlib.sha256()
+    digest.update(struct.pack("<I", len(language)))
+    digest.update(language)
+    digest.update(struct.pack("<Q", len(text_value)))
+    digest.update(text_value)
+    return digest.digest()
+
+
+def _text_cache_identity(
+    *,
+    datasets: Sequence[RouteDataset],
+    tokenizer_manifest_sha256: str,
+    keys: Sequence[tuple[str, str]],
+) -> str:
+    key_digest = hashlib.sha256()
+    for key in keys:
+        key_digest.update(_text_key_digest(key))
+    return config_sha256(
+        {
+            "schema_version": TEXT_CACHE_SCHEMA_VERSION,
+            "datasets": [
+                {
+                    "split": dataset.split,
+                    "file_sha256": dataset.file_sha256,
+                    "selection_sha256": dataset.selection_sha256,
+                    "records": dataset.records,
+                }
+                for dataset in datasets
+            ],
+            "tokenizer_manifest_sha256": tokenizer_manifest_sha256,
+            "unique_language_texts": len(keys),
+            "unique_language_texts_sha256": key_digest.hexdigest(),
+        }
+    )
+
+
+def _load_text_encoding_cache(
+    *,
+    directory: Path,
+    expected_identity_sha256: str,
+    keys: Sequence[tuple[str, str]],
+    source: str,
+) -> TextEncodingCache:
+    import numpy
+
+    manifest_path = directory / TEXT_CACHE_MANIFEST
+    payload_path = directory / TEXT_CACHE_PAYLOAD
+    if not directory.is_dir() or directory.is_symlink():
+        raise TrainingContractError("persistent text cache must be a real directory")
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise TrainingContractError("persistent text cache manifest is unreadable") from exc
+    if manifest.get("status") != "complete":
+        raise TrainingContractError("persistent text cache is not complete")
+    if manifest.get("identity_sha256") != expected_identity_sha256:
+        raise TrainingContractError("persistent text cache identity changed")
+    if int(manifest.get("unique_language_texts", -1)) != len(keys):
+        raise TrainingContractError("persistent text cache key count changed")
+    payload = manifest.get("payload")
+    if not isinstance(payload, Mapping):
+        raise TrainingContractError("persistent text cache payload metadata is invalid")
+    if set(payload) != {"path", "bytes", "sha256"}:
+        raise TrainingContractError("persistent text cache payload fields changed")
+    if payload["path"] != TEXT_CACHE_PAYLOAD or not payload_path.is_file():
+        raise TrainingContractError("persistent text cache payload is missing")
+    if payload_path.is_symlink() or payload_path.stat().st_size != int(payload["bytes"]):
+        raise TrainingContractError("persistent text cache payload size changed")
+    if sha256_file(payload_path) != payload["sha256"]:
+        raise TrainingContractError("persistent text cache payload SHA-256 changed")
+    try:
+        with numpy.load(payload_path, allow_pickle=False) as arrays:
+            if set(arrays.files) != {"key_hashes", "offsets", "token_ids"}:
+                raise TrainingContractError(
+                    "persistent text cache array set changed"
+                )
+            key_hashes = arrays["key_hashes"]
+            offsets = arrays["offsets"]
+            token_ids = arrays["token_ids"]
+    except (OSError, ValueError) as exc:
+        raise TrainingContractError("persistent text cache payload is invalid") from exc
+    expected_hashes = numpy.frombuffer(
+        b"".join(_text_key_digest(key) for key in keys), dtype=numpy.uint8
+    ).reshape(len(keys), 32)
+    if (
+        key_hashes.dtype != numpy.uint8
+        or key_hashes.shape != expected_hashes.shape
+        or not numpy.array_equal(key_hashes, expected_hashes)
+    ):
+        raise TrainingContractError("persistent text cache key identities changed")
+    if offsets.dtype != numpy.int64 or offsets.shape != (len(keys) + 1,):
+        raise TrainingContractError("persistent text cache offsets are invalid")
+    if token_ids.dtype != numpy.int32 or token_ids.ndim != 1:
+        raise TrainingContractError("persistent text cache token IDs are invalid")
+    if (
+        int(offsets[0]) != 0
+        or int(offsets[-1]) != len(token_ids)
+        or bool(numpy.any(offsets[1:] < offsets[:-1]))
+    ):
+        raise TrainingContractError("persistent text cache offsets are inconsistent")
+    encodings = {
+        key: tuple(int(value) for value in token_ids[int(offsets[index]) : int(offsets[index + 1])])
+        for index, key in enumerate(keys)
+    }
+    return TextEncodingCache(
+        encodings=encodings,
+        identity_sha256=expected_identity_sha256,
+        directory=directory,
+        source=source,
+        payload_bytes=payload_path.stat().st_size,
+        token_ids=len(token_ids),
+        estimated_bytes=_text_encoding_cache_bytes(encodings),
+    )
+
+
+_PROCESS_TEXT_TOKENIZER: object | None = None
+_PROCESS_TEXT_MAPPING: Mapping[str, int] | None = None
+_PROCESS_TEXT_VOCAB_SIZE: int | None = None
+
+
+def _initialize_text_encoder(tokenizer_path: str) -> None:
+    global _PROCESS_TEXT_TOKENIZER
+    global _PROCESS_TEXT_MAPPING
+    global _PROCESS_TEXT_VOCAB_SIZE
+    _PROCESS_TEXT_TOKENIZER = reload_tokenizer(Path(tokenizer_path))
+    _PROCESS_TEXT_MAPPING = build_language_mapping(_PROCESS_TEXT_TOKENIZER)
+    _PROCESS_TEXT_VOCAB_SIZE = len(_PROCESS_TEXT_TOKENIZER)
+
+
+def _process_encode_text(key: tuple[str, str]) -> tuple[int, ...]:
+    if (
+        _PROCESS_TEXT_TOKENIZER is None
+        or _PROCESS_TEXT_MAPPING is None
+        or _PROCESS_TEXT_VOCAB_SIZE is None
+    ):
+        raise TrainingContractError("text encoding worker was not initialized")
+    return encode_language_text(
+        _PROCESS_TEXT_TOKENIZER,
+        key[1],
+        key[0],
+        language_mapping=_PROCESS_TEXT_MAPPING,
+        vocab_size=_PROCESS_TEXT_VOCAB_SIZE,
+    )
+
+
+def load_or_build_text_encoding_cache(
+    *,
+    datasets: Sequence[RouteDataset],
+    tokenizer: object,
+    tokenizer_path: Path,
+    tokenizer_manifest_sha256: str,
+    workers: int,
+    cache_root: Path | None,
+) -> TextEncodingCache:
+    """Load or atomically publish one deduplicated, identity-bound token payload."""
+
+    import numpy
+
+    keys = _canonical_text_keys(datasets)
+    identity_sha256 = _text_cache_identity(
+        datasets=datasets,
+        tokenizer_manifest_sha256=tokenizer_manifest_sha256,
+        keys=keys,
+    )
+    target = (
+        cache_root / f"text-cache-{identity_sha256}"
+        if cache_root is not None
+        else None
+    )
+    if target is not None and target.exists():
+        return _load_text_encoding_cache(
+            directory=target,
+            expected_identity_sha256=identity_sha256,
+            keys=keys,
+            source="persistent",
+        )
+    if workers:
+        chunksize = max(1, len(keys) // max(1, workers * 16))
+        with ProcessPoolExecutor(
+            max_workers=workers,
+            initializer=_initialize_text_encoder,
+            initargs=(str(tokenizer_path),),
+        ) as executor:
+            values = list(executor.map(_process_encode_text, keys, chunksize=chunksize))
+    else:
+        mapping = build_language_mapping(tokenizer)
+        vocab_size = len(tokenizer)
+        values = [
+            encode_language_text(
+                tokenizer,
+                key[1],
+                key[0],
+                language_mapping=mapping,
+                vocab_size=vocab_size,
+            )
+            for key in keys
+        ]
+    if target is None:
+        return TextEncodingCache(
+            encodings=(encodings := dict(zip(keys, values, strict=True))),
+            identity_sha256=identity_sha256,
+            directory=None,
+            source="memory",
+            payload_bytes=0,
+            token_ids=sum(len(value) for value in values),
+            estimated_bytes=_text_encoding_cache_bytes(encodings),
+        )
+    cache_root.mkdir(parents=True, exist_ok=True)
+    staging = Path(
+        tempfile.mkdtemp(
+            prefix=f".{target.name}.staging-",
+            dir=cache_root,
+        )
+    )
+    try:
+        offsets = numpy.zeros(len(values) + 1, dtype=numpy.int64)
+        for index, value in enumerate(values, start=1):
+            offsets[index] = offsets[index - 1] + len(value)
+        token_ids = numpy.fromiter(
+            (token for value in values for token in value),
+            dtype=numpy.int32,
+            count=int(offsets[-1]),
+        )
+        key_hashes = numpy.frombuffer(
+            b"".join(_text_key_digest(key) for key in keys), dtype=numpy.uint8
+        ).reshape(len(keys), 32)
+        payload_path = staging / TEXT_CACHE_PAYLOAD
+        with payload_path.open("wb") as handle:
+            numpy.savez(
+                handle,
+                key_hashes=key_hashes,
+                offsets=offsets,
+                token_ids=token_ids,
+            )
+            handle.flush()
+            os.fsync(handle.fileno())
+        _atomic_json(
+            staging / TEXT_CACHE_MANIFEST,
+            {
+                "schema_version": TEXT_CACHE_SCHEMA_VERSION,
+                "status": "complete",
+                "identity_sha256": identity_sha256,
+                "unique_language_texts": len(keys),
+                "token_ids": len(token_ids),
+                "payload": {
+                    "path": TEXT_CACHE_PAYLOAD,
+                    "bytes": payload_path.stat().st_size,
+                    "sha256": sha256_file(payload_path),
+                },
+            },
+        )
+        try:
+            os.replace(staging, target)
+        except OSError:
+            if not target.exists():
+                raise
+    finally:
+        if staging.exists():
+            shutil.rmtree(staging)
+    return _load_text_encoding_cache(
+        directory=target,
+        expected_identity_sha256=identity_sha256,
+        keys=keys,
+        source="built",
+    )
+
+
+_PROCESS_ENCODER_TOKENIZER: object | None = None
+_PROCESS_ENCODER_POLICY: EncodingPolicy | None = None
+_PROCESS_ENCODER_MAPPING: Mapping[str, int] | None = None
+_PROCESS_ENCODER_VOCAB_SIZE: int | None = None
+
+
+def _initialize_process_encoder(
+    tokenizer_path: str, policy_values: Mapping[str, Any]
+) -> None:
+    global _PROCESS_ENCODER_TOKENIZER
+    global _PROCESS_ENCODER_POLICY
+    global _PROCESS_ENCODER_MAPPING
+    global _PROCESS_ENCODER_VOCAB_SIZE
+    _PROCESS_ENCODER_TOKENIZER = reload_tokenizer(Path(tokenizer_path))
+    _PROCESS_ENCODER_POLICY = EncodingPolicy(**dict(policy_values))
+    _PROCESS_ENCODER_MAPPING = build_language_mapping(_PROCESS_ENCODER_TOKENIZER)
+    _PROCESS_ENCODER_VOCAB_SIZE = len(_PROCESS_ENCODER_TOKENIZER)
+
+
+def _process_encode_sample(record: Mapping[str, Any]) -> EncodedSample:
+    if (
+        _PROCESS_ENCODER_TOKENIZER is None
+        or _PROCESS_ENCODER_POLICY is None
+        or _PROCESS_ENCODER_MAPPING is None
+        or _PROCESS_ENCODER_VOCAB_SIZE is None
+    ):
+        raise TrainingContractError("pre-encoding worker was not initialized")
+    return encode_parallel_sample(
+        _PROCESS_ENCODER_TOKENIZER,
+        record,
+        _PROCESS_ENCODER_POLICY,
+        language_mapping=_PROCESS_ENCODER_MAPPING,
+        vocab_size=_PROCESS_ENCODER_VOCAB_SIZE,
+    )
+
+
+def _encoded_sample_bytes(sample: EncodedSample) -> int:
+    return (
+        256
+        + 8 * (len(sample.input_ids) + len(sample.labels))
+        + len(sample.sample_id.encode("utf-8"))
+        + len(sample.sample_group_id.encode("utf-8"))
+        + len(sample.source_language.encode("ascii"))
+        + len(sample.target_language.encode("ascii"))
+    )
+
+
+def build_encoded_sample_cache(
+    *,
+    dataset: RouteDataset,
+    tokenizer: object,
+    tokenizer_path: Path,
+    tokenizer_manifest_sha256: str,
+    policy: EncodingPolicy,
+    workers: int,
+    memory_budget_mib: int,
+    text_cache: TextEncodingCache | None = None,
+) -> EncodedSampleCache:
+    """Pre-encode a frozen split in canonical order with bounded host memory."""
+
+    records = [
+        record
+        for route in ROUTE_ORDER
+        for record in dataset.records_by_route[route]
+    ]
+    if text_cache is not None:
+        mapping = build_language_mapping(tokenizer)
+        vocab_size = len(tokenizer)
+        try:
+            encoded = [
+                encoded_sample_from_sequences(
+                    tokenizer,
+                    record,
+                    policy,
+                    source_ids=text_cache.encodings[
+                        (str(record["src_lang"]), str(record["source_text"]))
+                    ],
+                    target_ids=text_cache.encodings[
+                        (str(record["tgt_lang"]), str(record["target_text"]))
+                    ],
+                    language_mapping=mapping,
+                    vocab_size=vocab_size,
+                )
+                for record in records
+            ]
+        except KeyError as exc:
+            raise TrainingContractError(
+                "text encoding cache is missing a selected language/text identity"
+            ) from exc
+    elif workers:
+        chunksize = max(1, len(records) // max(1, workers * 16))
+        with ProcessPoolExecutor(
+            max_workers=workers,
+            initializer=_initialize_process_encoder,
+            initargs=(str(tokenizer_path), asdict(policy)),
+        ) as executor:
+            encoded = list(
+                executor.map(_process_encode_sample, records, chunksize=chunksize)
+            )
+    else:
+        mapping = build_language_mapping(tokenizer)
+        vocab_size = len(tokenizer)
+        encoded = [
+            encode_parallel_sample(
+                tokenizer,
+                record,
+                policy,
+                language_mapping=mapping,
+                vocab_size=vocab_size,
+            )
+            for record in records
+        ]
+    samples_by_id = {sample.sample_id: sample for sample in encoded}
+    if len(samples_by_id) != len(records):
+        raise TrainingContractError("pre-encoded input cache contains duplicate samples")
+    estimated_bytes = sum(_encoded_sample_bytes(sample) for sample in encoded)
+    if estimated_bytes > memory_budget_mib * MIB:
+        raise TrainingContractError("pre-encoded input cache exceeds its memory budget")
+    identity = {
+        "schema_version": 1,
+        "split": dataset.split,
+        "file_sha256": dataset.file_sha256,
+        "selection_sha256": dataset.selection_sha256,
+        "tokenizer_manifest_sha256": tokenizer_manifest_sha256,
+        "encoding_policy": asdict(policy),
+        "text_cache_identity_sha256": (
+            text_cache.identity_sha256 if text_cache is not None else None
+        ),
+        "records": len(encoded),
+    }
+    return EncodedSampleCache(
+        samples_by_id=samples_by_id,
+        identities=(config_sha256(identity),),
+        estimated_bytes=estimated_bytes,
+        identity_sha256=config_sha256(identity),
+    )
 
 
 def load_route_dataset(
@@ -689,6 +1351,140 @@ class DeterministicRouteSampler:
             raise TrainingContractError("sampler RNG state is invalid") from exc
 
 
+class DeterministicLengthBucketSampler:
+    """Sort a bounded draw pool by cached length with exact pending-state resume."""
+
+    def __init__(
+        self,
+        sampler: DeterministicRouteSampler,
+        text_cache: TextEncodingCache,
+        pool_batches: int,
+    ) -> None:
+        if pool_batches < 2:
+            raise TrainingContractError("length bucket pool must contain two batches")
+        self.sampler = sampler
+        self.text_cache = text_cache
+        self.pool_batches = pool_batches
+        self.batch_size: int | None = None
+        self.pending: list[list[SampleSelection]] = []
+        self.records_by_id: dict[str, dict[str, Any]] = {}
+        for route in ROUTE_ORDER:
+            for record in sampler.dataset.records_by_route[route]:
+                sample_id = str(record.get("sample_id", ""))
+                if not sample_id or sample_id in self.records_by_id:
+                    raise TrainingContractError(
+                        "length bucket dataset sample identities are invalid"
+                    )
+                self.records_by_id[sample_id] = record
+
+    @property
+    def epochs(self) -> dict[str, int]:
+        return self.sampler.epochs
+
+    def _length_key(self, selection: SampleSelection) -> tuple[int, int, str, int, int]:
+        record = selection.record
+        try:
+            source = self.text_cache.encodings[
+                (str(record["src_lang"]), str(record["source_text"]))
+            ]
+            target = self.text_cache.encodings[
+                (str(record["tgt_lang"]), str(record["target_text"]))
+            ]
+        except KeyError as exc:
+            raise TrainingContractError(
+                "length bucket cache is missing a selected language/text identity"
+            ) from exc
+        return (
+            max(len(source), len(target)),
+            len(source) + len(target),
+            selection.route,
+            selection.route_epoch,
+            selection.route_position,
+        )
+
+    def next_batch(self, batch_size: int) -> list[SampleSelection]:
+        if batch_size < 1:
+            raise TrainingContractError("batch size must be positive")
+        if self.batch_size is None:
+            self.batch_size = batch_size
+        elif self.batch_size != batch_size:
+            raise TrainingContractError("length bucket batch size changed")
+        if not self.pending:
+            pool = self.sampler.next_batch(batch_size * self.pool_batches)
+            ordered = sorted(pool, key=self._length_key)
+            self.pending = [
+                ordered[index : index + batch_size]
+                for index in range(0, len(ordered), batch_size)
+            ]
+        return self.pending.pop(0)
+
+    @staticmethod
+    def _selection_state(selection: SampleSelection) -> dict[str, Any]:
+        return {
+            "route": selection.route,
+            "route_epoch": selection.route_epoch,
+            "route_position": selection.route_position,
+            "sample_id": selection.record["sample_id"],
+        }
+
+    def state_dict(self) -> dict[str, Any]:
+        return {
+            "schema_version": 1,
+            "kind": "deterministic_length_bucket",
+            "pool_batches": self.pool_batches,
+            "batch_size": self.batch_size,
+            "pending": [
+                [self._selection_state(selection) for selection in batch]
+                for batch in self.pending
+            ],
+            "sampler": self.sampler.state_dict(),
+        }
+
+    def load_state_dict(self, state: Mapping[str, Any]) -> None:
+        if (
+            state.get("schema_version") != 1
+            or state.get("kind") != "deterministic_length_bucket"
+        ):
+            raise TrainingContractError("length bucket sampler state is unsupported")
+        if int(state.get("pool_batches", -1)) != self.pool_batches:
+            raise TrainingContractError("length bucket pool size changed")
+        batch_size = state.get("batch_size")
+        if batch_size is not None and (not isinstance(batch_size, int) or batch_size < 1):
+            raise TrainingContractError("length bucket batch size state is invalid")
+        pending_value = state.get("pending")
+        if not isinstance(pending_value, list):
+            raise TrainingContractError("length bucket pending state is invalid")
+        pending: list[list[SampleSelection]] = []
+        for batch in pending_value:
+            if not isinstance(batch, list):
+                raise TrainingContractError("length bucket pending batch is invalid")
+            selections: list[SampleSelection] = []
+            for value in batch:
+                if not isinstance(value, Mapping):
+                    raise TrainingContractError("length bucket selection state is invalid")
+                sample_id = str(value.get("sample_id", ""))
+                record = self.records_by_id.get(sample_id)
+                route = str(value.get("route", ""))
+                if record is None or f"{record['src_lang']}->{record['tgt_lang']}" != route:
+                    raise TrainingContractError(
+                        "length bucket pending sample identity changed"
+                    )
+                selections.append(
+                    SampleSelection(
+                        route=route,
+                        route_epoch=int(value["route_epoch"]),
+                        route_position=int(value["route_position"]),
+                        record=record,
+                    )
+                )
+            pending.append(selections)
+        if batch_size is not None and any(len(batch) != batch_size for batch in pending):
+            raise TrainingContractError("length bucket pending batch size changed")
+        self.sampler.load_state_dict(_mapping(state.get("sampler"), "sampler state"))
+        self.batch_size = batch_size
+        self.pending = pending
+
+
 class BatchEncoder:
     """Bounded, ordered tokenizer workers without sampler prefetch."""
 
@@ -699,28 +1495,87 @@ class BatchEncoder:
         tokenizer_path: Path,
         policy: EncodingPolicy,
         workers: int,
+        encoded_cache: EncodedSampleCache | None = None,
+        text_cache: TextEncodingCache | None = None,
+        pin_memory: bool = False,
         tokenizer_loader: Callable[[Path], object] = reload_tokenizer,
     ) -> None:
         self.collator = DirectionAwareCollator(tokenizer, policy)
         self.tokenizer_path = tokenizer_path
         self.policy = policy
         self.workers = workers
+        self.encoded_cache = encoded_cache
+        self.text_cache = text_cache
+        self.pin_memory = pin_memory
         self.tokenizer_loader = tokenizer_loader
         self.local = threading.local()
-        self.executor = ThreadPoolExecutor(max_workers=workers) if workers else None
+        self.executor = (
+            ThreadPoolExecutor(max_workers=workers)
+            if workers and encoded_cache is None and text_cache is None
+            else None
+        )
+        if encoded_cache is not None and text_cache is not None:
+            raise TrainingContractError(
+                "batch encoder accepts only one encoded cache representation"
+            )
 
     def _encode(self, record: Mapping[str, Any]) -> EncodedSample:
         tokenizer = getattr(self.local, "tokenizer", None)
         if tokenizer is None:
             tokenizer = self.tokenizer_loader(self.tokenizer_path)
             self.local.tokenizer = tokenizer
-        return encode_parallel_sample(tokenizer, record, self.policy)
+            self.local.language_mapping = build_language_mapping(tokenizer)
+            self.local.vocab_size = len(tokenizer)
+        return encode_parallel_sample(
+            tokenizer,
+            record,
+            self.policy,
+            language_mapping=self.local.language_mapping,
+            vocab_size=self.local.vocab_size,
+        )
+
+    def _pin_batch(self, batch: dict[str, Any]) -> dict[str, Any]:
+        if self.pin_memory:
+            for name in model_inputs(batch):
+                batch[name] = batch[name].pin_memory()
+        return batch
+
+    def _finish(self, samples: Sequence[EncodedSample]) -> dict[str, Any]:
+        return self._pin_batch(self.collator.collate_encoded(samples))
+
+    def _from_text_cache(self, record: Mapping[str, Any]) -> EncodedSample:
+        if self.text_cache is None:
+            raise TrainingContractError("text encoding cache is unavailable")
+        try:
+            source_ids = self.text_cache.encodings[
+                (str(record["src_lang"]), str(record["source_text"]))
+            ]
+            target_ids = self.text_cache.encodings[
+                (str(record["tgt_lang"]), str(record["target_text"]))
+            ]
+        except KeyError as exc:
+            raise TrainingContractError(
+                "text encoding cache is missing a selected language/text identity"
+            ) from exc
+        return encoded_sample_from_sequences(
+            self.collator.tokenizer,
+            record,
+            self.policy,
+            source_ids=source_ids,
+            target_ids=target_ids,
+            language_mapping=self.collator.language_mapping,
+            vocab_size=self.collator.vocab_size,
+        )
 
     def __call__(self, records: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+        if self.encoded_cache is not None:
+            return self._finish(self.encoded_cache.samples(records))
+        if self.text_cache is not None:
+            return self._finish([self._from_text_cache(record) for record in records])
         if self.executor is None:
-            return self.collator(records)
+            return self._pin_batch(self.collator(records))
         encoded = list(self.executor.map(self._encode, records))
-        return self.collator.collate_encoded(encoded)
+        return self._finish(encoded)
 
     def close(self) -> None:
         if self.executor is not None:
@@ -734,8 +1589,12 @@ class BatchEncoder:
 
 
 class JsonlRunLogger:
-    def __init__(self, path: Path | None = None) -> None:
+    def __init__(self, path: Path | None = None, *, flush_frequency: int = 1) -> None:
+        if flush_frequency < 1:
+            raise TrainingContractError("logger flush frequency must be positive")
         self.path = path
+        self.flush_frequency = flush_frequency
+        self.unflushed_events = 0
         self.events: list[dict[str, Any]] = []
         self.handle = None
         if path is not None:
@@ -750,14 +1609,22 @@ class JsonlRunLogger:
                 json.dumps(row, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
                 + "\n"
             )
-            self.handle.flush()
+            self.unflushed_events += 1
+            if self.unflushed_events >= self.flush_frequency:
+                self.handle.flush()
+                self.unflushed_events = 0
 
     def close(self) -> None:
         if self.handle is not None:
-            self.handle.flush()
+            self.flush()
             os.fsync(self.handle.fileno())
             self.handle.close()
             self.handle = None
+
+    def flush(self) -> None:
+        if self.handle is not None:
+            self.handle.flush()
+            self.unflushed_events = 0
 
     def __enter__(self) -> "JsonlRunLogger":
         return self
@@ -774,11 +1641,12 @@ def semantic_trace_sha256(events: Sequence[Mapping[str, Any]]) -> str:
         "tokens_per_second",
         "samples_per_second",
         "peak_device_memory_bytes",
+        "peak_device_reserved_bytes",
     }
     semantic = [
         {name: value for name, value in event.items() if name not in excluded}
         for event in events
-        if event.get("event") != "checkpoint"
+        if event.get("event") not in {"checkpoint", "input_cache"}
     ]
     return config_sha256(semantic)
 
@@ -888,8 +1756,13 @@ def _loss(output: object, labels: object, label_smoothing: float) -> object:
     )
 
 
-def _move_batch(batch: Mapping[str, Any], device: object) -> dict[str, Any]:
-    return {name: tensor.to(device) for name, tensor in model_inputs(batch).items()}
+def _move_batch(
+    batch: Mapping[str, Any], device: object, *, non_blocking: bool = False
+) -> dict[str, Any]:
+    return {
+        name: tensor.to(device, non_blocking=non_blocking)
+        for name, tensor in model_inputs(batch).items()
+    }
 
 
 def _validate_gradients(model: object) -> None:
@@ -904,6 +1777,33 @@ def _validate_gradients(model: object) -> None:
             raise TrainingContractError("training produced a NaN/Inf gradient")
     if not found:
         raise TrainingContractError("training produced no gradients")
+
+
+def _clip_and_validate_gradients(
+    model: object, maximum: float, *, mode: str
+) -> object:
+    import torch
+
+    if mode == "per_parameter":
+        _validate_gradients(model)
+        gradient_norm = torch.nn.utils.clip_grad_norm_(model.parameters(), maximum)
+        if not bool(torch.isfinite(gradient_norm).item()):
+            raise TrainingContractError("gradient norm is NaN/Inf")
+        return gradient_norm
+    parameters = [parameter for parameter in model.parameters() if parameter.grad is not None]
+    if not parameters:
+        raise TrainingContractError("training produced no gradients")
+    try:
+        return torch.nn.utils.clip_grad_norm_(
+            parameters,
+            maximum,
+            error_if_nonfinite=True,
+            foreach=True,
+        )
+    except RuntimeError as exc:
+        if "non-finite" in str(exc).lower():
+            raise TrainingContractError("training produced a NaN/Inf gradient") from exc
+        raise
 
 
 def seed_training(seed: int) -> None:
@@ -937,6 +1837,7 @@ def evaluate_dev(
 
     resource = config["resource_profile"]
     optimization = config["optimization"]
+    pipeline = config.get("input_pipeline", {})
     sampler = DeterministicRouteSampler(
         dataset,
         config["data"]["route_weights"],
@@ -952,7 +1853,11 @@ def evaluate_dev(
         for _ in range(int(optimization["validation_batches"])):
             selections = sampler.next_batch(int(resource["micro_batch_size"]))
             batch = encoder([selection.record for selection in selections])
-            moved = _move_batch(batch, device)
+            moved = _move_batch(
+                batch,
+                device,
+                non_blocking=bool(pipeline.get("non_blocking_transfer", False)),
+            )
             with _autocast_context(resource["device"], resource["precision"]):
                 output = model(**moved)
                 loss = _loss(output, moved["labels"], float(optimization["label_smoothing"]))
@@ -986,6 +1891,7 @@ def execute_training(
     resume_loader: Callable[[Mapping[str, Any]], Mapping[str, Any]] | None = None,
     checkpoint_callback: Callable[[Mapping[str, Any]], None] | None = None,
     stop_after_optimizer_steps: int | None = None,
+    input_cache_root: Path | None = None,
 ) -> dict[str, Any]:
     """Execute the bounded TD-10 loop without checkpoint persistence."""
 
@@ -993,7 +1899,94 @@ def execute_training(
 
     resource = config["resource_profile"]
     optimization = config["optimization"]
+    pipeline = config.get("input_pipeline", {})
+    gpu_optimization = config.get("gpu_optimization", {})
+    logging_mode = str(config.get("logging", {}).get("mode", "full"))
     seed_training(int(config["identity"]["seed"]))
+    policy = EncodingPolicy(
+        max_source_length=int(resource["max_source_length"]),
+        max_target_length=int(resource["max_target_length"]),
+    )
+    encoded_cache = None
+    text_cache = None
+    input_pipeline_report: dict[str, Any] = {
+        "mode": str(pipeline.get("mode", "on_demand")),
+        "cache_mode": str(pipeline.get("cache_mode", "memory")),
+        "mapping_cache": "per_tokenizer_instance",
+    }
+    if pipeline.get("mode") == "preencode_memory":
+        cache_start = time.perf_counter()
+        cache_mode = str(pipeline.get("cache_mode", "memory"))
+        if cache_mode == "persistent":
+            if input_cache_root is None:
+                raise TrainingContractError(
+                    "persistent input cache requires an input cache root"
+                )
+            text_cache = load_or_build_text_encoding_cache(
+                datasets=(train_dataset, dev_dataset),
+                tokenizer=tokenizer,
+                tokenizer_path=tokenizer_path,
+                tokenizer_manifest_sha256=config["identity"][
+                    "tokenizer_manifest_sha256"
+                ],
+                workers=int(pipeline["preencode_workers"]),
+                cache_root=input_cache_root,
+            )
+        if text_cache is not None:
+            if text_cache.estimated_bytes > int(pipeline["memory_budget_mib"]) * MIB:
+                raise TrainingContractError("text input cache exceeds its memory budget")
+            input_pipeline_report.update(
+                {
+                    "workers": int(pipeline["preencode_workers"]),
+                    "records": train_dataset.records + dev_dataset.records,
+                    "estimated_bytes": text_cache.estimated_bytes,
+                    "identity_sha256": text_cache.identity_sha256,
+                    "component_identity_sha256": [text_cache.identity_sha256],
+                    "wall_time_seconds": time.perf_counter() - cache_start,
+                }
+            )
+            input_pipeline_report["text_cache"] = {
+                "identity_sha256": text_cache.identity_sha256,
+                "source": text_cache.source,
+                "directory": str(text_cache.directory.resolve()),
+                "unique_language_texts": len(text_cache.encodings),
+                "token_ids": text_cache.token_ids,
+                "payload_bytes": text_cache.payload_bytes,
+                "estimated_bytes": text_cache.estimated_bytes,
+            }
+        else:
+            cache_arguments = {
+                "tokenizer": tokenizer,
+                "tokenizer_path": tokenizer_path,
+                "tokenizer_manifest_sha256": config["identity"][
+                    "tokenizer_manifest_sha256"
+                ],
+                "policy": policy,
+                "workers": int(pipeline["preencode_workers"]),
+                "memory_budget_mib": int(pipeline["memory_budget_mib"]),
+            }
+            train_cache = build_encoded_sample_cache(
+                dataset=train_dataset,
+                **cache_arguments,
+            )
+            dev_cache = build_encoded_sample_cache(
+                dataset=dev_dataset,
+                **cache_arguments,
+            )
+            encoded_cache = EncodedSampleCache.merge(train_cache, dev_cache)
+            if encoded_cache.estimated_bytes > int(pipeline["memory_budget_mib"]) * MIB:
+                raise TrainingContractError("merged input cache exceeds its memory budget")
+            input_pipeline_report.update(
+                {
+                    "workers": int(pipeline["preencode_workers"]),
+                    "records": len(encoded_cache.samples_by_id),
+                    "estimated_bytes": encoded_cache.estimated_bytes,
+                    "identity_sha256": encoded_cache.identity_sha256,
+                    "component_identity_sha256": list(encoded_cache.identities),
+                    "wall_time_seconds": time.perf_counter() - cache_start,
+                }
+            )
+        logger.write({"event": "input_cache", **input_pipeline_report})
     device = torch.device(resource["device"])
     if device.type == "cuda":
         torch.cuda.reset_peak_memory_stats(device)
@@ -1002,13 +1995,15 @@ def execute_training(
         model.gradient_checkpointing_enable()
         model.config.use_cache = False
     model.train()
-    optimizer = torch.optim.AdamW(
-        model.parameters(),
-        lr=float(optimization["learning_rate"]),
-        betas=tuple(float(value) for value in optimization["betas"]),
-        eps=float(optimization["epsilon"]),
-        weight_decay=float(optimization["weight_decay"]),
-    )
+    optimizer_arguments = {
+        "lr": float(optimization["learning_rate"]),
+        "betas": tuple(float(value) for value in optimization["betas"]),
+        "eps": float(optimization["epsilon"]),
+        "weight_decay": float(optimization["weight_decay"]),
+    }
+    if gpu_optimization.get("fused_adamw", False):
+        optimizer_arguments["fused"] = True
+    optimizer = torch.optim.AdamW(model.parameters(), **optimizer_arguments)
     scheduler = _linear_scheduler(
         optimizer,
         warmup_steps=int(optimization["warmup_steps"]),
@@ -1023,10 +2018,17 @@ def execute_training(
         config["data"]["route_weights"],
         int(config["identity"]["seed"]),
     )
-    policy = EncodingPolicy(
-        max_source_length=int(resource["max_source_length"]),
-        max_target_length=int(resource["max_target_length"]),
-    )
+    pool_batches = int(pipeline.get("length_bucket_pool_batches", 1))
+    if pool_batches > 1:
+        if text_cache is None:
+            raise TrainingContractError(
+                "length bucketing requires a loaded persistent text cache"
+            )
+        sampler = DeterministicLengthBucketSampler(
+            sampler,
+            text_cache,
+            pool_batches,
+        )
     optimizer_step = 0
     micro_step = 0
     consumed_samples = 0
@@ -1069,6 +2071,9 @@ def execute_training(
         tokenizer_path=tokenizer_path,
         policy=policy,
         workers=int(resource["dataloader_workers"]),
+        encoded_cache=encoded_cache,
+        text_cache=text_cache,
+        pin_memory=bool(pipeline.get("pin_memory", False)),
     ) as encoder:
         while optimizer_step < int(optimization["max_optimizer_steps"]):
             optimizer.zero_grad(set_to_none=True)
@@ -1089,7 +2094,11 @@ def execute_training(
                     raise TrainingContractError(
                         "max_train_tokens would be exceeded before max_optimizer_steps"
                     )
-                moved = _move_batch(batch, device)
+                moved = _move_batch(
+                    batch,
+                    device,
+                    non_blocking=bool(pipeline.get("non_blocking_transfer", False)),
+                )
                 try:
                     with _autocast_context(resource["device"], resource["precision"]):
                         output = model(**moved)
@@ -1099,19 +2108,20 @@ def execute_training(
                             float(optimization["label_smoothing"]),
                         )
                         scaled_loss = loss / int(resource["gradient_accumulation_steps"])
-                    if loss is None or not bool(torch.isfinite(loss).item()):
+                    loss_value = float(loss.detach().float().cpu().item())
+                    if not math.isfinite(loss_value):
                         raise TrainingContractError("training produced a NaN/Inf loss")
                     scaler.scale(scaled_loss).backward()
                 except torch.cuda.OutOfMemoryError as exc:
                     raise TrainingContractError(
                         "CUDA OOM; formal training does not retry or mutate the profile"
                     ) from exc
-                loss_value = float(loss.detach().cpu().item())
                 step_losses.append(loss_value)
                 step_tokens += tokens
                 step_samples += len(batch["routes"])
                 step_route_counts.update(batch["routes"])
-                step_sample_ids.extend(batch["sample_ids"])
+                if logging_mode != "performance":
+                    step_sample_ids.extend(batch["sample_ids"])
                 for statistics in batch["route_statistics"].values():
                     for name in (
                         "source_original_tokens",
@@ -1122,38 +2132,67 @@ def execute_training(
                         "target_truncated_tokens",
                     ):
                         token_audit[name] += int(statistics[name])
-                logger.write(
-                    {
-                        "event": "micro_step",
-                        "micro_step": micro_step,
-                        "optimizer_step": optimizer_step,
-                        "accumulation_phase": accumulation_phase,
-                        "loss": loss_value,
-                        "tokens": tokens,
-                        "samples": len(batch["routes"]),
-                        "routes": batch["routes"],
-                        "sample_ids": batch["sample_ids"],
-                        "sample_group_ids": batch["sample_group_ids"],
-                        "sampler": [
-                            {
-                                "route": selection.route,
-                                "route_epoch": selection.route_epoch,
-                                "route_position": selection.route_position,
-                            }
-                            for selection in selections
-                        ],
-                        "route_statistics": batch["route_statistics"],
-                    }
-                )
+                micro_event = {
+                    "event": "micro_step",
+                    "micro_step": micro_step,
+                    "optimizer_step": optimizer_step,
+                    "accumulation_phase": accumulation_phase,
+                    "loss": loss_value,
+                    "tokens": tokens,
+                    "samples": len(batch["routes"]),
+                }
+                if logging_mode == "compact":
+                    selection_trace = [
+                        {
+                            "route": selection.route,
+                            "route_epoch": selection.route_epoch,
+                            "route_position": selection.route_position,
+                        }
+                        for selection in selections
+                    ]
+                    micro_event.update(
+                        {
+                            "route_statistics": batch["route_statistics"],
+                            "route_counts": dict(Counter(batch["routes"])),
+                            "batch_trace_sha256": config_sha256(
+                                {
+                                    "sample_ids": batch["sample_ids"],
+                                    "sample_group_ids": batch["sample_group_ids"],
+                                    "sampler": selection_trace,
+                                    "route_statistics": batch["route_statistics"],
+                                }
+                            ),
+                        }
+                    )
+                elif logging_mode == "full":
+                    selection_trace = [
+                        {
+                            "route": selection.route,
+                            "route_epoch": selection.route_epoch,
+                            "route_position": selection.route_position,
+                        }
+                        for selection in selections
+                    ]
+                    micro_event.update(
+                        {
+                            "route_statistics": batch["route_statistics"],
+                            "routes": batch["routes"],
+                            "sample_ids": batch["sample_ids"],
+                            "sample_group_ids": batch["sample_group_ids"],
+                            "sampler": selection_trace,
+                        }
+                    )
+                logger.write(micro_event)
                 micro_step += 1
             if scaler.is_enabled():
                 scaler.unscale_(optimizer)
-            _validate_gradients(model)
-            gradient_norm = torch.nn.utils.clip_grad_norm_(
-                model.parameters(), float(optimization["max_grad_norm"])
+            gradient_norm = _clip_and_validate_gradients(
+                model,
+                float(optimization["max_grad_norm"]),
+                mode=str(
+                    gpu_optimization.get("gradient_validation", "per_parameter")
+                ),
             )
-            if not bool(torch.isfinite(gradient_norm).item()):
-                raise TrainingContractError("gradient norm is NaN/Inf")
             scaler.step(optimizer)
             scaler.update()
             scheduler.step()
@@ -1179,12 +2218,18 @@ def execute_training(
                 "samples_per_second": consumed_samples / max(elapsed, 1e-9),
                 "wall_time_seconds": elapsed,
                 "route_counts": dict(sorted(step_route_counts.items())),
-                "sample_ids": step_sample_ids,
                 "checkpoint_due": optimizer_step % int(optimization["checkpoint_frequency"]) == 0,
             }
+            if logging_mode == "full":
+                step_event["sample_ids"] = step_sample_ids
+            elif logging_mode == "compact":
+                step_event["sample_ids_sha256"] = config_sha256(step_sample_ids)
             if device.type == "cuda":
                 step_event["peak_device_memory_bytes"] = int(
                     torch.cuda.max_memory_allocated(device)
+                )
+                step_event["peak_device_reserved_bytes"] = int(
+                    torch.cuda.max_memory_reserved(device)
                 )
             logger.write(step_event)
             if optimizer_step % int(optimization["validation_frequency"]) == 0:
@@ -1230,6 +2275,7 @@ def execute_training(
                         "wall_time_seconds": time.perf_counter() - checkpoint_start,
                     }
                 )
+                logger.flush()
             if (
                 stop_after_optimizer_steps is not None
                 and optimizer_step >= stop_after_optimizer_steps
@@ -1264,8 +2310,12 @@ def execute_training(
         "peak_device_memory_bytes": (
             int(torch.cuda.max_memory_allocated(device)) if device.type == "cuda" else None
         ),
+        "peak_device_reserved_bytes": (
+            int(torch.cuda.max_memory_reserved(device)) if device.type == "cuda" else None
+        ),
         "process_memory": process_memory(),
         "exception_skips": 0,
+        "input_pipeline": input_pipeline_report,
         "semantic_trace_sha256": semantic_trace_sha256(logger.events),
     }
 
@@ -1338,8 +2388,26 @@ def prepare_training_run(
     *, config_path: Path, repository_root: Path
 ) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
     config = load_training_config(config_path)
+    expected_allocator = configure_cuda_allocator(config)
     student_config, inputs = validate_run_inputs(config, repository_root)
     runtime = probe_runtime(config["resource_profile"])
+    if (
+        expected_allocator is not None
+        and runtime.get("cuda_allocator_backend") != expected_allocator
+    ):
+        raise TrainingContractError(
+            "configured CUDA allocator was not active before runtime probing"
+        )
+    pipeline = config.get("input_pipeline", {})
+    logical_processors = runtime.get("host_logical_processors")
+    if (
+        pipeline.get("mode") == "preencode_memory"
+        and isinstance(logical_processors, int)
+        and int(pipeline["preencode_workers"]) > logical_processors
+    ):
+        raise TrainingContractError(
+            "pre-encoding worker count exceeds available logical processors"
+        )
     report = {
         "schema_version": TRAINING_SCHEMA_VERSION,
         "status": "validated",
@@ -1366,6 +2434,7 @@ def run_training(
     checkpoint_root: Path | None = None,
     resume_from: Path | None = None,
     stop_after_optimizer_steps: int | None = None,
+    input_cache_root: Path | None = None,
 ) -> dict[str, Any]:
     config, student_config, report = prepare_training_run(
         config_path=config_path, repository_root=repository_root
@@ -1383,6 +2452,8 @@ def run_training(
         report["checkpoint_root"] = str(checkpoint_root.resolve())
     if resume_from is not None:
         report["resume_from"] = str(resume_from.resolve())
+    if input_cache_root is not None:
+        report["input_cache_root"] = str(input_cache_root.resolve())
     running = {**report, "status": "running"}
     _atomic_json(manifest_path, running)
     try:
@@ -1410,6 +2481,7 @@ def run_training(
             from mvp_checkpoint import (
                 build_checkpoint_identity,
                 load_checkpoint,
+                prune_after_validated_publish,
                 save_checkpoint,
             )
 
@@ -1420,18 +2492,32 @@ def run_training(
             )
             if checkpoint_root is not None:
                 def publish_checkpoint(context: Mapping[str, Any]) -> None:
-                    created_checkpoints.append(
-                        save_checkpoint(
-                            checkpoint_root,
-                            model=context["model"],
-                            optimizer=context["optimizer"],
-                            scheduler=context["scheduler"],
-                            scaler=context["scaler"],
-                            sampler=context["sampler"],
-                            trainer_state=context["trainer_state"],
-                            identity=checkpoint_identity,
-                        )
+                    newest = save_checkpoint(
+                        checkpoint_root,
+                        model=context["model"],
+                        optimizer=context["optimizer"],
+                        scheduler=context["scheduler"],
+                        scaler=context["scaler"],
+                        sampler=context["sampler"],
+                        trainer_state=context["trainer_state"],
+                        identity=checkpoint_identity,
                     )
+                    created_checkpoints.append(newest)
+                    keep_last = config["optimization"].get(
+                        "checkpoint_retention"
+                    )
+                    if keep_last is not None:
+                        removed = set(
+                            prune_after_validated_publish(
+                                checkpoint_root,
+                                newest_checkpoint=newest,
+                                expected_identity=checkpoint_identity,
+                                keep_last=int(keep_last),
+                            )
+                        )
+                        created_checkpoints[:] = [
+                            path for path in created_checkpoints if path not in removed
+                        ]
 
                 checkpoint_callback = publish_checkpoint
             if resume_from is not None:
@@ -1447,7 +2533,11 @@ def run_training(
                     )
 
                 resume_loader = restore_checkpoint
-        with JsonlRunLogger(output_dir / "events.jsonl") as logger:
+        logging = config.get("logging", {})
+        with JsonlRunLogger(
+            output_dir / "events.jsonl",
+            flush_frequency=int(logging.get("flush_frequency", 1)),
+        ) as logger:
             result = execute_training(
                 model=model,
                 tokenizer=tokenizer,
@@ -1459,6 +2549,7 @@ def run_training(
                 resume_loader=resume_loader,
                 checkpoint_callback=checkpoint_callback,
                 stop_after_optimizer_steps=stop_after_optimizer_steps,
+                input_cache_root=input_cache_root,
             )
         for path_field, hash_field in (("train_path", "train_sha256"), ("dev_path", "dev_sha256")):
             if sha256_file(repository_root / data[path_field]) != data[hash_field]:

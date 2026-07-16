@@ -24,6 +24,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--compare-to", type=Path)
     parser.add_argument("--checkpoint-root", type=Path)
     parser.add_argument("--resume-from", type=Path)
+    parser.add_argument("--input-cache-root", type=Path)
     parser.add_argument("--stop-after-optimizer-step", type=int)
     parser.add_argument("--dry-run", action="store_true")
     return parser.parse_args()
@@ -41,6 +42,9 @@ def main() -> int:
         ),
         resume_from=args.resume_from.resolve() if args.resume_from else None,
         stop_after_optimizer_steps=args.stop_after_optimizer_step,
+        input_cache_root=(
+            args.input_cache_root.resolve() if args.input_cache_root else None
+        ),
     )
     if args.compare_to is not None and not args.dry_run:
         baseline = json.loads(args.compare_to.resolve().read_text(encoding="utf-8"))
