@@ -1,6 +1,6 @@
 # task index: MVP model training
 
-状态：active（TD-01～TD-16B completed；TD-16C 语料修复 in_progress；TD-16D～TD-18 pending）
+状态：active（TD-02 v3 来源调研 in_progress；TD-03～TD-05 v3 pending；TD-16 suspended）
 
 ## 来源
 
@@ -15,10 +15,10 @@
 
 ```mermaid
 flowchart LR
-    TD01["TD-01 执行契约"] --> TD02["TD-02 数据源调研"]
-    TD02 --> TD03["TD-03 数据管线"]
-    TD03 --> TD04["TD-04 切分/去重/泄漏"]
-    TD04 --> TD05["TD-05 M0 数据验收"]
+    TD01["TD-01 执行契约"] --> TD02["TD-02 数据源调研（v3 reopened）"]
+    TD02 --> TD03["TD-03 数据管线（v3 pending）"]
+    TD03 --> TD04["TD-04 切分/去重/泄漏（v3 pending）"]
+    TD04 --> TD05["TD-05 M0 数据验收（v3 pending）"]
 
     TD01 --> TD06["TD-06 teacher 运行时"]
     TD05 --> TD07["TD-07 prompt/decode"]
@@ -47,9 +47,10 @@ flowchart LR
     TD15 --> TD16
     TD16 --> TD16A["TD-16A 可配置高吞吐训练器"]
     TD16A --> TD16B["TD-16B 完整 M0 长训诊断"]
-    TD16B --> TD16C["TD-16C 修复 human 平行语料"]
-    TD16C --> TD16D["TD-16D 修复语料 human foundation"]
-    TD16D --> TD16E["TD-16E teacher 辅助/能力等价"]
+    TD16B -. "旧 M0 来源适用性失败，回退" .-> TD02
+    TD05 --> TD16C["TD-16C 新 M0 human foundation"]
+    TD16C --> TD16D["TD-16D human-led teacher 辅助"]
+    TD16D --> TD16E["TD-16E 重复能力等价/选择"]
     TD16E --> TD16F["TD-16F 一次性 test/MVP 发布"]
     TD16F --> TD17["TD-17 M3 CT2 回接"]
     TD17 --> TD18["TD-18 回归与 review 准备"]
@@ -62,10 +63,10 @@ flowchart LR
 | 阶段 | 编号 | 原子 task | 最早开始条件 | 完成门槛 | 可并行任务 | 状态 |
 | ---: | --- | --- | --- | --- | --- | --- |
 | 1 | TD-01 | [冻结执行契约、目录与 Git 边界](td-01-execution-contract.md) | 无 | 无 | TD-02 | completed |
-| 2 | TD-02 | [调研并锁定有界平行数据来源](td-02-dataset-research-and-lock.md) | TD-01 completed | TD-01 | 无 | completed |
-| 3 | TD-03 | [实现确定性平行数据构建管线](td-03-data-pipeline.md) | TD-01、TD-02 completed | TD-01、TD-02 | 无 | completed |
-| 4 | TD-04 | [实现分组切分、去重与泄漏防护](td-04-split-dedup-leakage.md) | TD-03 completed | TD-03 | 无 | completed |
-| 5 | TD-05 | [构建并验收 M0 数据集](td-05-m0-dataset-acceptance.md) | TD-04 completed | TD-04 | 无 | completed |
+| 2 | TD-02 | [调研并锁定有界平行数据来源](td-02-dataset-research-and-lock.md) | TD-01 completed；旧 M0 长训否决 | TD-01 | 无 | in_progress（v3） |
+| 3 | TD-03 | [实现确定性平行数据构建管线](td-03-data-pipeline.md) | TD-02 v3 completed | TD-01、TD-02 v3 | 无 | pending（v3 build） |
+| 4 | TD-04 | [实现分组切分、去重与泄漏防护](td-04-split-dedup-leakage.md) | TD-03 v3 completed | TD-03 v3 | 无 | pending（v3 run） |
+| 5 | TD-05 | [构建并验收 M0 数据集](td-05-m0-dataset-acceptance.md) | TD-04 v3 completed | TD-04 v3 | 无 | pending（v3 acceptance） |
 | 2–5 | TD-06 | [锁定并验证 Hy-MT2 7B teacher 运行时](td-06-hymt2-teacher-runtime.md) | TD-01 completed | TD-01 | TD-02～TD-05、TD-09～TD-11 | completed |
 | 6 | TD-07 | [校准 teacher 语言映射、prompt 与解码](td-07-teacher-prompt-decode.md) | TD-05、TD-06 completed | TD-05、TD-06 | 无 | completed |
 | 7 | TD-08 | [生成 D0 smoke 并验收 D1 最小可用蒸馏数据](td-08-distilled-data.md) | TD-07 completed | TD-05、TD-07 | 无 | completed |
@@ -76,28 +77,28 @@ flowchart LR
 | 6 | TD-13 | [实现独立评测与方向汇总](td-13-evaluation.md) | TD-05、TD-09 completed | TD-05、TD-09 | TD-07、TD-12 | completed |
 | 7 | TD-14 | [基准测试并冻结可配置训练资源 profile](td-14-training-resource-profile.md) | TD-05、TD-12 completed | TD-05、TD-12 | TD-08、TD-13 | completed |
 | 8 | TD-15 | [冻结蒸馏配方与等预算 A/B 契约](td-15-distillation-ab-contract.md) | TD-05、TD-08、TD-13 completed | TD-05、TD-08、TD-13 | TD-14 | completed |
-| 9.0 | TD-16 | [训练并冻结基于合格语料能力的 MVP 模型（任务组）](td-16-m2-training.md) | TD-05、TD-08、TD-12～TD-15 completed | TD-05、TD-08、TD-12～TD-15 | 无 | in_progress |
+| 9.0 | TD-16 | [训练并冻结基于合格语料能力的 MVP 模型（任务组）](td-16-m2-training.md) | TD-05 v3 及新数据相关门禁 completed | TD-05 v3 | 无 | suspended |
 | 9.1 | TD-16A | [合并性能优先且硬件可配置的训练器](td-16a-performance-equivalence-contract.md) | TD-16 A/B 诊断完成 | TD-16 | 无 | completed |
 | 9.2 | TD-16B | [验证完整 human M0 长训并定位语料边界](td-16b-full-human-foundation.md) | TD-16A completed | TD-16A | 无 | completed（候选不准入） |
-| 9.3 | TD-16C | [修复并重新冻结 human 平行语料](td-16c-corpus-remediation.md) | TD-16B completed | TD-16B | 无 | in_progress |
-| 9.4 | TD-16D | [训练修复语料上的 human foundation](td-16d-human-foundation.md) | TD-16C completed | TD-16C | 无 | pending |
-| 9.5 | TD-16E | [验证 human-led teacher 辅助与重复能力等价](td-16e-human-led-equivalence.md) | TD-16D completed | TD-16D | 无 | pending |
+| 9.3 | TD-16C | [训练新 M0 human foundation](td-16c-repaired-human-foundation.md) | TD-05 v3 completed | TD-05 v3、TD-16A | 无 | pending |
+| 9.4 | TD-16D | [验证 human-led teacher 辅助](td-16d-human-led-distillation.md) | TD-16C completed | TD-16C、新 teacher 数据门禁 | 无 | pending |
+| 9.5 | TD-16E | [验证重复训练能力等价并冻结候选](td-16e-capability-equivalence-selection.md) | TD-16D completed | TD-16D | 无 | pending |
 | 9.6 | TD-16F | [执行一次性正式 test 并发布 MVP](td-16f-formal-test-release.md) | TD-16E completed | TD-16E | 无 | pending |
 | 10 | TD-17 | [完成 M3 CTranslate2 回接与量化诊断](td-17-ctranslate2-deployment.md) | TD-16F completed | TD-16F | 无 | pending |
 | 11 | TD-18 | [完成统一回归、文档与 review 准备](td-18-regression-and-review.md) | TD-01～TD-17 completed | TD-01～TD-17 | 无 | pending |
 
 ## 并行窗口与资源互斥
 
-1. TD-01 完成后，人类数据链 TD-02～TD-05、teacher 运行时 TD-06、student 基础链 TD-09～TD-11 可并行推进，前提是负责文件和运行目录不重叠。
+1. 当前只推进重新打开的 TD-02 v3 来源调研；TD-03～TD-05 严格串行，不能把旧 complete manifest 直接提升为新语料身份。
 2. TD-09 已使用正式 20 路 fixture 完成编码、student 构造、CPU forward/backward 和离线重载；TD-10 从该冻结接口继续。
 3. TD-05 与 TD-06 已汇合；TD-07 的新增两路校准和 TD-08 的两路 addendum/20 路 composite 均已完成。D0/D1 v1 保持不可变。
 4. TD-12、TD-13 可并行；TD-14 必须等待 TD-12。TD-15 可与 TD-14 并行准备；已完成的 TD-16 共同 source A/B 诊断依赖两者。
-5. 若运行时探测只有一个可用 accelerator，TD-06～TD-08 的 teacher 运行、TD-14 的 student 基准和 TD-16D～TD-16F 的训练/评测在执行层面互斥；资源互斥依据探测结果和 profile，不依据 GPU 型号。
-6. TD-16C、TD-16D、TD-16E、TD-16F、TD-17、TD-18 为当前严格串行收口；正式 test 只允许 TD-16F 对 TD-16E 唯一候选读取一次。
+5. TD-02～TD-05 v3 只做数据工作，不启动 student/teacher 长训；旧训练证据和正式 test 隔离保持不变。
+6. TD-05 v3 完成后才决定新 teacher 数据门禁并恢复 TD-16C；正式 test 只允许未来 TD-16F 对 TD-16E 唯一候选读取一次。
 
 ## 关键路径
 
-当前已完成 `TD-01 -> ... -> TD-16B`。TD-16A 已把通用高吞吐训练器合入主分支；TD-16B 使用全部 226,218 条 directed M0 records 完成长训诊断，但确认其只有 11,411 个 semantic/alignment groups，且 MASSIVE 的 locale adaptation 不符合通用翻译实体忠实度，因此所有长训候选均不准入后续阶段。关键路径现回退到 TD-16C 语料准备，直至 TD-16F 才完成 TD-16 任务组。
+历史链已执行到 TD-16B，但长训否决了 TD-02 的来源适用性假设。当前关键路径正式回到 `TD-02 v3 -> TD-03 v3 -> TD-04 v3 -> TD-05 v3`；TD-16 整体 suspended。TD-05 发布合格的新 M0 后，才允许从 TD-16C 训练 human foundation。旧 A/B、M0、D1 和长训 checkpoint 只保留为不可变诊断证据。
 
 任何来源/许可缺口、teacher 离线运行失败、M1 未过拟合、恢复不一致或 test 隔离失败都会阻塞后续汇合，不得以跳过 task 的方式继续。
 
@@ -113,6 +114,7 @@ flowchart LR
 
 - `pending`：尚未开始或完成依赖未满足。
 - `in_progress`：依赖满足，已记录执行边界并正在实施。
+- `suspended`：后置任务曾产生诊断证据，但上游前提被否决；必须等待重新打开的数据门禁完成，不能继续执行。
 - `completed`：本 task 的实现、产物和验收证据齐全，可供后续 task 使用。
 - `review`：仅用于 TD-18 完成后的整个 todo 统一复核。
 - `done`：统一 review 通过且整个工作流已归档。

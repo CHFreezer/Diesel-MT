@@ -1,6 +1,6 @@
 # task TD-04: 实现分组切分、去重与泄漏防护
 
-状态：completed
+状态：pending（历史实现已完成；v3 数据运行等待 TD-03）
 
 依赖：TD-03
 
@@ -62,3 +62,10 @@
 - 第 10 组已绑定既有 alignment group/component；完成 exact/near 去重、反向隔离、正式外部污染扫描和 manifest-last 发布。
 - 最终发布 327,508 条有向记录、20 路，train/dev/test 为 226,218/37,508/63,782；finalized manifest SHA-256 为 `33a40b305012325657fff8e1620f0edf769e15c4aba8d3a4c413faf8c863e6cd`。
 - 第二个完全离线 fresh/resume 构建的 corpus、split、test identity、报告与 manifest 全部字节一致；FLORES-200 阻断扫描命中 0，v1 finalized manifest 未修改。
+
+## v3 重新执行边界（2026-07-17）
+
+- 对 TD-03 v3 的多来源语义组重新执行 component/group-aware split，旧 split/test identity 不覆盖。
+- 跨来源、翻译方向、反向样本、模板和近重复不得跨 train/dev/test；路由展开后的同一 semantic group 必须同 split。
+- 新 dev/test 必须独立于训练模板与本地化生成机制，并加入实体、数字、否定和目标脚本忠实度检查。
+- 完成新的污染、泄漏、复现报告后才交给 TD-05 v3 验收。

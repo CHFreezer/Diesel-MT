@@ -1,6 +1,6 @@
 # task TD-05: 构建并验收 M0 数据集
 
-状态：completed
+状态：pending（历史 M0 已完成但被长训否决；等待 TD-04 发布 v3 candidate）
 
 依赖：TD-04
 
@@ -59,3 +59,11 @@
 - 固定人工队列逐条检查 549 条：accepted 400、rejected 149；第 10 组 accepted train/dev/test 和 rejected 均达到冻结抽检预算。保留 38 个已知 MASSIVE 边界质量警告，无 systemic blocker。
 - 双构建、污染、脚本、来源/许可、20 路非空与方向采样 gate 全部通过。M0 manifest SHA-256 为 `5cc369421a705e2eea0076eec06c2bc12de7f278888df2f1ca9add6250ee1d67`；提交内证据为 `artifacts/model-training/reports/m0/m0-20route-acceptance.json`。
 - v1 artifact 与哈希保持不变；TD-09 未启动。
+
+## v3 重新验收边界（2026-07-17）
+
+- 旧 20 路 M0 保留为 route/system-validation 与长训诊断证据，不再标记为通用 MT foundation 输入。
+- 新候选必须分别报告 independent semantic groups、唯一 `(language,text)`、tokens 和 directed records，并达到 TD-02 冻结的逐来源/逐路由预算。
+- 人工抽检把 source-target 语义、实体、数字、否定和操作对象忠实度列为阻断门槛；locale substitution 不能自动判为正确翻译。
+- 新 human dev 必须能检出实体替换与 meaning divergence；完成双构建、许可、泄漏、污染、脚本和忠实度验收后才发布新 M0 identity。
+- TD-05 v3 未完成前，TD-15/TD-16 的新训练、蒸馏选择和正式 test 全部暂停。

@@ -1,6 +1,6 @@
 # task TD-02: 调研并锁定有界平行数据来源
 
-状态：completed
+状态：in_progress（历史 v1/v2 已完成；通用 MT v3 来源调研已重新打开）
 
 依赖：TD-01
 
@@ -58,3 +58,15 @@
 - 已把锁定归档中的 `zh-CN`/`zh-TW` 登记为 `zho_Hans--zho_Hant` 第 10 组人工 multiparallel localization；train/dev/test 原始上限为 11,514/2,033/2,974，无需重新下载。
 - schema v2 source lock 保留官方归档、许可、notice 和五个成员文件的原始字节身份，并绑定新 config hash；lock 文件 SHA-256 为 `de24d2989ef21063a3c437b6c9bcf12362115c25d36a86cafa663e86b0ab8f88`。
 - 10 组覆盖、预算与许可证缺口全部关闭，未使用 synthetic 补充 human dev/test。
+
+## v3 重新打开原因与验收（2026-07-17）
+
+TD-16B 长训证明此前“专业本地化即可作为通用平行翻译主体”的来源判断不成立。226,218 条 directed train records 实际来自 11,411 个 semantic/alignment groups；MASSIVE 的 locale adaptation 允许地点、媒体、服务和人物替换，不能满足通用 MT 的 source-target 忠实度。
+
+本轮从 TD-02 重新开始，而不是在 TD-16 内修补数据：
+
+- 重新调研覆盖 5 标签、10 组关系的真实平行来源，逐来源声明 `literal_parallel`、`localization_parallel` 或其他用途。
+- 主体来源必须保留语义、实体、数字、否定和操作对象；MASSIVE 只能作为显式窄领域/路由控制补充，不得再承担通用 MT 主体。
+- 数量预算同时按 independent semantic groups、唯一 `(language,text)`、token 和 directed routes 报告；路由展开不得充当新增语义。
+- 为新来源锁定版本、文件 hash、许可证、下载/解压预算和处理顺序，并冻结独立 human dev/test 来源策略。
+- 发布新的 config/source-lock 身份前，TD-03 v3 不得开始；旧 lock、M0 和训练证据保持不可变。

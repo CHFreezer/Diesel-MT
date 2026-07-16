@@ -1,6 +1,6 @@
 # task TD-03: 实现确定性平行数据构建管线
 
-状态：completed
+状态：pending（历史实现已完成；v3 构建等待 TD-02 新 source lock）
 
 依赖：TD-01、TD-02
 
@@ -61,3 +61,10 @@
 - 最初在隔离构建根生成 164,778 条清洗后无向记录，拒绝 432 条；每个完整 alignment group 生成第 10 个 `zho_Hans--zho_Hant` relation。验收完成后，最终 20 路数据已发布到标准 `data/model/corpus/mvp/`，隔离构建根已清理。
 - TD-03 manifest SHA-256 为 `113a33afa2ca6f73e8e10fbd5a3dab876dd470fbf0e570320edb0961901fe0c7`，构建报告 SHA-256 为 `8718f7e494580c79377f1b614b12d5a7e7ff34ae7b11a570006963341dd843c1`。
 - 使用相同锁定缓存在第二个独立根完成完全离线 fresh build 和五 locale resume；所有规范产物逐字节一致，v1 corpus 未覆盖。
+
+## v3 重新执行边界（2026-07-17）
+
+- 保留现有下载、缓存、原子发布和稳定 ID 实现；为 TD-02 新锁定来源增加必要 adapter，不覆盖旧 MASSIVE 产物。
+- schema/provenance 必须携带来源用途和 fidelity policy；`localization_parallel` 不得静默进入 `literal_parallel` 主体。
+- 若保留 MASSIVE，审计 `utt`、`annot_utt`、slot 与 locale adaptation；只有可证明忠实或使用可逆统一 placeholder 的记录才可进入 literal MT。
+- 新 corpus 以全新 identity 发布，并报告 independent semantic groups、唯一文本和 token 规模；完成后才交给 TD-04 v3。

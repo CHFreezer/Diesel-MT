@@ -1,14 +1,14 @@
 # task group TD-16: 训练并冻结基于合格语料能力的 MVP 模型
 
-状态：in_progress（TD-16A、TD-16B completed；当前回退到 TD-16C 语料准备）
+状态：pending / suspended（TD-16A、TD-16B 诊断已完成；当前活动入口已回退到 TD-02）
 
-依赖：TD-05、TD-08、TD-12、TD-13、TD-14、TD-15
+恢复依赖：TD-05 v3；teacher 辅助阶段还必须重新验证 TD-08/TD-15 与新 source identity 的兼容性
 
 ## 目标与边界修正
 
 TD-16 的最终含义是：以经过通用翻译忠实度验收的 20 路 human 语料为能力基础，训练出经过独立 dev 选择、重复训练能力等价验收和一次性正式 test 的 `mvp_e8_d2_v48k` MVP 模型。
 
-原 44,313 条共同 source A/B 只回答“teacher target 能否替代 human target”。随后完整 226,218-record M0 长训又证明：记录数和 complete manifest 不能代替独立语义规模与翻译忠实度。TD-16 因此扩展为 TD-16A～TD-16F；A/B 和长训证据均保留，但不能被重新解释为最终 MVP。
+原 44,313 条共同 source A/B 只回答“teacher target 能否替代 human target”。随后完整 226,218-record M0 长训又证明：记录数和 complete manifest 不能代替独立语义规模与翻译忠实度。失效前提位于 TD-02 的来源选择，所以当前工作已离开 TD-16，重新执行 TD-02～TD-05；A/B 和长训证据均保留，但不能被重新解释为最终 MVP。
 
 ## 已完成事实
 
@@ -31,16 +31,25 @@ TD-16 的最终含义是：以经过通用翻译忠实度验收的 20 路 human 
 - MASSIVE 是窄领域多语言本地化。当前 `utt` 直接对齐允许地点、媒体、服务和人物的 locale substitution；这对 intent/localization 有效，但不满足通用机器翻译的 source fidelity。
 - 现有 checkpoint 只保留为训练器/数据诊断，不进入蒸馏、复跑、test 或发布。
 
-## 当前关键路径
+## 当前回退路径（不属于 TD-16 子任务）
+
+1. TD-02 v3：重新调研并锁定通用 MT 平行来源 — in_progress
+2. TD-03 v3：适配新来源并构建新 corpus identity — pending
+3. TD-04 v3：重新切分、去重与泄漏/污染审计 — pending
+4. TD-05 v3：重新验收并发布新 M0 — pending
+
+TD-05 v3 完成以前，TD-16 不处于执行状态，也不得启动新 foundation、teacher 辅助或正式 test。
+
+## 未来恢复路径
 
 1. [TD-16A：合并性能优先且硬件可配置的训练器](td-16a-performance-equivalence-contract.md) — completed
 2. [TD-16B：验证完整 human M0 长训并定位语料边界](td-16b-full-human-foundation.md) — completed，候选不准入
-3. [TD-16C：修复并重新冻结 human 平行语料](td-16c-corpus-remediation.md) — in_progress
-4. [TD-16D：训练修复语料上的 human foundation](td-16d-human-foundation.md) — pending
-5. [TD-16E：验证 human-led teacher 辅助与重复能力等价](td-16e-human-led-equivalence.md) — pending
+3. [TD-16C：训练新 M0 human foundation](td-16c-repaired-human-foundation.md) — pending，等待 TD-05 v3
+4. [TD-16D：验证 human-led teacher 辅助](td-16d-human-led-distillation.md) — pending
+5. [TD-16E：验证重复训练能力等价并冻结候选](td-16e-capability-equivalence-selection.md) — pending
 6. [TD-16F：执行一次性正式 test 并发布 MVP](td-16f-formal-test-release.md) — pending
 
-TD-16A～TD-16F 严格串行。TD-17 CTranslate2 回接必须等待 TD-16F 完成。
+重新进入 TD-16 后，TD-16C～TD-16F 严格串行。TD-17 CTranslate2 回接必须等待 TD-16F 完成。
 
 ## 总验收
 
