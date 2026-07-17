@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "status": "complete",
+  "task": "TD-03",
+  "source_config_sha256": "fde7f08f6ef445a245153526e78b856f07ee8136175f598f3e4e4b75121717d6",
+  "source_lock_sha256": "d0e9e010c48d6cdc42cba527915356e78908b4a3707bd0721fb16c0679fed6e2",
+  "formal_test_accessed": false,
+  "source_bank": {
+    "path": "source-bank.jsonl",
+    "records": 200851,
+    "sha256": "ae590f476125461f3f2acf7e3230ae0e6e72215622fb4ec6fe1419448f582e4e",
+    "counts": {
+      "eng_Latn": 50000,
+      "zho_Hans": 50000,
+      "zho_Hant": 851,
+      "jpn_Jpan": 50000,
+      "kor_Hang": 50000
+    }
+  },
+  "human_anchors": {
+    "path": "human-anchors.jsonl",
+    "records": 40000,
+    "sha256": "82b23f97ef7e7a38ea6b1aac0f9ee3099e29d16ef0f1dfd552f6ce094383715c",
+    "independent_group_counts": {
+      "alt": 4000,
+      "kftt": 3000,
+      "korean": 3000,
+      "moj": 2000,
+      "massive": 0
+    },
+    "route_counts": {
+      "eng_Latn->jpn_Jpan": 7000,
+      "eng_Latn->kor_Hang": 3000,
+      "eng_Latn->zho_Hans": 4000,
+      "eng_Latn->zho_Hant": 2000,
+      "jpn_Jpan->eng_Latn": 7000,
+      "jpn_Jpan->zho_Hans": 4000,
+      "kor_Hang->eng_Latn": 3000,
+      "zho_Hans->eng_Latn": 4000,
+      "zho_Hans->jpn_Jpan": 4000,
+      "zho_Hant->eng_Latn": 2000
+    }
+  },
+  "candidate_groups": {
+    "alt": {"raw": 18034, "accepted": 15053},
+    "kftt": {"raw": 440288, "accepted": 217666},
+    "korean": {"raw": 94123, "accepted": 76806},
+    "massive": {"raw": 11514, "accepted": 230},
+    "moj": {"raw": 27896, "accepted": 3775}
+  },
+  "source_components": {
+    "eng_Latn": {"ALT-news": 1000, "KFTT": 34000, "Korean-news-English-side": 15000},
+    "zho_Hans": {"ALT-news": 5000, "UNPC": 45000},
+    "zho_Hant": {"quality-actual-TD02": 851},
+    "jpn_Jpan": {"ALT-news": 1000, "KFTT": 49000},
+    "kor_Hang": {"Korean-news": 50000}
+  },
+  "invariants": {
+    "zero_truncation": true,
+    "source_anchor_group_overlap": 0,
+    "exact_or_near_overlap": 0,
+    "flores_dev_contamination": 0,
+    "formal_devtest_access": 0,
+    "manifest_published_last": true
+  }
+}

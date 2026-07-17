@@ -1,6 +1,6 @@
 # task TD-03: 实现确定性平行数据构建管线
 
-状态：pending（历史实现已完成；v3 构建等待 TD-02 新 source lock）
+状态：completed（ability-first source bank 与 human anchors 已在独立运行根原子发布；旧 MASSIVE corpus 未覆盖）
 
 依赖：TD-01、TD-02
 
@@ -68,3 +68,12 @@
 - schema/provenance 必须携带来源用途和 fidelity policy；`localization_parallel` 不得静默进入 `literal_parallel` 主体。
 - 若保留 MASSIVE，审计 `utt`、`annot_utt`、slot 与 locale adaptation；只有可证明忠实或使用可逆统一 placeholder 的记录才可进入 literal MT。
 - 新 corpus 以全新 identity 发布，并报告 independent semantic groups、唯一文本和 token 规模；完成后才交给 TD-04 v3。
+
+## ability-first v4 完成记录（2026-07-17）
+
+- 新实现为 [`mvp_60m_data_pipeline.py`](../../../scripts/mvp_60m_data_pipeline.py) 与 [`build_mvp_60m_source_bank.py`](../../../scripts/build_mvp_60m_source_bank.py)。构建根为 `D:\Diesel-MT-Runtime\mvp60-data-v1\td03`，manifest 最后发布；仓库内旧 M0/MASSIVE corpus 未修改。
+- TD-03 启动前对 HPLT 四个非繁体分片执行确定性抽样，现有门仍会放进中文网页拼接、日文借贷 SEO、英文营销残片等。为避免重演旧 M0 的来源适用性错误，translation source 改用已 byte-lock 的人工平行语料单语侧：ALT 新闻、KFTT、韩英新闻与 UNPC；所有 source/anchor 按 semantic group 分区。
+- source bank 共 200,851 条：`eng_Latn/zho_Hans/jpn_Jpan/kor_Hang` 各 50,000，原生 `zho_Hant` 质量实收 851；规范 JSONL SHA-256 为 `ae590f476125461f3f2acf7e3230ae0e6e72215622fb4ec6fe1419448f582e4e`。
+- human anchors 实收 40,000 条、12,000 个独立组：ALT 4,000 组三语双向展开 24,000 条，KFTT 3,000 组 6,000 条，韩英新闻 3,000 组 6,000 条，MOJ 2,000 组 4,000 条。MASSIVE 的 230 个全五侧质量组均与 498 条原生繁体 source 的 semantic group 冲突，因此按“不重用、不回填”合同实收 0，而不是放宽门；anchor JSONL SHA-256 为 `82b23f97ef7e7a38ea6b1aac0f9ee3099e29d16ef0f1dfd552f6ce094383715c`。
+- 两次物化专门复核 MOJ article group key；最终验证 `source_anchor_group_overlap=0`、跨集合 exact/near overlap=0、FLORES dev contamination=0、zero truncation=true，且从未读取正式 devtest。
+- 紧凑机器证据为 [`mvp-60m-td03-manifest.json`](../../../artifacts/model-training/reports/m0/mvp-60m-td03-manifest.json)。TD-04 只能消费该 manifest 绑定的 source bank 和 human anchors。

@@ -43,10 +43,10 @@ def test_source_config_and_lock_are_hash_bound_and_bounded(
             "explicitly rejected"
         ),
         "total_local_bytes": 1_832_030_713,
-        "total_download_bytes": 378_979_331,
-        "total_selected_bytes": 428_040_881,
+        "total_download_bytes": 1_914_686_972,
+        "total_selected_bytes": 5_945_164_235,
     }
-    assert len(lock["records"]) == 16
+    assert len(lock["records"]) == 17
 
 
 def test_first_wave_is_quality_first_hant_and_80_20_sampling_mix(

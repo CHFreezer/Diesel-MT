@@ -19,6 +19,7 @@ import xml.etree.ElementTree as ET
 import zipfile
 from collections import Counter
 from dataclasses import asdict, dataclass
+import heapq
 from pathlib import Path
 from typing import Any, Iterable, Iterator, Mapping, Sequence
 
@@ -60,6 +61,13 @@ class QualityDecision:
     reason: str | None
     characters: int
     student_tokens: int | None
+
+
+@dataclass(frozen=True)
+class ParallelGroup:
+    source_id: str
+    source_group_id: str
+    texts: Mapping[str, str]
 
 
 def canonical_json_bytes(value: Any) -> bytes:
@@ -508,3 +516,332 @@ def write_jsonl(path: Path, rows: Iterable[Mapping[str, Any]]) -> tuple[int, str
     payload = b"".join(canonical_json_bytes(dict(row)) for row in rows)
     atomic_write_bytes(path, payload)
     return payload.count(b"\n"), sha256_bytes(payload)
+
+
+def read_parallel_lines(
+    source_id: str,
+    paths: Mapping[str, Path],
+) -> list[ParallelGroup]:
+    handles = {language: path.open(encoding="utf-8") for language, path in paths.items()}
+    groups: list[ParallelGroup] = []
+    try:
+        iterators = [iter(handle) for handle in handles.values()]
+        import itertools
+
+        for index, values in enumerate(itertools.zip_longest(*iterators)):
+            if any(value is None for value in values):
+                raise AbilityDataError(f"parallel line count differs for {source_id}")
+            texts = {
+                language: str(value).rstrip("\r\n")
+                for language, value in zip(handles, values, strict=True)
+            }
+            groups.append(ParallelGroup(source_id, str(index), texts))
+    finally:
+        for handle in handles.values():
+            handle.close()
+    return groups
+
+
+def parse_alt_groups(en_ja_archive: Path, en_zh_archive: Path) -> list[ParallelGroup]:
+    def sides(path: Path, suffixes: tuple[str, str]) -> tuple[list[str], list[str]]:
+        with zipfile.ZipFile(path) as handle:
+            left = handle.read(suffixes[0]).decode("utf-8").splitlines()
+            right = handle.read(suffixes[1]).decode("utf-8").splitlines()
+        if len(left) != len(right):
+            raise AbilityDataError(f"ALT side counts differ: {path}")
+        return left, right
+
+    en_ja, ja = sides(en_ja_archive, ("ALT.en-ja.en", "ALT.en-ja.ja"))
+    en_zh, zh = sides(en_zh_archive, ("ALT.en-zh.en", "ALT.en-zh.zh"))
+    ja_by_en: dict[str, list[str]] = {}
+    zh_by_en: dict[str, list[str]] = {}
+    for english, japanese in zip(en_ja, ja, strict=True):
+        ja_by_en.setdefault(english, []).append(japanese)
+    for english, chinese in zip(en_zh, zh, strict=True):
+        zh_by_en.setdefault(english, []).append(chinese)
+    groups: list[ParallelGroup] = []
+    for english in sorted(set(ja_by_en) & set(zh_by_en)):
+        if len(ja_by_en[english]) != 1 or len(zh_by_en[english]) != 1:
+            continue
+        group_hash = sha256_bytes(english.encode("utf-8"))[:24]
+        groups.append(
+            ParallelGroup(
+                "alt-v20191206-en-ja-zh",
+                group_hash,
+                {
+                    "eng_Latn": english,
+                    "zho_Hans": zh_by_en[english][0],
+                    "jpn_Jpan": ja_by_en[english][0],
+                },
+            )
+        )
+    return groups
+
+
+def parse_massive_groups(archive: Path) -> list[ParallelGroup]:
+    import tarfile
+
+    locale_by_tag = {
+        "eng_Latn": "en-US",
+        "zho_Hans": "zh-CN",
+        "zho_Hant": "zh-TW",
+        "jpn_Jpan": "ja-JP",
+        "kor_Hang": "ko-KR",
+    }
+    by_language: dict[str, dict[str, str]] = {}
+    with tarfile.open(archive, "r:gz") as handle:
+        for language, locale in locale_by_tag.items():
+            member = handle.extractfile(f"1.1/data/{locale}.jsonl")
+            if member is None:
+                raise AbilityDataError(f"MASSIVE locale missing: {locale}")
+            values: dict[str, str] = {}
+            for line in member:
+                row = json.loads(line)
+                if row.get("partition") == "train":
+                    values[str(row["id"])] = str(row["utt"])
+            by_language[language] = values
+    ids = set.intersection(*(set(values) for values in by_language.values()))
+    return [
+        ParallelGroup(
+            "massive-1.1-route-control",
+            f"train:{record_id}",
+            {language: values[record_id] for language, values in by_language.items()},
+        )
+        for record_id in sorted(ids, key=lambda value: int(value))
+    ]
+
+
+def _pcode(url: str) -> str:
+    return url.partition("pcode=")[2].lower()
+
+
+def parse_moj_parallel_groups(chinese_paths: Sequence[Path], english_paths: Sequence[Path]) -> list[ParallelGroup]:
+    def laws(paths: Sequence[Path], *, english: bool) -> dict[str, Mapping[str, Any]]:
+        result: dict[str, Mapping[str, Any]] = {}
+        for path in paths:
+            payload = json.loads(path.read_text(encoding="utf-8-sig"))
+            for law in payload["Laws"]:
+                url_key = "EngLawURL" if english else "LawURL"
+                code = _pcode(str(law.get(url_key, "")))
+                if code:
+                    result[code] = law
+        return result
+
+    zh_laws = laws(chinese_paths, english=False)
+    en_laws = laws(english_paths, english=True)
+    groups: list[ParallelGroup] = []
+    for code in sorted(set(zh_laws) & set(en_laws)):
+        zh_articles = [
+            item for item in zh_laws[code].get("LawArticles", []) if item.get("ArticleType") == "A"
+        ]
+        en_articles = [
+            item for item in en_laws[code].get("EngLawArticles", []) if item.get("EngArticleType") == "A"
+        ]
+        for ordinal, (zh_article, en_article) in enumerate(zip(zh_articles, en_articles)):
+            zh_parts = list(split_prose(str(zh_article.get("ArticleContent", ""))))
+            en_parts = list(split_prose(str(en_article.get("EngArticleContent", ""))))
+            if len(zh_parts) != 1 or len(en_parts) != 1:
+                continue
+            article_id = str(zh_article.get("ArticleNo") or ordinal)
+            group_id = f"{code}:{article_id}"
+            groups.append(
+                ParallelGroup(
+                    "taiwan-moj-law-api-20260710",
+                    group_id,
+                    {"zho_Hant": zh_parts[0], "eng_Latn": en_parts[0]},
+                )
+            )
+    return groups
+
+
+def filter_parallel_groups(
+    groups: Sequence[ParallelGroup],
+    *,
+    tokenizer: Any,
+    contamination_exact: set[str],
+    contamination_near: set[str],
+) -> tuple[list[ParallelGroup], dict[str, int]]:
+    preliminary: list[tuple[ParallelGroup, dict[str, QualityDecision]]] = []
+    token_texts: list[str] = []
+    rejected: Counter[str] = Counter()
+    for group in groups:
+        decisions = {
+            language: quality_decision(
+                TextCandidate(group.source_id, group.source_group_id, language, "parallel", text)
+            )
+            for language, text in group.texts.items()
+        }
+        reason = next((decision.reason for decision in decisions.values() if decision.reason), None)
+        if reason:
+            rejected[str(reason)] += 1
+            continue
+        preliminary.append((group, decisions))
+        token_texts.extend(decision.text for decision in decisions.values())
+    lengths = iter(tokenizer_lengths(tokenizer, token_texts))
+    accepted: list[ParallelGroup] = []
+    for group, decisions in preliminary:
+        normalized: dict[str, str] = {}
+        reason: str | None = None
+        for language, decision in decisions.items():
+            final = quality_decision(
+                TextCandidate(group.source_id, group.source_group_id, language, "parallel", decision.text),
+                token_count=next(lengths),
+            )
+            if final.reason:
+                reason = final.reason
+            normalized[language] = final.text
+        identities = [normalized_identity(text) for text in normalized.values()]
+        near = [near_identity(text) for text in normalized.values()]
+        if reason is None and any(value in contamination_exact for value in identities):
+            reason = "flores_dev_contamination"
+        if reason is None and any(value in contamination_near for value in near):
+            reason = "flores_dev_contamination"
+        lengths_without_space = [max(1, len(text.replace(" ", ""))) for text in normalized.values()]
+        if reason is None and max(lengths_without_space) / min(lengths_without_space) > 3.5:
+            reason = "alignment_length_ratio"
+        if reason is None and len(set(identities)) != len(identities):
+            reason = "cross_language_copy"
+        if reason:
+            rejected[reason] += 1
+            continue
+        accepted.append(ParallelGroup(group.source_id, group.source_group_id, normalized))
+    return accepted, dict(sorted(rejected.items()))
+
+
+def _ranked_groups(groups: Sequence[ParallelGroup], seed: str) -> list[ParallelGroup]:
+    return sorted(
+        groups,
+        key=lambda group: stable_rank(seed, group.source_id, group.source_group_id),
+    )
+
+
+def select_group_role(
+    groups: Sequence[ParallelGroup],
+    *,
+    count: int,
+    seed: str,
+    languages: Sequence[str],
+    used_groups: set[tuple[str, str]],
+    used_exact: set[str],
+    used_near: set[str],
+    forbidden_groups: set[tuple[str, str]] = frozenset(),
+) -> list[ParallelGroup]:
+    selected: list[ParallelGroup] = []
+    for group in _ranked_groups(groups, seed):
+        key = (group.source_id, group.source_group_id)
+        if key in used_groups or key in forbidden_groups:
+            continue
+        texts = [group.texts[language] for language in languages]
+        exact = [normalized_identity(text) for text in texts]
+        near = [near_identity(text) for text in texts]
+        if any(value in used_exact for value in exact) or any(value in used_near for value in near):
+            continue
+        selected.append(group)
+        used_groups.add(key)
+        used_exact.update(exact)
+        used_near.update(near)
+        if len(selected) == count:
+            break
+    return selected
+
+
+def select_unpc_hans(
+    path: Path,
+    *,
+    tokenizer: Any,
+    count: int,
+    seed: str,
+    used_exact: set[str],
+    used_near: set[str],
+    contamination_exact: set[str],
+    contamination_near: set[str],
+    scan_limit: int = 1_000_000,
+    candidate_capacity: int = 90_000,
+) -> list[dict[str, Any]]:
+    heap: list[tuple[int, int, str, str, str]] = []
+    with path.open(encoding="utf-8") as handle:
+        for line_number, line in enumerate(handle):
+            if line_number >= scan_limit:
+                break
+            candidate = TextCandidate(
+                "unpc-v1.0-en-zho_hans", str(line_number), "zho_Hans", "formal", line.rstrip("\r\n")
+            )
+            decision = quality_decision(candidate)
+            if not decision.accepted:
+                continue
+            exact = normalized_identity(decision.text)
+            near = near_identity(decision.text)
+            if exact in contamination_exact or near in contamination_near:
+                continue
+            rank = int(stable_rank(seed, str(line_number), exact), 16)
+            item = (-rank, line_number, decision.text, exact, near)
+            if len(heap) < candidate_capacity:
+                heapq.heappush(heap, item)
+            elif rank < -heap[0][0]:
+                heapq.heapreplace(heap, item)
+    candidates = sorted(heap, key=lambda item: (-item[0], item[1]))
+    token_counts = tokenizer_lengths(tokenizer, [item[2] for item in candidates])
+    selected: list[dict[str, Any]] = []
+    for item, token_count in zip(candidates, token_counts, strict=True):
+        _neg_rank, line_number, text, exact, near = item
+        if token_count > 256 or token_count < 4 or exact in used_exact or near in used_near:
+            continue
+        used_exact.add(exact)
+        used_near.add(near)
+        selected.append(
+            {
+                "source_id": "unpc-v1.0-en-zho_hans",
+                "source_record_id": str(line_number),
+                "language_tag": "zho_Hans",
+                "domain": "formal",
+                "text": text,
+                "characters": len(text),
+                "student_tokens": token_count,
+                "normalized_sha256": exact,
+            }
+        )
+        if len(selected) == count:
+            break
+    if len(selected) != count:
+        raise AbilityDataError(f"UNPC selected {len(selected)} records, expected {count}")
+    return selected
+
+
+def source_rows(groups: Sequence[ParallelGroup], language: str) -> list[dict[str, Any]]:
+    return [
+        {
+            "record_id": f"src-{sha256_bytes(canonical_json_bytes([group.source_id, group.source_group_id, language]))[:24]}",
+            "semantic_group_id": f"grp-{sha256_bytes(canonical_json_bytes([group.source_id, group.source_group_id]))[:24]}",
+            "source_id": group.source_id,
+            "source_record_id": group.source_group_id,
+            "language_tag": language,
+            "domain": "general_parallel_side",
+            "text": group.texts[language],
+            "normalized_sha256": normalized_identity(group.texts[language]),
+        }
+        for group in groups
+    ]
+
+
+def anchor_rows(groups: Sequence[ParallelGroup], languages: Sequence[str]) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for group in groups:
+        semantic_id = f"grp-{sha256_bytes(canonical_json_bytes([group.source_id, group.source_group_id]))[:24]}"
+        for source in languages:
+            for target in languages:
+                if source == target:
+                    continue
+                rows.append(
+                    {
+                        "record_id": f"human-{sha256_bytes(canonical_json_bytes([group.source_id, group.source_group_id, source, target]))[:24]}",
+                        "semantic_group_id": semantic_id,
+                        "source_id": group.source_id,
+                        "source_record_id": group.source_group_id,
+                        "src_lang": source,
+                        "tgt_lang": target,
+                        "source_text": group.texts[source],
+                        "target_text": group.texts[target],
+                        "provenance": "human_parallel",
+                    }
+                )
+    return rows

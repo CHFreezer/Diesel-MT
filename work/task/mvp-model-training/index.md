@@ -1,6 +1,6 @@
 # task index: MVP model training
 
-状态：active（TD-02 schema v4 source lock completed；TD-03 source/anchors in_progress；TD-04～TD-05等待；旧TD-16 suspended）
+状态：active（TD-02～TD-03 ability-first completed；TD-04 teacher generation in_progress；TD-05等待；旧TD-16 suspended）
 
 ## 来源
 
@@ -64,8 +64,8 @@ flowchart LR
 | ---: | --- | --- | --- | --- | --- | --- |
 | 1 | TD-01 | [冻结执行契约、目录与 Git 边界](td-01-execution-contract.md) | 无 | 无 | TD-02 | completed |
 | 2 | TD-02 | [调研并锁定 60M MVP 数据来源](td-02-dataset-research-and-lock.md) | TD-01 completed；旧 M0 长训否决 | TD-01 | 无 | completed（schema v4；原生Hant质量实收851条） |
-| 3 | TD-03 | [实现确定性平行数据构建管线](td-03-data-pipeline.md) | TD-02 schema v4 completed | TD-01、TD-02 schema v4 | 无 | in_progress（source bank + anchors） |
-| 4 | TD-04 | [实现分组切分、去重与泄漏防护](td-04-split-dedup-leakage.md) | TD-03 schema v4 completed | TD-03 schema v4 | 无 | pending（重写为 teacher 输入隔离） |
+| 3 | TD-03 | [实现确定性平行数据构建管线](td-03-data-pipeline.md) | TD-02 schema v4 completed | TD-01、TD-02 schema v4 | 无 | completed（200,851 source + 40,000 human） |
+| 4 | TD-04 | [实现分组切分、去重与泄漏防护](td-04-split-dedup-leakage.md) | TD-03 schema v4 completed | TD-03 schema v4 | 无 | in_progress（20-route teacher + reverse pairs） |
 | 5 | TD-05 | [构建并验收 M0 数据集](td-05-m0-dataset-acceptance.md) | TD-04 schema v4 completed | TD-04 schema v4 | 无 | pending（重写为 20 路 teacher + anchor 发布） |
 | 2–5 | TD-06 | [锁定并验证 Hy-MT2 7B teacher 运行时](td-06-hymt2-teacher-runtime.md) | TD-01 completed | TD-01 | TD-02～TD-05、TD-09～TD-11 | completed |
 | 6 | TD-07 | [校准 teacher 语言映射、prompt 与解码](td-07-teacher-prompt-decode.md) | TD-05、TD-06 completed | TD-05、TD-06 | 无 | completed |

@@ -64,11 +64,13 @@
   },
   "explicit_exclusions": {
     "hplt3-tokenizer-train-zho_Hant": "deterministic random audit exposed SEO/loan spam, unrelated concatenation, historical-classical text, and register mixing without source-level provenance",
+    "hplt3-tokenizer-train-non-Hant": "TD-03 boundary audit also exposed marketing fragments, web concatenation, and loan SEO; all HPLT sides remain tokenizer provenance only",
     "hkel-current-legislation": "3873 candidates passed per-record gates but zero survived the deterministic cross-source 20 percent legal-domain ceiling",
     "generic-zh-or-cmn": "cannot prove zho_Hans versus zho_Hant identity",
     "cantonese": "separate language outside the five-tag and 20-route MVP scope"
   },
   "locked_archive_sha256": {
+    "unpc-v1.0-en-zh-moses": "527313b09c3c4975c65c3424bb573da846f30b375aeb099117096e2c53769b2f",
     "hkel-current-instruments-zh-hant-20260323": "f68fd0429f0b7dc887b79a47ec5160d94bbd699115fedc08ac8763680c15d2cc",
     "mdn-translated-content-zh-tw-1fbedb37": "57896f490741902b1cd275160d5753da4214e3b7f6e565b32f422c46e12805f4",
     "tldr-pages-zh-tw-7801071f": "f667efa45728d40c57ccd49f1fa41086fe46d9863b27b94be1a3105b42cce47f",

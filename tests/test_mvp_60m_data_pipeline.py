@@ -9,11 +9,14 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 from mvp_60m_data_pipeline import (  # noqa: E402
     TextCandidate,
+    ParallelGroup,
     apply_domain_ceilings,
     near_identity,
     normalized_identity,
     quality_decision,
     written_cantonese,
+    anchor_rows,
+    select_group_role,
 )
 
 
@@ -54,3 +57,26 @@ def test_domain_ceilings_are_exact_and_never_refill_base() -> None:
     assert technical / len(selected) <= 0.15
     assert legal / len(selected) <= 0.20
     assert sum(row["domain"] == "general" for row in selected) == 65
+
+
+def test_group_role_selection_is_disjoint_and_anchor_expansion_is_directed() -> None:
+    groups = [
+        ParallelGroup("fixture", str(index), {"eng_Latn": f"English sentence number {index}.", "jpn_Jpan": f"これは十分に長い日本語の文です。番号{index}。"})
+        for index in range(5)
+    ]
+    used_groups: set[tuple[str, str]] = set()
+    used_exact: set[str] = set()
+    used_near: set[str] = set()
+    first = select_group_role(
+        groups, count=2, seed="first", languages=("eng_Latn", "jpn_Jpan"),
+        used_groups=used_groups, used_exact=used_exact, used_near=used_near,
+    )
+    second = select_group_role(
+        groups, count=3, seed="second", languages=("eng_Latn",),
+        used_groups=used_groups, used_exact=used_exact, used_near=used_near,
+    )
+    assert len(first) == 2 and len(second) == 3
+    assert not ({group.source_group_id for group in first} & {group.source_group_id for group in second})
+    rows = anchor_rows(first, ("eng_Latn", "jpn_Jpan"))
+    assert len(rows) == 4
+    assert {f"{row['src_lang']}->{row['tgt_lang']}" for row in rows} == {"eng_Latn->jpn_Jpan", "jpn_Jpan->eng_Latn"}

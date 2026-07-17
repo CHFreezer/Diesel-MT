@@ -1,12 +1,13 @@
 {
   "schema_version": 4,
-  "config_sha256": "5a6e16d6fe55f5540f63dfb6a62d29c0b0245266dab7ff1c6d06a95a65e761fe",
+  "config_sha256": "fde7f08f6ef445a245153526e78b856f07ee8136175f598f3e4e4b75121717d6",
   "record_order": [
     "tokenizer-corpus-mvp",
     "hymt2-generation-contracts",
     "flores200-evaluation-boundary",
     "alt-v20191206-en-ja",
     "alt-v20191206-en-zh",
+    "unpc-v1.0-en-zh-moses",
     "kftt-data-1.0",
     "taiwan-moj-ch-law-json-20260710",
     "taiwan-moj-en-law-json-20260710",
@@ -122,6 +123,20 @@
         {"path": "README", "role": "metadata", "bytes": 5021, "sha256": "1f87193154dcdaaf82f8ed04de874941e9e9238776b7ee94c6202e0770d14959"},
         {"path": "ALT.en-zh.en", "role": "data:eng_Latn", "bytes": 2514306, "sha256": "fd5e89812a9e420eac300bda8dab41e95cecadc6a7a2169f75fc3982e2ec9d5a"},
         {"path": "ALT.en-zh.zh", "role": "data:zho_Hans", "bytes": 2238360, "sha256": "9158ff597d65dfb8fc7d2ece574e9e47b6ccd83dc1113ef2908302fdcb381def"}
+      ]
+    },
+    {
+      "record_id": "unpc-v1.0-en-zh-moses",
+      "kind": "upstream-archive",
+      "download_uri": "https://object.pouta.csc.fi/OPUS-UNPC/v1.0/moses/en-zh.txt.zip",
+      "bytes": 1535707641,
+      "sha256": "527313b09c3c4975c65c3424bb573da846f30b375aeb099117096e2c53769b2f",
+      "selected_files": [
+        {"path": "LICENSE", "role": "license", "bytes": 1531, "sha256": "e0809c7f2f3a989cfe405dab34fa7df4799c47fa8bad02d123769cd436e6baea"},
+        {"path": "README", "role": "metadata", "bytes": 2084, "sha256": "5c3e09c6e6770f13523048e04a5e68e67c3557699328166fa04875a4f4a98aed"},
+        {"path": "UNPC.en-zh.en", "role": "alignment-side:eng_Latn-not-admitted", "bytes": 2746696841, "sha256": "f28fdf2414aaa997891246c1c7247f45d192369dc84dc0a36fe4bab2f5d67476"},
+        {"path": "UNPC.en-zh.zh", "role": "data:zho_Hans", "bytes": 2137392497, "sha256": "7c9d67c40da0445f25774f989c76ce9124c978ae89dd3c5f4a074fe7378baef4"},
+        {"path": "UNPC.en-zh.xml", "role": "alignment", "bytes": 633030401, "sha256": "0592d279a517e7e5cf6337d44fd8d2b5b905dc0ab3d8033082b156f5f43fc3b7"}
       ]
     },
     {
@@ -253,7 +268,7 @@
     "verified_on": "2026-07-17",
     "method": "all admitted sources: local full-file SHA-256 plus cached upstream archive and selected-member or sorted-concatenation SHA-256; HPLT zho_Hant remains explicitly rejected",
     "total_local_bytes": 1832030713,
-    "total_download_bytes": 378979331,
-    "total_selected_bytes": 428040881
+    "total_download_bytes": 1914686972,
+    "total_selected_bytes": 5945164235
   }
 }

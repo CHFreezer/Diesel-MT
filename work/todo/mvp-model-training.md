@@ -59,7 +59,7 @@ TD-16F -> TD-17 -> TD-18
 ## 当前回退门禁
 
 - [x] **TD-02 schema v4**：EN/Hans/JA/KO各50,000 source；原生Hant无target/minimum/refill，完整审计后实收851条；锁定一跳反向pair、human-anchor ceiling、80/20 sampling weight和一次dev-only patch。
-- [ ] **TD-03 schema v4**：构建并发布200,000条固定非Hant source、质量实收Hant和质量实收human anchors，严格零截断、去重和holdout/FLORES隔离。
+- [x] **TD-03 schema v4**：已发布200,000条固定非Hant source、851条质量实收Hant和40,000条human anchors；严格零截断、semantic-group分区、exact/near去重和FLORES-dev隔离。
 - [ ] **TD-04 schema v4**：复用冻结Hy-MT2运行时生成16路固定target及4条质量实收`Hant -> X`，验证一跳反向pair并执行固定人工抽检。
 - [ ] **TD-05 schema v4**：按实际accepted数量发布80/20 sampling mixed 60M corpus；不复制记录凑固定raw总数，不再创建human-only foundation。
 - [x] 历史 TD-02～TD-05 v1/v2 产物保持不可变，只作为 route/system-validation 与失败诊断证据。

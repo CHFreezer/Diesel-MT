@@ -38,7 +38,7 @@ evaluation_boundary:
     decision: all thresholds must pass; otherwise only failing routes may trigger the single weak-route patch
 
 source_bank:
-  selection_seed: diesel-mt-td02-mvp60-source-bank-v2-quality-first-hant
+  selection_seed: diesel-mt-td03-mvp60-source-bank-v3-parallel-side-quality
   fixed_non_hant_unique_texts: 200000
   fixed_texts_per_non_hant_language: 50000
   actual_native_hant_unique_texts: 851
@@ -77,10 +77,14 @@ source_bank:
     source_anchor_overlap: prohibited-by-normalized-text-and-source-group
     overflow_policy: reject-never-truncate
   components:
-    - {source_id: hplt3-tokenizer-train, language_tag: eng_Latn, selected_texts: 50000, selection_unit: cleaned-line}
-    - {source_id: hplt3-tokenizer-train, language_tag: zho_Hans, selected_texts: 50000, selection_unit: cleaned-line}
-    - {source_id: hplt3-tokenizer-train, language_tag: jpn_Jpan, selected_texts: 50000, selection_unit: cleaned-line}
-    - {source_id: hplt3-tokenizer-train, language_tag: kor_Hang, selected_texts: 50000, selection_unit: cleaned-line}
+    - {source_id: alt-v20191206-en-ja-zh, language_tag: eng_Latn, selected_texts: 1000, selection_unit: disjoint-aligned-group-side}
+    - {source_id: kftt-1.0-en-ja, language_tag: eng_Latn, selected_texts: 34000, selection_unit: disjoint-aligned-group-side}
+    - {source_id: korean-parallel-news-a1fb53d, language_tag: eng_Latn, selected_texts: 15000, selection_unit: disjoint-aligned-group-side}
+    - {source_id: unpc-v1.0-en-zho_hans, language_tag: zho_Hans, selected_texts: 45000, selection_unit: disjoint-aligned-group-side}
+    - {source_id: alt-v20191206-en-ja-zh, language_tag: zho_Hans, selected_texts: 5000, selection_unit: disjoint-aligned-group-side}
+    - {source_id: kftt-1.0-en-ja, language_tag: jpn_Jpan, selected_texts: 49000, selection_unit: disjoint-aligned-group-side}
+    - {source_id: alt-v20191206-en-ja-zh, language_tag: jpn_Jpan, selected_texts: 1000, selection_unit: disjoint-aligned-group-side}
+    - {source_id: korean-parallel-news-a1fb53d, language_tag: kor_Hang, selected_texts: 50000, selection_unit: disjoint-aligned-group-side}
     - {source_id: massive-1.1-route-control, language_tag: zho_Hant, selected_texts: 498, selection_unit: quality-gated-text}
     - {source_id: taiwan-moj-law-api-20260710, language_tag: zho_Hant, selected_texts: 170, selection_unit: quality-gated-text}
     - {source_id: mdn-translated-content-zh-tw, language_tag: zho_Hant, selected_texts: 121, selection_unit: quality-gated-text}
@@ -190,10 +194,10 @@ sources:
     split_policy: train-only
     limitations:
       - Product or redistribution use still requires an upstream-rights review; CC0 covers packaging, not every page.
-      - Exploratory sampling found the frozen zho_Hant web corpus materially noisier, so it is excluded from the first source bank.
+      - Deterministic five-tag audits found web concatenation, SEO, marketing fragments, historical text, and register mixing; HPLT remains tokenizer provenance only and contributes zero translation-source records.
 
   - source_id: alt-v20191206-en-ja-zh
-    roles: [human-anchor]
+    roles: [source-bank, human-anchor]
     version: "20191206"
     license: CC-BY-4.0
     homepage: https://opus.nlpl.eu/ALT/corpus/version/ALT
@@ -203,8 +207,19 @@ sources:
     split_policy: train-only
     limitations: [The two OPUS bilingual exports are joined only on identical unique English text; duplicate or conflicting joins are rejected.]
 
+  - source_id: unpc-v1.0-en-zho_hans
+    roles: [source-bank]
+    version: "1.0"
+    license: United Nations public-domain corpus terms with attribution and disclaimer
+    homepage: https://www.un.org/dgacm/en/content/uncorpus
+    lock_record_ids: [unpc-v1.0-en-zh-moses]
+    language_tags: [zho_Hans]
+    available_records: 17451549
+    split_policy: train-only-disjoint-group-side
+    limitations: [Formal UN language dominates; only a deterministic 45000-group Simplified-Chinese source subset is admitted and no UNPC target enters human anchors.]
+
   - source_id: kftt-1.0-en-ja
-    roles: [human-anchor]
+    roles: [source-bank, human-anchor]
     version: "1.0"
     license: CC-BY-SA-3.0
     homepage: https://www.phontron.com/kftt/
@@ -226,7 +241,7 @@ sources:
     limitations: [Native Traditional Chinese but legal-domain heavy; source-bank clauses and bilingual anchors must use disjoint PCode/article groups.]
 
   - source_id: korean-parallel-news-a1fb53d
-    roles: [human-anchor]
+    roles: [source-bank, human-anchor]
     version: a1fb53dc5216f3a2d07d973456d8921ed23c88c6
     license: CC-BY-SA-3.0
     homepage: https://github.com/jungyeul/korean-parallel-corpora/tree/a1fb53dc5216f3a2d07d973456d8921ed23c88c6
