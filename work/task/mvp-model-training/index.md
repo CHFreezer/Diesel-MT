@@ -1,6 +1,6 @@
 # task index: MVP model training
 
-状态：active（TD-02～TD-03 ability-first completed；TD-04 teacher generation in_progress；TD-05等待；旧TD-16 suspended）
+状态：active（TD-02～TD-03 ability-first completed；TD-04 v3 人工质量门 rejected；TD-05 blocked；旧TD-16 suspended）
 
 ## 来源
 
@@ -65,8 +65,8 @@ flowchart LR
 | 1 | TD-01 | [冻结执行契约、目录与 Git 边界](td-01-execution-contract.md) | 无 | 无 | TD-02 | completed |
 | 2 | TD-02 | [调研并锁定 60M MVP 数据来源](td-02-dataset-research-and-lock.md) | TD-01 completed；旧 M0 长训否决 | TD-01 | 无 | completed（schema v4；原生Hant质量实收851条） |
 | 3 | TD-03 | [实现确定性平行数据构建管线](td-03-data-pipeline.md) | TD-02 schema v4 completed | TD-01、TD-02 schema v4 | 无 | completed（200,851 source + 40,000 human） |
-| 4 | TD-04 | [实现分组切分、去重与泄漏防护](td-04-split-dedup-leakage.md) | TD-03 schema v4 completed | TD-03 schema v4 | 无 | in_progress（20-route teacher + reverse pairs） |
-| 5 | TD-05 | [构建并验收 M0 数据集](td-05-m0-dataset-acceptance.md) | TD-04 schema v4 completed | TD-04 schema v4 | 无 | pending（重写为 20 路 teacher + anchor 发布） |
+| 4 | TD-04 | [实现分组切分、去重与泄漏防护](td-04-split-dedup-leakage.md) | TD-03 schema v4 completed | TD-03 schema v4 | 无 | rejected（v3 完成生成但 KFTT 日文→英文实体/术语质量门失败） |
+| 5 | TD-05 | [构建并验收 M0 数据集](td-05-m0-dataset-acceptance.md) | TD-04 schema v4 completed | TD-04 schema v4 | 无 | blocked（禁止消费 v3） |
 | 2–5 | TD-06 | [锁定并验证 Hy-MT2 7B teacher 运行时](td-06-hymt2-teacher-runtime.md) | TD-01 completed | TD-01 | TD-02～TD-05、TD-09～TD-11 | completed |
 | 6 | TD-07 | [校准 teacher 语言映射、prompt 与解码](td-07-teacher-prompt-decode.md) | TD-05、TD-06 completed | TD-05、TD-06 | 无 | completed |
 | 7 | TD-08 | [生成 D0 smoke 并验收 D1 最小可用蒸馏数据](td-08-distilled-data.md) | TD-07 completed | TD-05、TD-07 | 无 | completed |
@@ -98,7 +98,7 @@ flowchart LR
 
 ## 关键路径
 
-历史链已执行到TD-16B，但长训否决了旧TD-02的来源适用性假设。新TD-02 schema v4已完成繁体质量实收和byte lock；当前关键路径为 `TD-03 source/anchors -> TD-04 teacher -> TD-05 mixed corpus -> TD-16C mixed 60M`。旧A/B、M0、D1和长训checkpoint只保留为不可变诊断证据。
+历史链已执行到TD-16B，但长训否决了旧TD-02的来源适用性假设。新TD-04 v3 又证明“保留 KFTT 日文并让 teacher 生成英文”仍会系统性破坏专名、年号和术语；当前关键路径回到 `修订 KFTT 日英准入 -> 新 TD-03/TD-04 identity -> TD-05 mixed corpus -> TD-16C mixed 60M`。旧A/B、M0、D1、长训checkpoint和 TD-04 v1/v2/v3 只保留为不可变诊断证据。
 
 任何来源/许可缺口、teacher 离线运行失败、M1 未过拟合、恢复不一致或 test 隔离失败都会阻塞后续汇合，不得以跳过 task 的方式继续。
 

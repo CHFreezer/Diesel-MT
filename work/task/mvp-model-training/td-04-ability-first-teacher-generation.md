@@ -1,6 +1,6 @@
 # task TD-04 schema v4：生成并验收 20 路 ability-first teacher 数据
 
-状态：in progress（v2 长句上限预检失败，v3 正式生成待启动）
+状态：rejected（v3 生成/数量门完成；人工质量门发现 KFTT 日文→英文系统性实体与术语错误）
 
 依赖：TD-03 schema v4、冻结的 TD-06/TD-07 teacher runtime 与 prompt/decode
 
@@ -47,4 +47,6 @@
 
 v3 的隔离预检覆盖剩余 12 条固定路线，并对五条风险路线复测候选上限；64 slots/32,768 总上下文与逐路上限均通过真实 Hy-MT2 请求，数量门不降低、截断输出仍拒收。正式 generation identity 为 `c4d1812f66c9be42a3a16f207444f7ee648e836f39d8867a3851d5999b9535ac`。
 
-v3 正式生成命令为 `scripts/generate_mvp_60m_teacher.py generate --runtime-root D:\Diesel-MT-Runtime\mvp60-data-v3`。完成前本 task 保持 `in progress`。
+v3 正式生成命令为 `scripts/generate_mvp_60m_teacher.py generate --runtime-root D:\Diesel-MT-Runtime\mvp60-data-v3`。生成已完整结束：raw 195,404 条，accepted teacher 163,368 条，16 条固定路线各发布候选 10,000，Hant 原生路线质量实收，reverse 1,683 条；manifest SHA-256 为 `7e5f136e7efde4e98f114c7482183b9e31386f85e8b38441c0a99aed21c10d46`。这只证明运行、长句上限和数量门完成，不代表质量验收。
+
+固定人工队列共 756 条。检查到 200 条时，`jpn_Jpan→eng_Latn` 的 20 条 accepted 中至少 7 条存在实质专名、年号或术语错误，且全部追溯到 `kftt-1.0-en-ja` 日文 source：例如「藤原秀郷／将門」被改成其他人物名、「安永」变成不存在的 `Eiyo`、「チューハイ」变成 `tuhao`。依据 `any-block-prevents-TD05` 合同立即停止，未检查记录没有自动 pass，也没有伪造完整 decisions/report。紧凑阻断证据为 [`mvp-60m-td04-v3-rejected-kftt-japanese.json`](../../../artifacts/model-training/reports/m0/mvp-60m-td04-v3-rejected-kftt-japanese.json)。v3 runtime 保持不可变，禁止 resume、禁止混入后续身份、禁止发布 TD-05。

@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "status": "rejected",
+  "task": "TD-04 schema v4 v3",
+  "rejected_on": "2026-07-18",
+  "reason": "KFTT Japanese teacher sources produced systematic entity, era-name and term corruption on jpn_Jpan->eng_Latn; successful generation and automatic filtering therefore do not qualify the corpus for TD-05",
+  "formal_test_accessed": false,
+  "formal_devtest_accessed": false,
+  "preserved_runtime_root": "D:/Diesel-MT-Runtime/mvp60-data-v3",
+  "generation": {
+    "generation_identity": "c4d1812f66c9be42a3a16f207444f7ee648e836f39d8867a3851d5999b9535ac",
+    "generation_config_sha256": "d062b22cb853247460051fa131b40d61f5069ce5f93948175db1b1e31a1b847e",
+    "status": "generation-complete",
+    "raw_records": 195404,
+    "raw_sha256": "9223cab55ebe3dd6e3889858a4e3c33bb52c6a7c2a29551ad3bbfd3dad391458",
+    "accepted_teacher_records": 163368,
+    "accepted_teacher_sha256": "29229aa74f349b70bb9330bc6b2b49c7129de37d1ca7805a391acbeae1918d0f",
+    "manifest_sha256": "7e5f136e7efde4e98f114c7482183b9e31386f85e8b38441c0a99aed21c10d46",
+    "fixed_non_hant_routes_at_10000": 16,
+    "outgoing_hant_quality_actual_no_refill": true,
+    "reverse_records": 1683
+  },
+  "manual_review": {
+    "queue_records": 756,
+    "queue_sha256": "59e51a6b8dcec3a4bc92573e7c43586fba855a063880c19fbc77ce5c2bb5c1e2",
+    "records_checked_before_stop": 200,
+    "first_blocking_route": "jpn_Jpan->eng_Latn",
+    "accepted_checked_on_blocking_route": 20,
+    "accepted_with_material_entity_or_term_errors": 7,
+    "systemic_blocker": true,
+    "complete_decisions_written": false,
+    "reason_for_incomplete_decisions": "The frozen any-block-prevents-TD05 policy requires review to stop at the first systemic blocker; unreviewed rows were not auto-passed."
+  },
+  "source_trace": {
+    "td03_source_bank_sha256": "4702ac9659483a361e0dbf663bf39f434df221ff0d8a818343f53adc0d22843a",
+    "source_id": "kftt-1.0-en-ja",
+    "japanese_teacher_source_records": 49000,
+    "examples": [
+      {
+        "source_record_id": "141488",
+        "source": "安永7年（1778年）12月二品に叙せられる。",
+        "teacher_target": "In December of the 7th year of Eiyo (1778), he was promoted to the second rank.",
+        "error": "The An'ei era name was changed to the nonexistent Eiyo."
+      },
+      {
+        "source_record_id": "348008",
+        "source": "天慶3年（940年）、藤原秀郷と協力して将門を攻め、2月14日「北山の決戦」にてこれを滅ぼす。",
+        "teacher_target": "In the 3rd year of Tenkei (940), he collaborated with Fujiwara no Hidemoto to attack Toshimoto, and on February 14, he defeated him in the ‘Battle of Kita-yama’.",
+        "error": "Fujiwara no Hidesato and Masakado were replaced by different names."
+      },
+      {
+        "source_record_id": "296735",
+        "source": "三善為長（みよしのためなが、寛弘4年（1007年）-永保元年8月3日(旧暦)（1081年9月8日））は、平安時代中期の貴族。",
+        "teacher_target": "Miyoši no Tamenaga (宽弘4年 (1007) – August 3, Year 1 of Eiho (old calendar) (September 8, 1081)) was a noble of the mid-Heian period.",
+        "error": "An English target retained Simplified Chinese era text and corrupted the name romanization."
+      },
+      {
+        "source_record_id": "125951",
+        "source": "同年12月8日_(旧暦)の『孝親日記』にその事が記されている。",
+        "teacher_target": "It is recorded in the ‘Journal of Filial Piety’ on December 8 of the same year_(lunar calendar).",
+        "error": "A proper-title entity was converted into an unsupported semantic gloss."
+      },
+      {
+        "source_record_id": "68508",
+        "source": "しかし2度の酒税改正により、チューハイなどに比べ、割安感があまり感じられなくなってきたのが実情となっている。",
+        "teacher_target": "However, due to two rounds of liquor tax reforms, it has become a reality that, compared to drinks like tuhao, the sense of being cheaper is no longer as noticeable.",
+        "error": "Chuhai was changed to the nonexistent product term tuhao."
+      }
+    ]
+  },
+  "decision": {
+    "td04_publication": "rejected",
+    "td05_publication": "prohibited",
+    "resume_v3": false,
+    "reuse_v3_teacher_targets": false,
+    "required_remediation": "Remove KFTT Japanese from teacher-generated English targets or consume its locked human English parallel side directly under a new data/config/generation identity, then rerun the complete fixed review gate."
+  }
+}

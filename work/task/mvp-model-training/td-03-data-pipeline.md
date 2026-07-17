@@ -82,6 +82,7 @@
 
 - 原 `mvp60-data-v1` 的 TD-03 source bank 作为被否决 TD-04 的输入保留；未覆盖其 runtime。新运行根为 `D:\Diesel-MT-Runtime\mvp60-data-v2`。
 - 新 source bank 仍为 200,851 条，SHA-256 `4702ac9659483a361e0dbf663bf39f434df221ff0d8a818343f53adc0d22843a`。EN=UNPC 30k + ALT 5k + 韩英新闻 15k，KFTT EN=0；Hans=UNPC 46k + ALT 4k；JA/KO/Hant 不变。
+- 该 source bank 已被 TD-04 v3 人工质量门否决为 teacher publication 输入：KFTT JA 49k 在生成英文时系统性破坏专名、年号和术语。其字节身份与运行证据继续保留，但下一 TD-03 identity 必须显式区分 KFTT human JA–EN pair 与需要 teacher 翻译的 source，不能原样复用本 manifest。
 - human anchors 40,000 条完全不变，SHA-256 仍为 `82b23f97ef7e7a38ea6b1aac0f9ee3099e29d16ef0f1dfd552f6ce094383715c`。
 - 独立复核确认所有标签之间 source semantic-group overlap=0、UNPC 英简 alignment-line overlap=0、source/anchor group overlap=0、exact/near overlap=0、FLORES dev contamination=0、zero truncation=true；从未读取 devtest。
 - runtime manifest SHA-256 为 `7795f2bb5d8c18cff78a3cbb751f913dd6d1a1470923b656667d7a6def1ec8c1`；提交内 compact manifest SHA-256 为 `c7bff0a6bdc811b0b06358c84ac5accad3922b3746239fa70292810fc7ed4bc4`。

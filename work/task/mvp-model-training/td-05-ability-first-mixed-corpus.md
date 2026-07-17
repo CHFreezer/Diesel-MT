@@ -1,6 +1,6 @@
 # task TD-05 schema v4：发布并验收 80/20 ability-first mixed corpus
 
-状态：pending runtime publication（实现和测试已完成；等待 TD-04 complete + manual review）
+状态：blocked（实现和测试已完成；TD-04 v3 人工质量门 rejected，禁止 runtime publication）
 
 依赖：TD-03 schema v4、TD-04 schema v4
 
@@ -39,3 +39,5 @@
 - runtime：`td05/training-corpus.jsonl`、`td05/sampling-plan.json`、最后发布的 `td05/manifest.json`。
 - tracked evidence：`artifacts/model-training/reports/m0/mvp-60m-td05-manifest.json` 与 `mvp-60m-data-chain.json`。
 - `status=complete`、20 路、零截断、80/20 preview、无 raw duplicate fill、无 teacher/human group overlap、人工 review 无 blocker、完整回归通过后，才可关闭 TD-05。
+
+2026-07-18：TD-04 v3 虽已完成 195,404 次生成与自动 finalize，但 `jpn_Jpan→eng_Latn` 固定人工审查发现 KFTT 日文 source 的系统性专名、年号与术语错误。`D:\Diesel-MT-Runtime\mvp60-data-v3\td05` 未创建；本 task 不得消费 v3 `accepted-teacher.jsonl` 或 `reverse-pairs.jsonl`。只有新的 TD-03/TD-04 身份完成全部 756 条同等人工门且无 blocker，才可重新进入 publication。
