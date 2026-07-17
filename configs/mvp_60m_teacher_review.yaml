@@ -1,0 +1,29 @@
+schema_version: 1
+
+identity:
+  name: mvp-60m-teacher-manual-review
+  status: frozen
+  task: TD-04
+
+inputs:
+  td04_manifest: td04/manifest.json
+  accepted_teacher: td04/accepted-teacher.jsonl
+  filtered_teacher: td04/filtered-teacher.jsonl
+
+sampling:
+  seed: diesel-mt-td04-manual-review-v1
+  accepted_per_route: 20
+  filtered_per_route: 20
+  insufficient_filtered_policy: review-all
+
+decisions:
+  allowed: [pass, warning, block]
+  required_fields: [review_id, decision, category, note]
+  blocker_policy: any-block-prevents-td05
+  warning_policy: retain-with-explicit-attestation
+  formal_test_access: prohibited
+
+outputs:
+  queue: td04/manual-review-queue.jsonl
+  decisions: td04/manual-review-decisions.jsonl
+  report: td04/manual-review-report.json
