@@ -370,6 +370,8 @@ def build_reverse_pairs(
                     "target_text": target_text,
                     "provenance": "one_hop_accepted_teacher_pair_reversal",
                     "counts_as_native_hant": False,
+                    "generation_identity": row.get("generation_identity"),
+                    "profile": row.get("profile"),
                 }
             )
             if sum(item["tgt_lang"] == target for item in reversed_rows) == limit:
@@ -388,6 +390,10 @@ def finalize(repository_root: Path, runtime_root: Path, config_path: Path) -> di
         raise AbilityDataError(
             f"teacher journal incomplete: {len(actual_ids)}/{len(expected_ids)} jobs"
         )
+    generation_identities = {str(row.get("generation_identity")) for row in raw}
+    if len(generation_identities) != 1 or "None" in generation_identities:
+        raise AbilityDataError("teacher journal generation identity drift")
+    generation_identity = next(iter(generation_identities))
     by_route: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in raw:
         by_route[str(row["route"])].append(row)
@@ -433,6 +439,8 @@ def finalize(repository_root: Path, runtime_root: Path, config_path: Path) -> di
             "source_text": row["source_text"],
             "target_text": row["normalized_output"],
             "provenance": "Hy-MT2-7B-GGUF-Q8_0-greedy-sequence-distillation",
+            "generation_identity": row["generation_identity"],
+            "profile": row["profile"],
         }
         for row in accepted_raw
     ]
@@ -455,6 +463,7 @@ def finalize(repository_root: Path, runtime_root: Path, config_path: Path) -> di
         "status": "complete",
         "task": "TD-04",
         "generation_config_sha256": canonical_sha256(config),
+        "generation_identity": generation_identity,
         "formal_test_accessed": False,
         "raw": {"records": len(raw), "sha256": sha256_file(output_root / "raw-generation.jsonl")},
         "accepted_teacher": {"records": accepted_count, "sha256": accepted_hash},
@@ -510,4 +519,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

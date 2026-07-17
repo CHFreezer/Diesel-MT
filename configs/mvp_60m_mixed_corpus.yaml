@@ -1,0 +1,50 @@
+schema_version: 1
+
+identity:
+  name: mvp-60m-ability-first-mixed-corpus
+  status: frozen
+  task: TD-05
+
+inputs:
+  td03_runtime_manifest: td03/manifest.json
+  td03_compact_manifest: artifacts/model-training/reports/m0/mvp-60m-td03-manifest.json
+  td03_compact_manifest_sha256: d1a200f28e00de25b9374d7d24244088046c16c32226f908ddae97ee26b15de1
+  td04_runtime_manifest: td04/manifest.json
+  td04_generation_config: configs/mvp_60m_teacher_generation.yaml
+  td04_generation_config_sha256: aadd22506bbcb45da6d649846051af5c3cff175225c07dcb02d782da9011e1b0
+  human_anchors: td03/human-anchors.jsonl
+  accepted_teacher: td04/accepted-teacher.jsonl
+  reverse_pairs: td04/reverse-pairs.jsonl
+
+tokenizer:
+  student_config: configs/mvp_e8_d2_v48k.yaml
+  artifact_manifest_sha256: eb79ae22f523f1d9c9fcf75b80f2b322e3c2882a8fddb7545b5933dd4053fa7f
+  maximum_source_tokens: 256
+  maximum_target_tokens: 256
+  overflow_policy: reject-corpus-publication
+
+sampling:
+  algorithm: deterministic-two-stage-smooth-weighted-round-robin
+  seed: 20260717
+  teacher_weight: 0.80
+  human_weight: 0.20
+  within_class_route_policy: uniform-over-available-routes
+  within_route_record_policy: deterministic-shuffle-with-epoch-cycling
+  raw_duplicate_fill: prohibited
+  preview_exposures: 100000
+
+quality:
+  required_teacher_routes: 20
+  required_fixed_non_hant_teacher_records_per_route: 10000
+  required_human_records: 40000
+  require_nonempty_text: true
+  require_unique_record_ids: true
+  require_unique_directed_text_pairs: true
+  require_disjoint_teacher_human_groups: true
+  formal_test_access: prohibited
+
+outputs:
+  corpus: td05/training-corpus.jsonl
+  sampling_plan: td05/sampling-plan.json
+  manifest: td05/manifest.json
+  compact_report: artifacts/model-training/reports/m0/mvp-60m-td05-manifest.json
