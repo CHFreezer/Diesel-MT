@@ -80,8 +80,11 @@ def build_queue(
         for kind in ("accepted", "filtered"):
             values = sorted(
                 by_kind[kind].get(route, []),
-                key=lambda row: stable_rank(
-                    seed, kind, route, str(row.get("record_id") or row.get("job_id"))
+                key=lambda row: (
+                    bool(row.get("accepted", True)) if kind == "filtered" else False,
+                    stable_rank(
+                        seed, kind, route, str(row.get("record_id") or row.get("job_id"))
+                    ),
                 ),
             )
             selected = values[: limits[kind]]
@@ -99,6 +102,7 @@ def build_queue(
                         "input_record_id": input_id,
                         "source_text": str(row["source_text"]),
                         "target_text": target_text,
+                        "publication_decision": row.get("publication_decision"),
                         "automated_rejection_reasons": list(row.get("rejection_reasons", [])),
                     }
                 )

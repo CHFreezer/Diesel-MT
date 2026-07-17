@@ -413,7 +413,17 @@ def finalize(repository_root: Path, runtime_root: Path, config_path: Path) -> di
         selected = passing if source == "zho_Hant" else passing[:fixed_target]
         selected_ids = {row["job_id"] for row in selected}
         accepted_raw.extend(selected)
-        filtered.extend(row for row in values if row["job_id"] not in selected_ids)
+        for row in values:
+            if row["job_id"] in selected_ids:
+                continue
+            filtered.append(
+                {
+                    **row,
+                    "publication_decision": (
+                        "quota_excess" if row["accepted"] else "automated_reject"
+                    ),
+                }
+            )
         if source == "zho_Hant":
             original_outgoing_counts[route] = len(selected)
         reasons = Counter(

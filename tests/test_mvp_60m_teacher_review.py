@@ -55,3 +55,34 @@ def test_incomplete_manual_decisions_are_rejected(tmp_path: Path) -> None:
     write_jsonl(td04 / "manual-review-decisions.jsonl", [])
     with pytest.raises(AbilityDataError, match="decisions incomplete"):
         verify_decisions(tmp_path, config)
+
+
+def test_filtered_review_prioritizes_real_rejections_over_quota_excess() -> None:
+    config = copy.deepcopy(load_config(ROOT / "configs/mvp_60m_teacher_review.yaml"))
+    config["sampling"]["accepted_per_route"] = 1
+    config["sampling"]["filtered_per_route"] = 1
+    accepted = []
+    filtered = []
+    for route_index, (source, target) in enumerate(directed_routes()):
+        accepted.append(_accepted(route_index, source, target))
+        filtered.extend(
+            [
+                {
+                    "job_id": f"quota-{route_index}", "route": f"{source}->{target}",
+                    "src_lang": source, "tgt_lang": target, "source_text": "quota",
+                    "normalized_output": "quota", "accepted": True,
+                    "publication_decision": "quota_excess", "rejection_reasons": [],
+                },
+                {
+                    "job_id": f"reject-{route_index}", "route": f"{source}->{target}",
+                    "src_lang": source, "tgt_lang": target, "source_text": "reject",
+                    "normalized_output": "reject", "accepted": False,
+                    "publication_decision": "automated_reject",
+                    "rejection_reasons": ["truncated"],
+                },
+            ]
+        )
+    queue = build_queue(accepted, filtered, config)
+    selected = [row for row in queue if row["kind"] == "filtered"]
+    assert len(selected) == 20
+    assert all(row["publication_decision"] == "automated_reject" for row in selected)
