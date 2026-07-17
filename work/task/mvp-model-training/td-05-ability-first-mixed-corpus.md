@@ -10,9 +10,9 @@
 
 ## 冻结输入与身份
 
-- 发布合同：`configs/mvp_60m_mixed_corpus.yaml`，规范 SHA-256 `57bb0dab9f6b6f5e700e5dd21cc56655f68f7c5cbb6d59bea2930a0613781b10`。
+- 发布合同：`configs/mvp_60m_mixed_corpus.yaml`，规范 SHA-256 `575e371373fa38591feac1a679c9003a3d0c3f475293ec79039139f9379a8547`。
 - TD-03 source bank、human anchors 与 runtime manifest 必须逐文件匹配已提交紧凑 manifest。
-- TD-04 runtime manifest 必须 `status=complete`，generation config SHA-256 必须为 `aadd22506bbcb45da6d649846051af5c3cff175225c07dcb02d782da9011e1b0`，accepted/reverse 文件必须逐字节匹配。
+- TD-04 runtime manifest 必须 `status=complete`，generation config SHA-256 必须为 `3b6f5def5aea5a8b7339f0862d92fcfbe177feab3d38dcdc96ed33c92dc85357`，accepted/reverse 文件必须逐字节匹配。
 - 冻结 tokenizer artifact manifest SHA-256：`eb79ae22f523f1d9c9fcf75b80f2b322e3c2882a8fddb7545b5933dd4053fa7f`。
 
 ## 原子边界

@@ -54,7 +54,7 @@ TD-05 -> TD-16C mixed 60M -> TD-16D 可选弱路由 patch -> TD-16E -> TD-16F
 TD-16F -> TD-17 -> TD-18
 ```
 
-历史执行已到 TD-16B：A/B诊断、可配置高吞吐训练器和完整旧M0长训均有证据，但TD-16B否决了旧M0作为通用MT foundation。TD-02/TD-03 schema v4 已完成来源实收、byte lock、source bank 与 human anchors；TD-04 正式 teacher generation 正在运行，TD-05 发布器已实现但等待真实输入，旧TD-16 suspended。
+历史执行已到 TD-16B：A/B诊断、可配置高吞吐训练器和完整旧M0长训均有证据，但TD-16B否决了旧M0作为通用MT foundation。TD-02/TD-03 schema v4 已完成来源实收、byte lock、source bank 与 human anchors；首次 TD-04 又在 14,246 条处否决 KFTT 英文实体臆译，现已用 UNPC/ALT/韩英新闻修订 EN source 并在全新 v2 根重启正式 generation。TD-05 发布器已实现但等待真实输入，旧TD-16 suspended。
 
 ## 当前回退门禁
 

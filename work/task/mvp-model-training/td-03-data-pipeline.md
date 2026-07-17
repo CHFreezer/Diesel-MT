@@ -77,3 +77,11 @@
 - human anchors 实收 40,000 条、12,000 个独立组：ALT 4,000 组三语双向展开 24,000 条，KFTT 3,000 组 6,000 条，韩英新闻 3,000 组 6,000 条，MOJ 2,000 组 4,000 条。MASSIVE 的 230 个全五侧质量组均与 498 条原生繁体 source 的 semantic group 冲突，因此按“不重用、不回填”合同实收 0，而不是放宽门；anchor JSONL SHA-256 为 `82b23f97ef7e7a38ea6b1aac0f9ee3099e29d16ef0f1dfd552f6ce094383715c`。
 - 两次物化专门复核 MOJ article group key；最终验证 `source_anchor_group_overlap=0`、跨集合 exact/near overlap=0、FLORES dev contamination=0、zero truncation=true，且从未读取正式 devtest。
 - 紧凑机器证据为 [`mvp-60m-td03-manifest.json`](../../../artifacts/model-training/reports/m0/mvp-60m-td03-manifest.json)。TD-04 只能消费该 manifest 绑定的 source bank 和 human anchors。
+
+## ability-first v4 英文实体修订完成记录（2026-07-17）
+
+- 原 `mvp60-data-v1` 的 TD-03 source bank 作为被否决 TD-04 的输入保留；未覆盖其 runtime。新运行根为 `D:\Diesel-MT-Runtime\mvp60-data-v2`。
+- 新 source bank 仍为 200,851 条，SHA-256 `4702ac9659483a361e0dbf663bf39f434df221ff0d8a818343f53adc0d22843a`。EN=UNPC 30k + ALT 5k + 韩英新闻 15k，KFTT EN=0；Hans=UNPC 46k + ALT 4k；JA/KO/Hant 不变。
+- human anchors 40,000 条完全不变，SHA-256 仍为 `82b23f97ef7e7a38ea6b1aac0f9ee3099e29d16ef0f1dfd552f6ce094383715c`。
+- 独立复核确认所有标签之间 source semantic-group overlap=0、UNPC 英简 alignment-line overlap=0、source/anchor group overlap=0、exact/near overlap=0、FLORES dev contamination=0、zero truncation=true；从未读取 devtest。
+- runtime manifest SHA-256 为 `7795f2bb5d8c18cff78a3cbb751f913dd6d1a1470923b656667d7a6def1ec8c1`；提交内 compact manifest SHA-256 为 `c7bff0a6bdc811b0b06358c84ac5accad3922b3746239fa70292810fc7ed4bc4`。

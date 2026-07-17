@@ -25,6 +25,8 @@
 
 2026-07-17 长训结论再次修正边界：可配置高吞吐训练器已合入主分支，完整旧 M0 也训练至 step 15,000 并 early-stop；训练稳定但 validation loss 在 step 4,000 后持续回升。进一步审计确认 226,218 条 directed records 只有 11,411 个 semantic/alignment groups，而且 MASSIVE 的 `utt` 是窄领域 locale adaptation，会合法替换地点、媒体、服务和人物。这种数据适合训练系统/路由验证，不足以承担通用机器翻译主体。失效前提最早位于 TD-02；schema v4 已完成 60M ability-first source lock，下一步依次重写并执行 TD-03～TD-05。旧 corpus/checkpoint 均保持不可变诊断证据。
 
+2026-07-17 TD-04 首轮又触发一次来源级质量否决：KFTT 英文侧把日文专名写成罗马字，teacher 向中文生成时无法恢复原始汉字，人工对照原始日文发现 13 条中 10 条存在实体/术语臆译。运行在 14,246 条处停止并保留；英文 source 修订为 UNPC 30k + ALT 5k + 韩英新闻 15k，KFTT 仅保留日文 source 与 human anchor。TD-03 v2 已在新根完成，TD-04 v2 probe 通过后重新开始全量生成。
+
 ## 语料成熟度口径
 
 语料版本号与成熟度必须分开记录，不能因为一次真实数据运行具有 complete manifest 就把它称为“最小可用训练语料”：
