@@ -86,3 +86,16 @@ def test_filtered_review_prioritizes_real_rejections_over_quota_excess() -> None
     selected = [row for row in queue if row["kind"] == "filtered"]
     assert len(selected) == 20
     assert all(row["publication_decision"] == "automated_reject" for row in selected)
+
+
+def test_accepted_review_identity_prefers_full_teacher_job_id() -> None:
+    config = copy.deepcopy(load_config(ROOT / "configs/mvp_60m_teacher_review.yaml"))
+    config["sampling"]["accepted_per_route"] = 1
+    config["sampling"]["filtered_per_route"] = 0
+    accepted = []
+    for index, (source, target) in enumerate(directed_routes()):
+        row = _accepted(index, source, target)
+        row["teacher_job_id"] = f"full-job-{index}"
+        accepted.append(row)
+    queue = build_queue(accepted, [], config)
+    assert all(str(row["input_record_id"]).startswith("full-job-") for row in queue)

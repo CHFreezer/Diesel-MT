@@ -53,6 +53,13 @@ def _route(row: Mapping[str, Any]) -> str:
     return f"{row['src_lang']}->{row['tgt_lang']}"
 
 
+def _input_id(row: Mapping[str, Any]) -> str:
+    value = row.get("teacher_job_id") or row.get("job_id") or row.get("record_id")
+    if not isinstance(value, str) or not value:
+        raise AbilityDataError("manual review input lacks a stable teacher/record ID")
+    return value
+
+
 def build_queue(
     accepted: Sequence[Mapping[str, Any]],
     filtered: Sequence[Mapping[str, Any]],
@@ -83,7 +90,7 @@ def build_queue(
                 key=lambda row: (
                     bool(row.get("accepted", True)) if kind == "filtered" else False,
                     stable_rank(
-                        seed, kind, route, str(row.get("record_id") or row.get("job_id"))
+                        seed, kind, route, _input_id(row)
                     ),
                 ),
             )
@@ -91,7 +98,7 @@ def build_queue(
             if kind == "accepted" and len(selected) != limits[kind]:
                 raise AbilityDataError(f"{route} lacks accepted manual-review records")
             for row in selected:
-                input_id = str(row.get("record_id") or row.get("job_id"))
+                input_id = _input_id(row)
                 target_text = str(row.get("target_text") or row.get("normalized_output") or "")
                 review_id = sha256_bytes(canonical_json_bytes([seed, kind, route, input_id]))
                 queue.append(
