@@ -98,6 +98,10 @@ def validate(
         raise AbilityDataError("TD-03 native Hant source count drift")
     if td03["human_anchors"]["records"] != int(required["human_anchor_records"]):
         raise AbilityDataError("TD-03 human anchor count drift")
+    for section in ("source_bank", "human_anchors"):
+        for field in ("records", "sha256"):
+            if td03_compact[section].get(field) != td03[section].get(field):
+                raise AbilityDataError(f"TD-03 compact/runtime binding failed: {section}.{field}")
     for field in ("source_anchor_group_overlap", "exact_or_near_overlap", "flores_dev_contamination"):
         if td03["invariants"].get(field) != 0:
             raise AbilityDataError(f"TD-03 invariant failed: {field}")
@@ -131,12 +135,30 @@ def validate(
         raise AbilityDataError("TD-04 route matrix differs from 20 routes")
     if td04["reverse_pairs"].get("counts_as_native_hant") is not False:
         raise AbilityDataError("TD-04 reverse pairs were misclassified as native Hant")
+    for route, count in td04["reverse_pairs"]["route_counts"].items():
+        original = int(td04["routes"][route]["accepted"])
+        if int(count) > int(original * 0.50):
+            raise AbilityDataError(f"TD-04 reverse-pair ceiling failed: {route}")
+    for field, expected in (
+        ("fixed_non_hant_routes_at_10000", int(required["fixed_non_hant_teacher_routes"])),
+        ("outgoing_hant_quality_actual_no_refill", True),
+        ("finite_text_outputs", True),
+        ("second_teacher_call_for_reverse", False),
+    ):
+        if td04["invariants"].get(field) != expected:
+            raise AbilityDataError(f"TD-04 invariant failed: {field}")
 
     review_path = runtime_root / PurePosixPath(runtime["td04_review_report"])
     review = _json(review_path)
     _require_complete(review, "TD-04 manual review")
     if review.get("blockers"):
         raise AbilityDataError("TD-04 manual review has blockers")
+    for route in ROUTES:
+        if review["route_kind_counts"].get(f"{route}|accepted") != 20:
+            raise AbilityDataError(f"TD-04 accepted manual review count failed: {route}")
+        filtered_count = int(review["route_kind_counts"].get(f"{route}|filtered", 0))
+        if filtered_count < 0 or filtered_count > 20:
+            raise AbilityDataError(f"TD-04 filtered manual review count failed: {route}")
     for key, section in (("td04_review_queue", "queue"), ("td04_review_decisions", "decisions")):
         if sha256_file(runtime_root / PurePosixPath(runtime[key])) != review[section]["sha256"]:
             raise AbilityDataError(f"TD-04 review hash drift: {section}")
@@ -148,11 +170,20 @@ def validate(
         raise AbilityDataError("TD-05 corpus hash drift")
     if sha256_file(runtime_root / PurePosixPath(runtime["td05_sampling_plan"])) != td05["sampling_plan"]["sha256"]:
         raise AbilityDataError("TD-05 sampling plan hash drift")
+    sampling_plan = _json(runtime_root / PurePosixPath(runtime["td05_sampling_plan"]))
     if not (
         td05["sampling_plan"]["teacher_weight"] == float(required["teacher_sampling_weight"])
         and td05["sampling_plan"]["human_weight"] == float(required["human_sampling_weight"])
     ):
         raise AbilityDataError("TD-05 sampling weights drift")
+    preview = sampling_plan.get("preview", {})
+    preview_exposures = int(preview.get("exposures", -1))
+    expected_teacher = round(preview_exposures * float(required["teacher_sampling_weight"]))
+    expected_human = preview_exposures - expected_teacher
+    if preview.get("class_counts") != {"human": expected_human, "teacher": expected_teacher}:
+        raise AbilityDataError("TD-05 sampling preview is not exact 80/20")
+    if td05["corpus"]["records"] != td05["audit"]["records"]:
+        raise AbilityDataError("TD-05 corpus/audit record count drift")
     for field, expected in (
         ("twenty_teacher_routes", True),
         ("zero_truncation", True),
