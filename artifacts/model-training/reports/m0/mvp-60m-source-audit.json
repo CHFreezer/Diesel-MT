@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "status": "complete",
+  "task": "TD-02 ability-first source audit and byte lock",
+  "pipeline_version": "mvp-60m-data-v1",
+  "audited_on": "2026-07-17",
+  "formal_test_accessed": false,
+  "policy": {
+    "native_hant_count": "quality-gated actual; no target, minimum, refill, or lower-quality backfill",
+    "minimum_characters": 20,
+    "maximum_characters": 256,
+    "minimum_student_tokens": 4,
+    "maximum_student_tokens": 256,
+    "overflow": "reject-never-truncate",
+    "deduplication": "NFC/casefold exact plus punctuation-symbol-insensitive near identity across all candidates",
+    "contamination_reference": "FLORES-200 dev only",
+    "formal_devtest": "not opened",
+    "technical_share_ceiling": 0.15,
+    "legal_and_government_share_ceiling": 0.20,
+    "written_cantonese": "hard reject; UD Cantonese-HK was not downloaded or admitted"
+  },
+  "audit": {
+    "scanned_candidates": 801346,
+    "accepted_before_domain_caps": 450918,
+    "rejection_counts": {
+      "exact_duplicate": 54930,
+      "html_or_template": 935,
+      "mechanical_repetition": 19,
+      "near_duplicate": 3292,
+      "too_long": 51,
+      "too_short": 289264,
+      "url_or_email": 139,
+      "wrong_script": 1798
+    },
+    "accepted_before_caps_by_source": {
+      "hkel-current-legislation": 3873,
+      "massive-1.1-route-control": 498,
+      "mdn-translated-content-zh-tw": 6106,
+      "taiwan-moj-law-api-20260710": 439982,
+      "tldr-pages-zh-tw": 231,
+      "ud-chinese-hk": 228
+    }
+  },
+  "selection": {
+    "records": 851,
+    "sha256": "85d3ea37fa66ba76c1084e91c31d3627e74986969f5a63936df371c74bd9924c",
+    "domain_counts": {
+      "daily_and_dialogue": 554,
+      "legal_and_government": 170,
+      "technical": 127
+    },
+    "source_counts": {
+      "massive-1.1-route-control": 498,
+      "mdn-translated-content-zh-tw": 121,
+      "taiwan-moj-law-api-20260710": 170,
+      "tldr-pages-zh-tw": 6,
+      "ud-chinese-hk": 56
+    },
+    "domain_shares": {
+      "daily_and_dialogue": 0.6509988249118684,
+      "legal_and_government": 0.199764982373678,
+      "technical": 0.1492361927144536
+    }
+  },
+  "explicit_exclusions": {
+    "hplt3-tokenizer-train-zho_Hant": "deterministic random audit exposed SEO/loan spam, unrelated concatenation, historical-classical text, and register mixing without source-level provenance",
+    "hkel-current-legislation": "3873 candidates passed per-record gates but zero survived the deterministic cross-source 20 percent legal-domain ceiling",
+    "generic-zh-or-cmn": "cannot prove zho_Hans versus zho_Hant identity",
+    "cantonese": "separate language outside the five-tag and 20-route MVP scope"
+  },
+  "locked_archive_sha256": {
+    "hkel-current-instruments-zh-hant-20260323": "f68fd0429f0b7dc887b79a47ec5160d94bbd699115fedc08ac8763680c15d2cc",
+    "mdn-translated-content-zh-tw-1fbedb37": "57896f490741902b1cd275160d5753da4214e3b7f6e565b32f422c46e12805f4",
+    "tldr-pages-zh-tw-7801071f": "f667efa45728d40c57ccd49f1fa41086fe46d9863b27b94be1a3105b42cce47f",
+    "ud-chinese-hk-05c37a78": "e4a0fad909e2258de80f673f2e6018843b3c1b5740419b2f74706f8f3670ae80",
+    "alt-v20191206-en-ja": "1c0de02e5ec748aa47e6eff29ebd69a8f81869c60983f65c4b77983a343b1233",
+    "alt-v20191206-en-zh": "7c4622e25abea0f5884351df5bc942a99928df5c99a27d126a560d5a6001e70a"
+  }
+}

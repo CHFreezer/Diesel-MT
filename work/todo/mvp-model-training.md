@@ -18,7 +18,7 @@
 
 本 todo 包含 source tag 非 Hant 的16路各10,000 accepted teacher targets、质量实收的4条 `Hant -> X`、一跳 accepted-pair 反向复用和最多一次 dev 弱路由 patch，但不包含无条件1M全量生成、递归回译、在线 logits/hidden-state 蒸馏、`e12-d3`、约200M模型、生产质量门槛或移动端性能优化。
 
-2026-07-17 长训修正：高吞吐训练器已经合并，完整旧 M0 也已完成至 15k 的诊断长训；结果证明阻塞点是 TD-02 的来源适用性假设，而非 GPU/CPU 管线。旧 M0 的 226,218 条 directed records 只有 11,411 个 semantic/alignment groups，且 MASSIVE locale adaptation 允许实体本地化替换，不能继续充当通用翻译主体。TD-02 schema v4 正在执行繁体质量优先来源审计；TD-03～TD-05继续阻塞，旧数据、checkpoint和test隔离证据保持不变。
+2026-07-17 长训修正：高吞吐训练器已经合并，完整旧 M0 也已完成至 15k 的诊断长训；结果证明阻塞点是旧TD-02的来源适用性假设，而非 GPU/CPU 管线。新TD-02 schema v4已完成繁体质量优先来源审计和16组byte lock；TD-03已开始，旧数据、checkpoint和test隔离证据保持不变。
 
 ## 固定口径
 
@@ -54,11 +54,11 @@ TD-05 -> TD-16C mixed 60M -> TD-16D 可选弱路由 patch -> TD-16E -> TD-16F
 TD-16F -> TD-17 -> TD-18
 ```
 
-历史执行已到 TD-16B：A/B诊断、可配置高吞吐训练器和完整旧M0长训均有证据，但TD-16B否决了旧M0作为通用MT foundation。TD-02 schema v4 已冻结质量优先原则但来源实收/byte lock尚未完成；TD-03～TD-05必须等待其关闭，旧TD-16 suspended。
+历史执行已到 TD-16B：A/B诊断、可配置高吞吐训练器和完整旧M0长训均有证据，但TD-16B否决了旧M0作为通用MT foundation。TD-02 schema v4 已完成来源实收/byte lock；TD-03 in progress，旧TD-16 suspended。
 
 ## 当前回退门禁
 
-- [ ] **TD-02 schema v4（in progress）**：EN/Hans/JA/KO各50,000 source；原生Hant无target/minimum/refill，技术≤15%、法律/政务≤20%，筛多少收多少；锁定一跳反向pair、human-anchor ceiling、80/20 sampling weight和一次dev-only patch。
+- [x] **TD-02 schema v4**：EN/Hans/JA/KO各50,000 source；原生Hant无target/minimum/refill，完整审计后实收851条；锁定一跳反向pair、human-anchor ceiling、80/20 sampling weight和一次dev-only patch。
 - [ ] **TD-03 schema v4**：构建并发布200,000条固定非Hant source、质量实收Hant和质量实收human anchors，严格零截断、去重和holdout/FLORES隔离。
 - [ ] **TD-04 schema v4**：复用冻结Hy-MT2运行时生成16路固定target及4条质量实收`Hant -> X`，验证一跳反向pair并执行固定人工抽检。
 - [ ] **TD-05 schema v4**：按实际accepted数量发布80/20 sampling mixed 60M corpus；不复制记录凑固定raw总数，不再创建human-only foundation。

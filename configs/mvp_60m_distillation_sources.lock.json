@@ -1,18 +1,23 @@
 {
   "schema_version": 4,
-  "config_sha256": "0717d8305556dc0a90cc8d57762549d015662b56391c53d32613b4cbab77be2d",
+  "config_sha256": "5a6e16d6fe55f5540f63dfb6a62d29c0b0245266dab7ff1c6d06a95a65e761fe",
   "record_order": [
     "tokenizer-corpus-mvp",
     "hymt2-generation-contracts",
     "flores200-evaluation-boundary",
-    "unpc-v1.0-en-zh-moses",
+    "alt-v20191206-en-ja",
+    "alt-v20191206-en-zh",
     "kftt-data-1.0",
     "taiwan-moj-ch-law-json-20260710",
     "taiwan-moj-en-law-json-20260710",
     "taiwan-moj-ch-order-json-20260710",
     "taiwan-moj-en-order-json-20260710",
     "korean-parallel-corpora-a1fb53d",
-    "massive-1.1"
+    "massive-1.1",
+    "hkel-current-instruments-zh-hant-20260323",
+    "mdn-translated-content-zh-tw-1fbedb37",
+    "tldr-pages-zh-tw-7801071f",
+    "ud-chinese-hk-05c37a78"
   ],
   "records": [
     {
@@ -94,17 +99,29 @@
       ]
     },
     {
-      "record_id": "unpc-v1.0-en-zh-moses",
+      "record_id": "alt-v20191206-en-ja",
       "kind": "upstream-archive",
-      "download_uri": "https://object.pouta.csc.fi/OPUS-UNPC/v1.0/moses/en-zh.txt.zip",
-      "bytes": 1535707641,
-      "sha256": "527313b09c3c4975c65c3424bb573da846f30b375aeb099117096e2c53769b2f",
+      "download_uri": "https://object.pouta.csc.fi/OPUS-ALT/v20191206/moses/en-ja.txt.zip",
+      "bytes": 2104934,
+      "sha256": "1c0de02e5ec748aa47e6eff29ebd69a8f81869c60983f65c4b77983a343b1233",
       "selected_files": [
-        {"path": "LICENSE", "role": "license", "bytes": 1531, "sha256": "e0809c7f2f3a989cfe405dab34fa7df4799c47fa8bad02d123769cd436e6baea"},
-        {"path": "README", "role": "metadata", "bytes": 2084, "sha256": "5c3e09c6e6770f13523048e04a5e68e67c3557699328166fa04875a4f4a98aed"},
-        {"path": "UNPC.en-zh.en", "role": "data:eng_Latn", "bytes": 2746696841, "sha256": "f28fdf2414aaa997891246c1c7247f45d192369dc84dc0a36fe4bab2f5d67476"},
-        {"path": "UNPC.en-zh.zh", "role": "data:zho_Hans", "bytes": 2137392497, "sha256": "7c9d67c40da0445f25774f989c76ce9124c978ae89dd3c5f4a074fe7378baef4"},
-        {"path": "UNPC.en-zh.xml", "role": "alignment", "bytes": 633030401, "sha256": "0592d279a517e7e5cf6337d44fd8d2b5b905dc0ab3d8033082b156f5f43fc3b7"}
+        {"path": "LICENSE", "role": "license", "bytes": 377, "sha256": "8a761a5c19ada178be2f701e910ea0d212bb18ee85fd39617e580f0ceba7983e"},
+        {"path": "README", "role": "metadata", "bytes": 5021, "sha256": "6964a773fd57779ada68c4059b3f3b632471a981f698e205c5323862cc0e5bc1"},
+        {"path": "ALT.en-ja.en", "role": "data:eng_Latn", "bytes": 2513761, "sha256": "5e25178eb80c749074d9b03de3bbd470bac234825d13144a28fe9040d6f06995"},
+        {"path": "ALT.en-ja.ja", "role": "data:jpn_Jpan", "bytes": 3172027, "sha256": "a01ed78cf54ba136ed873414a5765bffedc92d75167920a57413d65562d9e6d9"}
+      ]
+    },
+    {
+      "record_id": "alt-v20191206-en-zh",
+      "kind": "upstream-archive",
+      "download_uri": "https://object.pouta.csc.fi/OPUS-ALT/v20191206/moses/en-zh.txt.zip",
+      "bytes": 1985004,
+      "sha256": "7c4622e25abea0f5884351df5bc942a99928df5c99a27d126a560d5a6001e70a",
+      "selected_files": [
+        {"path": "LICENSE", "role": "license", "bytes": 377, "sha256": "8a761a5c19ada178be2f701e910ea0d212bb18ee85fd39617e580f0ceba7983e"},
+        {"path": "README", "role": "metadata", "bytes": 5021, "sha256": "1f87193154dcdaaf82f8ed04de874941e9e9238776b7ee94c6202e0770d14959"},
+        {"path": "ALT.en-zh.en", "role": "data:eng_Latn", "bytes": 2514306, "sha256": "fd5e89812a9e420eac300bda8dab41e95cecadc6a7a2169f75fc3982e2ec9d5a"},
+        {"path": "ALT.en-zh.zh", "role": "data:zho_Hans", "bytes": 2238360, "sha256": "9158ff597d65dfb8fc7d2ece574e9e47b6ccd83dc1113ef2908302fdcb381def"}
       ]
     },
     {
@@ -187,13 +204,56 @@
         {"path": "1.1/data/ja-JP.jsonl", "role": "data:jpn_Jpan", "bytes": 12263054, "sha256": "c22df382db6aa4a23dd1e7f62a2ac8f01c6158865771ad25201696be7201ab79"},
         {"path": "1.1/data/ko-KR.jsonl", "role": "data:kor_Hang", "bytes": 12036096, "sha256": "3f44944978e95b1b3c083a6b378fc15ddcee996ef3371f1ca10635c772b93037"}
       ]
+    },
+    {
+      "record_id": "hkel-current-instruments-zh-hant-20260323",
+      "kind": "upstream-archive",
+      "download_uri": "https://resource.data.one.gov.hk/doj/data/hkel_c_instruments_zh-Hant.zip",
+      "bytes": 50946383,
+      "sha256": "f68fd0429f0b7dc887b79a47ec5160d94bbd699115fedc08ac8763680c15d2cc",
+      "selected_files": [
+        {"path": "@sorted-concatenation/60-xml-members", "role": "data:zho_Hant:selection-identity", "bytes": 2721677, "sha256": "ba561d1250a9d02f30c22aeaa6e009f38847e567f71e5b1629e849e0f2e3ba84"}
+      ]
+    },
+    {
+      "record_id": "mdn-translated-content-zh-tw-1fbedb37",
+      "kind": "upstream-archive",
+      "download_uri": "https://codeload.github.com/mdn/translated-content/zip/1fbedb37ccf2e84baaa439a7c2fdf86e219e3390",
+      "bytes": 104120257,
+      "sha256": "57896f490741902b1cd275160d5753da4214e3b7f6e565b32f422c46e12805f4",
+      "selected_files": [
+        {"path": "LICENSE.md", "role": "license", "bytes": 23750, "sha256": "57c0d7e200fadfdbadb04b9ab220297809ba7f2ac0adaa6707a07fba432b2ebe"},
+        {"path": "@sorted-concatenation/files/zh-tw/1023-markdown-members", "role": "data:zho_Hant:selection-identity", "bytes": 5801404, "sha256": "6f399fdbed909ef26a216885ac9bf1d2323575292a748f8e2be9f10498dc04e2"}
+      ]
+    },
+    {
+      "record_id": "tldr-pages-zh-tw-7801071f",
+      "kind": "upstream-archive",
+      "download_uri": "https://codeload.github.com/tldr-pages/tldr/zip/7801071f13755c147bd9dd2d322dbeaae8c2b7da",
+      "bytes": 19601565,
+      "sha256": "f667efa45728d40c57ccd49f1fa41086fe46d9863b27b94be1a3105b42cce47f",
+      "selected_files": [
+        {"path": "LICENSE.md", "role": "license", "bytes": 1572, "sha256": "826498c9793c53709035760c33bd6681e48380d34031320447febe675420ef4d"},
+        {"path": "@sorted-concatenation/pages.zh_TW/577-markdown-members", "role": "data:zho_Hant:selection-identity", "bytes": 134163, "sha256": "0ef54dbf8a6d141df99e5008e6086630b5a182d62d822f085724c0daf2234486"}
+      ]
+    },
+    {
+      "record_id": "ud-chinese-hk-05c37a78",
+      "kind": "upstream-archive",
+      "download_uri": "https://codeload.github.com/UniversalDependencies/UD_Chinese-HK/zip/05c37a78e3818e5d311e8b77b13adeccdda1e2cf",
+      "bytes": 168250,
+      "sha256": "e4a0fad909e2258de80f673f2e6018843b3c1b5740419b2f74706f8f3670ae80",
+      "selected_files": [
+        {"path": "LICENSE.txt", "role": "license", "bytes": 202, "sha256": "899b1804a12ebc090b96339614eede1b64b686721b650a71430b55b5235f7f79"},
+        {"path": "zh_hk-ud-test.conllu", "role": "data:zho_Hant", "bytes": 942232, "sha256": "a71ff348dd1e45c2cd525ed537a78d6c4b6c5edc15a19641bedc0a8465de820e"}
+      ]
     }
   ],
   "verification": {
     "verified_on": "2026-07-17",
-    "method": "verified dependencies only: local full-file SHA-256 plus cached upstream archive and selected-member SHA-256; pending native-Hant candidates remain outside this lock until admission",
+    "method": "all admitted sources: local full-file SHA-256 plus cached upstream archive and selected-member or sorted-concatenation SHA-256; HPLT zho_Hant remains explicitly rejected",
     "total_local_bytes": 1832030713,
-    "total_download_bytes": 1735760579,
-    "total_selected_bytes": 5925089985
+    "total_download_bytes": 378979331,
+    "total_selected_bytes": 428040881
   }
 }

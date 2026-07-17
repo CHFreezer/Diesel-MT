@@ -3,7 +3,7 @@ schema_version: 4
 identity:
   name: mvp_60m_sequence_distillation_sources
   purpose: ability-first source and human-anchor contract for the first approximately 60M translation-capable student
-  status: research-in-progress
+  status: source-locked
 
 coverage:
   model_tags: [eng_Latn, zho_Hans, zho_Hant, jpn_Jpan, kor_Hang]
@@ -41,6 +41,9 @@ source_bank:
   selection_seed: diesel-mt-td02-mvp60-source-bank-v2-quality-first-hant
   fixed_non_hant_unique_texts: 200000
   fixed_texts_per_non_hant_language: 50000
+  actual_native_hant_unique_texts: 851
+  audit_artifact_path: artifacts/model-training/reports/m0/mvp-60m-source-audit.json
+  selected_native_hant_sha256: 85d3ea37fa66ba76c1084e91c31d3627e74986969f5a63936df371c74bd9924c
   native_hant_admission:
     count_policy: quality-gated-actual
     target_selected_texts: null
@@ -54,13 +57,13 @@ source_bank:
       technical: 0.15
       legal_and_government: 0.20
     candidate_sources:
-      - {source_id: hplt3-tokenizer-train, domain: general, lock_status: requires-strict-requalification}
-      - {source_id: massive-1.1-route-control, domain: daily_and_dialogue, lock_status: verified-dependency}
-      - {source_id: taiwan-moj-law-api-20260710, domain: legal_and_government, lock_status: verified-dependency}
-      - {source_id: hkel-current-legislation, domain: legal_and_government, lock_status: pending-byte-lock}
-      - {source_id: mdn-translated-content-zh-tw, domain: technical, lock_status: pending-byte-lock}
-      - {source_id: tldr-pages-zh-tw, domain: technical, lock_status: pending-byte-lock}
-      - {source_id: ud-chinese-hk, domain: daily_and_dialogue, lock_status: pending-byte-lock}
+      - {source_id: hplt3-tokenizer-train, domain: general, lock_status: audited-rejected-noisy, selected_texts: 0}
+      - {source_id: massive-1.1-route-control, domain: daily_and_dialogue, lock_status: byte-locked-selected, selected_texts: 498}
+      - {source_id: taiwan-moj-law-api-20260710, domain: legal_and_government, lock_status: byte-locked-selected, selected_texts: 170}
+      - {source_id: hkel-current-legislation, domain: legal_and_government, lock_status: byte-locked-zero-after-caps, selected_texts: 0}
+      - {source_id: mdn-translated-content-zh-tw, domain: technical, lock_status: byte-locked-selected, selected_texts: 121}
+      - {source_id: tldr-pages-zh-tw, domain: technical, lock_status: byte-locked-selected, selected_texts: 6}
+      - {source_id: ud-chinese-hk, domain: mixed_daily_and_legal, lock_status: byte-locked-selected, selected_texts: 56}
   requirements:
     minimum_characters: 20
     maximum_characters: 256
@@ -78,19 +81,24 @@ source_bank:
     - {source_id: hplt3-tokenizer-train, language_tag: zho_Hans, selected_texts: 50000, selection_unit: cleaned-line}
     - {source_id: hplt3-tokenizer-train, language_tag: jpn_Jpan, selected_texts: 50000, selection_unit: cleaned-line}
     - {source_id: hplt3-tokenizer-train, language_tag: kor_Hang, selected_texts: 50000, selection_unit: cleaned-line}
+    - {source_id: massive-1.1-route-control, language_tag: zho_Hant, selected_texts: 498, selection_unit: quality-gated-text}
+    - {source_id: taiwan-moj-law-api-20260710, language_tag: zho_Hant, selected_texts: 170, selection_unit: quality-gated-text}
+    - {source_id: mdn-translated-content-zh-tw, language_tag: zho_Hant, selected_texts: 121, selection_unit: quality-gated-text}
+    - {source_id: tldr-pages-zh-tw, language_tag: zho_Hant, selected_texts: 6, selection_unit: quality-gated-text}
+    - {source_id: ud-chinese-hk, language_tag: zho_Hant, selected_texts: 56, selection_unit: quality-gated-text}
 
 human_anchors:
   selection_seed: diesel-mt-td02-mvp60-human-anchor-v2-quality-first
   count_policy: per-component-quality-gated-actual-without-refill
-  total_independent_groups_ceiling: 22750
+  total_independent_groups_ceiling: 12500
   total_directed_records_ceiling: 50000
   source_bank_overlap: prohibited
   components:
-    - {source_id: unpc-v1.0-en-zho_hans, independent_group_ceiling: 10000, routes_per_group: 2, directed_record_ceiling: 20000}
-    - {source_id: kftt-1.0-en-ja, independent_group_ceiling: 5000, routes_per_group: 2, directed_record_ceiling: 10000}
-    - {source_id: korean-parallel-news-a1fb53d, independent_group_ceiling: 5000, routes_per_group: 2, directed_record_ceiling: 10000}
-    - {source_id: taiwan-moj-law-api-20260710, independent_group_ceiling: 2500, routes_per_group: 2, directed_record_ceiling: 5000}
-    - {source_id: massive-1.1-route-control, independent_group_ceiling: 250, routes_per_group: 20, directed_record_ceiling: 5000}
+    - {source_id: alt-v20191206-en-ja-zh, independent_group_ceiling: 4000, routes_per_group: 6, directed_record_ceiling: 24000}
+    - {source_id: kftt-1.0-en-ja, independent_group_ceiling: 3000, routes_per_group: 2, directed_record_ceiling: 6000}
+    - {source_id: korean-parallel-news-a1fb53d, independent_group_ceiling: 3000, routes_per_group: 2, directed_record_ceiling: 6000}
+    - {source_id: taiwan-moj-law-api-20260710, independent_group_ceiling: 2000, routes_per_group: 2, directed_record_ceiling: 4000}
+    - {source_id: massive-1.1-route-control, independent_group_ceiling: 500, routes_per_group: 20, directed_record_ceiling: 10000}
 
 teacher_generation:
   teacher_lock_record_id: hymt2-generation-contracts
@@ -184,16 +192,16 @@ sources:
       - Product or redistribution use still requires an upstream-rights review; CC0 covers packaging, not every page.
       - Exploratory sampling found the frozen zho_Hant web corpus materially noisier, so it is excluded from the first source bank.
 
-  - source_id: unpc-v1.0-en-zho_hans
+  - source_id: alt-v20191206-en-ja-zh
     roles: [human-anchor]
-    version: "1.0"
-    license: United Nations public-domain corpus terms with attribution and disclaimer
-    homepage: https://www.un.org/dgacm/en/content/uncorpus
-    lock_record_ids: [unpc-v1.0-en-zh-moses]
-    language_tags: [eng_Latn, zho_Hans]
-    available_records: 17451549
+    version: "20191206"
+    license: CC-BY-4.0
+    homepage: https://opus.nlpl.eu/ALT/corpus/version/ALT
+    lock_record_ids: [alt-v20191206-en-ja, alt-v20191206-en-zh]
+    language_tags: [eng_Latn, zho_Hans, jpn_Jpan]
+    available_records: 18049
     split_policy: train-only
-    limitations: [Formal UN language dominates; only a deterministic 10000-group anchor subset is admitted.]
+    limitations: [The two OPUS bilingual exports are joined only on identical unique English text; duplicate or conflicting joins are rejected.]
 
   - source_id: kftt-1.0-en-ja
     roles: [human-anchor]
@@ -239,10 +247,56 @@ sources:
     split_policy: train-only
     limitations: [Professional localization may replace entities and slot values; it is route control, not literal general-MT supervision.]
 
+  - source_id: hkel-current-legislation
+    roles: [source-bank]
+    version: "2026-03-23-instruments"
+    license: DATA.GOV.HK terms and HKSAR Government copyright/attribution conditions
+    homepage: https://data.gov.hk/en-data/dataset/hk-doj-hkel-legislation-current
+    lock_record_ids: [hkel-current-instruments-zh-hant-20260323]
+    language_tags: [zho_Hant]
+    available_records: 3873
+    split_policy: current-version-train-only
+    limitations: [Legal-domain candidate was byte-locked and audited but contributed zero records after deterministic cross-source domain caps.]
+
+  - source_id: mdn-translated-content-zh-tw
+    roles: [source-bank]
+    version: 1fbedb37ccf2e84baaa439a7c2fdf86e219e3390
+    license: CC-BY-SA-2.5 for MDN prose; code samples excluded by the parser
+    homepage: https://github.com/mdn/translated-content/tree/1fbedb37ccf2e84baaa439a7c2fdf86e219e3390/files/zh-tw
+    lock_record_ids: [mdn-translated-content-zh-tw-1fbedb37]
+    language_tags: [zho_Hant]
+    available_records: 6106
+    split_policy: pinned-revision-train-only
+    limitations: [Technical prose only; markup, templates, code-bearing fragments, incomplete sentences, and browser-specific residue are rejected before the 15 percent domain cap.]
+
+  - source_id: tldr-pages-zh-tw
+    roles: [source-bank]
+    version: 7801071f13755c147bd9dd2d322dbeaae8c2b7da
+    license: CC-BY-4.0
+    homepage: https://github.com/tldr-pages/tldr/tree/7801071f13755c147bd9dd2d322dbeaae8c2b7da/pages.zh_TW
+    lock_record_ids: [tldr-pages-zh-tw-7801071f]
+    language_tags: [zho_Hant]
+    available_records: 231
+    split_policy: pinned-revision-train-only
+    limitations: [Natural-language descriptions only; command lines and URLs are excluded before the technical-domain cap.]
+
+  - source_id: ud-chinese-hk
+    roles: [source-bank]
+    version: 05c37a78e3818e5d311e8b77b13adeccdda1e2cf
+    license: CC-BY-SA-4.0
+    homepage: https://github.com/UniversalDependencies/UD_Chinese-HK/tree/05c37a78e3818e5d311e8b77b13adeccdda1e2cf
+    lock_record_ids: [ud-chinese-hk-05c37a78]
+    language_tags: [zho_Hant]
+    available_records: 228
+    split_policy: corpus-only-not-evaluation-use
+    limitations: [This is Mandarin Chinese-HK, not UD Cantonese-HK; sentences 1-650 are dialogue and the remainder are legislative proceedings subject to the legal-domain cap.]
+
 license_boundary:
   teacher_output_rule: teacher generation does not erase input-corpus license, attribution, privacy, or takedown obligations
   release_rule: model publication requires a separate provenance and attribution review; TD-02 source admission is not legal clearance
   excluded_first_wave:
     - HPLT v2 parallel mining because noisy pair fidelity adds work without helping the direct-teacher MVP route
+    - frozen HPLT v3 zho_Hant tokenizer text because strict random audit exposed SEO spam, unrelated concatenation, historical-classical text, and language-register mixing without source-level provenance
+    - UNPC because ALT news plus route-control anchors provide broader general-MT value inside the same 50000 directed-record ceiling
     - ParaCrawl and WikiMatrix because deterministic samples showed severe alignment and content noise
     - monolingual denoising pretraining, recursive backtranslation, pivot translation, and instruction tuning; only the one-hop accepted-pair reversal defined above is admitted

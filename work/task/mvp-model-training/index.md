@@ -1,6 +1,6 @@
 # task index: MVP model training
 
-状态：active（TD-02 schema v4 繁体质量优先来源审计 in_progress；TD-03～TD-05等待；旧TD-16 suspended）
+状态：active（TD-02 schema v4 source lock completed；TD-03 source/anchors in_progress；TD-04～TD-05等待；旧TD-16 suspended）
 
 ## 来源
 
@@ -63,8 +63,8 @@ flowchart LR
 | 阶段 | 编号 | 原子 task | 最早开始条件 | 完成门槛 | 可并行任务 | 状态 |
 | ---: | --- | --- | --- | --- | --- | --- |
 | 1 | TD-01 | [冻结执行契约、目录与 Git 边界](td-01-execution-contract.md) | 无 | 无 | TD-02 | completed |
-| 2 | TD-02 | [调研并锁定 60M MVP 数据来源](td-02-dataset-research-and-lock.md) | TD-01 completed；旧 M0 长训否决 | TD-01 | 无 | in_progress（schema v4 OPUS 审查） |
-| 3 | TD-03 | [实现确定性平行数据构建管线](td-03-data-pipeline.md) | TD-02 schema v4 completed | TD-01、TD-02 schema v4 | 无 | pending（重写为 source bank + anchors） |
+| 2 | TD-02 | [调研并锁定 60M MVP 数据来源](td-02-dataset-research-and-lock.md) | TD-01 completed；旧 M0 长训否决 | TD-01 | 无 | completed（schema v4；原生Hant质量实收851条） |
+| 3 | TD-03 | [实现确定性平行数据构建管线](td-03-data-pipeline.md) | TD-02 schema v4 completed | TD-01、TD-02 schema v4 | 无 | in_progress（source bank + anchors） |
 | 4 | TD-04 | [实现分组切分、去重与泄漏防护](td-04-split-dedup-leakage.md) | TD-03 schema v4 completed | TD-03 schema v4 | 无 | pending（重写为 teacher 输入隔离） |
 | 5 | TD-05 | [构建并验收 M0 数据集](td-05-m0-dataset-acceptance.md) | TD-04 schema v4 completed | TD-04 schema v4 | 无 | pending（重写为 20 路 teacher + anchor 发布） |
 | 2–5 | TD-06 | [锁定并验证 Hy-MT2 7B teacher 运行时](td-06-hymt2-teacher-runtime.md) | TD-01 completed | TD-01 | TD-02～TD-05、TD-09～TD-11 | completed |
@@ -89,7 +89,7 @@ flowchart LR
 
 ## 并行窗口与资源互斥
 
-1. TD-02 schema v4 已取消原生繁体固定配额，正在逐来源执行质量实收与byte lock；TD-03保持阻塞。旧complete manifest不能直接提升为新语料身份。
+1. TD-02 schema v4 已取消原生繁体固定配额，并完成801,346候选审计、851条质量实收与16组byte lock；TD-03已解锁。旧complete manifest不能直接提升为新语料身份。
 2. TD-09 已使用正式 20 路 fixture 完成编码、student 构造、CPU forward/backward 和离线重载；TD-10 从该冻结接口继续。
 3. TD-05 与 TD-06 已汇合；TD-07 的新增两路校准和 TD-08 的两路 addendum/20 路 composite 均已完成。D0/D1 v1 保持不可变。
 4. TD-12、TD-13 可并行；TD-14 必须等待 TD-12。TD-15 可与 TD-14 并行准备；已完成的 TD-16 共同 source A/B 诊断依赖两者。
@@ -98,7 +98,7 @@ flowchart LR
 
 ## 关键路径
 
-历史链已执行到TD-16B，但长训否决了TD-02的来源适用性假设。TD-02 schema v4 已更新为繁体质量实收，仍需完成候选来源byte lock和实际accepted审计；完成后关键路径才进入 `TD-03 source/anchors -> TD-04 teacher -> TD-05 mixed corpus -> TD-16C mixed 60M`。旧A/B、M0、D1和长训checkpoint只保留为不可变诊断证据。
+历史链已执行到TD-16B，但长训否决了旧TD-02的来源适用性假设。新TD-02 schema v4已完成繁体质量实收和byte lock；当前关键路径为 `TD-03 source/anchors -> TD-04 teacher -> TD-05 mixed corpus -> TD-16C mixed 60M`。旧A/B、M0、D1和长训checkpoint只保留为不可变诊断证据。
 
 任何来源/许可缺口、teacher 离线运行失败、M1 未过拟合、恢复不一致或 test 隔离失败都会阻塞后续汇合，不得以跳过 task 的方式继续。
 

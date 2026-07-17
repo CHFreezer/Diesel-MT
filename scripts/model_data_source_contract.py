@@ -118,8 +118,8 @@ def validate_mvp_60m_source_config(config: Mapping[str, Any]) -> dict[str, Any]:
     _exact_keys(identity, {"name", "purpose", "status"}, "identity")
     if identity["name"] != "mvp_60m_sequence_distillation_sources":
         raise SourceContractError("MVP 60M source identity changed")
-    if identity["status"] != "research-in-progress":
-        raise SourceContractError("MVP 60M source research status changed")
+    if identity["status"] != "source-locked":
+        raise SourceContractError("MVP 60M source lock status changed")
 
     coverage = _mapping(config["coverage"], "coverage")
     _exact_keys(
@@ -236,6 +236,9 @@ def validate_mvp_60m_source_config(config: Mapping[str, Any]) -> dict[str, Any]:
             "selection_seed",
             "fixed_non_hant_unique_texts",
             "fixed_texts_per_non_hant_language",
+            "actual_native_hant_unique_texts",
+            "audit_artifact_path",
+            "selected_native_hant_sha256",
             "native_hant_admission",
             "requirements",
             "components",
@@ -247,6 +250,16 @@ def validate_mvp_60m_source_config(config: Mapping[str, Any]) -> dict[str, Any]:
         raise SourceContractError("the four non-Hant source banks must total 200000 texts")
     if source_bank["fixed_texts_per_non_hant_language"] != 50_000:
         raise SourceContractError("each non-Hant source bank must contain 50000 texts")
+    if source_bank["actual_native_hant_unique_texts"] != 851:
+        raise SourceContractError("locked native-Hant quality-actual count changed")
+    if source_bank["audit_artifact_path"] != (
+        "artifacts/model-training/reports/m0/mvp-60m-source-audit.json"
+    ):
+        raise SourceContractError("native-Hant audit artifact path changed")
+    _sha256(
+        source_bank["selected_native_hant_sha256"],
+        "source_bank.selected_native_hant_sha256",
+    )
 
     hant_admission = _mapping(
         source_bank["native_hant_admission"], "source_bank.native_hant_admission"
@@ -287,24 +300,29 @@ def validate_mvp_60m_source_config(config: Mapping[str, Any]) -> dict[str, Any]:
     )
     if dict(domain_ceilings) != {"technical": 0.15, "legal_and_government": 0.20}:
         raise SourceContractError("native Hant technical/legal domain ceilings changed")
-    candidate_fields = {"source_id", "domain", "lock_status"}
+    candidate_fields = {"source_id", "domain", "lock_status", "selected_texts"}
     candidates = _list(
         hant_admission["candidate_sources"],
         "source_bank.native_hant_admission.candidate_sources",
     )
     expected_candidates = {
-        "hplt3-tokenizer-train": ("general", "requires-strict-requalification"),
-        "massive-1.1-route-control": ("daily_and_dialogue", "verified-dependency"),
+        "hplt3-tokenizer-train": ("general", "audited-rejected-noisy", 0),
+        "massive-1.1-route-control": ("daily_and_dialogue", "byte-locked-selected", 498),
         "taiwan-moj-law-api-20260710": (
             "legal_and_government",
-            "verified-dependency",
+            "byte-locked-selected",
+            170,
         ),
-        "hkel-current-legislation": ("legal_and_government", "pending-byte-lock"),
-        "mdn-translated-content-zh-tw": ("technical", "pending-byte-lock"),
-        "tldr-pages-zh-tw": ("technical", "pending-byte-lock"),
-        "ud-chinese-hk": ("daily_and_dialogue", "pending-byte-lock"),
+        "hkel-current-legislation": (
+            "legal_and_government",
+            "byte-locked-zero-after-caps",
+            0,
+        ),
+        "mdn-translated-content-zh-tw": ("technical", "byte-locked-selected", 121),
+        "tldr-pages-zh-tw": ("technical", "byte-locked-selected", 6),
+        "ud-chinese-hk": ("mixed_daily_and_legal", "byte-locked-selected", 56),
     }
-    actual_candidates: dict[str, tuple[str, str]] = {}
+    actual_candidates: dict[str, tuple[str, str, int]] = {}
     for index, candidate_value in enumerate(candidates):
         candidate = _mapping(
             candidate_value,
@@ -321,6 +339,7 @@ def validate_mvp_60m_source_config(config: Mapping[str, Any]) -> dict[str, Any]:
         actual_candidates[source_id] = (
             _string(candidate["domain"], f"{source_id}.domain"),
             _string(candidate["lock_status"], f"{source_id}.lock_status"),
+            candidate["selected_texts"],
         )
     if actual_candidates != expected_candidates:
         raise SourceContractError("native Hant research candidates changed")
@@ -375,13 +394,15 @@ def validate_mvp_60m_source_config(config: Mapping[str, Any]) -> dict[str, Any]:
         )
         _string(component["selection_unit"], f"source_bank.components[{index}].selection_unit")
     expected_totals = {tag: 50_000 for tag in MODEL_TAGS if tag != "zho_Hant"}
-    expected_totals["zho_Hant"] = 0
+    expected_totals["zho_Hant"] = source_bank["actual_native_hant_unique_texts"]
     if totals_by_tag != expected_totals:
         raise SourceContractError(
-            "fixed source components must contain 50000 texts for each non-Hant tag "
-            "and no native-Hant quota"
+            "source components must contain 50000 texts for each non-Hant tag and "
+            "the locked quality-actual native-Hant count"
         )
-    if sum(totals_by_tag.values()) != source_bank["fixed_non_hant_unique_texts"]:
+    if sum(totals_by_tag[tag] for tag in MODEL_TAGS if tag != "zho_Hant") != (
+        source_bank["fixed_non_hant_unique_texts"]
+    ):
         raise SourceContractError("fixed non-Hant source-bank total is inconsistent")
 
     anchors = _mapping(config["human_anchors"], "human_anchors")
@@ -429,13 +450,13 @@ def validate_mvp_60m_source_config(config: Mapping[str, Any]) -> dict[str, Any]:
         anchor_groups += groups
         anchor_records += records
     if (
-        anchor_groups != 22_750
+        anchor_groups != 12_500
         or anchor_records != 50_000
         or anchors["total_independent_groups_ceiling"] != anchor_groups
         or anchors["total_directed_records_ceiling"] != anchor_records
     ):
         raise SourceContractError(
-            "human-anchor ceilings must remain 22750 groups / 50000 records"
+            "human-anchor ceilings must remain 12500 groups / 50000 records"
         )
 
     teacher = _mapping(config["teacher_generation"], "teacher_generation")

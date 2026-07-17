@@ -38,15 +38,15 @@ def test_source_config_and_lock_are_hash_bound_and_bounded(
     assert lock["verification"] == {
         "verified_on": "2026-07-17",
         "method": (
-            "verified dependencies only: local full-file SHA-256 plus cached upstream "
-            "archive and selected-member SHA-256; pending native-Hant candidates remain "
-            "outside this lock until admission"
+            "all admitted sources: local full-file SHA-256 plus cached upstream archive "
+            "and selected-member or sorted-concatenation SHA-256; HPLT zho_Hant remains "
+            "explicitly rejected"
         ),
         "total_local_bytes": 1_832_030_713,
-        "total_download_bytes": 1_735_760_579,
-        "total_selected_bytes": 5_925_089_985,
+        "total_download_bytes": 378_979_331,
+        "total_selected_bytes": 428_040_881,
     }
-    assert len(lock["records"]) == 11
+    assert len(lock["records"]) == 16
 
 
 def test_first_wave_is_quality_first_hant_and_80_20_sampling_mix(
@@ -59,6 +59,7 @@ def test_first_wave_is_quality_first_hant_and_80_20_sampling_mix(
 
     assert source_bank["fixed_non_hant_unique_texts"] == 200_000
     assert source_bank["fixed_texts_per_non_hant_language"] == 50_000
+    assert source_bank["actual_native_hant_unique_texts"] == 851
     assert hant["count_policy"] == "quality-gated-actual"
     assert hant["target_selected_texts"] is None
     assert hant["minimum_selected_texts"] is None
@@ -144,15 +145,15 @@ def test_human_anchors_are_small_disjoint_and_not_a_foundation_pretrain(
     components = {component["source_id"]: component for component in anchors["components"]}
 
     assert anchors["count_policy"] == "per-component-quality-gated-actual-without-refill"
-    assert anchors["total_independent_groups_ceiling"] == 22_750
+    assert anchors["total_independent_groups_ceiling"] == 12_500
     assert anchors["total_directed_records_ceiling"] == 50_000
     assert anchors["source_bank_overlap"] == "prohibited"
-    assert components["unpc-v1.0-en-zho_hans"]["directed_record_ceiling"] == 20_000
+    assert components["alt-v20191206-en-ja-zh"]["directed_record_ceiling"] == 24_000
     assert components["massive-1.1-route-control"] == {
         "source_id": "massive-1.1-route-control",
-        "independent_group_ceiling": 250,
+        "independent_group_ceiling": 500,
         "routes_per_group": 20,
-        "directed_record_ceiling": 5_000,
+        "directed_record_ceiling": 10_000,
     }
 
 
@@ -165,7 +166,7 @@ def test_traditional_chinese_has_no_quota_and_candidate_domains_are_capped(
         if component["language_tag"] == "zho_Hant"
     ]
 
-    assert components == []
+    assert sum(component["selected_texts"] for component in components) == 851
     hant = source_config["source_bank"]["native_hant_admission"]
     assert hant["domain_share_ceilings"] == {
         "technical": 0.15,
@@ -179,6 +180,16 @@ def test_traditional_chinese_has_no_quota_and_candidate_domains_are_capped(
         "mdn-translated-content-zh-tw",
         "tldr-pages-zh-tw",
         "ud-chinese-hk",
+    }
+    selected = {item["source_id"]: item["selected_texts"] for item in hant["candidate_sources"]}
+    assert selected == {
+        "hplt3-tokenizer-train": 0,
+        "massive-1.1-route-control": 498,
+        "taiwan-moj-law-api-20260710": 170,
+        "hkel-current-legislation": 0,
+        "mdn-translated-content-zh-tw": 121,
+        "tldr-pages-zh-tw": 6,
+        "ud-chinese-hk": 56,
     }
 
     changed = copy.deepcopy(source_config)
