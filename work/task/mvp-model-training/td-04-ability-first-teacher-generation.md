@@ -45,6 +45,6 @@
 
 首次 v1 在 14,246 条处因 KFTT 英文实体臆译被质量门否决并停止。v2 修复来源后未复现实体臆译，但在 39,130 条处预判 `eng_Latn→kor_Hang` 只有 75.1% 接收、按 12k scan 无法达到 10k；根因是旧 80-token 输出上限和 256 tokens/slot 上下文造成 24.8% 截断。v2 journal 身份 `e4216e0f5e33a1ff830aa1f0d8f30dd1d76ff2fe8c8e34a335d23f6fba4c0783` 已验证完整并保留，不得恢复或混入 v3。
 
-v3 的隔离预检覆盖剩余 12 条固定路线，并对五条风险路线复测候选上限；64 slots/32,768 总上下文与逐路上限均通过真实 Hy-MT2 请求，数量门不降低、截断输出仍拒收。
+v3 的隔离预检覆盖剩余 12 条固定路线，并对五条风险路线复测候选上限；64 slots/32,768 总上下文与逐路上限均通过真实 Hy-MT2 请求，数量门不降低、截断输出仍拒收。正式 generation identity 为 `c4d1812f66c9be42a3a16f207444f7ee648e836f39d8867a3851d5999b9535ac`。
 
 v3 正式生成命令为 `scripts/generate_mvp_60m_teacher.py generate --runtime-root D:\Diesel-MT-Runtime\mvp60-data-v3`。完成前本 task 保持 `in progress`。
