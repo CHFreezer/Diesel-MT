@@ -756,6 +756,8 @@ class LlamaCppTeacher:
             assert self.process is not None and self.process.stdout is not None
             for line in self.process.stdout:
                 self.logs.append(line.rstrip())
+                if len(self.logs) > 2_000:
+                    del self.logs[:1_000]
 
         self.log_thread = threading.Thread(target=collect_logs, daemon=True)
         self.log_thread.start()

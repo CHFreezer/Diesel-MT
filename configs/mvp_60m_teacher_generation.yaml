@@ -1,0 +1,54 @@
+schema_version: 1
+
+identity:
+  name: mvp-60m-ability-first-teacher-generation
+  status: frozen
+  task: TD-04
+
+inputs:
+  td03_manifest_path: artifacts/model-training/reports/m0/mvp-60m-td03-manifest.json
+  td03_manifest_sha256: d1a200f28e00de25b9374d7d24244088046c16c32226f908ddae97ee26b15de1
+  runtime_source_bank: td03/source-bank.jsonl
+  runtime_human_anchors: td03/human-anchors.jsonl
+
+teacher:
+  selection_path: configs/hymt2_teacher_selection.yaml
+  selection_sha256: cdf41f45c51de0f491d1f4b7ce1f71eb5cd383c9d1f07dd0483256b3795c4038
+  cross_language_prompt_path: configs/hymt2_teacher_prompt_decode.yaml
+  cross_language_prompt_sha256: 9c6dfc6048070fd8846343a49040211fff36ddf74d38992c745ed212ca9dbd8b
+  chinese_conversion_prompt_path: configs/hymt2_teacher_prompt_decode_zh_conversion.yaml
+  chinese_conversion_prompt_sha256: a8edab20edaa3f07d45b940c516066e50d3ec014e3e60b13e80865acfe6f2a86
+  profile: greedy-v1
+  artifact: official-Hy-MT2-7B-GGUF-Q8_0
+  backend: llama.cpp-b10012-cuda13.3
+  flash_attention: true
+
+generation:
+  source_selection_seed: diesel-mt-td04-mvp60-teacher-v1
+  fixed_routes: source-is-not-zho_Hant
+  accepted_target_per_fixed_route: 10000
+  candidate_scan_per_fixed_route: 12000
+  outgoing_hant_policy: all-851-sources-quality-actual-no-refill
+  parallel_slots: 96
+  server_port: 18093
+  append_flush_records: 256
+  formal_test_access: prohibited
+  resume_identity: config-plus-td03-manifest-plus-source-bank-sha256
+
+reverse_pairs:
+  enabled: true
+  source: accepted-X-to-zho_Hant-teacher-pairs
+  routes: [zho_Hant->eng_Latn, zho_Hant->zho_Hans, zho_Hant->jpn_Jpan, zho_Hant->kor_Hang]
+  maximum_fraction_of_original_outgoing_hant_route: 0.50
+  second_teacher_call: false
+  require_number_and_placeholder_preservation: true
+  counts_as_native_hant: false
+
+outputs:
+  raw_journal: td04/raw-generation.jsonl
+  accepted_teacher: td04/accepted-teacher.jsonl
+  filtered_teacher: td04/filtered-teacher.jsonl
+  reverse_pairs: td04/reverse-pairs.jsonl
+  manifest: td04/manifest.json
+  gpu_samples: td04/gpu-samples.jsonl
+
