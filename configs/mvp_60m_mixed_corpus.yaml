@@ -11,7 +11,7 @@ inputs:
   td03_compact_manifest_sha256: c7bff0a6bdc811b0b06358c84ac5accad3922b3746239fa70292810fc7ed4bc4
   td04_runtime_manifest: td04/manifest.json
   td04_generation_config: configs/mvp_60m_teacher_generation.yaml
-  td04_generation_config_sha256: 3b6f5def5aea5a8b7339f0862d92fcfbe177feab3d38dcdc96ed33c92dc85357
+  td04_generation_config_sha256: d062b22cb853247460051fa131b40d61f5069ce5f93948175db1b1e31a1b847e
   human_anchors: td03/human-anchors.jsonl
   accepted_teacher: td04/accepted-teacher.jsonl
   reverse_pairs: td04/reverse-pairs.jsonl

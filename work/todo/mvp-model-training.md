@@ -54,13 +54,13 @@ TD-05 -> TD-16C mixed 60M -> TD-16D 可选弱路由 patch -> TD-16E -> TD-16F
 TD-16F -> TD-17 -> TD-18
 ```
 
-历史执行已到 TD-16B：A/B诊断、可配置高吞吐训练器和完整旧M0长训均有证据，但TD-16B否决了旧M0作为通用MT foundation。TD-02/TD-03 schema v4 已完成来源实收、byte lock、source bank 与 human anchors；首次 TD-04 又在 14,246 条处否决 KFTT 英文实体臆译，现已用 UNPC/ALT/韩英新闻修订 EN source 并在全新 v2 根重启正式 generation。TD-05 发布器已实现但等待真实输入，旧TD-16 suspended。
+历史执行已到 TD-16B：A/B诊断、可配置高吞吐训练器和完整旧M0长训均有证据，但TD-16B否决了旧M0作为通用MT foundation。TD-02/TD-03 schema v4 已完成来源实收、byte lock、source bank 与 human anchors；TD-04 v1 否决 KFTT 英文实体臆译，v2 又在 39,130 条处因韩语长目标截断会导致路线数量门失败而停止。逐路上限和 512 tokens/slot 已经真实预检，v3 在独立根继续。TD-05 发布器已实现但等待真实输入，旧TD-16 suspended。
 
 ## 当前回退门禁
 
 - [x] **TD-02 schema v4**：EN/Hans/JA/KO各50,000 source；原生Hant无target/minimum/refill，完整审计后实收851条；锁定一跳反向pair、human-anchor ceiling、80/20 sampling weight和一次dev-only patch。
 - [x] **TD-03 schema v4**：已发布200,000条固定非Hant source、851条质量实收Hant和40,000条human anchors；严格零截断、semantic-group分区、exact/near去重和FLORES-dev隔离。
-- [ ] **[TD-04 schema v4](../task/mvp-model-training/td-04-ability-first-teacher-generation.md)**：复用冻结Hy-MT2运行时生成16路固定target及4条质量实收`Hant -> X`，验证一跳反向pair并执行固定人工抽检；正式运行中。
+- [ ] **[TD-04 schema v4](../task/mvp-model-training/td-04-ability-first-teacher-generation.md)**：复用冻结Hy-MT2运行时生成16路固定target及4条质量实收`Hant -> X`，验证一跳反向pair并执行固定人工抽检；v3 配置已通过长句预检，等待正式生成。
 - [ ] **[TD-05 schema v4](../task/mvp-model-training/td-05-ability-first-mixed-corpus.md)**：按实际accepted数量发布80/20 sampling mixed 60M corpus；不复制记录凑固定raw总数，不再创建human-only foundation；实现完成、等待 TD-04 runtime publication。
 - [x] 历史 TD-02～TD-05 v1/v2 产物保持不可变，只作为 route/system-validation 与失败诊断证据。
 

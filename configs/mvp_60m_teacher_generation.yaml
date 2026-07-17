@@ -29,9 +29,31 @@ generation:
   accepted_target_per_fixed_route: 10000
   candidate_scan_per_fixed_route: 12000
   outgoing_hant_policy: all-851-sources-quality-actual-no-refill
-  parallel_slots: 96
+  parallel_slots: 64
+  server_context_size: 32768
   server_port: 18093
   append_flush_records: 256
+  route_max_output_tokens:
+    eng_Latn->zho_Hans: 64
+    eng_Latn->zho_Hant: 64
+    eng_Latn->jpn_Jpan: 112
+    eng_Latn->kor_Hang: 128
+    zho_Hans->eng_Latn: 96
+    zho_Hans->zho_Hant: 96
+    zho_Hans->jpn_Jpan: 128
+    zho_Hans->kor_Hang: 192
+    jpn_Jpan->eng_Latn: 64
+    jpn_Jpan->zho_Hans: 64
+    jpn_Jpan->zho_Hant: 64
+    jpn_Jpan->kor_Hang: 128
+    kor_Hang->eng_Latn: 64
+    kor_Hang->zho_Hans: 64
+    kor_Hang->zho_Hant: 64
+    kor_Hang->jpn_Jpan: 112
+    zho_Hant->eng_Latn: 96
+    zho_Hant->zho_Hans: 96
+    zho_Hant->jpn_Jpan: 112
+    zho_Hant->kor_Hang: 128
   formal_test_access: prohibited
   resume_identity: config-plus-td03-manifest-plus-source-bank-sha256
 

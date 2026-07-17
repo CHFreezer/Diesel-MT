@@ -129,6 +129,7 @@ def generate_one(
     cross_config: Mapping[str, Any],
     conversion_config: Mapping[str, Any],
     generation_identity: str,
+    max_output_tokens: int | None = None,
 ) -> dict[str, Any]:
     route = str(job["route"])
     prompt_config = _prompt_for_route(route, cross_config, conversion_config)
@@ -140,7 +141,11 @@ def generate_one(
             prompt=build_prompt(prompt_config, str(job["source_text"]), str(job["tgt_lang"])),
             profile=profile,
             sample_id=str(job["job_id"]),
-            max_tokens=int(limit["max_output_tokens"]),
+            max_tokens=(
+                int(max_output_tokens)
+                if max_output_tokens is not None
+                else int(limit["max_output_tokens"])
+            ),
             stop=limit["stop"],
         )
     except DistillationError as error:
@@ -267,9 +272,17 @@ def generate(
         raise AbilityDataError("Chinese conversion prompt hash drift")
     cross = load_prompt_config(cross_path)
     conversion = load_prompt_config(conversion_path)
+    prompt_routes = set(route_limits(cross)) | set(route_limits(conversion))
+    raw_output_limits = config["generation"].get("route_max_output_tokens")
+    if not isinstance(raw_output_limits, Mapping) or set(raw_output_limits) != prompt_routes:
+        raise AbilityDataError("route_max_output_tokens must cover the exact 20-route prompt union")
+    output_limits = {str(route): int(value) for route, value in raw_output_limits.items()}
+    if any(value <= 0 for value in output_limits.values()):
+        raise AbilityDataError("route_max_output_tokens values must be positive integers")
     server_config = copy.deepcopy(cross)
     slots = int(config["generation"]["parallel_slots"])
     server_config["runtime"]["maximum_batch_size"] = slots
+    server_config["runtime"]["context_size"] = int(config["generation"]["server_context_size"])
     server_config["runtime"]["port"] = int(config["generation"]["server_port"])
     flush_records = int(config["generation"]["append_flush_records"])
     output_root.mkdir(parents=True, exist_ok=True)
@@ -299,6 +312,7 @@ def generate(
                         cross_config=cross,
                         conversion_config=conversion,
                         generation_identity=generation_identity,
+                        max_output_tokens=output_limits[str(job["route"])],
                     )
                     futures[future] = job
                 newly_completed = 0
@@ -342,6 +356,7 @@ def generate(
                             cross_config=cross,
                             conversion_config=conversion,
                             generation_identity=generation_identity,
+                            max_output_tokens=output_limits[str(next_job["route"])],
                         )
                         futures[next_future] = next_job
                 handle.flush()
@@ -356,6 +371,9 @@ def generate(
         "completed_jobs": len(completed),
         "pending_jobs": len(jobs) - len(completed),
         "route_completed": dict(sorted(route_completed.items())),
+        "parallel_slots": slots,
+        "server_context_size": int(server_config["runtime"]["context_size"]),
+        "route_max_output_tokens": dict(sorted(output_limits.items())),
         "wall_seconds_this_run": round(time.monotonic() - started, 3),
         "server_log_tail": server_log_tail,
     }

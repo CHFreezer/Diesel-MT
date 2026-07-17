@@ -16,13 +16,13 @@ repository_inputs:
   td03_compact: artifacts/model-training/reports/m0/mvp-60m-td03-manifest.json
   teacher_config:
     path: configs/mvp_60m_teacher_generation.yaml
-    canonical_sha256: 3b6f5def5aea5a8b7339f0862d92fcfbe177feab3d38dcdc96ed33c92dc85357
+    canonical_sha256: d062b22cb853247460051fa131b40d61f5069ce5f93948175db1b1e31a1b847e
   review_config:
     path: configs/mvp_60m_teacher_review.yaml
     canonical_sha256: 831b2572be0dbd2740e282f2bd9fccaaf02f67561e702664db6932d844be4905
   mixed_config:
     path: configs/mvp_60m_mixed_corpus.yaml
-    canonical_sha256: 575e371373fa38591feac1a679c9003a3d0c3f475293ec79039139f9379a8547
+    canonical_sha256: d7dfceabe6d09d3a3e1e886fd29669deac91156a3d0cd96c980dd8cb635180c2
   td05_compact: artifacts/model-training/reports/m0/mvp-60m-td05-manifest.json
 
 runtime_inputs:

@@ -109,3 +109,55 @@ def test_non_format_teacher_failure_remains_fatal() -> None:
         assert "connection refused" in str(error)
     else:
         raise AssertionError("non-format teacher failures must remain fatal")
+
+
+def test_generation_config_has_exact_audited_route_limits() -> None:
+    config = load_config(ROOT / "configs/mvp_60m_teacher_generation.yaml")
+    limits = config["generation"]["route_max_output_tokens"]
+    assert len(limits) == 20
+    assert limits["eng_Latn->kor_Hang"] == 128
+    assert limits["zho_Hans->kor_Hang"] == 192
+    assert limits["zho_Hans->jpn_Jpan"] == 128
+    assert config["generation"]["parallel_slots"] == 64
+    assert config["generation"]["server_context_size"] == 32768
+
+
+def test_generate_one_uses_generation_specific_output_limit() -> None:
+    class CapturingTeacher:
+        def __init__(self) -> None:
+            self.max_tokens = 0
+
+        def generate(self, **kwargs: object) -> dict[str, object]:
+            self.max_tokens = int(kwargs["max_tokens"])
+            return {
+                "raw_output": "有效译文",
+                "finish_reason": "stop",
+                "prompt_tokens": 10,
+                "completion_tokens": 4,
+                "latency_seconds": 0.1,
+                "request_attempts": 1,
+                "seed": 1,
+            }
+
+    cross = load_prompt_config(ROOT / "configs/hymt2_teacher_prompt_decode.yaml")
+    conversion = load_prompt_config(ROOT / "configs/hymt2_teacher_prompt_decode_zh_conversion.yaml")
+    teacher = CapturingTeacher()
+    record = generate_one(
+        teacher,
+        {
+            "job_id": "job-3",
+            "job_rank": 0,
+            "route": "eng_Latn->zho_Hans",
+            "src_lang": "eng_Latn",
+            "tgt_lang": "zho_Hans",
+            "source_record_id": "source-3",
+            "semantic_group_id": "group-3",
+            "source_text": "A valid source sentence.",
+        },
+        cross_config=cross,
+        conversion_config=conversion,
+        generation_identity="generation-2",
+        max_output_tokens=137,
+    )
+    assert teacher.max_tokens == 137
+    assert record["accepted"] is True
