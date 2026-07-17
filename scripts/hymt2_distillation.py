@@ -690,8 +690,13 @@ def _http_json(url: str, payload: Mapping[str, Any] | None = None, timeout: floa
         headers={"Content-Type": "application/json"},
         method="GET" if data is None else "POST",
     )
-    with urllib.request.urlopen(request, timeout=timeout) as response:
-        value = json.loads(response.read().decode("utf-8"))
+    try:
+        with urllib.request.urlopen(request, timeout=timeout) as response:
+            value = json.loads(response.read().decode("utf-8"))
+    except urllib.error.HTTPError as error:
+        body = error.read().decode("utf-8", errors="replace").strip()
+        detail = body or str(error.reason)
+        raise DistillationError(f"HTTP {error.code}: {detail}") from error
     if not isinstance(value, dict):
         raise DistillationError(f"non-object response from {url}")
     return value

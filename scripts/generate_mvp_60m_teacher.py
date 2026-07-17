@@ -19,8 +19,10 @@ from typing import Any, Iterable, Mapping, Sequence
 import yaml
 
 from hymt2_distillation import (
+    DistillationError,
     LlamaCppTeacher,
     build_prompt,
+    derived_seed,
     filter_output,
     load_prompt_config,
     route_limits,
@@ -132,13 +134,43 @@ def generate_one(
     prompt_config = _prompt_for_route(route, cross_config, conversion_config)
     limit = route_limits(prompt_config)[route]
     profile_name = "greedy-v1"
-    response = teacher.generate(
-        prompt=build_prompt(prompt_config, str(job["source_text"]), str(job["tgt_lang"])),
-        profile=prompt_config["decode_profiles"][profile_name],
-        sample_id=str(job["job_id"]),
-        max_tokens=int(limit["max_output_tokens"]),
-        stop=limit["stop"],
-    )
+    profile = prompt_config["decode_profiles"][profile_name]
+    try:
+        response = teacher.generate(
+            prompt=build_prompt(prompt_config, str(job["source_text"]), str(job["tgt_lang"])),
+            profile=profile,
+            sample_id=str(job["job_id"]),
+            max_tokens=int(limit["max_output_tokens"]),
+            stop=limit["stop"],
+        )
+    except DistillationError as error:
+        if "expected peg-native format" not in str(error):
+            raise
+        filtered = filter_output(
+            source_text=str(job["source_text"]),
+            target_text="",
+            target_language=str(job["tgt_lang"]),
+            finish_reason="teacher_output_format_error",
+            config=prompt_config,
+        )
+        filtered["accepted"] = False
+        filtered["rejection_reasons"] = list(
+            dict.fromkeys(["teacher_output_format_error", *filtered["rejection_reasons"]])
+        )
+        return {
+            **job,
+            "generation_identity": generation_identity,
+            "profile": profile_name,
+            "raw_output": "",
+            "finish_reason": "teacher_output_format_error",
+            "prompt_tokens": 0,
+            "completion_tokens": 0,
+            "latency_seconds": 0.0,
+            "request_attempts": int(prompt_config["runtime"]["request_attempts"]),
+            "seed": derived_seed(profile, str(job["job_id"])),
+            "teacher_error_code": "peg_native_output_parse_error",
+            **filtered,
+        }
     filtered = filter_output(
         source_text=str(job["source_text"]),
         target_text=str(response["raw_output"]),
