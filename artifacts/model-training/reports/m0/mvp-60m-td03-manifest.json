@@ -2,13 +2,13 @@
   "schema_version": 1,
   "status": "complete",
   "task": "TD-03",
-  "source_config_sha256": "fde7f08f6ef445a245153526e78b856f07ee8136175f598f3e4e4b75121717d6",
-  "source_lock_sha256": "d0e9e010c48d6cdc42cba527915356e78908b4a3707bd0721fb16c0679fed6e2",
+  "source_config_sha256": "53a56eb12e57cd92766f515bb821ebf407ee5d0ef501879e26c317f9269eaa6c",
+  "source_lock_sha256": "735b05c8349330d49b7deb17e8ca5aa0059cccf881976424e57484fc661f7b78",
   "formal_test_accessed": false,
   "source_bank": {
     "path": "source-bank.jsonl",
     "records": 200851,
-    "sha256": "ae590f476125461f3f2acf7e3230ae0e6e72215622fb4ec6fe1419448f582e4e",
+    "sha256": "4702ac9659483a361e0dbf663bf39f434df221ff0d8a818343f53adc0d22843a",
     "counts": {
       "eng_Latn": 50000,
       "zho_Hans": 50000,
@@ -49,8 +49,8 @@
     "moj": {"raw": 27896, "accepted": 3775}
   },
   "source_components": {
-    "eng_Latn": {"ALT-news": 1000, "KFTT": 34000, "Korean-news-English-side": 15000},
-    "zho_Hans": {"ALT-news": 5000, "UNPC": 45000},
+    "eng_Latn": {"ALT-news": 5000, "Korean-news-English-side": 15000, "UNPC-English": 30000},
+    "zho_Hans": {"ALT-news": 4000, "UNPC": 46000},
     "zho_Hant": {"quality-actual-TD02": 851},
     "jpn_Jpan": {"ALT-news": 1000, "KFTT": 49000},
     "kor_Hang": {"Korean-news": 50000}
@@ -58,6 +58,9 @@
   "invariants": {
     "zero_truncation": true,
     "source_anchor_group_overlap": 0,
+    "cross_language_source_group_overlap": 0,
+    "unpc_english_hans_alignment_line_overlap": 0,
+    "kftt_english_teacher_source_records": 0,
     "exact_or_near_overlap": 0,
     "flores_dev_contamination": 0,
     "formal_devtest_access": 0,

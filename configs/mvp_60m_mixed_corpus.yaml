@@ -8,10 +8,10 @@ identity:
 inputs:
   td03_runtime_manifest: td03/manifest.json
   td03_compact_manifest: artifacts/model-training/reports/m0/mvp-60m-td03-manifest.json
-  td03_compact_manifest_sha256: d1a200f28e00de25b9374d7d24244088046c16c32226f908ddae97ee26b15de1
+  td03_compact_manifest_sha256: c7bff0a6bdc811b0b06358c84ac5accad3922b3746239fa70292810fc7ed4bc4
   td04_runtime_manifest: td04/manifest.json
   td04_generation_config: configs/mvp_60m_teacher_generation.yaml
-  td04_generation_config_sha256: aadd22506bbcb45da6d649846051af5c3cff175225c07dcb02d782da9011e1b0
+  td04_generation_config_sha256: 3b6f5def5aea5a8b7339f0862d92fcfbe177feab3d38dcdc96ed33c92dc85357
   human_anchors: td03/human-anchors.jsonl
   accepted_teacher: td04/accepted-teacher.jsonl
   reverse_pairs: td04/reverse-pairs.jsonl

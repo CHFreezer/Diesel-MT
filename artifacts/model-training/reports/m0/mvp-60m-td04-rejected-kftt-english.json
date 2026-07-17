@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "status": "rejected",
+  "task": "TD-04 schema v4 predecessor",
+  "rejected_on": "2026-07-17",
+  "reason": "KFTT English contains romanized Japanese entities without the original kanji; Hy-MT2 systematically guessed incorrect Han-character names and terms in Chinese targets",
+  "formal_test_accessed": false,
+  "formal_devtest_accessed": false,
+  "preserved_runtime_root": "D:/Diesel-MT-Runtime/mvp60-data-v1",
+  "predecessor_td03": {
+    "manifest_sha256": "9e4c1076df3eb980609722920cbff2a1a255c2c179da4a0c286e505a268d983d",
+    "source_config_sha256": "fde7f08f6ef445a245153526e78b856f07ee8136175f598f3e4e4b75121717d6",
+    "source_lock_sha256": "d0e9e010c48d6cdc42cba527915356e78908b4a3707bd0721fb16c0679fed6e2",
+    "source_bank_sha256": "ae590f476125461f3f2acf7e3230ae0e6e72215622fb4ec6fe1419448f582e4e",
+    "kftt_english_records": 34000
+  },
+  "preserved_teacher_journal": {
+    "records": 14246,
+    "sha256": "ce95b7be38653116a5dd51cfdbb131077c647b441a5841e8fec1186dbbb08ce4",
+    "generation_identity": "4531b93c14376278a7607bcfac253caecc7349923f7a19e618375da73831f276"
+  },
+  "manual_cross_check": {
+    "route": "eng_Latn->zho_Hant",
+    "kftt_records_checked": 13,
+    "records_with_material_entity_or_term_errors": 10,
+    "systemic_blocker": true,
+    "examples": [
+      {"english": "After Goenyu died", "original_japanese": "後円融の死後", "teacher_target": "源義勇去世後"},
+      {"english": "Provinces ... Hitachi, Kazusa and Kozuke", "original_japanese": "常陸国、上総国、上野国", "teacher_target": "常陸國、笠置國和越後國"},
+      {"english": "Only the Gokijo family of Onakabo", "original_japanese": "小仲坊の五鬼助家", "teacher_target": "大納加保的五城寺家族"}
+    ]
+  },
+  "remediation": {
+    "kftt_english_teacher_source_records": 0,
+    "replacement_english_components": {"UNPC": 30000, "ALT": 5000, "Korean-news": 15000},
+    "kftt_japanese_source_retained": 49000,
+    "human_anchors_unchanged_sha256": "82b23f97ef7e7a38ea6b1aac0f9ee3099e29d16ef0f1dfd552f6ce094383715c"
+  }
+}

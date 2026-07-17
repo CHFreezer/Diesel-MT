@@ -20,7 +20,7 @@ from mvp_60m_data_pipeline import (
     parse_moj_parallel_groups,
     read_parallel_lines,
     select_group_role,
-    select_unpc_hans,
+    select_unpc_side,
     sha256_file,
     source_rows,
     write_json,
@@ -42,6 +42,7 @@ def arguments() -> argparse.Namespace:
     parser.add_argument("--korean-en", type=Path, required=True)
     parser.add_argument("--korean-ko", type=Path, required=True)
     parser.add_argument("--unpc-zh", type=Path, required=True)
+    parser.add_argument("--unpc-en", type=Path, required=True)
     parser.add_argument("--massive", type=Path, required=True)
     parser.add_argument("--moj-zh", type=Path, nargs=2, required=True)
     parser.add_argument("--moj-en", type=Path, nargs=2, required=True)
@@ -127,10 +128,9 @@ def main() -> int:
         anchors.extend(anchor_rows(selected, languages))
 
     source_specs = [
-        ("alt", "eng_Latn", 1000),
-        ("kftt", "eng_Latn", 34000),
+        ("alt", "eng_Latn", 5000),
         ("korean", "eng_Latn", 15000),
-        ("alt", "zho_Hans", 5000),
+        ("alt", "zho_Hans", 4000),
         ("kftt", "jpn_Jpan", 49000),
         ("alt", "jpn_Jpan", 1000),
         ("korean", "kor_Hang", 50000),
@@ -146,16 +146,29 @@ def main() -> int:
             raise AbilityDataError(f"{name}/{language} selected {len(selected)}, expected {count}")
         sources.extend(source_rows(selected, language))
         source_counts[language] += len(selected)
-    unpc = select_unpc_hans(
-        args.unpc_zh.resolve(), tokenizer=tokenizer, count=45000, seed="td03-source-unpc-zho-hans",
+    unpc_hans = select_unpc_side(
+        args.unpc_zh.resolve(), tokenizer=tokenizer, language_tag="zho_Hans",
+        count=46000, seed="td03-source-unpc-zho-hans",
         used_exact=used_exact, used_near=used_near,
         contamination_exact=contamination_exact, contamination_near=contamination_near,
     )
-    for row in unpc:
+    for row in unpc_hans:
         row["record_id"] = f"src-{row['normalized_sha256'][:24]}"
         row["semantic_group_id"] = f"grp-unpc-{int(row['source_record_id']):08d}"
-    sources.extend(unpc)
-    source_counts["zho_Hans"] += len(unpc)
+    sources.extend(unpc_hans)
+    source_counts["zho_Hans"] += len(unpc_hans)
+    unpc_en = select_unpc_side(
+        args.unpc_en.resolve(), tokenizer=tokenizer, language_tag="eng_Latn",
+        count=30000, seed="td03-source-unpc-eng-latn",
+        used_exact=used_exact, used_near=used_near,
+        contamination_exact=contamination_exact, contamination_near=contamination_near,
+        excluded_record_ids={str(row["source_record_id"]) for row in unpc_hans},
+    )
+    for row in unpc_en:
+        row["record_id"] = f"src-{row['normalized_sha256'][:24]}"
+        row["semantic_group_id"] = f"grp-unpc-{int(row['source_record_id']):08d}"
+    sources.extend(unpc_en)
+    source_counts["eng_Latn"] += len(unpc_en)
     for row in hant_rows:
         row["record_id"] = f"src-{row['normalized_sha256'][:24]}"
         source_id = str(row["source_id"])

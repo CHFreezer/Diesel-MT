@@ -77,11 +77,11 @@ source_bank:
     source_anchor_overlap: prohibited-by-normalized-text-and-source-group
     overflow_policy: reject-never-truncate
   components:
-    - {source_id: alt-v20191206-en-ja-zh, language_tag: eng_Latn, selected_texts: 1000, selection_unit: disjoint-aligned-group-side}
-    - {source_id: kftt-1.0-en-ja, language_tag: eng_Latn, selected_texts: 34000, selection_unit: disjoint-aligned-group-side}
+    - {source_id: unpc-v1.0-en-zho_hans, language_tag: eng_Latn, selected_texts: 30000, selection_unit: disjoint-aligned-group-side}
+    - {source_id: alt-v20191206-en-ja-zh, language_tag: eng_Latn, selected_texts: 5000, selection_unit: disjoint-aligned-group-side}
     - {source_id: korean-parallel-news-a1fb53d, language_tag: eng_Latn, selected_texts: 15000, selection_unit: disjoint-aligned-group-side}
-    - {source_id: unpc-v1.0-en-zho_hans, language_tag: zho_Hans, selected_texts: 45000, selection_unit: disjoint-aligned-group-side}
-    - {source_id: alt-v20191206-en-ja-zh, language_tag: zho_Hans, selected_texts: 5000, selection_unit: disjoint-aligned-group-side}
+    - {source_id: unpc-v1.0-en-zho_hans, language_tag: zho_Hans, selected_texts: 46000, selection_unit: disjoint-aligned-group-side}
+    - {source_id: alt-v20191206-en-ja-zh, language_tag: zho_Hans, selected_texts: 4000, selection_unit: disjoint-aligned-group-side}
     - {source_id: kftt-1.0-en-ja, language_tag: jpn_Jpan, selected_texts: 49000, selection_unit: disjoint-aligned-group-side}
     - {source_id: alt-v20191206-en-ja-zh, language_tag: jpn_Jpan, selected_texts: 1000, selection_unit: disjoint-aligned-group-side}
     - {source_id: korean-parallel-news-a1fb53d, language_tag: kor_Hang, selected_texts: 50000, selection_unit: disjoint-aligned-group-side}
@@ -213,10 +213,10 @@ sources:
     license: United Nations public-domain corpus terms with attribution and disclaimer
     homepage: https://www.un.org/dgacm/en/content/uncorpus
     lock_record_ids: [unpc-v1.0-en-zh-moses]
-    language_tags: [zho_Hans]
+    language_tags: [eng_Latn, zho_Hans]
     available_records: 17451549
     split_policy: train-only-disjoint-group-side
-    limitations: [Formal UN language dominates; only a deterministic 45000-group Simplified-Chinese source subset is admitted and no UNPC target enters human anchors.]
+    limitations: [Formal UN language dominates; deterministic English 30000 and Simplified-Chinese 46000 source subsets use disjoint alignment groups, and no UNPC target enters human anchors.]
 
   - source_id: kftt-1.0-en-ja
     roles: [source-bank, human-anchor]
@@ -227,7 +227,7 @@ sources:
     language_tags: [eng_Latn, jpn_Jpan]
     available_records: 440288
     split_policy: original-train-only
-    limitations: [Kyoto encyclopedic domain; KFTT tune, dev, and test are excluded.]
+    limitations: [Kyoto encyclopedic domain; KFTT English remains available only for human anchors, not teacher source, because romanized Japanese entities caused systematic teacher target hallucination; KFTT tune, dev, and test are excluded.]
 
   - source_id: taiwan-moj-law-api-20260710
     roles: [source-bank, human-anchor]

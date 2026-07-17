@@ -17,6 +17,7 @@ from mvp_60m_data_pipeline import (  # noqa: E402
     written_cantonese,
     anchor_rows,
     select_group_role,
+    select_unpc_side,
 )
 
 
@@ -80,3 +81,42 @@ def test_group_role_selection_is_disjoint_and_anchor_expansion_is_directed() -> 
     rows = anchor_rows(first, ("eng_Latn", "jpn_Jpan"))
     assert len(rows) == 4
     assert {f"{row['src_lang']}->{row['tgt_lang']}" for row in rows} == {"eng_Latn->jpn_Jpan", "jpn_Jpan->eng_Latn"}
+
+
+class _LengthTokenizer:
+    src_lang = "zho_Hans"
+
+    def __call__(self, texts, **_kwargs):
+        return {"input_ids": [[1] * (len(text.split()) + 2) for text in texts]}
+
+
+def test_unpc_side_selector_supports_english_and_excludes_aligned_hans_groups(
+    tmp_path: Path,
+) -> None:
+    path = tmp_path / "unpc.en"
+    path.write_text(
+        "\n".join(
+            f"This is a sufficiently long English sentence number {index} for deterministic selection."
+            for index in range(8)
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    tokenizer = _LengthTokenizer()
+    selected = select_unpc_side(
+        path,
+        tokenizer=tokenizer,
+        language_tag="eng_Latn",
+        count=3,
+        seed="fixture",
+        used_exact=set(),
+        used_near=set(),
+        contamination_exact=set(),
+        contamination_near=set(),
+        excluded_record_ids={"0", "1", "2", "3", "4"},
+        candidate_capacity=8,
+    )
+    assert len(selected) == 3
+    assert all(row["source_record_id"] not in {"0", "1", "2", "3", "4"} for row in selected)
+    assert all(row["language_tag"] == "eng_Latn" for row in selected)
+    assert tokenizer.src_lang == "zho_Hans"

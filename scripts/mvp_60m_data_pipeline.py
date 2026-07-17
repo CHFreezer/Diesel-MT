@@ -745,16 +745,18 @@ def select_group_role(
     return selected
 
 
-def select_unpc_hans(
+def select_unpc_side(
     path: Path,
     *,
     tokenizer: Any,
+    language_tag: str,
     count: int,
     seed: str,
     used_exact: set[str],
     used_near: set[str],
     contamination_exact: set[str],
     contamination_near: set[str],
+    excluded_record_ids: set[str] = frozenset(),
     scan_limit: int = 1_000_000,
     candidate_capacity: int = 90_000,
 ) -> list[dict[str, Any]]:
@@ -763,8 +765,14 @@ def select_unpc_hans(
         for line_number, line in enumerate(handle):
             if line_number >= scan_limit:
                 break
+            if str(line_number) in excluded_record_ids:
+                continue
             candidate = TextCandidate(
-                "unpc-v1.0-en-zho_hans", str(line_number), "zho_Hans", "formal", line.rstrip("\r\n")
+                "unpc-v1.0-en-zho_hans",
+                str(line_number),
+                language_tag,
+                "formal",
+                line.rstrip("\r\n"),
             )
             decision = quality_decision(candidate)
             if not decision.accepted:
@@ -780,7 +788,12 @@ def select_unpc_hans(
             elif rank < -heap[0][0]:
                 heapq.heapreplace(heap, item)
     candidates = sorted(heap, key=lambda item: (-item[0], item[1]))
-    token_counts = tokenizer_lengths(tokenizer, [item[2] for item in candidates])
+    original_language = getattr(tokenizer, "src_lang", None)
+    try:
+        tokenizer.src_lang = language_tag
+        token_counts = tokenizer_lengths(tokenizer, [item[2] for item in candidates])
+    finally:
+        tokenizer.src_lang = original_language
     selected: list[dict[str, Any]] = []
     for item, token_count in zip(candidates, token_counts, strict=True):
         _neg_rank, line_number, text, exact, near = item
@@ -792,7 +805,7 @@ def select_unpc_hans(
             {
                 "source_id": "unpc-v1.0-en-zho_hans",
                 "source_record_id": str(line_number),
-                "language_tag": "zho_Hans",
+                "language_tag": language_tag,
                 "domain": "formal",
                 "text": text,
                 "characters": len(text),
@@ -803,8 +816,40 @@ def select_unpc_hans(
         if len(selected) == count:
             break
     if len(selected) != count:
-        raise AbilityDataError(f"UNPC selected {len(selected)} records, expected {count}")
+        raise AbilityDataError(
+            f"UNPC/{language_tag} selected {len(selected)} records, expected {count}"
+        )
     return selected
+
+
+def select_unpc_hans(
+    path: Path,
+    *,
+    tokenizer: Any,
+    count: int,
+    seed: str,
+    used_exact: set[str],
+    used_near: set[str],
+    contamination_exact: set[str],
+    contamination_near: set[str],
+    scan_limit: int = 1_000_000,
+    candidate_capacity: int = 90_000,
+) -> list[dict[str, Any]]:
+    """Backward-compatible Simplified-Chinese UNPC selector."""
+
+    return select_unpc_side(
+        path,
+        tokenizer=tokenizer,
+        language_tag="zho_Hans",
+        count=count,
+        seed=seed,
+        used_exact=used_exact,
+        used_near=used_near,
+        contamination_exact=contamination_exact,
+        contamination_near=contamination_near,
+        scan_limit=scan_limit,
+        candidate_capacity=candidate_capacity,
+    )
 
 
 def source_rows(groups: Sequence[ParallelGroup], language: str) -> list[dict[str, Any]]:

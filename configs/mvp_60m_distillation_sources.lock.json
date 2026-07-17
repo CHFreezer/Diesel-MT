@@ -1,6 +1,6 @@
 {
   "schema_version": 4,
-  "config_sha256": "fde7f08f6ef445a245153526e78b856f07ee8136175f598f3e4e4b75121717d6",
+  "config_sha256": "53a56eb12e57cd92766f515bb821ebf407ee5d0ef501879e26c317f9269eaa6c",
   "record_order": [
     "tokenizer-corpus-mvp",
     "hymt2-generation-contracts",
@@ -134,7 +134,7 @@
       "selected_files": [
         {"path": "LICENSE", "role": "license", "bytes": 1531, "sha256": "e0809c7f2f3a989cfe405dab34fa7df4799c47fa8bad02d123769cd436e6baea"},
         {"path": "README", "role": "metadata", "bytes": 2084, "sha256": "5c3e09c6e6770f13523048e04a5e68e67c3557699328166fa04875a4f4a98aed"},
-        {"path": "UNPC.en-zh.en", "role": "alignment-side:eng_Latn-not-admitted", "bytes": 2746696841, "sha256": "f28fdf2414aaa997891246c1c7247f45d192369dc84dc0a36fe4bab2f5d67476"},
+        {"path": "UNPC.en-zh.en", "role": "data:eng_Latn", "bytes": 2746696841, "sha256": "f28fdf2414aaa997891246c1c7247f45d192369dc84dc0a36fe4bab2f5d67476"},
         {"path": "UNPC.en-zh.zh", "role": "data:zho_Hans", "bytes": 2137392497, "sha256": "7c9d67c40da0445f25774f989c76ce9124c978ae89dd3c5f4a074fe7378baef4"},
         {"path": "UNPC.en-zh.xml", "role": "alignment", "bytes": 633030401, "sha256": "0592d279a517e7e5cf6337d44fd8d2b5b905dc0ab3d8033082b156f5f43fc3b7"}
       ]
@@ -147,7 +147,7 @@
       "sha256": "fcfcaa670d6d59aa691b0e909c0d7c393852dd2fb1d6310fda9b3282dc6d1638",
       "selected_files": [
         {"path": "README.txt", "role": "license-and-metadata", "bytes": 267, "sha256": "1db7086c83bf8641748db3740a135e54682b894e44ce74ae1937118942ce87c3"},
-        {"path": "data/orig/kyoto-train.en", "role": "data:eng_Latn", "bytes": 59913666, "sha256": "77cfe62e038a7cfa11b22a5c853f93e902bd3ef2d4ebafe213c635f40d8d9864"},
+        {"path": "data/orig/kyoto-train.en", "role": "alignment-side:eng_Latn-human-anchor-only", "bytes": 59913666, "sha256": "77cfe62e038a7cfa11b22a5c853f93e902bd3ef2d4ebafe213c635f40d8d9864"},
         {"path": "data/orig/kyoto-train.ja", "role": "data:jpn_Jpan", "bytes": 49077443, "sha256": "99ede0a61a798c62e5eec37fc9c4c5d5c7d3cc60d8267177bb0e08e2ac362303"}
       ]
     },
