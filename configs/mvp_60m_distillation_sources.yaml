@@ -1,0 +1,248 @@
+schema_version: 4
+
+identity:
+  name: mvp_60m_sequence_distillation_sources
+  purpose: ability-first source and human-anchor contract for the first approximately 60M translation-capable student
+  status: research-in-progress
+
+coverage:
+  model_tags: [eng_Latn, zho_Hans, zho_Hant, jpn_Jpan, kor_Hang]
+  directed_routes: 20
+  route_policy: translate every selected source directly into each of the other four tags; no pivot targets
+  chinese_script_boundary:
+    zho_Hans_semantics: FLORES-200 zho_Hans
+    zho_Hant_semantics: FLORES-200 zho_Hant
+    locale_policy: zho_Hant uses Taiwan standard Traditional Chinese as the primary output convention; formal standard written Traditional Chinese from Hong Kong or Macau is admissible supplementation and does not change the semantic identity
+    admissible_hant: modern standard written Chinese in Traditional script from Taiwan, Hong Kong, or Macau with explicit script identity and source provenance
+    excluded_hant: written Cantonese or Guangdong vernacular in any script, including yue_Hant, plus generic zh or cmn text without reliable language and script provenance
+    cantonese_policy: Cantonese is a separate language capability outside the current five-tag and 20-route scope and must never be mapped to zho_Hant
+    conversion_policy: tool-converted Hans-to-Hant text is synthetic augmentation only and cannot satisfy native-Hant source or human-anchor admission
+
+evaluation_boundary:
+  lock_record_id: flores200-evaluation-boundary
+  lock_path: configs/mvp_mt_evaluation.lock.json
+  development_split: FLORES-200 dev
+  formal_test_split: FLORES-200 devtest
+  policy: dev may select the recipe and one weak-route patch; devtest is prohibited from TD-02 through training and remains one-shot
+  mvp_pass_line:
+    protocol: full-five-tag-flores200-dev-20-direct-routes
+    source_sentences_per_tag: 997
+    route_generations: 19940
+    primary_metric: sacrebleu-chrf-char6-word2-beta2
+    minimum_macro_route_chrf: 25.0
+    minimum_route_chrf: 12.0
+    minimum_routes_at_or_above_chrf_20: 16
+    minimum_target_script_compliance_per_route: 0.99
+    maximum_empty_output_rate_per_route: 0.01
+    maximum_source_copy_rate_per_route: 0.02
+    decision: all thresholds must pass; otherwise only failing routes may trigger the single weak-route patch
+
+source_bank:
+  selection_seed: diesel-mt-td02-mvp60-source-bank-v2-quality-first-hant
+  fixed_non_hant_unique_texts: 200000
+  fixed_texts_per_non_hant_language: 50000
+  native_hant_admission:
+    count_policy: quality-gated-actual
+    target_selected_texts: null
+    minimum_selected_texts: null
+    refill_to_quota: prohibited
+    lower_quality_backfill: prohibited
+    synthetic_counts_as_native: prohibited
+    same_route_duplicate_fill: prohibited
+    reuse_across_distinct_target_routes: allowed-with-shared-semantic-group
+    domain_share_ceilings:
+      technical: 0.15
+      legal_and_government: 0.20
+    candidate_sources:
+      - {source_id: hplt3-tokenizer-train, domain: general, lock_status: requires-strict-requalification}
+      - {source_id: massive-1.1-route-control, domain: daily_and_dialogue, lock_status: verified-dependency}
+      - {source_id: taiwan-moj-law-api-20260710, domain: legal_and_government, lock_status: verified-dependency}
+      - {source_id: hkel-current-legislation, domain: legal_and_government, lock_status: pending-byte-lock}
+      - {source_id: mdn-translated-content-zh-tw, domain: technical, lock_status: pending-byte-lock}
+      - {source_id: tldr-pages-zh-tw, domain: technical, lock_status: pending-byte-lock}
+      - {source_id: ud-chinese-hk, domain: daily_and_dialogue, lock_status: pending-byte-lock}
+  requirements:
+    minimum_characters: 20
+    maximum_characters: 256
+    minimum_student_tokens: 4
+    maximum_student_tokens: 256
+    tokenizer_path: artifacts/tokenizers/mvp-tokenizer-v0
+    tokenizer_manifest_sha256: eb79ae22f523f1d9c9fcf75b80f2b322e3c2882a8fddb7545b5933dd4053fa7f
+    allowed_split: train-only
+    tokenizer_holdout_use: prohibited
+    exact_and_near_deduplication: required-across-source-bank-human-anchors-and-flores
+    source_anchor_overlap: prohibited-by-normalized-text-and-source-group
+    overflow_policy: reject-never-truncate
+  components:
+    - {source_id: hplt3-tokenizer-train, language_tag: eng_Latn, selected_texts: 50000, selection_unit: cleaned-line}
+    - {source_id: hplt3-tokenizer-train, language_tag: zho_Hans, selected_texts: 50000, selection_unit: cleaned-line}
+    - {source_id: hplt3-tokenizer-train, language_tag: jpn_Jpan, selected_texts: 50000, selection_unit: cleaned-line}
+    - {source_id: hplt3-tokenizer-train, language_tag: kor_Hang, selected_texts: 50000, selection_unit: cleaned-line}
+
+human_anchors:
+  selection_seed: diesel-mt-td02-mvp60-human-anchor-v2-quality-first
+  count_policy: per-component-quality-gated-actual-without-refill
+  total_independent_groups_ceiling: 22750
+  total_directed_records_ceiling: 50000
+  source_bank_overlap: prohibited
+  components:
+    - {source_id: unpc-v1.0-en-zho_hans, independent_group_ceiling: 10000, routes_per_group: 2, directed_record_ceiling: 20000}
+    - {source_id: kftt-1.0-en-ja, independent_group_ceiling: 5000, routes_per_group: 2, directed_record_ceiling: 10000}
+    - {source_id: korean-parallel-news-a1fb53d, independent_group_ceiling: 5000, routes_per_group: 2, directed_record_ceiling: 10000}
+    - {source_id: taiwan-moj-law-api-20260710, independent_group_ceiling: 2500, routes_per_group: 2, directed_record_ceiling: 5000}
+    - {source_id: massive-1.1-route-control, independent_group_ceiling: 250, routes_per_group: 20, directed_record_ceiling: 5000}
+
+teacher_generation:
+  teacher_lock_record_id: hymt2-generation-contracts
+  teacher_selection_path: configs/hymt2_teacher_selection.yaml
+  teacher_selection_sha256: cdf41f45c51de0f491d1f4b7ce1f71eb5cd383c9d1f07dd0483256b3795c4038
+  prompt_decode_path: configs/hymt2_teacher_prompt_decode.yaml
+  prompt_decode_sha256: 9c6dfc6048070fd8846343a49040211fff36ddf74d38992c745ed212ca9dbd8b
+  initial_wave:
+    fixed_quota_routes: 16
+    fixed_route_definition: source tag is not zho_Hant
+    accepted_target_per_fixed_route: 10000
+    fixed_route_accepted_target: 160000
+    candidate_scan_limit_per_fixed_route: 12000
+    maximum_fixed_route_candidate_records: 192000
+    outgoing_hant_routes: 4
+    outgoing_hant_count_policy: quality-gated-actual-without-refill
+    accepted_teacher_records_policy: 160000-fixed-route-target-plus-quality-gated-outgoing-hant
+    reverse_pair_policy:
+      enabled: true
+      source_pair: accepted-non-hant-to-hant-teacher-pair
+      reversed_target: original-human-source-text
+      count_policy: quality-gated-actual
+      maximum_fraction_per_outgoing_hant_route: 0.50
+      counts_as_native_hant: false
+      shared_semantic_group: required
+      second_teacher_call: not-required
+  training_mix:
+    teacher_sampling_weight: 0.80
+    human_sampling_weight: 0.20
+    raw_record_count_policy: quality-gated-actual-teacher-plus-quality-gated-human
+    duplicate_fill: prohibited
+  weak_route_patch:
+    trigger: dev-only route below the pre-registered MVP pass line after the initial 60M run
+    maximum_increment_accepted_records_per_triggered_route: 10000
+    refill_to_increment: prohibited
+    maximum_accepted_records_per_route: 50000
+    maximum_teacher_records_all_routes: 1000000
+    maximum_patch_rounds_before_recipe_review: 1
+    formal_test_access: prohibited
+
+quality_gates:
+  source_hard_reject:
+    - empty-or-invalid-unicode
+    - wrong-language-or-script
+    - written-cantonese-or-guangdong-vernacular
+    - url-email-html-or-template-dominance
+    - keyword-spam-or-mechanical-repetition
+    - character-or-token-overflow
+    - exact-or-near-duplicate
+    - flores-contamination
+  teacher_hard_reject:
+    - empty-output
+    - prompt-echo-or-explanation
+    - exact-source-copy
+    - wrong-target-script
+    - finish-reason-length
+    - abnormal-repetition
+    - placeholder-loss
+  reverse_pair_hard_reject:
+    - any-forward-teacher-hard-reject
+    - semantic-roundtrip-failure
+    - number-entity-or-placeholder-drift
+    - missing-shared-semantic-group
+  diagnostic_not_automatic_reject:
+    - number-or-entity-drift
+    - unusual-length-ratio
+    - source-domain-imbalance
+  manual_audit:
+    accepted_samples_per_route: 20
+    rejected_samples_per_route_cap: 20
+    selection: deterministic
+    failure_policy: block-publication-and-review-the-gate; do-not-silently-drop-a-route
+
+resource_budget:
+  maximum_new_download_bytes: 2000000000
+  maximum_selected_extract_bytes: 6500000000
+  maximum_local_source_bytes: 2000000000
+  generation_storage_policy: append-only-jsonl-shards-with-batched-flush-and-manifest-last
+
+sources:
+  - source_id: hplt3-tokenizer-train
+    roles: [source-bank]
+    version: 3.0 (July 2025 release; frozen local MVP train split)
+    license: CC0-1.0 packaging; original web-text rights remain with upstream publishers
+    homepage: https://hplt-project.org/datasets/v3.0
+    lock_record_ids: [tokenizer-corpus-mvp]
+    language_tags: [eng_Latn, zho_Hans, jpn_Jpan, kor_Hang]
+    available_records: 3500728
+    split_policy: train-only
+    limitations:
+      - Product or redistribution use still requires an upstream-rights review; CC0 covers packaging, not every page.
+      - Exploratory sampling found the frozen zho_Hant web corpus materially noisier, so it is excluded from the first source bank.
+
+  - source_id: unpc-v1.0-en-zho_hans
+    roles: [human-anchor]
+    version: "1.0"
+    license: United Nations public-domain corpus terms with attribution and disclaimer
+    homepage: https://www.un.org/dgacm/en/content/uncorpus
+    lock_record_ids: [unpc-v1.0-en-zh-moses]
+    language_tags: [eng_Latn, zho_Hans]
+    available_records: 17451549
+    split_policy: train-only
+    limitations: [Formal UN language dominates; only a deterministic 10000-group anchor subset is admitted.]
+
+  - source_id: kftt-1.0-en-ja
+    roles: [human-anchor]
+    version: "1.0"
+    license: CC-BY-SA-3.0
+    homepage: https://www.phontron.com/kftt/
+    lock_record_ids: [kftt-data-1.0]
+    language_tags: [eng_Latn, jpn_Jpan]
+    available_records: 440288
+    split_policy: original-train-only
+    limitations: [Kyoto encyclopedic domain; KFTT tune, dev, and test are excluded.]
+
+  - source_id: taiwan-moj-law-api-20260710
+    roles: [source-bank, human-anchor]
+    version: "2026-07-10"
+    license: Taiwan Open Government Data License 1.0 with attribution
+    homepage: https://law.moj.gov.tw/api/swagger/index.html
+    lock_record_ids: [taiwan-moj-ch-law-json-20260710, taiwan-moj-en-law-json-20260710, taiwan-moj-ch-order-json-20260710, taiwan-moj-en-order-json-20260710]
+    language_tags: [eng_Latn, zho_Hant]
+    available_records: 85051
+    split_policy: train-only
+    limitations: [Native Traditional Chinese but legal-domain heavy; source-bank clauses and bilingual anchors must use disjoint PCode/article groups.]
+
+  - source_id: korean-parallel-news-a1fb53d
+    roles: [human-anchor]
+    version: a1fb53dc5216f3a2d07d973456d8921ed23c88c6
+    license: CC-BY-SA-3.0
+    homepage: https://github.com/jungyeul/korean-parallel-corpora/tree/a1fb53dc5216f3a2d07d973456d8921ed23c88c6
+    lock_record_ids: [korean-parallel-corpora-a1fb53d]
+    language_tags: [eng_Latn, kor_Hang]
+    available_records: 94123
+    split_policy: news-train-only
+    limitations: [Occasional truncation and alignment defects require deterministic hard filtering.]
+
+  - source_id: massive-1.1-route-control
+    roles: [source-bank, human-anchor]
+    version: "1.1"
+    license: CC-BY-4.0 with SLURP notice
+    homepage: https://github.com/alexa/massive/tree/f966f21846043aabef9b0f974fa7970027f43738
+    lock_record_ids: [massive-1.1]
+    language_tags: [eng_Latn, zho_Hans, zho_Hant, jpn_Jpan, kor_Hang]
+    available_records: 11514
+    split_policy: train-only
+    limitations: [Professional localization may replace entities and slot values; it is route control, not literal general-MT supervision.]
+
+license_boundary:
+  teacher_output_rule: teacher generation does not erase input-corpus license, attribution, privacy, or takedown obligations
+  release_rule: model publication requires a separate provenance and attribution review; TD-02 source admission is not legal clearance
+  excluded_first_wave:
+    - HPLT v2 parallel mining because noisy pair fidelity adds work without helping the direct-teacher MVP route
+    - ParaCrawl and WikiMatrix because deterministic samples showed severe alignment and content noise
+    - monolingual denoising pretraining, recursive backtranslation, pivot translation, and instruction tuning; only the one-hop accepted-pair reversal defined above is admitted

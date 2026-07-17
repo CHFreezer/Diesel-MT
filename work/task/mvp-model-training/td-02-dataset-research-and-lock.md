@@ -1,12 +1,12 @@
-# task TD-02: 调研并锁定有界平行数据来源
+# task TD-02: 调研并锁定 60M MVP 数据来源
 
-状态：in_progress（历史 v1/v2 已完成；通用 MT v3 来源调研已重新打开）
+状态：in_progress（schema v4 已改为繁体质量优先研究合同；候选来源尚待逐项 byte lock，TD-02 不关闭）
 
 依赖：TD-01
 
 ## 目标
 
-为 10 组无向模型关系确定许可清晰、版本可锁定、规模有界且可审计的人类平行/本地化语料方案，并发布后续构建唯一消费的新 source lock。
+为首个约 60M、必须达到翻译及格线的 MVP 锁定最短数据路线：四个非繁体 tag 的有界 source bank、质量门禁后实收的原生繁体、20 路 Hy-MT2 直接翻译、受控的一跳正反 pair 复用、20% human sampling weight、dev-only 弱路由补强及完整 byte lock。原生繁体数量是质量筛选的输出，不是必须完成的 KPI。
 
 ## 输入
 
@@ -16,29 +16,32 @@
 
 ## 原子边界
 
-本 task 只完成来源研究、预算和 lock，不实现下载/清洗管线，也不把未审清许可的候选纳入正式配置。
+本 task 只完成来源研究、预算和 lock，不生成 teacher target、不训练模型、不消费正式 test。历史 M0/D1/TD-16 证据不可覆盖。
 
 ## 执行事项
 
-- 保留 9 组 v1 调研；把锁定 MASSIVE `zh-CN`/`zh-TW` 文件登记为 `zho_Hans--zho_Hant` 第 10 组，无需重新下载。
-- 对 3 组繁体相关语料确认繁体侧为原生 `zho_Hant`，不得把简转繁、`yue_Hant` 或脚本未知中文静默归类为普通话繁体。
-- 对确实缺少人类语料的标签对设计有界 synthetic 补充方案，保留原生文本侧与完整 teacher provenance，且不扩张为全量蒸馏。
-- 为每组冻结 train/dev/test 最小样本预算、扫描上限和下载上限；繁体预算可较低但 dev/test 不得为空。
-- 生成来源 registry 与 `configs/mvp_model_data.lock.json`，锁定 URI、版本、大小、SHA-256、许可证和逻辑处理顺序。
-- 列出并排除许可不兼容、用途不明或无法稳定版本化的候选。
+- 复用已冻结的 HPLT tokenizer train corpus 作为 EN/Hans/JA/KO teacher source，不读取 tokenizer holdout；四个 tag 各保留 50,000 的固定池。
+- 为 Hant 单独审计原生繁体质量；不设 target/minimum、不 refill、不用低质量来源回填，不因已有文件或计划数量强行使用。
+- Hant 技术语料最多占原生繁体实收数 15%，法律/政务最多 20%；generic `zh/cmn`、粤语/广东话、工具简转繁和老师生成文本均不得计为原生繁体。
+- 前 16 条 source tag 非 Hant 的路线保持每路 10,000 accepted target；4 条 `Hant -> X` 使用原生繁体实收数决定，不设固定 accepted 数。
+- 允许将已通过完整门禁的 `X -> Hant` pair 一跳反向为 `Hant -> X`，target 使用原始真人 source；反向记录不计为原生繁体、不得超过对应 outgoing-Hant 路线的 50%，正反记录必须共用 semantic group。
+- human anchors 的 22,750 groups / 50,000 directed records 改为 ceiling，最终数量同样以逐来源质量门禁实收为准；训练保持 80/20 sampling weight，而不是用重复记录凑固定 raw count。
+- 冻结 source/anchor/evaluation 去重、零截断、最小 hard filter、人工抽检和一次 dev-only 弱路由 patch。
+- 锁定本地依赖与上游 archive 的大小/SHA-256/许可证；列出第一轮排除项。
 
 ## 产物
 
 - `docs/model-training-dataset-research.md`。
-- 数据来源 registry 与 `configs/mvp_model_data.lock.json`。
-- 10 组覆盖、预算、许可和排除矩阵。
+- [`mvp_60m_distillation_sources.yaml`](../../../configs/mvp_60m_distillation_sources.yaml) 与对应 source lock。
+- 20 路 teacher、五语 source bank、human anchor、预算、许可和排除矩阵。
 
 ## 验收
 
-- 10 组关系都有明确、可审计、规模有界的来源方案，并由新 config hash/source lock 覆盖。
-- 每个正式来源均有稳定版本、SHA-256、许可证和处理顺序。
-- 原生繁体身份与 synthetic 边界单独可查。
-- 任一未关闭的来源或许可缺口都会阻塞 TD-03。
+- EN/Hans/JA/KO 各有 50,000 条可构建 source；原生 Hant 报告 raw、逐 gate reject、dedup、domain 和最终 accepted 实收数，所有固定 quota/refill 均被合同拒绝。
+- 前16路各有10,000 accepted teacher target；4条 `Hant -> X` 和全局 raw record 总数由质量实收决定。teacher/human 只冻结 80/20 sampling weight，不冻结250,000条 raw 总数。
+- 一跳反向 pair 的语义/数字/实体/placeholder/semantic-group 门禁可验证，synthetic Hant 与原生 Hant 分账。
+- 原生繁体候选来源、技术/法律占比上限、许可风险、formal-test 隔离和 dev-only 扩容边界单独可查。
+- 新 config/source lock/hash/contract tests 一致；任一缺口阻塞 TD-03。
 
 ## 实现与验收记录（2026-07-15）
 
@@ -59,14 +62,30 @@
 - schema v2 source lock 保留官方归档、许可、notice 和五个成员文件的原始字节身份，并绑定新 config hash；lock 文件 SHA-256 为 `de24d2989ef21063a3c437b6c9bcf12362115c25d36a86cafa663e86b0ab8f88`。
 - 10 组覆盖、预算与许可证缺口全部关闭，未使用 synthetic 补充 human dev/test。
 
-## v3 重新打开原因与验收（2026-07-17）
+## schema v4 重新打开原因与验收（2026-07-17）
 
 TD-16B 长训证明此前“专业本地化即可作为通用平行翻译主体”的来源判断不成立。226,218 条 directed train records 实际来自 11,411 个 semantic/alignment groups；MASSIVE 的 locale adaptation 允许地点、媒体、服务和人物替换，不能满足通用 MT 的 source-target 忠实度。
 
-本轮从 TD-02 重新开始，而不是在 TD-16 内修补数据：
+本轮从 TD-02 重新开始，而不是继续在 TD-16 内修补。“MVP”重新定义为约 60M 且达到预注册翻译及格线；流程跑通只算 smoke test。由此否决了 2026-07-17 早些时候拟定的百万级 human foundation schema v3，该草案从未提交，也不构成正式来源身份。
 
-- 重新调研覆盖 5 标签、10 组关系的真实平行来源，逐来源声明 `literal_parallel`、`localization_parallel` 或其他用途。
-- 主体来源必须保留语义、实体、数字、否定和操作对象；MASSIVE 只能作为显式窄领域/路由控制补充，不得再承担通用 MT 主体。
-- 数量预算同时按 independent semantic groups、唯一 `(language,text)`、token 和 directed routes 报告；路由展开不得充当新增语义。
-- 为新来源锁定版本、文件 hash、许可证、下载/解压预算和处理顺序，并冻结独立 human dev/test 来源策略。
-- 发布新的 config/source-lock 身份前，TD-03 v3 不得开始；旧 lock、M0 和训练证据保持不可变。
+## schema v4 候选合同记录（2026-07-17，尚未关闭）
+
+- 发布 [`mvp_60m_distillation_sources.yaml`](../../../configs/mvp_60m_distillation_sources.yaml)，当前候选 config canonical SHA-256 为 `0717d8305556dc0a90cc8d57762549d015662b56391c53d32613b4cbab77be2d`；状态为 `research-in-progress`，不能解释为来源已经全部锁定。
+- 对应 lock 文件 SHA-256 为 `93006fd192ef4431e3735640401051bfd1a19b3a99f8786186b474223b0cd240`，目前只覆盖已经验证的依赖：本地依赖 1,832,030,713 bytes，上游 archive 1,735,760,579 bytes，选中解压成员 5,925,089,985 bytes；HKeL、MDN `zh-TW`、tldr `zh_TW`、UD Chinese-HK 等待实际准入后才能加入 lock。
+- EN/Hans/JA/KO 固定 source bank 合计 200,000；Hant 不再出现在固定 components 中，候选均采用 `quality-gated-actual`，不设 target/minimum/refill/低质回填。
+- 前16条 source tag 非Hant的路线固定目标合计160,000 accepted；4条 `Hant -> X` 由原生实收与一跳反向 pair 共同组成，后者最多占每路50%且不计原生。human anchors 为22,750 groups / 50,000 records ceiling；训练为80/20 sampling weight。
+- dev 只允许触发一次弱路由 patch，每个弱路由最多新增10,000 accepted 且禁止为达到增量而 refill；每路上限50,000、teacher全局上限1,000,000。FLORES `devtest` 在数据、teacher、训练和 patch 决策阶段全部禁止访问。
+- MVP 及格线预先固定为完整 FLORES-200 dev 的 19,940 次直接路由生成：macro route chrF++ ≥25、每路 ≥12、至少 16/20 路 ≥20，且逐路由目标脚本合规率 ≥99%、空输出 ≤1%、source-copy ≤2%；必须全部满足。
+- HPLT v2 parallel、ParaCrawl、WikiMatrix、human-only foundation、单语去噪、递归回译、pivot、多阶段 curriculum 和 instruction tuning 均不进入第一轮；只允许合同定义的一跳 accepted-pair 反向复用。
+- [`model_data_source_contract.py`](../../../scripts/model_data_source_contract.py) 对预算、FLORES简繁脚本语义、Hant无quota/refill/低质回填、技术/法律ceiling、粤语独立排除、一跳反向provenance、零截断、holdout/formal-test隔离和已验证依赖byte lock fail closed；定向合同测试为`8 passed`，完整离线回归为`212 passed in 45.68s`。TD-03的唯一入口是完成候选来源审计后的schema v4 source bank + anchors，不是恢复旧M0训练。
+
+## OPUS 扩展审计记录（2026-07-17）
+
+- 已通过 OPUS API 枚举 EN/Hans/Hant/JA/KO 相关 pair；OPUS 是分 corpus、分版本、分许可的分发目录，不能把 `OPUS`、`OPUS-100` 或浮动 `latest` 当作统一来源。
+- 已隔离下载并逐行抽检 ALT、Tatoeba、MDN Web Docs、tldr-pages、GlobalVoices、Wikimedia 和 TED2020 代表包；检查 raw/unique、空行、source copy、长度、目标脚本和固定语义样本，证据写入调研文档。
+- 第一优先候选是 ALT EN/JA/Hans 三语交集：18,049 个唯一 English group、CC BY 4.0、抽检对齐干净。第二候选是 Tatoeba EN–JA 的有界日常短句子集，但必须保留 sentence id 与 attribution URL。
+- Tatoeba EN–KO/JA–KO 只有 3,637/663 行，但机械门禁可保留 3,625/656，固定样本对齐干净；MDN EN–KO/JA–KO 清洗上限约 4,625/13,386，可与 tldr EN–KO 一起作为韩语技术/口语小比例补充，不替代现有韩英新闻主体。
+- tldr-pages/MDN 只作技术域补充；GlobalVoices/Wikimedia 的当前 Moses 行存在跨句错配，未重对齐前不准作为 human anchors。
+- OPUS 没有可准入且有规模的原生 Hant：TED2020/NeuLab 的 `zh_tw` 虽是真繁体，但 TED 现行条款明确禁止未经授权用于 AI/ML；Wikimedia 只有 9 条。generic `zh/cmn` 抽样混合简繁，不能映射到任一中文 tag。
+- 用户确认中文采用“简体中文 / 繁体中文 / 粤语广东话”三分类：`zho_Hans`/`zho_Hant` 直接对齐冻结 FLORES-200 同名标签，繁体以台湾规范为主要输出基线，港澳正式书面繁体可补充且不破坏语义；粤语/广东话不论使用何种脚本都属于独立语言能力，当前五标签/20 路范围排除且绝不能映射到 `zho_Hant`。MOJ/MASSIVE 的 `zh-TW` 继续作为当前主体来源 provenance。
+- QED、JParaCrawl、TED、News-Commentary、影视字幕类、评测集和大规模 web-mined 聚合均按许可、污染或质量原因排除首轮；新增 OPUS corpus 尚未写入 config/byte lock，因此 TD-02 继续 `in_progress`、TD-03 继续阻塞。
