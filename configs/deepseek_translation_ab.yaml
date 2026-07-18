@@ -1,0 +1,57 @@
+schema_version: 1
+
+identity:
+  name: deepseek-v4-flash-direct-translation-ab-v1
+  status: frozen
+  task: TD-04-independent-direct-translation-ab
+
+inputs:
+  review_config: configs/deepseek_translation_review.yaml
+  review_config_sha256: 1166bbede175f33cfa399335e4ec43cbbdbde59c8cc0b95c9c2361ef5c614253
+  stage_report_sha256: e756c2a2302f9390bb0ce03c50d25fdeb0638706bf0139651f157348bc4e770b
+  stage_assessment: td04/deepseek-translation-review-v1/stage-00000512-assessment.json
+  stage_assessment_sha256: 674681bb90104ad4a00ddac2dcfac28c92daa0648421c032babffb5b0908f344
+  formal_test_access: prohibited
+  formal_devtest_access: prohibited
+
+api:
+  base_url: https://api.deepseek.com
+  endpoint: /chat/completions
+  model: deepseek-v4-flash
+  thinking: disabled
+  response_format: json_object
+  user_id: diesel-mt-direct-translation-ab-v1
+  request_timeout_seconds: 600
+  request_attempts: 3
+  retry_base_seconds: 1
+  concurrency: 8
+  batch_max_records: 64
+  batch_max_estimated_input_tokens: 45000
+  max_output_tokens: 16384
+
+pricing:
+  retrieved_on: 2026-07-18
+  currency: USD
+  per_million_tokens:
+    input_cache_hit: 0.0028
+    input_cache_miss: 0.14
+    output: 0.28
+  estimated_output_tokens_per_record: 96
+
+ab:
+  records: 512
+  blind_seed: diesel-mt-deepseek-direct-ab-v1
+  both_pass_manual_sample: 64
+  filter_config: configs/hymt2_teacher_prompt_decode.yaml
+  filter_config_sha256: 9c6dfc6048070fd8846343a49040211fff36ddf74d38992c745ed212ca9dbd8b
+
+outputs:
+  root: td04/deepseek-direct-translation-ab-v1
+  plan: plan.json
+  translation_responses: translation-responses
+  translations: translations.jsonl
+  review_responses: direct-review-responses
+  direct_review_decisions: direct-review-decisions.jsonl
+  blind_queue: blind-comparison-queue.jsonl
+  blind_key: blind-comparison-key.jsonl
+  report: report.json

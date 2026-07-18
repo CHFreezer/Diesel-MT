@@ -54,13 +54,13 @@ TD-05 -> TD-16C mixed 60M -> TD-16D 可选弱路由 patch -> TD-16E -> TD-16F
 TD-16F -> TD-17 -> TD-18
 ```
 
-历史执行已到 TD-16B：A/B诊断、可配置高吞吐训练器和完整旧M0长训均有证据，但TD-16B否决了旧M0作为通用MT foundation。TD-02/TD-03 schema v4 已完成来源实收、byte lock、source bank 与 human anchors；TD-04 v1 否决 KFTT 英文实体臆译，v2 因长目标截断停止，v3 则完整生成 195,404 条并通过数量门，但固定人工队列在 `jpn_Jpan→eng_Latn` 发现 KFTT 日文 source 的系统性专名/年号/术语臆译。v3 生成证据保持 rejected、禁止直接进入 TD-05；独立 DeepSeek V4 Flash 思考模式审查已通过 30 条校准并完成首批 128 条 pilot，只能形成新的派生质量层，不能回写或自动放行 v3。旧TD-16继续 suspended。
+历史执行已到 TD-16B：A/B诊断、可配置高吞吐训练器和完整旧M0长训均有证据，但TD-16B否决了旧M0作为通用MT foundation。TD-02/TD-03 schema v4 已完成来源实收、byte lock、source bank 与 human anchors；TD-04 v1 否决 KFTT 英文实体臆译，v2 因长目标截断停止，v3 则完整生成 195,404 条并通过数量门，但固定人工队列在 `jpn_Jpan→eng_Latn` 发现 KFTT 日文 source 的系统性专名/年号/术语臆译。v3 生成证据保持 rejected、禁止直接进入 TD-05。后续 512 条、20 路/60 strata 的 source-only A/B 已证明 DeepSeek V4 Flash 直译显著优于 Hy-MT2：119 条盲评为 56 胜/22 负/33 平/8 双差；当前只放行相同协议的 2,048 条复验，不能回写或自动放行 v3，也尚未授权 DeepSeek 全量生成。旧TD-16继续 suspended。
 
 ## 当前回退门禁
 
 - [x] **TD-02 schema v4**：EN/Hans/JA/KO各50,000 source；原生Hant无target/minimum/refill，完整审计后实收851条；锁定一跳反向pair、human-anchor ceiling、80/20 sampling weight和一次dev-only patch。
 - [x] **TD-03 schema v4**：已发布200,000条固定非Hant source、851条质量实收Hant和40,000条human anchors；严格零截断、semantic-group分区、exact/near去重和FLORES-dev隔离。
-- [ ] **[TD-04 schema v4](../task/mvp-model-training/td-04-ability-first-teacher-generation.md)**：v3 已完成16路固定target、4路Hant质量实收和反向pair，但人工审查命中 KFTT 日文到英文的系统性实体/术语 blocker；当前身份 rejected。独立API审查的512条分层阶段已覆盖20路/60 strata，48条flag中43条值得拦截，64条pass抽查发现2条实质漏检和2条边界漏检；当前 `hold_before_expansion`，先补专名转写与地区法律/技术术语的有界二次检查，再决定是否进入2,048条，不能就地修复v3。
+- [ ] **[TD-04 schema v4](../task/mvp-model-training/td-04-ability-first-teacher-generation.md)**：v3 已完成16路固定target、4路Hant质量实收和反向pair，但人工审查命中 KFTT 日文到英文的系统性实体/术语 blocker；当前身份 rejected。独立API审查的512条分层阶段已覆盖20路/60 strata，48条flag中43条值得拦截，64条pass抽查发现2条实质漏检和2条边界漏检。随后 source-only DeepSeek 直译 A/B 的119条盲评为 DeepSeek 56胜、Hy-MT2 22胜、33平、8双差，已把门禁更新为 `expand_same_protocol_to_2048_records`；尚未授权全量生成，不能就地修复或发布v3。
 - [ ] **[TD-05 schema v4](../task/mvp-model-training/td-05-ability-first-mixed-corpus.md)**：实现已完成，但 v3 人工质量门失败，publication blocked；不得消费 v3 accepted teacher 或创建80/20 mixed corpus。
 - [x] 历史 TD-02～TD-05 v1/v2 产物保持不可变，只作为 route/system-validation 与失败诊断证据。
 

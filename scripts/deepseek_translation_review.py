@@ -547,18 +547,26 @@ class DeepSeekClient:
             jitter = self.random.random() * 0.25
         return min(base * (2 ** (attempt - 1)) + jitter, 30.0)
 
-    def review_batch(self, items: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+    def request_json(
+        self,
+        *,
+        system_prompt: str,
+        user_content: str,
+        max_tokens: int | None = None,
+    ) -> dict[str, Any]:
+        """Issue one identity-bound JSON request using the configured API profile."""
+
         api = self.config["api"]
         url = str(api["base_url"]).rstrip("/") + "/" + str(api["endpoint"]).lstrip("/")
         payload: dict[str, Any] = {
             "model": api["model"],
             "messages": [
-                {"role": "system", "content": SYSTEM_PROMPT},
-                {"role": "user", "content": user_payload(items, self.config)},
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_content},
             ],
             "thinking": {"type": api["thinking"]},
             "response_format": {"type": api["response_format"]},
-            "max_tokens": int(api["max_output_tokens"]),
+            "max_tokens": int(max_tokens or api["max_output_tokens"]),
             "stream": False,
             "user_id": str(api["user_id"]),
         }
@@ -593,10 +601,6 @@ class DeepSeekClient:
                         f"incomplete API response: finish_reason={finish_reason!r}"
                     )
                 parsed = json.loads(content)
-                try:
-                    decisions = _validate_decisions(parsed, items, self.config)
-                except TranslationReviewError as error:
-                    raise ResponseContractError(str(error)) from error
                 usage = decoded.get("usage", {})
                 return {
                     "api_response_id": str(decoded.get("id", "")),
@@ -613,7 +617,7 @@ class DeepSeekClient:
                         "reasoning_tokens": int(usage.get("completion_tokens_details", {}).get("reasoning_tokens", 0)),
                         "total_tokens": int(usage.get("total_tokens", 0)),
                     },
-                    "decisions": decisions,
+                    "json": parsed,
                 }
             except urllib.error.HTTPError as error:
                 detail = error.read(1024).decode("utf-8", errors="replace")
@@ -636,6 +640,17 @@ class DeepSeekClient:
             if attempt < attempts:
                 time.sleep(self._retry_delay(attempt))
         raise TranslationReviewError(f"DeepSeek review failed after {attempts} attempts: {last_error}")
+
+    def review_batch(self, items: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+        response = self.request_json(
+            system_prompt=SYSTEM_PROMPT,
+            user_content=user_payload(items, self.config),
+        )
+        try:
+            decisions = _validate_decisions(response.pop("json"), items, self.config)
+        except TranslationReviewError as error:
+            raise ResponseContractError(str(error)) from error
+        return {**response, "decisions": decisions}
 
 
 def _response_path(response_root: Path, batch: Mapping[str, Any]) -> Path:

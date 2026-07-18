@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "status": "complete",
+  "task": "TD-04-independent-direct-translation-ab",
+  "executed_on": "2026-07-18",
+  "question": "For the same bounded source sample, does DeepSeek V4 Flash direct translation produce better training targets than the rejected Hy-MT2 v3 output?",
+  "sample": {
+    "records": 512,
+    "routes": 20,
+    "strata": 60,
+    "selection": "the exact first 512 records of the frozen route/source/kind stratified review order",
+    "candidate_independence": "DeepSeek received source text and target-language identity only; Hy-MT2 candidate text was not included in the translation request"
+  },
+  "identities": {
+    "ab_config_sha256": "19fa5b738f216e86fddd9be214697986a67ebd073a50a16586b64a709eda651d",
+    "input_review_report_sha256": "e756c2a2302f9390bb0ce03c50d25fdeb0638706bf0139651f157348bc4e770b",
+    "input_stage_assessment_sha256": "674681bb90104ad4a00ddac2dcfac28c92daa0648421c032babffb5b0908f344",
+    "direct_translations_sha256": "4605aded592a114d0a4e4697d474241a3ffeb5ca1ffd3015a4585dbd231baf57",
+    "blind_queue_sha256": "f335d7ba60c23eebf0c53fa1d5cc48f2c59ebc1f8a633c359ac8ea4c7f853b36",
+    "blind_key_sha256": "901eb2b10ef667a27572d42b607d5889f56422e4ca507bc731c273cc4f465025",
+    "manual_assessment_sha256": "07b4a22fa4649724544f64e7a2d6bb2f7ffeb239aa310e728b6fbcef0f2233b4"
+  },
+  "independent_model_review": {
+    "hymt2": {
+      "pass": 464,
+      "warning": 9,
+      "reject": 39
+    },
+    "deepseek_direct": {
+      "pass": 502,
+      "warning": 2,
+      "reject": 8
+    },
+    "paired_classification": {
+      "both_pass": 457,
+      "deepseek_improves": 45,
+      "deepseek_regresses": 7,
+      "both_flagged": 3
+    },
+    "limitation": "The automated fidelity reviewer is also DeepSeek, so its paired counts are diagnostic rather than the deciding evidence."
+  },
+  "manual_blind_review": {
+    "records": 119,
+    "selection": "all 55 pairs with at least one model flag plus 64 deterministic both-pass pairs",
+    "reviewers": 1,
+    "candidate_identity_hidden_until_all_choices_complete": true,
+    "deepseek_wins": 56,
+    "hymt2_wins": 22,
+    "both_acceptable_or_tied": 33,
+    "both_bad_or_source_malformed": 8,
+    "decisive_pairs": 78,
+    "deepseek_share_of_decisive_wins": 0.717949,
+    "by_paired_classification": {
+      "deepseek_improves": {
+        "records": 45,
+        "deepseek_wins": 36,
+        "hymt2_wins": 3,
+        "ties": 2,
+        "both_bad": 4
+      },
+      "deepseek_regresses": {
+        "records": 7,
+        "deepseek_wins": 0,
+        "hymt2_wins": 6,
+        "ties": 0,
+        "both_bad": 1
+      },
+      "both_flagged": {
+        "records": 3,
+        "deepseek_wins": 1,
+        "hymt2_wins": 0,
+        "ties": 0,
+        "both_bad": 2
+      },
+      "both_pass_sample": {
+        "records": 64,
+        "deepseek_wins": 19,
+        "hymt2_wins": 13,
+        "ties": 31,
+        "both_bad": 1
+      }
+    }
+  },
+  "verified_deepseek_improvements": [
+    "preserved DPP as the Democratic Progressive Party instead of changing it to a prosecution office",
+    "preserved Mianyang, Tan Li, Tangjiashan and Langkawi entities",
+    "preserved carelessness polarity instead of reversing it to caution",
+    "preserved greenhouse, release, rank, date and organization details omitted or changed by Hy-MT2",
+    "avoided mixed-script target fragments in multiple Chinese-to-Korean examples"
+  ],
+  "verified_deepseek_regressions": [
+    "changed Japanese exit-gate duty to ticket-selling duty",
+    "mishandled a malformed kinship sentence",
+    "literalized a Taiwan statistical-compilation term",
+    "weakened the UNDP organization name",
+    "emitted mixed Chinese in an English legal translation",
+    "copied a Japanese source instead of translating it to Korean",
+    "returned Simplified Chinese for a Japanese target"
+  ],
+  "cost_usd": {
+    "direct_translation": 0.011892,
+    "independent_thinking_review": 0.044179,
+    "total": 0.056071,
+    "linear_diagnostic_only": {
+      "direct_translation_for_165051_records": 3.833567,
+      "direct_translation_for_195404_records": 4.538563,
+      "translation_and_same_full_review_for_165051_records": 18.075341,
+      "translation_and_same_full_review_for_195404_records": 21.399410
+    }
+  },
+  "decision": {
+    "result": "deepseek_direct_translation_wins_bounded_512_record_ab",
+    "next_gate": "expand_same_protocol_to_2048_records",
+    "full_generation_authorized": false,
+    "reason": "The blind review establishes a material quality advantage, but seven verified DeepSeek regressions and a single-reviewer bounded sample still require a larger route/source-stratified gate."
+  },
+  "boundaries": {
+    "hymt2_v3_status": "rejected_and_unchanged",
+    "td05_publication": "blocked",
+    "formal_test_accessed": false,
+    "formal_devtest_accessed": false
+  }
+}

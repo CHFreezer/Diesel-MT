@@ -64,3 +64,13 @@ v3 正式生成命令为 `scripts/generate_mvp_60m_teacher.py generate --runtime
 2026-07-18 阶段化修正：首个 128 条 pilot 仅覆盖 `eng_Latn→jpn_Jpan`，只算 API/JSON/费用工程冒烟，不作为跨路由质量样本。正式阶段顺序改为固定 seed 下按 `route × source_id × teacher/reverse` 分层、桶内稳定 hash 排序、桶间 round-robin；累计扩大时复用所有既有 batch。阶段一累计 512 条，人工全检所有 warning/reject 并分层抽查 64 条 pass；阶段二累计 2,048 条，阶段三累计 8,192 条。每阶段都必须检查严重漏检、误报率、来源/路线聚集、类别分布、completion 上限和实际费用，任一出现系统性漏检、不可接受误报或输出不完整即停止，不自动扩大。只有 8,192 条阶段仍稳定，才向用户申请全量预算。
 
 阶段一已按新顺序覆盖全部20路、60个 `route/source/kind` strata，共512条，费用0.045930美元；DeepSeek给出464 pass、9 warning、39 reject。Codex逐条复核48条flag：43条存在实质错误、来源歧义或合理人工复核价值，5条为过严/可接受变体。继续分层复核64条pass，未发现数字、否定、主体或整句级灾难性遗漏，但发现2条实质漏检和2条边界漏检：台湾法律 `保防工作` 被弱化为普通 `prevention work`，专名 `嵐電` 被错写成 `Arashidenden`，另有 `大家姐` 称谓弱化和 `I.M. Jolly` 转写边界。当前结论为 `hold_before_expansion`：单次Flash对常规错误有效，但对专名/标题转写和地区法律技术术语存在可重复盲点；在设计有界的pass侧二次检查前，不进入2,048条阶段。
+
+## DeepSeek 直译对 Hy-MT2 的 512 条 A/B
+
+为直接回答“继续检查 Hy-MT2，还是改为蒸馏 DeepSeek”这一决策，新增 `scripts/deepseek_translation_ab.py` 和冻结配置 `configs/deepseek_translation_ab.yaml`。A/B 精确复用上述 512 条、20 路、60 strata 样本；DeepSeek 非思考模式只接收 source 和目标语言，不看到 Hy-MT2 译文。两组输出随后各自经过同一思考模式质量审查，并把全部至少一侧被 flag 的 55 对和确定性抽取的 64 对 both-pass 组成 119 条盲评队列。候选身份在全部人工选择完成后才解盲。
+
+结果支持改用 DeepSeek 直译：独立模型审查中 DeepSeek 为 502 pass/2 warning/8 reject，Hy-MT2 为 464 pass/9 warning/39 reject；配对上 45 条改善、7 条退化、3 条两侧均被 flag。119 条人工盲评得到 DeepSeek 胜 56、Hy-MT2 胜 22、双方可接受/平局 33、双方均差或 source 过于破损 8；78 条有明确胜负的记录中 DeepSeek 胜率为 71.79%。该盲评也验证 DeepSeek 更好地保留政党、人地名、极性、组织与细节，但仍发现出闸职务、台湾统计术语、UNDP 名称、目标脚本/语言等 7 个退化案例。
+
+512 条直译实际费用 0.011892 美元，同批独立思考审查 0.044179 美元，总计 0.056071 美元。按本次实际 token 线性外推，195,404 条只做直译约 4.54 美元；若每条再做同等级思考审查，总费用约 21.40 美元。这只是本批 token 分布下的诊断估计，不是供应商报价或预算承诺。
+
+结论从 `hold_before_expansion` 更新为 `deepseek_direct_translation_wins_512_record_ab`：允许按相同 source-only、20 路分层、可恢复身份扩大到 2,048 条复验；尚未授权全量生成，也不允许发布 TD-05。原因是当前盲评只有一名审查者，且 7 个 DeepSeek 退化已证明目标语言检查、术语和实体门仍不可省略。紧凑证据为 [`deepseek-direct-translation-ab-512.json`](../../../artifacts/model-training/reports/m0/deepseek-direct-translation-ab-512.json)；Hy-MT2 v3 rejected 产物保持不变，FLORES devtest/正式 test 均未访问。
