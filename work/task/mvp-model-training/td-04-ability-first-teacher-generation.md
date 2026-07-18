@@ -60,3 +60,7 @@ v3 正式生成命令为 `scripts/generate_mvp_60m_teacher.py generate --runtime
 思考模式按 128 条/批冻结，避免 512 条时超过 49,152 completion-token 上限。全量保守估算 1,290 批、22,782,177 input tokens、54,466,830 completion tokens，按 2026-07-18 官方价格为 18.440217 美元；默认 10 美元预检门会阻止误启动。首批 128 条 pilot 实际耗时 158.7 秒、费用 0.008501 美元，得到 123 pass、3 warning、2 reject；5 条经人工复核均为真实问题，包括 `wheel well→エンジンルーム`、遗漏 `possibly`、无来源的“速やか”、`Decade→デー` 和 `Theo→トエ`。据 pilot 外推全量更接近约 11 美元，但仍保留 18.44 美元作为预算上界。
 
 该审查层当前只证明“全量检查可行且初步精度足够”，不撤销 v3 rejected 身份。若用户批准全量费用，应按同一 prompt/config 从已完成 pilot 精确续跑；完成后先人工复核全部 warning/reject 与 pass 分层样本，再将可接受记录发布为新的派生 corpus/manifest 身份。禁止删除原记录后冒充 v3、禁止在审查结果未完成时进入 TD-05。
+
+2026-07-18 阶段化修正：首个 128 条 pilot 仅覆盖 `eng_Latn→jpn_Jpan`，只算 API/JSON/费用工程冒烟，不作为跨路由质量样本。正式阶段顺序改为固定 seed 下按 `route × source_id × teacher/reverse` 分层、桶内稳定 hash 排序、桶间 round-robin；累计扩大时复用所有既有 batch。阶段一累计 512 条，人工全检所有 warning/reject 并分层抽查 64 条 pass；阶段二累计 2,048 条，阶段三累计 8,192 条。每阶段都必须检查严重漏检、误报率、来源/路线聚集、类别分布、completion 上限和实际费用，任一出现系统性漏检、不可接受误报或输出不完整即停止，不自动扩大。只有 8,192 条阶段仍稳定，才向用户申请全量预算。
+
+阶段一已按新顺序覆盖全部20路、60个 `route/source/kind` strata，共512条，费用0.045930美元；DeepSeek给出464 pass、9 warning、39 reject。Codex逐条复核48条flag：43条存在实质错误、来源歧义或合理人工复核价值，5条为过严/可接受变体。继续分层复核64条pass，未发现数字、否定、主体或整句级灾难性遗漏，但发现2条实质漏检和2条边界漏检：台湾法律 `保防工作` 被弱化为普通 `prevention work`，专名 `嵐電` 被错写成 `Arashidenden`，另有 `大家姐` 称谓弱化和 `I.M. Jolly` 转写边界。当前结论为 `hold_before_expansion`：单次Flash对常规错误有效，但对专名/标题转写和地区法律技术术语存在可重复盲点；在设计有界的pass侧二次检查前，不进入2,048条阶段。

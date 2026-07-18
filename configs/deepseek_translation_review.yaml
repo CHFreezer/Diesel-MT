@@ -63,6 +63,8 @@ review:
   calibration_minimum_clean_pass_rate: 0.80
   calibration_require_complete_output: true
   full_review_requires_qualified_calibration: true
+  staged_review_seed: 20260718
+  staged_manual_pass_sample: 64
 
 outputs:
   root: td04/deepseek-translation-review-v1
@@ -70,5 +72,6 @@ outputs:
   plan: plan.json
   responses: responses
   decisions: decisions.jsonl
+  stage_manual_queue: stage-manual-review-queue.jsonl
   report: report.json
   calibration_root: td04/deepseek-translation-review-v1/calibration

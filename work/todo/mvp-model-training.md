@@ -60,7 +60,7 @@ TD-16F -> TD-17 -> TD-18
 
 - [x] **TD-02 schema v4**：EN/Hans/JA/KO各50,000 source；原生Hant无target/minimum/refill，完整审计后实收851条；锁定一跳反向pair、human-anchor ceiling、80/20 sampling weight和一次dev-only patch。
 - [x] **TD-03 schema v4**：已发布200,000条固定非Hant source、851条质量实收Hant和40,000条human anchors；严格零截断、semantic-group分区、exact/near去重和FLORES-dev隔离。
-- [ ] **[TD-04 schema v4](../task/mvp-model-training/td-04-ability-first-teacher-generation.md)**：v3 已完成16路固定target、4路Hant质量实收和反向pair，但人工审查命中 KFTT 日文到英文的系统性实体/术语 blocker；当前身份 rejected。新增独立 API 全量审查候选：校准错误召回 90.91%、干净通过 100%，128 条 pilot 发现 5 条实质问题；全量仍需显式批准约 11 美元实测外推/18.44 美元保守预算，并发布新身份，不能就地修复 v3。
+- [ ] **[TD-04 schema v4](../task/mvp-model-training/td-04-ability-first-teacher-generation.md)**：v3 已完成16路固定target、4路Hant质量实收和反向pair，但人工审查命中 KFTT 日文到英文的系统性实体/术语 blocker；当前身份 rejected。独立API审查的512条分层阶段已覆盖20路/60 strata，48条flag中43条值得拦截，64条pass抽查发现2条实质漏检和2条边界漏检；当前 `hold_before_expansion`，先补专名转写与地区法律/技术术语的有界二次检查，再决定是否进入2,048条，不能就地修复v3。
 - [ ] **[TD-05 schema v4](../task/mvp-model-training/td-05-ability-first-mixed-corpus.md)**：实现已完成，但 v3 人工质量门失败，publication blocked；不得消费 v3 accepted teacher 或创建80/20 mixed corpus。
 - [x] 历史 TD-02～TD-05 v1/v2 产物保持不可变，只作为 route/system-validation 与失败诊断证据。
 

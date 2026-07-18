@@ -20,7 +20,7 @@ import threading
 import time
 import urllib.error
 import urllib.request
-from collections import Counter
+from collections import Counter, defaultdict, deque
 from pathlib import Path, PurePosixPath
 from typing import Any, Iterable, Mapping, Sequence
 
@@ -162,6 +162,11 @@ def load_config(path: Path) -> dict[str, Any]:
         > int(api.get("max_output_tokens", 0))
     ):
         raise TranslationReviewError("estimated batch output exceeds API max_output_tokens")
+    review = value.get("review", {})
+    if int(review.get("staged_manual_pass_sample", 0)) <= 0:
+        raise TranslationReviewError("staged manual pass sample must be positive")
+    if not isinstance(review.get("staged_review_seed"), int):
+        raise TranslationReviewError("staged review seed must be an integer")
     if api.get("response_format") != "json_object":
         raise TranslationReviewError("JSON output must be enabled")
     return value
@@ -301,6 +306,57 @@ def load_full_review_items(runtime_root: Path, config: Mapping[str, Any]) -> tup
         "records": len(items),
     }
     return items, evidence
+
+
+def stratified_review_order(
+    items: Sequence[Mapping[str, Any]], config: Mapping[str, Any]
+) -> list[Mapping[str, Any]]:
+    """Deterministically interleave route/source/kind strata for cumulative pilots."""
+
+    seed = str(config["review"]["staged_review_seed"])
+    buckets: dict[tuple[str, str, str], list[Mapping[str, Any]]] = defaultdict(list)
+    for item in items:
+        key = (str(item["route"]), str(item["source_id"]), str(item["kind"]))
+        buckets[key].append(item)
+    ordered_buckets: list[tuple[tuple[str, str, str], deque[Mapping[str, Any]]]] = []
+    for key, values in buckets.items():
+        values.sort(
+            key=lambda item: hashlib.sha256(
+                f"{seed}:record:{item['id']}".encode("utf-8")
+            ).digest()
+        )
+        ordered_buckets.append((key, deque(values)))
+    ordered_buckets.sort(
+        key=lambda pair: hashlib.sha256(
+            f"{seed}:stratum:{'|'.join(pair[0])}".encode("utf-8")
+        ).digest()
+    )
+    result: list[Mapping[str, Any]] = []
+    active = ordered_buckets
+    while active:
+        remaining: list[tuple[tuple[str, str, str], deque[Mapping[str, Any]]]] = []
+        for key, values in active:
+            result.append(values.popleft())
+            if values:
+                remaining.append((key, values))
+        active = remaining
+    if len(result) != len(items):
+        raise TranslationReviewError("stratified review ordering lost records")
+    return result
+
+
+def _review_order_evidence(items: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+    digest = hashlib.sha256()
+    strata = Counter()
+    for item in items:
+        digest.update(str(item["id"]).encode("utf-8"))
+        digest.update(b"\n")
+        strata[f"{item['route']}|{item['source_id']}|{item['kind']}"] += 1
+    return {
+        "method": "deterministic-route-source-kind-round-robin-v1",
+        "ordered_ids_sha256": digest.hexdigest(),
+        "strata": len(strata),
+    }
 
 
 def load_calibration_items(
@@ -736,6 +792,54 @@ def _aggregate(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     }
 
 
+def _stage_manual_queue(
+    items: Sequence[Mapping[str, Any]],
+    rows: Sequence[Mapping[str, Any]],
+    config: Mapping[str, Any],
+) -> list[dict[str, Any]]:
+    decisions = {str(row["id"]): row for row in rows}
+    reviewed_items = [item for item in items if str(item["id"]) in decisions]
+    flagged = [
+        item
+        for item in reviewed_items
+        if decisions[str(item["id"])]["verdict"] != "pass"
+    ]
+    passes = [
+        item
+        for item in reviewed_items
+        if decisions[str(item["id"])]["verdict"] == "pass"
+    ]
+    pass_limit = int(config["review"]["staged_manual_pass_sample"])
+    selected = [("flagged", item) for item in flagged]
+    selected.extend(
+        ("pass_audit", item)
+        for item in stratified_review_order(passes, config)[:pass_limit]
+    )
+    queue: list[dict[str, Any]] = []
+    for purpose, item in selected:
+        decision = decisions[str(item["id"])]
+        queue.append(
+            {
+                "id": str(item["id"]),
+                "purpose": purpose,
+                "kind": str(item["kind"]),
+                "route": str(item["route"]),
+                "source_id": str(item["source_id"]),
+                "source_text": str(item["source_text"]),
+                "candidate_translation": str(item["candidate_translation"]),
+                "verdict": str(decision["verdict"]),
+                "categories": list(decision["categories"]),
+                "confidence": float(decision["confidence"]),
+                "source_evidence": str(decision["source_evidence"]),
+                "target_evidence": str(decision["target_evidence"]),
+                "note": str(decision["note"]),
+                "manual_decision": None,
+                "manual_note": "",
+            }
+        )
+    return queue
+
+
 def _write_plan(
     path: Path,
     *,
@@ -776,6 +880,8 @@ def estimate_action(
     runtime_root: Path, config: Mapping[str, Any], config_path: Path
 ) -> dict[str, Any]:
     items, evidence = load_full_review_items(runtime_root, config)
+    items = stratified_review_order(items, config)
+    evidence = {**evidence, "review_order": _review_order_evidence(items)}
     batches = make_batches(items, config)
     estimate = estimate_cost(batches, config)
     output = runtime_root / PurePosixPath(config["outputs"]["root"]) / config["outputs"]["estimate"]
@@ -903,6 +1009,8 @@ def review_action(
         if calibration_report.get("calibration_definition_sha256") != sha256_file(calibration_path):
             raise TranslationReviewError("calibration definition identity drift")
     items, evidence = load_full_review_items(runtime_root, config)
+    items = stratified_review_order(items, config)
+    evidence = {**evidence, "review_order": _review_order_evidence(items)}
     all_batches = make_batches(items, config)
     batches = all_batches[:maximum_batches] if maximum_batches is not None else all_batches
     estimate = estimate_cost(batches, config)
@@ -929,6 +1037,10 @@ def review_action(
     rows = _decision_rows(batches, responses)
     complete = maximum_batches is None and len(rows) == len(items)
     _, decisions_sha = write_jsonl(output_root / config["outputs"]["decisions"], rows)
+    manual_queue = _stage_manual_queue(items, rows, config)
+    manual_queue_records, manual_queue_sha = write_jsonl(
+        output_root / config["outputs"]["stage_manual_queue"], manual_queue
+    )
     report = {
         "schema_version": 1,
         "status": "complete" if complete else "in_progress",
@@ -942,6 +1054,9 @@ def review_action(
         "batches_selected": len(batches),
         "batches_complete": len(responses),
         "decisions_sha256": decisions_sha,
+        "review_order": evidence["review_order"],
+        "stage_manual_queue_records": manual_queue_records,
+        "stage_manual_queue_sha256": manual_queue_sha,
         "aggregate": _aggregate(rows),
         "cost": _actual_cost(responses, config),
         "formal_test_accessed": False,

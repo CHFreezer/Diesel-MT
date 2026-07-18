@@ -13,6 +13,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 from deepseek_translation_review import (  # noqa: E402
     TranslationReviewError,
+    _stage_manual_queue,
     _validate_decisions,
     estimate_cost,
     load_api_key,
@@ -20,6 +21,7 @@ from deepseek_translation_review import (  # noqa: E402
     load_full_review_items,
     make_batches,
     run_batches,
+    stratified_review_order,
 )
 from mvp_60m_data_pipeline import sha256_file, write_json, write_jsonl  # noqa: E402
 
@@ -96,6 +98,54 @@ def test_batches_are_deterministic_and_cost_is_bounded() -> None:
     changed[0]["candidate_translation"] = "changed candidate"
     changed_batches = make_batches(changed, config)
     assert changed_batches[0]["identity"] != first[0]["identity"]
+
+
+def test_stratified_order_is_deterministic_and_spreads_strata() -> None:
+    config = _config()
+    items: list[dict[str, object]] = []
+    for route_index, route in enumerate(
+        ("eng_Latn->jpn_Jpan", "jpn_Jpan->eng_Latn", "kor_Hang->zho_Hant")
+    ):
+        for item_index in range(4):
+            item = _item(route_index * 10 + item_index)
+            source_language, target_language = route.split("->")
+            item.update(
+                {
+                    "route": route,
+                    "source_language": source_language,
+                    "target_language": target_language,
+                    "source_id": f"source-{route_index}",
+                }
+            )
+            items.append(item)
+    first = stratified_review_order(items, config)
+    second = stratified_review_order(items, config)
+    assert [item["id"] for item in first] == [item["id"] for item in second]
+    assert len({item["route"] for item in first[:3]}) == 3
+    assert {item["id"] for item in first} == {item["id"] for item in items}
+
+
+def test_stage_manual_queue_contains_all_flags_and_bounded_passes() -> None:
+    config = _config()
+    config["review"]["staged_manual_pass_sample"] = 1  # type: ignore[index]
+    items = [_item(index) for index in range(3)]
+    rows = [_pass(items[0]), _pass(items[1])]
+    rows.append(
+        {
+            "id": items[2]["id"],
+            "verdict": "reject",
+            "categories": ["entity_error"],
+            "confidence": 0.9,
+            "source_evidence": "",
+            "target_evidence": "",
+            "note": "wrong entity",
+        }
+    )
+    queue = _stage_manual_queue(items, rows, config)
+    assert len(queue) == 2
+    assert sum(row["purpose"] == "flagged" for row in queue) == 1
+    assert sum(row["purpose"] == "pass_audit" for row in queue) == 1
+    assert all(row["source_text"] for row in queue)
 
 
 def test_response_requires_exact_order_and_sanitizes_evidence() -> None:
