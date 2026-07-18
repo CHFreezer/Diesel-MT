@@ -54,13 +54,13 @@ TD-05 -> TD-16C mixed 60M -> TD-16D 可选弱路由 patch -> TD-16E -> TD-16F
 TD-16F -> TD-17 -> TD-18
 ```
 
-历史执行已到 TD-16B：A/B诊断、可配置高吞吐训练器和完整旧M0长训均有证据，但TD-16B否决了旧M0作为通用MT foundation。TD-02/TD-03 schema v4 已完成来源实收、byte lock、source bank 与 human anchors；TD-04 v1 否决 KFTT 英文实体臆译，v2 因长目标截断停止，v3 则完整生成 195,404 条并通过数量门，但固定人工队列在 `jpn_Jpan→eng_Latn` 发现 KFTT 日文 source 的系统性专名/年号/术语臆译。v3 只保留为完整运行与失败诊断证据，禁止进入 TD-05；旧TD-16继续 suspended。
+历史执行已到 TD-16B：A/B诊断、可配置高吞吐训练器和完整旧M0长训均有证据，但TD-16B否决了旧M0作为通用MT foundation。TD-02/TD-03 schema v4 已完成来源实收、byte lock、source bank 与 human anchors；TD-04 v1 否决 KFTT 英文实体臆译，v2 因长目标截断停止，v3 则完整生成 195,404 条并通过数量门，但固定人工队列在 `jpn_Jpan→eng_Latn` 发现 KFTT 日文 source 的系统性专名/年号/术语臆译。v3 生成证据保持 rejected、禁止直接进入 TD-05；独立 DeepSeek V4 Flash 思考模式审查已通过 30 条校准并完成首批 128 条 pilot，只能形成新的派生质量层，不能回写或自动放行 v3。旧TD-16继续 suspended。
 
 ## 当前回退门禁
 
 - [x] **TD-02 schema v4**：EN/Hans/JA/KO各50,000 source；原生Hant无target/minimum/refill，完整审计后实收851条；锁定一跳反向pair、human-anchor ceiling、80/20 sampling weight和一次dev-only patch。
 - [x] **TD-03 schema v4**：已发布200,000条固定非Hant source、851条质量实收Hant和40,000条human anchors；严格零截断、semantic-group分区、exact/near去重和FLORES-dev隔离。
-- [ ] **[TD-04 schema v4](../task/mvp-model-training/td-04-ability-first-teacher-generation.md)**：v3 已完成16路固定target、4路Hant质量实收和反向pair，但人工审查命中 KFTT 日文到英文的系统性实体/术语 blocker；当前身份 rejected，等待新的 KFTT 日英 human-pair/替代 source 合同。
+- [ ] **[TD-04 schema v4](../task/mvp-model-training/td-04-ability-first-teacher-generation.md)**：v3 已完成16路固定target、4路Hant质量实收和反向pair，但人工审查命中 KFTT 日文到英文的系统性实体/术语 blocker；当前身份 rejected。新增独立 API 全量审查候选：校准错误召回 90.91%、干净通过 100%，128 条 pilot 发现 5 条实质问题；全量仍需显式批准约 11 美元实测外推/18.44 美元保守预算，并发布新身份，不能就地修复 v3。
 - [ ] **[TD-05 schema v4](../task/mvp-model-training/td-05-ability-first-mixed-corpus.md)**：实现已完成，但 v3 人工质量门失败，publication blocked；不得消费 v3 accepted teacher 或创建80/20 mixed corpus。
 - [x] 历史 TD-02～TD-05 v1/v2 产物保持不可变，只作为 route/system-validation 与失败诊断证据。
 

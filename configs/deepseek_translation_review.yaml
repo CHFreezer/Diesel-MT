@@ -1,0 +1,74 @@
+schema_version: 1
+
+identity:
+  name: deepseek-v4-flash-translation-review-v1
+  status: frozen
+  task: TD-04-independent-translation-review
+
+inputs:
+  td04_manifest: td04/manifest.json
+  accepted_teacher: td04/accepted-teacher.jsonl
+  reverse_pairs: td04/reverse-pairs.jsonl
+  source_bank: td03/source-bank.jsonl
+  manual_review_queue: td04/manual-review-queue.jsonl
+  calibration: configs/deepseek_translation_review_calibration.yaml
+  formal_test_access: prohibited
+  formal_devtest_access: prohibited
+
+api:
+  base_url: https://api.deepseek.com
+  endpoint: /chat/completions
+  model: deepseek-v4-flash
+  thinking: enabled
+  response_format: json_object
+  user_id: diesel-mt-translation-review-v1
+  request_timeout_seconds: 600
+  request_attempts: 3
+  retry_base_seconds: 1
+  concurrency: 8
+  batch_max_records: 128
+  batch_max_estimated_input_tokens: 90000
+  max_output_tokens: 49152
+
+pricing:
+  retrieved_on: 2026-07-18
+  currency: USD
+  per_million_tokens:
+    input_cache_hit: 0.0028
+    input_cache_miss: 0.14
+    output: 0.28
+  default_cost_ceiling_usd: 10.0
+  # Thinking-mode calibration used 302.7 completion tokens per record,
+  # including reasoning tokens. Keep headroom for batch-to-batch variance.
+  estimated_output_tokens_per_record: 330
+
+review:
+  verdicts: [pass, warning, reject]
+  categories:
+    - entity_error
+    - numeric_error
+    - date_time_error
+    - omission
+    - unsupported_addition
+    - polarity_or_relation_error
+    - terminology_error
+    - language_or_script_error
+    - source_copy
+    - fluency_only
+    - ambiguous_source
+    - uncertain
+  maximum_evidence_characters: 160
+  maximum_note_characters: 240
+  calibration_minimum_error_flag_recall: 0.90
+  calibration_minimum_clean_pass_rate: 0.80
+  calibration_require_complete_output: true
+  full_review_requires_qualified_calibration: true
+
+outputs:
+  root: td04/deepseek-translation-review-v1
+  estimate: estimate.json
+  plan: plan.json
+  responses: responses
+  decisions: decisions.jsonl
+  report: report.json
+  calibration_root: td04/deepseek-translation-review-v1/calibration

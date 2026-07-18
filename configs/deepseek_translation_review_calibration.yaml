@@ -1,0 +1,91 @@
+schema_version: 1
+identity:
+  name: deepseek-v4-flash-translation-review-calibration-v1
+  status: frozen
+
+# IDs bind to the deterministic TD-04 v3 manual-review queue.  Text is read
+# from the runtime queue so licensed corpus text is not duplicated here.
+cases:
+  - review_id: 68af67599a4d9b0ec8893c81330e46c3da3e72e13c398beb0a4f283888f70fee
+    expected: flag
+    category: numeric_error
+    note: 135,000 years was reduced to 35,000 years in Japanese.
+  - review_id: 45441a9bd6154a45e8ecf74ec0e53071de4fb692ec600687dd1ac063fc87b59f
+    expected: flag
+    category: date_time_error
+    note: The -3 UTC offset was omitted or changed.
+  - review_id: 656eea46ef85c65448356d30dd4625655900c6f5f5637d65b50cb4d52184142c
+    expected: flag
+    category: entity_error
+    note: Newcastle United was corrupted into mixed-script 新castle United.
+  - review_id: 0f379c107b607fe93cfd0fc7c674606049ef6f2abdb4dc74a95c7fcab2cab2f4
+    expected: flag
+    category: terminology_error
+    note: Japanese tea names including Asuke and tencha were mistranslated.
+  - review_id: 378ac04ef351c3f9e34dc971d20239eeec3403d7b7ddd65088904a5d11bb1eb5
+    expected: flag
+    category: entity_error
+    note: The An'ei era name was changed to the nonexistent Eiyo.
+  - review_id: 4851e3551032c9ffd032e2346bfa20c6dc0a1b408b11002577fcc1ebc39439b2
+    expected: flag
+    category: ambiguous_source
+    note: A malformed table fragment was converted into unsupported prose and names.
+  - review_id: 5b76a778af1713a12778118dc4616cf395308b217365df0acd96326740077334
+    expected: flag
+    category: language_or_script_error
+    note: An English target retained Simplified Chinese era-name text.
+  - review_id: 6525f0b4f468b658e65c7000b30626edf857d76c323637ac10f635ef2afd453c
+    expected: flag
+    category: entity_error
+    note: Fujiwara no Hidesato and Masakado were replaced by different people.
+  - review_id: 9a50ce6896208d807e71a23f80d2ea06f08d08590e72c9358b2714bc14c71b56
+    expected: flag
+    category: entity_error
+    note: A proper diary title was replaced by an unsupported semantic gloss.
+  - review_id: b8de7f8990f8409a4ca7b246c4df9f606b23b3c8c642bc174ad9ef471ead4269
+    expected: flag
+    category: terminology_error
+    note: Chuhai was changed to the nonexistent product term tuhao.
+
+  - review_id: 0d2a6279e519c394e8c536c31e7b649332bfc1e09335cd23b41c6a9f114315aa
+    expected: pass
+  - review_id: 3198d3b44a6680c4c5e0ab08469a9341ff8d434a40fda0f677dae6b61ae8c0cc
+    expected: pass
+  - review_id: 42887584b49c9d378fea9e029a76d63ea47784c358827ff995821c3867821ff3
+    expected: pass
+  - review_id: f359b0ab850d7849809c03ae51d435314515f972416ebca093cc389699e16392
+    expected: pass
+  - review_id: 153f3c5738aeb64cbf488cb9b90c8fab0e6b37ceea0fe18166089434340dde14
+    expected: pass
+  - review_id: 7c3d562698fd46bf74fb780c42ab2223a603a86386c3abd69dcaf78cf4582729
+    expected: pass
+  - review_id: c47ca474fb9fc8a24ce1c8ede81bddaf84a6114c19703feb80868b9779689a7e
+    expected: pass
+  - review_id: f7103dd4cda274aea9643e2a0b745b72151a39632066dd2cba28ab04173bb74a
+    expected: pass
+  - review_id: 018a09bca05a75a3528256092c296c61d8f2570b2d0ba6173d90703adce0f9ee
+    expected: pass
+  - review_id: 2c5df7138bae02bd04c28f22ab2fef65236f5a02dd926554025330c72d55fbff
+    expected: pass
+  - review_id: a8312f3badac530b0bb8654412f2dbc683d0e0b5c6600c2a8eee86ace37fe790
+    expected: pass
+  - review_id: ff43000029162471f3cd640f8c22704697ce3e40d35586c31a3cecf310c3e4e1
+    expected: pass
+  - review_id: 0222adafab78a4adc8224623d56668718cf5f7214a18a13a9a3edf8023eb6c1e
+    expected: pass
+  - review_id: 321917651f593f5b12c92372ef8f8445a90c191a13bf3ec95354edb67e570484
+    expected: pass
+  - review_id: 69c7920513d850c96973cf8b35ecd23edd6e707f156c44b6e395c8e0eb7de6f2
+    expected: pass
+  - review_id: fc1f2b39cc23fd2a118b6b948cd84f214071cb9db9884ddc174fcd3c02cc9ea0
+    expected: pass
+  - review_id: 0f234543c26463b56d46958610e1ff02da60bcc28a56736a6af906d3303a5f0b
+    expected: pass
+  - review_id: 2edf79623ab038621cff59342b95e1e1a1b7d682d07cddc4546a2358671cc1f5
+    expected: pass
+  - review_id: 502093cce9256f371d7413990d27647e05bf23ebca2b9053c101c155fc1e264b
+    expected: flag
+    category: terminology_error
+    note: Japanese units 咫 and 尺 were rendered with Mandarin readings zhi and chi.
+  - review_id: ee5d3958ccc780ecf9fe398b9afa2e300dd7c7e84de57b839be8097ff17a71e9
+    expected: pass
