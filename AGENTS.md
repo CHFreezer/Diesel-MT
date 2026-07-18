@@ -42,6 +42,10 @@ python -m pip install -r requirements.txt
 # Estimate model parameters for all configurations
 python scripts/calculate_model_parameters.py
 
+# Inspect the unified student training/evaluation CLI
+python scripts/mvp_cli.py --help
+python scripts/mvp_cli.py train --dry-run
+
 # Fetch tokenizer datasets — dry-run first
 python scripts/fetch_tokenizer_datasets.py --profile smoke --dry-run
 
@@ -65,15 +69,16 @@ python scripts/fetch_tokenizer_datasets.py --resolve-lock
 - Use “Chinese” only for a product-level statement that applies to both Chinese states. Data, configs, training, inference, and metrics must name `zho_Hans` or `zho_Hant` explicitly. Aggregated Chinese metrics must retain both tag-level route breakdowns.
 - The transition contract and immutable-v1 boundary are frozen in `docs/chinese-locale-capability-contract.md`.
 
-### No package structure
+### Flat shared-module structure
 
-The project has no `src/` layout, `__init__.py` files, or installable package. Python modules live in `scripts/` as flat files. Tests import them via `sys.path.insert(0, str(ROOT / "scripts"))`, so in tests the scripts directory acts as an ad-hoc package.
+The project has no `src/` layout, `__init__.py` files, or installable package. Python modules live in `scripts/` as flat importable modules. Tests import them via `sys.path.insert(0, str(ROOT / "scripts"))`. Reusable behavior belongs in domain modules (for example `artifact_io.py`, `mvp_training.py`, and `mvp_evaluation.py`); avoid adding a new one-file CLI when an existing domain CLI can expose another subcommand.
 
 ### Key modules
 
 - **`scripts/fetch_tokenizer_datasets.py`** — CLI entry point for the tokenizer corpus pipeline. Thin argument parsing + delegation to the pipeline library.
 - **`scripts/tokenizer_dataset_pipeline.py`** (~1543 lines) — Core processing library: config validation, HPLT 3.0 HTTP fetcher with range/resume, text cleaning pipeline, MinHash approximate dedup, deterministic balanced sampling, memory-first builds, per-language checkpointing, atomic file output, quality reports.
 - **`scripts/calculate_model_parameters.py`** — Standalone parameter estimator for 5 model configs (baseline + 4 MVP candidates).
+- **`scripts/artifact_io.py`** — Shared canonical JSON/JSONL, SHA-256, structured-data loading, and atomic artifact publication primitives.
 - **`scripts/model_training_contract.py`** — Strict MVP model-data/student/source-lock contract: five tags, ten undirected relations, 20 routes, canonical config hashing, provenance schema, path boundaries, and fail-fast validation.
 - **`scripts/prepare_model_data.py`** — Thin TD-03 CLI for side-effect-free dry runs, locked-cache/offline builds, and identity-bound locale checkpoint resume.
 - **`scripts/model_data_pipeline.py`** — Deterministic MASSIVE parallel-data adapter: resumable archive fetch, nested file verification, conservative multilingual cleaning, stable sample/group identities, provenance, atomic corpus/report publication, and manifest-last completion.
@@ -85,8 +90,9 @@ The project has no `src/` layout, `__init__.py` files, or installable package. P
 - **`scripts/hymt2_distillation.py`** — Shared TD-07/TD-08 prompt, filtering, metrics, deterministic sampling, and loopback llama.cpp teacher runtime contracts.
 - **`scripts/calibrate_hymt2_teacher.py`** — TD-07 dev-only prompt/decode calibration and exact-replay CLI; calibration outputs never enter student training.
 - **`scripts/hymt2_distillation_data.py`** / **`scripts/generate_teacher_data.py`** — TD-08 train-only bounded sequence-distillation pipeline and CLI: deterministic route sampling, per-sample resume, raw/accepted/filtered separation, manual review, replay, gates, and manifest-last publication.
+- **`scripts/mvp_cli.py`** — Unified student-domain CLI for training, TD-09/TD-11/TD-12 validation, TD-13 evaluation, TD-14 resource evidence, and TD-15 A/B preparation/validation.
 - **`scripts/mvp_student.py`** / **`scripts/mvp_training.py`** / **`scripts/mvp_checkpoint.py`** — TD-09 through TD-11 frozen-tokenizer student construction, direction-aware encoding, deterministic 20-route sampling/training, persistent encoding cache, configurable pre-encoding/length bucketing/pinned transfer/fused optimizer, runtime-probed resource budgets, and atomic complete-state resume checkpoints.
-- **`scripts/mvp_evaluation.py`** / **`scripts/evaluate_mvp_model.py`** — TD-13 standalone dev/test-gated evaluator with fixed SacreBLEU/chrF semantics, 20 tag routes, 12 product-direction aggregates, and two Chinese conversion routes.
+- **`scripts/mvp_evaluation.py`** — TD-13 standalone dev/test-gated evaluator with fixed SacreBLEU/chrF semantics, 20 tag routes, 12 product-direction aggregates, and two Chinese conversion routes.
 - **`scripts/mvp_resource_benchmark.py`** / **`scripts/mvp_resource_profile.py`** — TD-14 real-length resource candidates, runtime hardware evidence, unique M2 profile selection, 100-step soak, and resume acceptance.
 - **`scripts/mvp_distillation_ab.py`** — TD-15 strict accepted-intersection builder and fairness validator for source-identical human-only/distilled recipes, pretraining differences, paired dry runs, and frozen dev selection rules.
 - **`scripts/mvp_m2.py`** / **`scripts/run_mvp_m2.py`** — TD-16 formal two-arm runner: exact-checkpoint to offline Hugging Face publication, scheduled dev generation/evaluation, post-publication retention, frozen dev-only selection, and one-shot formal-test authorization.

@@ -12,6 +12,7 @@ from collections.abc import Callable, Mapping
 from pathlib import Path, PurePosixPath
 from typing import Any
 
+from artifact_io import atomic_write_json
 from freeze_tokenizer_artifact import sha256_file
 from model_training_contract import config_sha256
 
@@ -35,20 +36,7 @@ class CheckpointError(RuntimeError):
 
 
 def _atomic_json(path: Path, payload: Mapping[str, Any]) -> None:
-    descriptor, name = tempfile.mkstemp(
-        prefix=f".{path.name}.", suffix=".tmp", dir=path.parent
-    )
-    temporary = Path(name)
-    try:
-        with os.fdopen(descriptor, "w", encoding="utf-8", newline="\n") as handle:
-            json.dump(payload, handle, ensure_ascii=False, indent=2, sort_keys=True)
-            handle.write("\n")
-            handle.flush()
-            os.fsync(handle.fileno())
-        os.replace(temporary, path)
-    except BaseException:
-        temporary.unlink(missing_ok=True)
-        raise
+    atomic_write_json(path, payload, sort_keys=True, allow_nan=True)
 
 
 def _torch_save(path: Path, payload: Any) -> None:
@@ -220,10 +208,10 @@ def build_checkpoint_identity(
     training_config: Mapping[str, Any],
 ) -> dict[str, Any]:
     code_files = (
+        "scripts/artifact_io.py",
         "scripts/mvp_student.py",
         "scripts/mvp_training.py",
         "scripts/mvp_checkpoint.py",
-        "scripts/train_mvp_model.py",
     )
     code = {
         relative: sha256_file(repository_root / relative) for relative in code_files

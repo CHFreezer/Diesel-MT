@@ -11,9 +11,7 @@ from __future__ import annotations
 import hashlib
 import html
 import json
-import os
 import re
-import tempfile
 import unicodedata
 import xml.etree.ElementTree as ET
 import zipfile
@@ -22,6 +20,15 @@ from dataclasses import asdict, dataclass
 import heapq
 from pathlib import Path
 from typing import Any, Iterable, Iterator, Mapping, Sequence
+
+from artifact_io import (
+    atomic_write_bytes,
+    canonical_json_bytes,
+    sha256_bytes,
+    sha256_file,
+    write_json,
+    write_jsonl,
+)
 
 
 PIPELINE_VERSION = "mvp-60m-data-v1"
@@ -68,24 +75,6 @@ class ParallelGroup:
     source_id: str
     source_group_id: str
     texts: Mapping[str, str]
-
-
-def canonical_json_bytes(value: Any) -> bytes:
-    return json.dumps(
-        value, ensure_ascii=False, sort_keys=True, separators=(",", ":")
-    ).encode("utf-8") + b"\n"
-
-
-def sha256_bytes(value: bytes) -> str:
-    return hashlib.sha256(value).hexdigest()
-
-
-def sha256_file(path: Path, *, chunk_size: int = 8 * 1024 * 1024) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        while chunk := handle.read(chunk_size):
-            digest.update(chunk)
-    return digest.hexdigest()
 
 
 def stable_rank(seed: str, *values: str) -> str:
@@ -490,32 +479,6 @@ def apply_domain_ceilings(
         + pools["legal_and_government"][:legal_count]
     )
     return [dict(record) for record in sorted(selected, key=lambda item: str(item["selection_rank"]))]
-
-
-def atomic_write_bytes(path: Path, value: bytes) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    descriptor, temporary = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
-    try:
-        with os.fdopen(descriptor, "wb") as handle:
-            handle.write(value)
-            handle.flush()
-            os.fsync(handle.fileno())
-        os.replace(temporary, path)
-    finally:
-        try:
-            os.unlink(temporary)
-        except FileNotFoundError:
-            pass
-
-
-def write_json(path: Path, value: Any) -> None:
-    atomic_write_bytes(path, json.dumps(value, ensure_ascii=False, indent=2).encode("utf-8") + b"\n")
-
-
-def write_jsonl(path: Path, rows: Iterable[Mapping[str, Any]]) -> tuple[int, str]:
-    payload = b"".join(canonical_json_bytes(dict(row)) for row in rows)
-    atomic_write_bytes(path, payload)
-    return payload.count(b"\n"), sha256_bytes(payload)
 
 
 def read_parallel_lines(

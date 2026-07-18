@@ -15,16 +15,23 @@ import math
 import os
 import random
 import re
-import tempfile
 import threading
 import time
 import urllib.error
 import urllib.request
 from collections import Counter, defaultdict, deque
 from pathlib import Path, PurePosixPath
-from typing import Any, Iterable, Mapping, Sequence
+from typing import Any, Mapping, Sequence
 
 import yaml
+
+from artifact_io import (
+    canonical_json_bytes,
+    sha256_bytes,
+    sha256_file,
+    write_json,
+    write_jsonl,
+)
 
 
 PROMPT_VERSION = "deepseek-translation-fidelity-review-v6-thinking"
@@ -76,24 +83,6 @@ class ResponseContractError(TranslationReviewError):
     """Raised for deterministic response-shape errors that must not be retried."""
 
 
-def canonical_json_bytes(value: Any) -> bytes:
-    return json.dumps(
-        value, ensure_ascii=False, sort_keys=True, separators=(",", ":")
-    ).encode("utf-8") + b"\n"
-
-
-def sha256_bytes(value: bytes) -> str:
-    return hashlib.sha256(value).hexdigest()
-
-
-def sha256_file(path: Path, *, chunk_size: int = 8 * 1024 * 1024) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        while chunk := handle.read(chunk_size):
-            digest.update(chunk)
-    return digest.hexdigest()
-
-
 def read_json(path: Path) -> dict[str, Any]:
     value = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(value, dict):
@@ -112,32 +101,6 @@ def read_jsonl(path: Path) -> list[dict[str, Any]]:
                 raise TranslationReviewError(f"non-object JSONL: {path}:{line_number}")
             rows.append(value)
     return rows
-
-
-def _atomic_replace(path: Path, payload: bytes) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    descriptor, temporary_name = tempfile.mkstemp(
-        prefix=f".{path.name}.", suffix=".tmp", dir=path.parent
-    )
-    temporary = Path(temporary_name)
-    try:
-        with os.fdopen(descriptor, "wb") as handle:
-            handle.write(payload)
-            handle.flush()
-            os.fsync(handle.fileno())
-        os.replace(temporary, path)
-    finally:
-        temporary.unlink(missing_ok=True)
-
-
-def write_json(path: Path, value: Mapping[str, Any]) -> None:
-    _atomic_replace(path, json.dumps(value, ensure_ascii=False, indent=2).encode("utf-8") + b"\n")
-
-
-def write_jsonl(path: Path, rows: Iterable[Mapping[str, Any]]) -> tuple[int, str]:
-    payload = b"".join(canonical_json_bytes(row) for row in rows)
-    _atomic_replace(path, payload)
-    return payload.count(b"\n"), sha256_bytes(payload)
 
 
 def load_config(path: Path) -> dict[str, Any]:

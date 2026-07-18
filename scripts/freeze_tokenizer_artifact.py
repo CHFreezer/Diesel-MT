@@ -8,7 +8,6 @@ that manifest in turn pins every file in the published artifact.
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 import math
 import os
@@ -23,6 +22,7 @@ SCRIPTS_DIR = ROOT / "scripts"
 if str(SCRIPTS_DIR) not in os.sys.path:
     os.sys.path.insert(0, str(SCRIPTS_DIR))
 
+from artifact_io import sha256_file  # noqa: E402
 from tokenizer_utils import (  # noqa: E402
     PROJECT_LANGUAGES,
     atomic_write_json,
@@ -47,14 +47,6 @@ LANGUAGE_TEXT = {
 
 class FreezeError(RuntimeError):
     """Raised when a freeze invariant is not satisfied."""
-
-
-def sha256_file(path: Path, *, chunk_size: int = 8 * 1024 * 1024) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        while chunk := handle.read(chunk_size):
-            digest.update(chunk)
-    return digest.hexdigest()
 
 
 def portable_display_path(path: Path) -> str:

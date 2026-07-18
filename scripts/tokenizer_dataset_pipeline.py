@@ -28,6 +28,13 @@ from typing import Any, Iterator
 import yaml
 import zstandard
 
+from artifact_io import (
+    atomic_write_bytes,
+    canonical_json_bytes,
+    sha256_bytes,
+    sha256_file,
+)
+
 
 LANGUAGES = ("eng_Latn", "zho_Hans", "zho_Hant", "jpn_Jpan", "kor_Hang")
 REQUIRED_SOURCE_FIELDS = {
@@ -78,37 +85,6 @@ class LockError(PipelineError):
 
 class FetchError(PipelineError):
     exit_code = 4
-
-
-def sha256_bytes(data: bytes) -> str:
-    return hashlib.sha256(data).hexdigest()
-
-
-def sha256_file(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
-
-
-def canonical_json_bytes(value: Any) -> bytes:
-    return (json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n").encode("utf-8")
-
-
-def atomic_write_bytes(path: Path, data: bytes) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    fd, temporary = tempfile.mkstemp(prefix=f".{path.name}.", suffix=".tmp", dir=path.parent)
-    try:
-        with os.fdopen(fd, "wb") as handle:
-            handle.write(data)
-            handle.flush()
-            os.fsync(handle.fileno())
-        os.replace(temporary, path)
-    except BaseException:
-        with contextlib.suppress(FileNotFoundError):
-            os.unlink(temporary)
-        raise
 
 
 def load_config(path: Path) -> dict[str, Any]:

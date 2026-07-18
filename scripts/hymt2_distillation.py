@@ -2,13 +2,11 @@
 
 from __future__ import annotations
 
-import contextlib
 import hashlib
 import json
 import os
 import re
 import subprocess
-import tempfile
 import threading
 import time
 import unicodedata
@@ -22,6 +20,14 @@ import yaml
 from opencc import OpenCC
 from sacrebleu.metrics import BLEU, CHRF
 
+from artifact_io import (
+    atomic_write_bytes,
+    atomic_write_json as _shared_atomic_write_json,
+    canonical_json_bytes as _shared_canonical_json_bytes,
+    sha256_bytes,
+    sha256_file,
+    write_jsonl as _shared_write_jsonl,
+)
 from model_data_pipeline import script_counts, wrong_script_dominates
 from model_training_contract import LANGUAGE_TAGS, config_sha256, directed_routes, validate_route
 
@@ -67,53 +73,16 @@ _S2T = OpenCC("s2t")
 _T2S = OpenCC("t2s")
 
 
-def sha256_bytes(data: bytes) -> str:
-    return hashlib.sha256(data).hexdigest()
-
-
-def sha256_file(path: Path, chunk_size: int = 8 * 1024 * 1024) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(chunk_size), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
-
-
 def canonical_json_bytes(value: Any) -> bytes:
-    return (
-        json.dumps(
-            value,
-            ensure_ascii=False,
-            sort_keys=True,
-            separators=(",", ":"),
-            allow_nan=False,
-        )
-        + "\n"
-    ).encode("utf-8")
-
-
-def atomic_write_bytes(path: Path, data: bytes) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    fd, temporary = tempfile.mkstemp(prefix=f".{path.name}.", suffix=".tmp", dir=path.parent)
-    try:
-        with os.fdopen(fd, "wb") as handle:
-            handle.write(data)
-            handle.flush()
-            os.fsync(handle.fileno())
-        os.replace(temporary, path)
-    except BaseException:
-        with contextlib.suppress(FileNotFoundError):
-            os.unlink(temporary)
-        raise
+    return _shared_canonical_json_bytes(value, allow_nan=False)
 
 
 def atomic_write_json(path: Path, value: Any) -> None:
-    atomic_write_bytes(path, json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True).encode("utf-8") + b"\n")
+    _shared_atomic_write_json(path, value, sort_keys=True, allow_nan=True)
 
 
 def atomic_write_jsonl(path: Path, records: Iterable[Mapping[str, Any]]) -> None:
-    payload = b"".join(canonical_json_bytes(dict(record)) for record in records)
-    atomic_write_bytes(path, payload)
+    _shared_write_jsonl(path, records, allow_nan=False)
 
 
 def load_yaml(path: Path) -> dict[str, Any]:

@@ -46,7 +46,7 @@
 
 ## 完成记录
 
-- 新增候选契约 `configs/mvp_training_td14_candidates.yaml`、真实长度/候选基准入口 `scripts/benchmark_mvp_resources.py` 与严格证据校验器。候选矩阵显式覆盖 32/64 最大长度、`64×2`/`128×1` 等效 batch、0/2 tokenizer worker 及 gradient checkpointing 开/关；选择规则在结果前冻结为零样本截断、预算内最高 tokens/s、再按较低峰值显存和候选 ID 决胜。
+- 新增候选契约 `configs/mvp_training_td14_candidates.yaml`、真实长度/候选基准模块 `scripts/mvp_resource_benchmark.py` 与严格证据校验器；原薄入口现统一为 `scripts/mvp_cli.py benchmark-resources` 和 `validate-resources`。候选矩阵显式覆盖 32/64 最大长度、`64×2`/`128×1` 等效 batch、0/2 tokenizer worker 及 gradient checkpointing 开/关；选择规则在结果前冻结为零样本截断、预算内最高 tokens/s、再按较低峰值显存和候选 ID 决胜。
 - 在每路前 512 条、共 10,240 条真实 train 记录上得到 source/target token 长度 `p50=10`、`p95=18`、`p99=22`、`max=38`。长度 32 候选因真实尾部截断被淘汰；其余三组通过容量门槛，胜出 `mb64-ga2-l64-w2-no-gc`：约 `977.96 tokens/s`，候选峰值设备内存 `2,840.1 MiB`。开启 gradient checkpointing 为约 `902.66 tokens/s`/`2,512.4 MiB`，`128×1` 为约 `657.59 tokens/s`/`4,401.4 MiB`。
 - 冻结 `configs/mvp_training_m2_profile.yaml`：CUDA BF16、设备预算 12,000 MiB、预留 2,048 MiB、最大利用率 0.85、host/dataloader 预算 32,768/2,048 MiB、OOM retry 0、micro batch 64、累积 2、长度 64/64、2 workers、不开 gradient checkpointing；AdamW/linear、LR `3e-4`、warmup 100、正式 M2 1,000 step/5,000,000 token 上限、每 50 step 验证/checkpoint。文件 SHA-256 为 `9384e5349839ebf5616ae6041e16343656ea0341fc0ddd305ef57590c686f47e`，canonical SHA-256 为 `971a5993099dc0566c344a8b4f51f1f52bea047f968e410ca166e070d8ad92af`。
 - 最终代码身份下完成冻结 scheduler 的前 100 optimizer step soak：200 micro step、12,800 samples、269,702 tokens、`1054.11 tokens/s`，mean/final loss `8.41625882387161`/`6.66803240776062`，峰值设备内存 `3,632.13 MiB`、峰值 host resident `2,272.77 MiB`，source/target 截断和异常跳过均为 0。step 50/100 各完成一次双 batch dev 验证及 checkpoint 发布，step 50 后峰值未继续增长。

@@ -3,13 +3,14 @@
 from __future__ import annotations
 
 import hashlib
-import json
 import os
 import re
 from pathlib import Path, PurePosixPath
 from typing import Any, Mapping
 
 import yaml
+
+from artifact_io import canonical_json_bytes as _shared_canonical_json_bytes
 
 
 LANGUAGE_TAGS = (
@@ -56,16 +57,7 @@ class ContractError(ValueError):
 def canonical_json_bytes(value: Any) -> bytes:
     """Return the one canonical byte representation used for config identity."""
 
-    return (
-        json.dumps(
-            value,
-            ensure_ascii=False,
-            sort_keys=True,
-            separators=(",", ":"),
-            allow_nan=False,
-        )
-        + "\n"
-    ).encode("utf-8")
+    return _shared_canonical_json_bytes(value, allow_nan=False)
 
 
 def config_sha256(value: Any) -> str:

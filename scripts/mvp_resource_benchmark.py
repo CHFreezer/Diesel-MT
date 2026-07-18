@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import json
 import math
 import os
 import tempfile
@@ -11,6 +10,7 @@ from typing import Any
 
 import yaml
 
+from artifact_io import atomic_write_json
 from freeze_tokenizer_artifact import sha256_file
 from model_training_contract import config_sha256, directed_routes, load_student_config
 from mvp_student import load_frozen_tokenizer
@@ -22,19 +22,7 @@ class ResourceBenchmarkError(RuntimeError):
 
 
 def _atomic_json(path: Path, value: Any) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    descriptor, name = tempfile.mkstemp(prefix=f".{path.name}.", suffix=".tmp", dir=path.parent)
-    temporary = Path(name)
-    try:
-        with os.fdopen(descriptor, "w", encoding="utf-8", newline="\n") as handle:
-            json.dump(value, handle, ensure_ascii=False, sort_keys=True, indent=2, allow_nan=False)
-            handle.write("\n")
-            handle.flush()
-            os.fsync(handle.fileno())
-        os.replace(temporary, path)
-    except Exception:
-        temporary.unlink(missing_ok=True)
-        raise
+    atomic_write_json(path, value, sort_keys=True, allow_nan=False)
 
 
 def _atomic_yaml(path: Path, value: Any) -> None:

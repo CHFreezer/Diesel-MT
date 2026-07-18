@@ -19,6 +19,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
 
+from artifact_io import atomic_write_json
 from freeze_tokenizer_artifact import sha256_file, verify_artifact_files
 from model_training_contract import (
     LANGUAGE_TAGS,
@@ -568,21 +569,7 @@ def _file_records(directory: Path) -> list[dict[str, Any]]:
 
 
 def _atomic_write_json(path: Path, payload: Mapping[str, Any]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    descriptor, temporary_name = tempfile.mkstemp(
-        prefix=f".{path.name}.", suffix=".tmp", dir=path.parent
-    )
-    temporary = Path(temporary_name)
-    try:
-        with os.fdopen(descriptor, "w", encoding="utf-8", newline="\n") as handle:
-            json.dump(payload, handle, ensure_ascii=False, indent=2, sort_keys=True)
-            handle.write("\n")
-            handle.flush()
-            os.fsync(handle.fileno())
-        os.replace(temporary, path)
-    except BaseException:
-        temporary.unlink(missing_ok=True)
-        raise
+    atomic_write_json(path, payload, sort_keys=True, allow_nan=True)
 
 
 def save_and_reload_student(

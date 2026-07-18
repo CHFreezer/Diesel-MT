@@ -27,12 +27,14 @@ from typing import Any
 
 import yaml
 
+from artifact_io import atomic_write_json
 from freeze_tokenizer_artifact import sha256_file
 from model_training_contract import (
     config_sha256,
     directed_routes,
     load_student_config,
 )
+from mvp_checkpoint import CHECKPOINT_MANIFEST, validate_checkpoint
 from mvp_student import (
     DirectionAwareCollator,
     EncodedSample,
@@ -1720,6 +1722,162 @@ def compare_training_runs(
     }
 
 
+def validate_resume_equivalence(
+    *,
+    config_path: Path,
+    repository_root: Path,
+    runtime_root: Path,
+    report_path: Path | None = None,
+) -> dict[str, Any]:
+    """Run the TD-11 uninterrupted versus interrupted/resumed acceptance gate."""
+
+    if runtime_root.exists():
+        raise TrainingContractError(
+            f"TD-11 runtime root already exists: {runtime_root}"
+        )
+    config = load_training_config(config_path)
+    maximum = int(config["optimization"]["max_optimizer_steps"])
+    if maximum < 2:
+        raise TrainingContractError(
+            "TD-11 acceptance requires at least two optimizer steps"
+        )
+    interruption_step = maximum // 2
+
+    baseline = run_training(
+        config_path=config_path,
+        repository_root=repository_root,
+        output_dir=runtime_root / "uninterrupted-run",
+        dry_run=False,
+        checkpoint_root=runtime_root / "uninterrupted-checkpoints",
+    )
+    interrupted = run_training(
+        config_path=config_path,
+        repository_root=repository_root,
+        output_dir=runtime_root / "interrupted-run",
+        dry_run=False,
+        checkpoint_root=runtime_root / "resumed-checkpoints",
+        stop_after_optimizer_steps=interruption_step,
+    )
+    resume_checkpoint = (
+        runtime_root / "resumed-checkpoints" / f"step-{interruption_step:08d}"
+    )
+    resumed = run_training(
+        config_path=config_path,
+        repository_root=repository_root,
+        output_dir=runtime_root / "resumed-run",
+        dry_run=False,
+        checkpoint_root=runtime_root / "resumed-checkpoints",
+        resume_from=resume_checkpoint,
+    )
+    baseline_checkpoint = (
+        runtime_root / "uninterrupted-checkpoints" / f"step-{maximum:08d}"
+    )
+    resumed_checkpoint = (
+        runtime_root / "resumed-checkpoints" / f"step-{maximum:08d}"
+    )
+    baseline_manifest = validate_checkpoint(baseline_checkpoint)
+    resumed_manifest = validate_checkpoint(resumed_checkpoint)
+
+    def events(report: Mapping[str, Any]) -> list[dict[str, Any]]:
+        return read_jsonl(Path(str(report["output_root"])) / report["events"]["path"])
+
+    def payload_hashes(checkpoint: Path) -> dict[str, str]:
+        manifest = json.loads(
+            (checkpoint / CHECKPOINT_MANIFEST).read_text(encoding="utf-8")
+        )
+        return {
+            str(record["path"]): str(record["sha256"])
+            for record in manifest["files"]
+        }
+
+    baseline_trace = semantic_trace_sha256(events(baseline))
+    resumed_trace = semantic_trace_sha256([*events(interrupted), *events(resumed)])
+    comparisons = {
+        "semantic_trace": baseline_trace == resumed_trace,
+        "final_train_loss": baseline["result"]["final_train_loss"]
+        == resumed["result"]["final_train_loss"],
+        "mean_train_loss": baseline["result"]["mean_train_loss"]
+        == resumed["result"]["mean_train_loss"],
+        "optimizer_steps": baseline["result"]["optimizer_steps"]
+        == resumed["result"]["optimizer_steps"],
+        "micro_steps": baseline["result"]["micro_steps"]
+        == resumed["result"]["micro_steps"],
+        "sampler_state": config_sha256(baseline["result"]["sampler_state"])
+        == config_sha256(resumed["result"]["sampler_state"]),
+        "checkpoint_payloads": payload_hashes(baseline_checkpoint)
+        == payload_hashes(resumed_checkpoint),
+    }
+    if not all(comparisons.values()):
+        raise TrainingContractError(
+            f"TD-11 exact resume comparison failed: {comparisons}"
+        )
+    report = {
+        "schema_version": 1,
+        "status": "complete",
+        "task": "TD-11",
+        "training_config": {
+            "path": config_path.relative_to(repository_root).as_posix(),
+            "file_sha256": sha256_file(config_path),
+            "canonical_sha256": config_sha256(config),
+        },
+        "interruption_step": interruption_step,
+        "final_step": maximum,
+        "runs": {
+            "uninterrupted": {
+                "output_root": baseline["output_root"],
+                "events_sha256": baseline["events"]["sha256"],
+                "final_loss": baseline["result"]["final_train_loss"],
+            },
+            "interrupted": {
+                "output_root": interrupted["output_root"],
+                "events_sha256": interrupted["events"]["sha256"],
+                "status": interrupted["status"],
+            },
+            "resumed": {
+                "output_root": resumed["output_root"],
+                "events_sha256": resumed["events"]["sha256"],
+                "final_loss": resumed["result"]["final_train_loss"],
+            },
+        },
+        "comparison": {
+            "status": "exact",
+            "checks": comparisons,
+            "semantic_trace_sha256": baseline_trace,
+        },
+        "final_checkpoints": {
+            "uninterrupted": {
+                "path": str(baseline_checkpoint),
+                "manifest_sha256": sha256_file(
+                    baseline_checkpoint / CHECKPOINT_MANIFEST
+                ),
+                "identity_sha256": baseline_manifest["identity_sha256"],
+                "payloads": payload_hashes(baseline_checkpoint),
+            },
+            "resumed": {
+                "path": str(resumed_checkpoint),
+                "manifest_sha256": sha256_file(
+                    resumed_checkpoint / CHECKPOINT_MANIFEST
+                ),
+                "identity_sha256": resumed_manifest["identity_sha256"],
+                "payloads": payload_hashes(resumed_checkpoint),
+            },
+        },
+        "automated_gates": {
+            "fault_injection_points": [
+                "after_model",
+                "after_optimizer",
+                "before_manifest",
+                "after_manifest_before_publish",
+            ],
+            "corrupt_incomplete_extra_identity_path_link_rejection": True,
+            "retention_requires_newest_validation": True,
+        },
+    }
+    if report_path is not None:
+        _atomic_json(report_path, report)
+    return report
+
+
 def _linear_scheduler(optimizer: object, *, warmup_steps: int, total_steps: int) -> object:
     import torch
 
@@ -2321,19 +2479,7 @@ def execute_training(
 
 
 def _atomic_json(path: Path, payload: Mapping[str, Any]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    descriptor, name = tempfile.mkstemp(prefix=f".{path.name}.", suffix=".tmp", dir=path.parent)
-    temporary = Path(name)
-    try:
-        with os.fdopen(descriptor, "w", encoding="utf-8", newline="\n") as handle:
-            json.dump(payload, handle, ensure_ascii=False, indent=2, sort_keys=True)
-            handle.write("\n")
-            handle.flush()
-            os.fsync(handle.fileno())
-        os.replace(temporary, path)
-    except BaseException:
-        temporary.unlink(missing_ok=True)
-        raise
+    atomic_write_json(path, payload, sort_keys=True, allow_nan=True)
 
 
 def git_identity(repository_root: Path) -> dict[str, Any]:

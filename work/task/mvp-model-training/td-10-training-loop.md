@@ -21,7 +21,7 @@
 
 ## 执行事项
 
-- 实现 `scripts/train_mvp_model.py`，支持配置、dry-run、train/dev、固定 seed、设备/精度、梯度累积、gradient checkpointing、梯度裁剪和受控 worker。
+- 实现 `scripts/mvp_training.py` 与统一入口 `scripts/mvp_cli.py train`，支持配置、dry-run、train/dev、固定 seed、设备/精度、梯度累积、gradient checkpointing、梯度裁剪和受控 worker。
 - 运行时探测可用设备、精度和内存，将实际硬件身份写入 run manifest；代码不得按 GPU 型号、固定显存容量或盘符分支。
 - 从配置读取设备内存预算/预留/最大利用率、主机与 data loader 内存预算、micro batch、累积、最大长度和 worker；有效设备内存上限取绝对预算、总容量乘最大利用率、总容量减预留三者的最小值，预算缺失或探测容量不足时明确失败。
 - 实现方向感知采样器，记录 batch/step 的路由、epoch、样本位置和实际 token 数；低资源权重只来自冻结配置。
@@ -33,7 +33,7 @@
 
 ## 产物
 
-- `scripts/train_mvp_model.py`、训练核心与方向采样器。
+- `scripts/mvp_training.py`、`scripts/mvp_cli.py train`、训练核心与方向采样器。
 - 结构化 run log/schema 和训练循环自动化测试。
 
 ## 验收
@@ -48,7 +48,7 @@
 
 2026-07-16 完成 TD-10：
 
-- 新增 `scripts/mvp_training.py` 与 `scripts/train_mvp_model.py`，配置 `configs/mvp_training_td10_smoke.yaml` 严格绑定 student/tokenizer/train/dev/manifest 身份、20 路权重、资源预算、batch/累积/长度/worker、AdamW/linear scheduler、step/token 上限以及 validation/checkpoint 频率；训练配置 canonical SHA-256 为 `96392a3019bfbea942c9341724075041716a77765156c4922a62732798fe68e2`。
+- 新增 `scripts/mvp_training.py`；原 `scripts/train_mvp_model.py` 薄入口现已迁移为 `scripts/mvp_cli.py train`。配置 `configs/mvp_training_td10_smoke.yaml` 严格绑定 student/tokenizer/train/dev/manifest 身份、20 路权重、资源预算、batch/累积/长度/worker、AdamW/linear scheduler、step/token 上限以及 validation/checkpoint 频率；训练配置 canonical SHA-256 为 `96392a3019bfbea942c9341724075041716a77765156c4922a62732798fe68e2`。
 - dry-run 完成配置、输入哈希、Git 状态、设备/后端/精度和内存容量探测，不构建模型或创建输出。资源验证将绝对设备预算、总容量乘最大利用率、总容量减预留三者取最小值，并独立约束 host/dataloader 内存；CPU/CUDA 选择不含设备型号分支。
 - `DeterministicRouteSampler` 使用可恢复的平滑加权轮询和逐路由确定性 shuffle，日志逐 micro/optimizer step 保存 route、epoch、位置、sample/group ID、token、loss、LR、梯度范数、吞吐、内存与截断统计。tokenizer worker 为有界线程池且不预取 sampler，0/2 worker 产生相同有序 batch。
 - 训练入口只接受 train/dev 字段，schema 明确拒绝 `test_path`；train/dev 在运行前后校验 SHA-256。空路由、空 batch、数据哈希变化、预算不足、NaN/Inf loss/gradient、token 上限不足和正式训练 OOM 均明确失败；只有 `td14_benchmark` 配置可以声明有限 OOM retry 预算。

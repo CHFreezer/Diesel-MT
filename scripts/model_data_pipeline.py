@@ -3,13 +3,10 @@
 
 from __future__ import annotations
 
-import contextlib
-import hashlib
 import json
 import os
 import re
 import tarfile
-import tempfile
 import time
 import unicodedata
 import urllib.error
@@ -19,6 +16,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, Mapping
 
+from artifact_io import atomic_write_bytes, sha256_bytes, sha256_file
 from model_training_contract import (
     ContractError,
     canonical_json_bytes,
@@ -78,35 +76,6 @@ class LocaleRecord:
     source_record_id: str
     text: str
     rejection_reason: str | None
-
-
-def sha256_bytes(data: bytes) -> str:
-    return hashlib.sha256(data).hexdigest()
-
-
-def sha256_file(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
-
-
-def atomic_write_bytes(path: Path, data: bytes) -> None:
-    """Write one complete file beside its destination and atomically replace it."""
-
-    path.parent.mkdir(parents=True, exist_ok=True)
-    fd, temporary = tempfile.mkstemp(prefix=f".{path.name}.", suffix=".tmp", dir=path.parent)
-    try:
-        with os.fdopen(fd, "wb") as handle:
-            handle.write(data)
-            handle.flush()
-            os.fsync(handle.fileno())
-        os.replace(temporary, path)
-    except BaseException:
-        with contextlib.suppress(FileNotFoundError):
-            os.unlink(temporary)
-        raise
 
 
 def archive_cache_path(cache_root: Path, source_record: Mapping[str, Any]) -> Path:

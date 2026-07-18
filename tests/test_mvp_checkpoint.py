@@ -21,6 +21,7 @@ import mvp_checkpoint  # noqa: E402
 from mvp_checkpoint import (  # noqa: E402
     CHECKPOINT_MANIFEST,
     CheckpointError,
+    build_checkpoint_identity,
     load_checkpoint,
     prune_after_validated_publish,
     retention_candidates,
@@ -49,6 +50,37 @@ IDENTITY = {
     "git": {"commit": "abc", "dirty": True},
     "runtime": {"device": "cpu", "precision": "fp32"},
 }
+
+
+def test_checkpoint_identity_tracks_shared_training_implementation() -> None:
+    training_config = {
+        "identity": {"tokenizer_manifest_sha256": "3" * 64}
+    }
+    training_report = {
+        "student_config_canonical_sha256": "2" * 64,
+        "inputs": {"train_path": {"sha256": "4" * 64}},
+        "git": {"commit": "abc", "dirty": True},
+        "runtime": {
+            "selected_device": "cpu",
+            "selected_precision": "fp32",
+            "torch": "test",
+            "cuda_runtime": None,
+            "cuda_device_count": 0,
+            "packages": {"python": "test"},
+        },
+    }
+    identity = build_checkpoint_identity(
+        repository_root=ROOT,
+        training_report=training_report,
+        training_config=training_config,
+    )
+    assert set(identity["code"]) == {
+        "scripts/artifact_io.py",
+        "scripts/mvp_student.py",
+        "scripts/mvp_training.py",
+        "scripts/mvp_checkpoint.py",
+    }
+    assert identity["code_sha256"] == config_sha256(identity["code"])
 
 
 class DummySampler:
