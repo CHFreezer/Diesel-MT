@@ -1,18 +1,98 @@
 # MVP 模型训练数据集调研与来源锁定
 
-状态：TD-02 schema v4 `in_progress`；候选合同已形成，正在继续审查 OPUS；旧 schema v2/M0/TD-16 证据保持不变
+状态：TD-02A `in_progress`；当前按 human-parallel-first 重做近期来源与许可清单；schema v2/v4、M0、Hy-MT2 v1/v2/v3 和 TD-16 诊断证据保持不变
 
-调研日期：2026-07-15；ability-first 重审：2026-07-17
+调研日期：2026-07-15；ability-first 重审：2026-07-17；human-first/近期词汇重构：2026-07-21；规模、费用与蒸馏定位更新：2026-07-22
 
-## schema v4 结论：先训练出会翻译的 60M，不做 human-only foundation
+## 2026-07-21 当前结论：近期 human parallel first
+
+schema v4 的“五语 source bank → Hy-MT2 补齐 20 路 → 80/20 mixed corpus”已被后续质量证据否决为当前完成路径。Hy-MT2 v3 虽完成数量门，但 KFTT 日英实体、年号和术语错误无法靠脚本或官方 sampling 修复；DeepSeek 512 条 source-only A/B 虽明显更好，也只足以证明值得继续研究，不等于获得全量远程翻译授权。
+
+当前路线改为：**近期真实平行来源清单 → 小样本实收率/成本 pilot → 确定性硬过滤 → DeepSeek 长上下文整批找错 → human-first corpus → 60M 能力训练**。旧 source bank、D0/D1、Hy-MT2 v3、A/B 和 checkpoint 只保留为不可变诊断证据，不自动继承。
+
+Tokenizer 分两阶段处理：当前 `mvp-tokenizer-v0` 的 49,152 词表只服务 60M MVP，TD-02B 必须用新 pilot 复核其字符损失、`<unk>`、切分效率和长度预算；通过后继续冻结，失败则阻塞并另立版本化 tokenizer 决策，不能原地改词表。MVP 路线通过后，约 200M 正式基线计划根据届时更完整的语料另行训练 65,536 词表并从零初始化模型；该 64k tokenizer 和正式模型当前均未实施。
+
+本轮新来源因此采用“双用途、分身份”沉淀：平行能力训练使用通过审计的 pair/group，未来 tokenizer 只把其中 train 分区的真人 source/target 两侧当作单语候选，并按稳定 `text_id` 去重。registry/manifest 必须保留语言标签、原始未截断文本引用、来源/许可、文档/作品、snapshot/content date、领域、内容哈希和 `tokenizer_candidate_status/reason`。dev/test、tokenizer holdout、synthetic、canary、quarantine、DeepSeek 改写和正反路由重复全部排除。该候选账本能复用本轮下载与清洗投入，但不等于 64k 语料已经完备；未来仍需加入更广的高质量单语数据并重新执行配比、污染、去重、规模饱和与许可验收。
+
+### 近期候选与角色
+
+| 候选 | 当前角色 | 近期词汇价值 | 进入正式语料前必须关闭的问题 |
+| --- | --- | --- | --- |
+| [OpenSubtitles v2024](https://opus.nlpl.eu/datasets/OpenSubtitles) | `pilot/rights-hold` | 近年影视、生活口语、网络表达，五标签相关路线规模大 | 验证底层使用边界；按作品/内容年份筛选 2020+；强去重、错轴/机器字幕/错译审计 |
+| translatewiki 2025 快照 | `pilot` | UI、账户、平台和现代软件术语，含简繁和非英语直连 | 锁定具体快照、locale 与许可；控制短片段/占位符和技术域比例 |
+| Mozilla 本地化 | `pilot` | 浏览器、隐私、安全、同步和云服务词汇 | 直接锁上游 commit/locale/许可，不用浮动聚合身份 |
+| [MDN Web Docs](https://opus.nlpl.eu/datasets/MDN_Web_Docs) | `pilot/capped` | Web、API、浏览器技术词汇 | 去代码、模板、source-copy/重复；技术域及 Hant 占比设 ceiling |
+| Wikimedia Content Translation | `pilot/realign` | 新人物、产品、实体和百科主题 | 文档/段落重对齐，区分 human/机器辅助，generic Chinese 重新判定简繁 |
+| ALT、KFTT human pair、韩英新闻、UNPC | `anchor` | 领域和年代偏旧，但提供稳定人类锚点 | 继续按 literal fidelity 复审；KFTT 只能用锁定 human pair，不能再交给 teacher 猜实体 |
+| HPLT/MultiHPLT | `term-discovery-only` | 发现新单语词汇和主题 | 不是天然平行语料，不能直接计入 human corpus |
+
+数据集的发布版本与文本内容年代必须分开。规范记录新增 `snapshot_date`、可空 `content_date_or_year`、`content_date_status` 和 `domain`；内容年代未知的样本可以作为普通候选，但不能计入近期内容层。TD-02B 先比较近期内容 20%～25%、持续本地化/技术术语 5%～10% 的区间，最终比例服从质量实收，不为满足比例收低质文本。
+
+项目与未来权重按非商业研究用途设计，可以把明确 CC BY-NC/CC BY-NC-SA/research-only 来源纳入候选，但非商业意图不自动授予网页、字幕或聚合数据的训练权。每个来源仍须分别记录训练、衍生权重、署名、相同方式共享、原始数据再分发和用途限制；不确定来源保持 `hold`。
+
+### DeepSeek 辅助审计口径
+
+DeepSeek 不逐句发请求，也不逐句输出 `pass`。同一路线/来源/领域的大量 `{sample_id, source, target}` 按 token 上限合成长上下文；模型扫描整批后只稀疏返回疑似错误 ID、严重度、类别和短理由。没有返回的记录仅表示本轮未发现问题。
+
+在全量审计前，用真实好/坏样本和不进入训练的已知错误 canary 比较多个上下文档位；全部 flag 人工复核，未标记记录分层抽检。响应截断、未知 ID、结构错误或缺少批次身份不能当作零问题。DeepSeek 建议译文一律不覆盖原始 human target；当前阶段不授权自动重译。
+
+### MVP 规模与领域比例预案（2026-07-22）
+
+首轮目标不是继续把少量语义组展开成漂亮的 directed-record 数，而是形成约 90万～130万个独立 human parallel groups；正反展开后约 180万～260万条有向训练记录。若首轮能力训练证明数据量仍不足，可把扩展 tranche 提高到 150万～200万个独立 pairs、300万～400万条有向记录。TD-02B pilot 先处理约5万～10万条候选，用真实实收率决定是否进入正式规模。
+
+| 无向关系 | 首轮独立 pairs 规划 |
+| --- | ---: |
+| EN–Hans | 15万～20万 |
+| EN–Hant | 6万～10万 |
+| EN–JA | 15万～20万 |
+| EN–KO | 15万～20万 |
+| Hans–Hant | 4万～8万 |
+| Hans–JA | 8万～13万 |
+| Hans–KO | 8万～13万 |
+| Hant–JA | 4万～8万 |
+| Hant–KO | 4万～8万 |
+| JA–KO | 8万～13万 |
+
+繁中相关关系允许处在区间低端，继续以质量实收为先。路线展开不增加 independent semantic groups，训练和数据卡必须同时报告 groups、pairs、directed records 和 tokens。
+
+每条 accepted 记录只进入一个主领域桶，初始目标为：近期字幕/自然对话25%，新闻/百科/一般说明文25%，高可信人工锚点/正式文本20%，日常社区短句10%，持续维护 UI/本地化10%，现代技术文档5%，简繁互转/地区正式繁体5%。单一来源原则上不超过30%；技术域全局约5%、Hant技术域继续≤15%，法律/政务Hant继续≤20%。这些是 pilot 比较目标，不是降低质量也必须凑满的 quota。
+
+新鲜度另作交叉维度：内容年份可证明为2020年以后的目标20%～25%，持续维护但单句年份未知的本地化目标5%～10%，其余65%～75%可来自较旧或年代未知但质量可靠的来源。
+
+### DeepSeek 费用与质量门（2026-07-22 价格快照）
+
+正式全量扫描使用 `deepseek-v4-flash`，不再依赖即将弃用的 `deepseek-chat` 别名。官方当前价格为缓存未命中输入1元/百万tokens、缓存命中输入0.02元/百万tokens、输出2元/百万tokens；上下文长度1M。价格会变化，执行前仍须重新读取[官方价格页](https://api-docs.deepseek.com/zh-cn/quick_start/pricing/)。每个双语句对连同 ID/结构暂按60～100 input tokens估算，最终以 API usage 为准；不同语言的字符/token比例只用于预算，不能替代实测。[Token 用量说明](https://api-docs.deepseek.com/quick_start/token_usage)
+
+| 费用阶段 | 预算范围 | 解锁条件 |
+| --- | ---: | --- |
+| pilot/上下文档位校准 | 10～30元 | 可直接执行 TD-02B/TD-04 校准 |
+| 首轮90万～130万 accepted 对应全量 preaudit | 累计150～350元 | 校准质量门全部通过 |
+| 扩展到150万～200万 accepted | 累计300～600元 | 首轮 corpus/训练证明确需扩展 |
+| 悲观硬上限 | 1000元 | 不是默认预算；超过600元前重新报告并确认 |
+
+估算按大部分正文为 cache miss，不把稳定 prompt 前缀的缓存命中夸大为整批缓存。费用必须分别报告输入、缓存命中、输出、重试、二次扫描和每万条成本。
+
+全量放行前暂定：严重实体/数字/否定/错语言 canary 召回率≥95%，flag 人工有效命中率≥70%，未标记分层抽查中的严重错误率≤1%。不满足时先缩小上下文、改进 prompt 或停止，不通过增加预算掩盖召回问题。用户确认该量级费用在能够换取高质量数据集时值得投入，但这不是无条件花完预算的授权。
+
+### 蒸馏生成语料的重新定位
+
+蒸馏仍有价值，但不再承担底模的主体语料。它最适合 human-first 60M 基线之后的三类定向补强：真实 human pair 稀缺的 Hant–JA/Hant–KO 等弱关系、从已验证近期单语文本补充新实体/新术语，以及对 dev 已证实的特定错误类型做小规模对症增强。
+
+当前不允许恢复 Hy-MT2 v3 或直接全量生成。若 TD-16C 未过线，先继续寻找 human parallel；确实不足且用户另行授权时，才比较 human-only continuation 与有界 synthetic augmentation。synthetic 初始实验以全局训练曝光约5%～10%、单个弱路由不超过约20%作为候选档位，而不是预先冻结承诺；同一 source 每次曝光只选择一个 target，所有生成结果经过独立审计，dev/test 始终保持 human-only。没有总体/time-to-quality 改善或出现其他路线退化时，保留负结果并回到 human-first 配方。
+
+执行拆分见 [TD-02A](../work/task/mvp-model-training/td-02a-modern-corpus-inventory.md)、[TD-02B](../work/task/mvp-model-training/td-02b-modern-corpus-pilot.md)、[新 TD-03](../work/task/mvp-model-training/td-03-modern-corpus-build.md)、[新 TD-04](../work/task/mvp-model-training/td-04-deepseek-batch-audit.md) 和 [新 TD-05](../work/task/mvp-model-training/td-05-modern-corpus-acceptance.md)。
+
+## 历史 schema v4 结论（已被当前 human-first 路径取代）
+
+以下 schema v4/source-bank/Hy-MT2 配额仅保留为 2026-07-17 的决策与失败证据，不是当前 TD-02A～TD-05 的执行合同。当前有效规模、领域比例、DeepSeek 费用门和蒸馏定位只以上文 2026-07-22 结论为准。
 
 TD-16B 的 20,000-step 训练说明旧路线的数据定义错了：226,218 条 directed records 只来自约 11,411 个独立 MASSIVE 语义组，并且 MASSIVE 是 locale localization，允许实体和 slot 值随地区变化。训练 loss 后期不降并不能证明训练器坏了，但足以否决“用 MASSIVE 反复展开 20 路就能得到通用翻译底模”。
 
-新的 TD-02 不再堆百万级人工平行语料，也不再先训 human-only 底模。首个 60M MVP 只验证一条最短能力路线：**五语真实 source bank → Hy-MT2 对其余四个标签直接翻译 → 少量人工锚点混训 → FLORES dev 选择 → 最多一次弱路由补强**。单语去噪预训练、递归回译、pivot、多阶段 curriculum 和翻译指令微调全部推迟到 60M 配方通过以后；唯一例外是同一个已验收 pair 的一跳正反向复用。
+当时的 TD-02 曾决定不堆百万级人工平行语料，而以 **五语真实 source bank → Hy-MT2 对其余四个标签直接翻译 → 少量人工锚点混训 → FLORES dev 选择 → 最多一次弱路由补强** 作为最短能力路线。后续 KFTT/Hy-MT2 质量审计已经否决这条路线作为当前完成路径；单语去噪预训练、递归回译、pivot、多阶段 curriculum 和翻译指令微调仍不属于当前 60M human-first 主线。
 
-新的唯一配置是 [`mvp_60m_distillation_sources.yaml`](../configs/mvp_60m_distillation_sources.yaml)，byte lock 是 [`mvp_60m_distillation_sources.lock.json`](../configs/mvp_60m_distillation_sources.lock.json)。它们不会覆盖旧 [`mvp_model_data.yaml`](../configs/mvp_model_data.yaml)、旧 M0、D1 或 TD-16 checkpoint。
+历史 schema v4 配置是 [`mvp_60m_distillation_sources.yaml`](../configs/mvp_60m_distillation_sources.yaml)，byte lock 是 [`mvp_60m_distillation_sources.lock.json`](../configs/mvp_60m_distillation_sources.lock.json)。它们不会覆盖旧 [`mvp_model_data.yaml`](../configs/mvp_model_data.yaml)、旧 M0、D1 或 TD-16 checkpoint，也不得作为新 TD-03～TD-05 的输入身份。
 
-## 首轮预算边界：繁体按质量实收
+## 历史 schema v4 首轮预算边界：繁体按质量实收
 
 | 部分 | 规模边界 | 含义 |
 | --- | ---: | --- |
@@ -26,7 +106,7 @@ TD-16B 的 20,000-step 训练说明旧路线的数据定义错了：226,218 条 
 
 EN/Hans/JA/KO 各从 50,000 source 池为四个目标路由选择候选，因此16路仍有每路10,000 accepted 的固定能力预算；硬门禁不降低，单路扫描12,000仍不足时必须阻塞。Hant 不使用该 quota：同一条高质量原生 Hant 可以在不同目标路由复用并共用 semantic group，但同一路线不得复制填数。
 
-## source bank 选择
+## 历史 schema v4 source bank 选择
 
 已经冻结的 tokenizer train corpus 可直接复用，不重新下载 HPLT。探索性二次门禁采用 30–600 字符、URL/email/HTML/spam 排除和固定 SHA 排序，确认四个桶有充足候选：English 289,203、Hans 1,064,563、Japanese 950,898、Korean 514,238，均远高于各 50,000 的需求。正式 TD-03 会进一步收紧到 20–256 字符、4–256 个冻结 tokenizer token，任何 overflow 都拒绝而不截断。
 

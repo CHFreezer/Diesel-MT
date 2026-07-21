@@ -1,14 +1,14 @@
 # task group TD-16: 训练并冻结基于合格语料能力的 MVP 模型
 
-状态：pending / suspended（TD-16A、TD-16B 诊断已完成；当前活动入口已回退到 TD-02）
+状态：pending / suspended（TD-16A、TD-16B 诊断已完成；当前活动入口为 TD-02A）
 
-恢复依赖：TD-05 v3；teacher 辅助阶段还必须重新验证 TD-08/TD-15 与新 source identity 的兼容性
+恢复依赖：新的 TD-05 human-first corpus；任何 teacher/synthetic 辅助都必须在 TD-16C 基线后另立任务
 
 ## 目标与边界修正
 
 TD-16 的最终含义是：以经过通用翻译忠实度验收的 20 路 human 语料为能力基础，训练出经过独立 dev 选择、重复训练能力等价验收和一次性正式 test 的 `mvp_e8_d2_v48k` MVP 模型。
 
-原 44,313 条共同 source A/B 只回答“teacher target 能否替代 human target”。随后完整 226,218-record M0 长训又证明：记录数和 complete manifest 不能代替独立语义规模与翻译忠实度。失效前提位于 TD-02 的来源选择，所以当前工作已离开 TD-16，重新执行 TD-02～TD-05；A/B 和长训证据均保留，但不能被重新解释为最终 MVP。
+原 44,313 条共同 source A/B 只回答“teacher target 能否替代 human target”。随后完整 226,218-record M0 长训又证明：记录数和 complete manifest 不能代替独立语义规模与翻译忠实度。失效前提位于 TD-02 的来源选择，所以当前工作已离开 TD-16，按 TD-02A/TD-02B/新 TD-03～TD-05 重建 human parallel corpus；A/B 和长训证据均保留，但不能被重新解释为最终 MVP。
 
 ## 已完成事实
 
@@ -33,19 +33,20 @@ TD-16 的最终含义是：以经过通用翻译忠实度验收的 20 路 human 
 
 ## 当前回退路径（不属于 TD-16 子任务）
 
-1. TD-02 v3：重新调研并锁定通用 MT 平行来源 — in_progress
-2. TD-03 v3：适配新来源并构建新 corpus identity — pending
-3. TD-04 v3：重新切分、去重与泄漏/污染审计 — pending
-4. TD-05 v3：重新验收并发布新 M0 — pending
+1. TD-02A：建立近期平行来源、许可与时间清单 — in_progress
+2. TD-02B：运行有界 pilot 并冻结实收/空间/API/人工预算 — pending
+3. 新 TD-03：构建 human parallel preaudit corpus — pending
+4. 新 TD-04：DeepSeek 长上下文稀疏找错与人工校准 — pending
+5. 新 TD-05：发布 human-first MVP corpus — pending
 
-TD-05 v3 完成以前，TD-16 不处于执行状态，也不得启动新 foundation、teacher 辅助或正式 test。
+新 TD-05 完成以前，TD-16 不处于执行状态，也不得启动新 foundation、synthetic 辅助或正式 test。
 
 ## 未来恢复路径
 
 1. [TD-16A：合并性能优先且硬件可配置的训练器](td-16a-performance-equivalence-contract.md) — completed
 2. [TD-16B：验证完整 human M0 长训并定位语料边界](td-16b-full-human-foundation.md) — completed，候选不准入
-3. [TD-16C：训练新 M0 human foundation](td-16c-repaired-human-foundation.md) — pending，等待 TD-05 v3
-4. [TD-16D：验证 human-led teacher 辅助](td-16d-human-led-distillation.md) — pending
+3. [TD-16C：训练 human-first 60M foundation](td-16c-repaired-human-foundation.md) — pending，等待新 TD-05
+4. [TD-16D：执行或跳过一次弱路由数据补强](td-16d-human-led-distillation.md) — pending，不预设 teacher/比例
 5. [TD-16E：验证重复训练能力等价并冻结候选](td-16e-capability-equivalence-selection.md) — pending
 6. [TD-16F：执行一次性正式 test 并发布 MVP](td-16f-formal-test-release.md) — pending
 

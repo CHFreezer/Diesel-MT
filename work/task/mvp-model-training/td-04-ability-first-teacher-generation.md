@@ -74,3 +74,11 @@ v3 正式生成命令为 `scripts/generate_mvp_60m_teacher.py generate --runtime
 512 条直译实际费用 0.011892 美元，同批独立思考审查 0.044179 美元，总计 0.056071 美元。按本次实际 token 线性外推，195,404 条只做直译约 4.54 美元；若每条再做同等级思考审查，总费用约 21.40 美元。这只是本批 token 分布下的诊断估计，不是供应商报价或预算承诺。
 
 结论从 `hold_before_expansion` 更新为 `deepseek_direct_translation_wins_512_record_ab`：允许按相同 source-only、20 路分层、可恢复身份扩大到 2,048 条复验；尚未授权全量生成，也不允许发布 TD-05。原因是当前盲评只有一名审查者，且 7 个 DeepSeek 退化已证明目标语言检查、术语和实体门仍不可省略。紧凑证据为 [`deepseek-direct-translation-ab-512.json`](../../../artifacts/model-training/reports/m0/deepseek-direct-translation-ab-512.json)；Hy-MT2 v3 rejected 产物保持不变，FLORES devtest/正式 test 均未访问。
+
+## Hy-MT2 官方 sampling 对当前 greedy 的 512 条 A/B
+
+为排除“Hy-MT2 质量差只是因为没有使用官方推荐参数”这一假设，新增 `decode-ab` 隔离入口、`scripts/hymt2_decode_ab.py` 和冻结配置 `configs/hymt2_decode_ab.yaml`。A/B 从 v3 accepted teacher 中确定性抽取 512 条 teacher-only 记录，覆盖20路和9个来源，并强制包含5条已知 KFTT blocker；模型、Q8_0 artifact、llama.cpp/FlashAttention、prompt、source、route、chat template、64 slots、32,768上下文与逐路64～192输出上限均不变，只把 `greedy-v1` 改为官方模型卡推荐的 `temperature=0.7/top_p=0.6/top_k=20/repeat_penalty=1.05`。官方通用 `max_tokens=4096` 没有替换逐路上限，因为512条均正常 stop、零 length finish，放大上限既不能增加有效译文，又会同时改变已验证的并发上下文预算。
+
+512 条中274条译文与 greedy 完全相同，238条发生变化，两侧自动过滤均512/512 accepted。DeepSeek thinking fidelity review 原始得到 greedy 467 pass、sampling 460 pass；相同字符串在两次独立审阅中有13条判定漂移，因此按“相同输出必须同判定”校正后 sampling 为463 pass，仍低于 greedy。只看238条真实变化，7条由 flag 改为 pass、11条由 pass 退化、19条两侧均 flag、201条两侧均 pass。对18条判定变化且译文确实不同的记录再做 source+A/B 盲评，结果为 greedy 8胜、sampling 4胜、5平、1双差。
+
+已知 blocker 的结果更直接：`チューハイ→tuhao` 被修为 `chu-hai`，但 `安永→Eiyo` 与日记专名意译逐字复现；`藤原秀郷/将門` 仍被替换成错误人物名；另一条只改变汉字/长音表面，未完整修复英文专名和年号。因此5条只修复1条，4条仍不合格。sampling 生成期间 GPU 平均/峰值利用率85.063%/99%、峰值功耗129.36W、峰值显存13,917MiB，说明实验确实运行了高负载本地 teacher，而不是空跑；两侧独立审阅总费用0.096627美元。结论保持 `greedy-v1`，不允许用官方 sampling 重跑 v3，也不撤销 TD-04 rejected/TD-05 blocked。紧凑证据为 [`hymt2-decode-ab-512.json`](../../../artifacts/model-training/reports/m0/hymt2-decode-ab-512.json)，正式 test/devtest 均未访问。
