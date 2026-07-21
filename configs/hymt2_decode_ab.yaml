@@ -1,0 +1,50 @@
+schema_version: 1
+
+identity:
+  name: hymt2-7b-official-sampling-vs-current-greedy-ab-v1
+  status: frozen
+  task: TD-04-rejected-corpus-remediation-evidence
+
+inputs:
+  generation_config: configs/mvp_60m_teacher_generation.yaml
+  generation_config_sha256: 253af24adac0f6706384d73ad308f62a950b7874775474345f51125433b763df
+  review_config: configs/deepseek_translation_review.yaml
+  review_config_sha256: 1166bbede175f33cfa399335e4ec43cbbdbde59c8cc0b95c9c2361ef5c614253
+  td04_manifest_sha256: 7e5f136e7efde4e98f114c7482183b9e31386f85e8b38441c0a99aed21c10d46
+  accepted_teacher_sha256: 29229aa74f349b70bb9330bc6b2b49c7129de37d1ca7805a391acbeae1918d0f
+  formal_test_access: prohibited
+  formal_devtest_access: prohibited
+
+ab:
+  records: 512
+  selection_seed: diesel-mt-hymt2-decode-ab-v1
+  baseline_profile: greedy-v1
+  challenger_profile: official-sampling-v1
+  both_pass_manual_sample: 64
+  blind_seed: diesel-mt-hymt2-decode-blind-v1
+  forced_cases:
+    - {route: jpn_Jpan->eng_Latn, source_record_id: "141488"}
+    - {route: jpn_Jpan->eng_Latn, source_record_id: "348008"}
+    - {route: jpn_Jpan->eng_Latn, source_record_id: "296735"}
+    - {route: jpn_Jpan->eng_Latn, source_record_id: "125951"}
+    - {route: jpn_Jpan->eng_Latn, source_record_id: "68508"}
+
+runtime:
+  parallel_slots: 64
+  server_context_size: 32768
+  server_port: 18094
+  append_flush_records: 64
+
+outputs:
+  root: td04/hymt2-decode-ab-v1
+  plan: plan.json
+  challenger_journal: official-sampling-generation.jsonl
+  pairs: pairs.jsonl
+  gpu_samples: gpu-samples.jsonl
+  baseline_review_responses: baseline-review-responses
+  challenger_review_responses: challenger-review-responses
+  baseline_decisions: baseline-review-decisions.jsonl
+  challenger_decisions: challenger-review-decisions.jsonl
+  blind_queue: blind-comparison-queue.jsonl
+  blind_key: blind-comparison-key.jsonl
+  report: report.json

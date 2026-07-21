@@ -130,11 +130,13 @@ def generate_one(
     conversion_config: Mapping[str, Any],
     generation_identity: str,
     max_output_tokens: int | None = None,
+    profile_name: str = "greedy-v1",
 ) -> dict[str, Any]:
     route = str(job["route"])
     prompt_config = _prompt_for_route(route, cross_config, conversion_config)
     limit = route_limits(prompt_config)[route]
-    profile_name = "greedy-v1"
+    if profile_name not in prompt_config["decode_profiles"]:
+        raise AbilityDataError(f"unknown teacher decode profile: {profile_name}")
     profile = prompt_config["decode_profiles"][profile_name]
     try:
         response = teacher.generate(
@@ -554,26 +556,58 @@ def finalize(repository_root: Path, runtime_root: Path, config_path: Path) -> di
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
-    parser.add_argument("action", choices=("generate", "finalize"))
+    parser.add_argument("action", choices=("generate", "finalize", "decode-ab"))
     parser.add_argument("--repository-root", type=Path, default=Path.cwd())
     parser.add_argument("--runtime-root", type=Path, required=True)
     parser.add_argument(
-        "--config", type=Path, default=Path("configs/mvp_60m_teacher_generation.yaml")
+        "--config", type=Path
     )
     parser.add_argument("--max-jobs", type=int)
+    parser.add_argument("--api-key-env", default="DEEPSEEK_API_KEY")
+    parser.add_argument("--auth-script", type=Path)
+    parser.add_argument("--max-cost-usd", type=float, default=0.25)
+    parser.add_argument("--concurrency", type=int)
     return parser.parse_args()
 
 
 def main() -> int:
     args = parse_args()
     repository_root = args.repository_root.resolve()
-    config_path = (repository_root / args.config).resolve() if not args.config.is_absolute() else args.config.resolve()
+    default_config = (
+        Path("configs/hymt2_decode_ab.yaml")
+        if args.action == "decode-ab"
+        else Path("configs/mvp_60m_teacher_generation.yaml")
+    )
+    requested_config = args.config or default_config
+    config_path = (
+        (repository_root / requested_config).resolve()
+        if not requested_config.is_absolute()
+        else requested_config.resolve()
+    )
     if args.action == "generate":
         generate(repository_root, args.runtime_root.resolve(), config_path, max_jobs=args.max_jobs)
-    else:
+    elif args.action == "finalize":
         if args.max_jobs is not None:
             raise AbilityDataError("--max-jobs is only valid for generate")
         finalize(repository_root, args.runtime_root.resolve(), config_path)
+    else:
+        if args.max_jobs is not None:
+            raise AbilityDataError("--max-jobs is only valid for generate")
+        if args.max_cost_usd <= 0:
+            raise AbilityDataError("--max-cost-usd must be positive")
+        if args.concurrency is not None and args.concurrency <= 0:
+            raise AbilityDataError("--concurrency must be positive")
+        from hymt2_decode_ab import run_decode_ab
+
+        run_decode_ab(
+            repository_root=repository_root,
+            runtime_root=args.runtime_root.resolve(),
+            config_path=config_path,
+            api_key_env=args.api_key_env,
+            auth_script=args.auth_script.resolve() if args.auth_script else None,
+            cost_ceiling=float(args.max_cost_usd),
+            review_concurrency=args.concurrency,
+        )
     return 0
 
 

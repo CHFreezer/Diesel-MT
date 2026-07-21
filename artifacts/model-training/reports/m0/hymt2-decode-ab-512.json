@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "status": "complete",
+  "task": "Hy-MT2-7B official sampling versus current greedy decode-only A/B",
+  "completed_on": "2026-07-19",
+  "decision": "keep-greedy-v1-official-sampling-does-not-remediate-teacher-quality",
+  "formal_test_accessed": false,
+  "formal_devtest_accessed": false,
+  "scope": {
+    "records": 512,
+    "routes": 20,
+    "source_strata": 9,
+    "selection": "deterministic teacher-only sample with five known KFTT blockers forced in",
+    "only_intended_difference": "decode profile",
+    "unchanged": [
+      "official Hy-MT2-7B GGUF Q8_0 artifact",
+      "llama.cpp CUDA backend and FlashAttention",
+      "official prompt and no system prompt",
+      "source text, route, chat template, per-route output limit, context and parallel slots"
+    ]
+  },
+  "profiles": {
+    "baseline": {
+      "name": "greedy-v1",
+      "temperature": 0.0,
+      "top_p": 1.0,
+      "top_k": 0,
+      "repeat_penalty": 1.0
+    },
+    "challenger": {
+      "name": "official-sampling-v1",
+      "temperature": 0.7,
+      "top_p": 0.6,
+      "top_k": 20,
+      "repeat_penalty": 1.05
+    },
+    "output_limit_note": "The official generic max_tokens=4096 was not substituted for the audited 64-192 route caps; all 512 sampling outputs ended normally and none hit length, so this isolates sampling without changing the 64-slot context budget."
+  },
+  "runtime_evidence": {
+    "root": "D:/Diesel-MT-Runtime/mvp60-data-v3/td04/hymt2-decode-ab-v1",
+    "identity": "fe723d8f5dbcbdd35fefd65552ed2dbd0994786ef29254f575060b3363193041",
+    "config_sha256": "db727e57e88b8d7a380fab46bf04f23b12f00263df7e5c8625a0258b49587a6d",
+    "generation_journal_sha256": "70826390e0fc81d081bd84bf4fa9c9067b42fb17207e25e64b73ec3a424e6c67",
+    "pairs_sha256": "3d88f591ddb3f1c9d30fd9c58e3c4dad0eedf3d3c943ea4935db72b4555dd0f3",
+    "baseline_review_sha256": "813c10f428d9bb62efc513578be07004c6d8b75c90e85b88d43969edca46eda5",
+    "challenger_review_sha256": "fe7717e0eb6614c7440f842c42476466ca692393ba249072be90d6fdb41955f0",
+    "runtime_report_sha256": "3dd958b6f9fe62c757c58f4f8c8c1a9e09ca5deb6fb398c5eec066a8b6c9b0ab"
+  },
+  "generation": {
+    "automated_filter_accepted": {
+      "greedy": 512,
+      "official_sampling": 512
+    },
+    "exact_translation_matches": 274,
+    "changed_translations": 238,
+    "official_sampling_completion_tokens": 21172,
+    "official_sampling_length_finishes": 0,
+    "gpu": {
+      "samples": 159,
+      "utilization_average_percent": 85.063,
+      "utilization_peak_percent": 99.0,
+      "power_peak_watts": 129.36,
+      "memory_peak_mib": 13917.0
+    }
+  },
+  "independent_review": {
+    "reviewer": "deepseek-v4-flash thinking fidelity review",
+    "greedy_verdict_counts": {
+      "pass": 467,
+      "warning": 5,
+      "reject": 40
+    },
+    "official_sampling_raw_verdict_counts": {
+      "pass": 460,
+      "warning": 11,
+      "reject": 41
+    },
+    "reviewer_variance_on_274_exact_matches": 13,
+    "official_sampling_exact_match_adjusted_verdict_counts": {
+      "pass": 463,
+      "warning": 7,
+      "reject": 42
+    },
+    "changed_output_pair_classification": {
+      "both_pass": 201,
+      "both_flagged": 19,
+      "sampling_improves": 7,
+      "sampling_regresses": 11
+    },
+    "actual_cost_usd": {
+      "greedy": 0.050006,
+      "official_sampling": 0.046621,
+      "total": 0.096627
+    },
+    "interpretation": "Identical strings cannot change translation quality, so the adjusted comparison reuses the baseline decision for exact matches and treats the 13 changed reviewer verdicts as reviewer variance."
+  },
+  "manual_differential_review": {
+    "method": "blind source plus candidate A/B review of all 18 non-identical pairs for which the independent verdict changed; identities were decoded only after decisions",
+    "records": 18,
+    "outcome": {
+      "greedy_wins": 8,
+      "official_sampling_wins": 4,
+      "ties": 5,
+      "both_bad": 1
+    },
+    "decisions": [
+      {"id": "7cce81ef59daeeb47dd5b69c5f92af765dd618951bd16cec345e96ebb9a2b156", "winner": "greedy-v1"},
+      {"id": "8269f068ed163066917f55bae42feb48970de5cfeacde99c5b2b3aa040a8e6fa", "winner": "official-sampling-v1"},
+      {"id": "d0d6d81eb851537545896daf747b8064f85a22eb05470d7baa729b413e8af13e", "winner": "greedy-v1"},
+      {"id": "d4c61409d860c1b6370ad64b82579f98ebff85d8ecc1654c1fb832f903f187c8", "winner": "greedy-v1"},
+      {"id": "f33361c485992d9c2d2de95499a33837dafecf19c81b3d258bc99a624203c5a6", "winner": "tie"},
+      {"id": "0653cf93425958e60c0936db91af7f158ff379dda1712cb757bdf28c7ee7bbff", "winner": "official-sampling-v1"},
+      {"id": "47796a3ce94496b747098eefe89601681dbb0f493f02898060566bcaff3d0336", "winner": "tie"},
+      {"id": "b486043d37213e1df9e4e41fd228e99a00c05fe1b6b2373536394745585e07b4", "winner": "official-sampling-v1"},
+      {"id": "1322ac7a009639518b8164bfa1c66121f15d228b14b56a52d2db43efcb6d0fae", "winner": "both_bad"},
+      {"id": "21f5519d769b622fcd4bf995a944d2aa8162f14bff53f6e669b2deae290af861", "winner": "greedy-v1"},
+      {"id": "ccc7e408c73af84cf3d18b042000ee959ffa764d711428fa9d098abc000a977b", "winner": "greedy-v1"},
+      {"id": "9b2b82e73f26c80e8dd9ec72d68fa77c4b3ad1d5ba0081b86342dc86537034d3", "winner": "greedy-v1"},
+      {"id": "6239195342b8c747c61e619bce262dbe0c476900fca47ed0597567c47b2f564e", "winner": "greedy-v1"},
+      {"id": "3e42ed32f76cc707de631d2e00e819de5f8d381d322297ab3531dfcb35db9d97", "winner": "tie"},
+      {"id": "b91f4f2286babf09f7d4d48f1c84f1349eea710bd351613433c310b5812ca84e", "winner": "greedy-v1"},
+      {"id": "0c9a5b434ee8d3e085f8da9c0c1e55af7356ae99820e8dbc9f469c563deb9356", "winner": "official-sampling-v1"},
+      {"id": "4fa3131d3b5b98a6bf8fbef1af90999ae66f2c1c923445753879d186eed1e314", "winner": "tie"},
+      {"id": "89b38310b8ddfcf2935cc5f3bd858212e4806472544ba409cb4f4ea484f5346f", "winner": "tie"}
+    ]
+  },
+  "known_kftt_blockers": {
+    "forced_records": 5,
+    "fully_fixed": 1,
+    "unresolved": 4,
+    "cases": [
+      {"source_record_id": "68508", "result": "fixed", "detail": "tuhao changed to chu-hai"},
+      {"source_record_id": "141488", "result": "unresolved_exact_replay", "detail": "An'ei remains the nonexistent Eiyo"},
+      {"source_record_id": "348008", "result": "unresolved_changed_error", "detail": "Hidesato and Masakado remain corrupted; Hidemoto changed to another wrong form"},
+      {"source_record_id": "296735", "result": "partially_changed_not_fixed", "detail": "script/diacritic surface changed but the English target still carries ideographic era text and nonstandard name romanization"},
+      {"source_record_id": "125951", "result": "unresolved_exact_replay", "detail": "the proper diary title remains an unsupported semantic gloss"}
+    ]
+  },
+  "conclusion": {
+    "select_profile": "greedy-v1",
+    "replace_current_distillation_targets": false,
+    "rerun_full_v3_with_official_sampling": false,
+    "td05_publication": "still-prohibited",
+    "reason": "Official sampling changes only 46.5% of outputs, produces fewer adjusted passes, loses the focused blind differential review 4 to 8, and fixes only one of five known systemic KFTT blockers. The failure is teacher/source suitability and entity fidelity, not the greedy decode choice."
+  }
+}
